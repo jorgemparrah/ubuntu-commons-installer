@@ -1,28 +1,22 @@
 #!/bin/bash
+# install_vscode.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Visual Studio Code"
 
-# Function to check if a package is installed
-check_package_installed() {
-    if command -v code &> /dev/null; then
-        return 0  # Installed
+# Function to check status
+check_status() {
+    if command -v code &> /dev/null || snap list | grep -q "^code "; then
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installVSCode() {
-    echo "Checking Visual Studio Code installation status..."
-    
-    if check_vim_installed; then
-        echo -e "${GREEN}✓${NC} Visual Studio Code is already installed."
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} Visual Studio Code is not installed. Installing..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
     # Configure debconf
     echo "code code/add-microsoft-repo boolean true" | sudo debconf-set-selections
@@ -41,7 +35,51 @@ installVSCode() {
     sudo apt update
     sudo apt install -y code
     
-    echo -e "${GREEN}✓${NC} Visual Studio Code installation complete."
+    echo "Visual Studio Code instalado correctamente."
 }
 
-installVSCode
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove VS Code
+    sudo apt remove -y code
+    sudo apt autoremove -y
+    
+    # Remove repository
+    sudo rm -f /etc/apt/sources.list.d/vscode.list
+    sudo rm -f /etc/apt/keyrings/packages.microsoft.gpg
+    
+    echo "Visual Studio Code desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

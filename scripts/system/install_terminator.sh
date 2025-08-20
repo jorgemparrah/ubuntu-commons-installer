@@ -1,39 +1,68 @@
 #!/bin/bash
+# install_terminator.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Terminator"
 
-# Function to check if Terminator is installed
-check_terminator_installed() {
-    if command -v terminator &> /dev/null; then
-        return 0  # Installed
+# Function to check status
+check_status() {
+    if command -v terminator &> /dev/null || snap list | grep -q "^terminator "; then
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installTerminator() {
-    echo "Checking Terminator installation status..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
-    if check_terminator_installed; then
-        echo -e "${GREEN}✓${NC} Terminator is already installed."
-        echo "Terminator version: $(terminator --version)"
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} Terminator is not installed. Installing..."
-    
-    # Update package list
+    # Install package
     sudo apt update
-    
-    # Install Terminator via apt
-    echo "Installing Terminator via apt..."
     sudo apt install -y terminator
     
-    echo -e "${GREEN}✓${NC} Terminator installation complete."
-    echo "Terminator version: $(terminator --version)"
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installTerminator
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package
+    sudo apt remove -y terminator
+    sudo apt autoremove -y
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

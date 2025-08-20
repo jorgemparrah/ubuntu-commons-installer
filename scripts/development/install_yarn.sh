@@ -1,53 +1,68 @@
 #!/bin/bash
+# install_yarn.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Yarn"
 
-# Function to check if a package is installed
-check_package_installed() {
-    local package="$1"
-    if dpkg -l | grep -q "^ii.*$package"; then
-        return 0  # Installed
-    else
-        return 1  # Not installed
-    fi
-}
-
-# Function to check if Yarn is installed
-check_yarn_installed() {
-    if command -v yarn &> /dev/null || check_package_installed "yarn"; then
-        return 0  # Installed
-    else
-        return 1  # Not installed
-    fi
-}
-
-installYarn() {
-    echo "Checking Yarn installation status..."
-    
-    if check_yarn_installed; then
-        echo -e "${GREEN}✓${NC} Yarn is already installed."
-        if command -v yarn &> /dev/null; then
-            echo "Yarn version: $(yarn --version)"
-        fi
+# Function to check status
+check_status() {
+    if command -v yarn &> /dev/null || snap list | grep -q "^yarn "; then
+        echo "INSTALLED"
         return 0
+    else
+        echo "NOT_INSTALLED"
+        return 1
     fi
+}
+
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
-    echo -e "${YELLOW}!${NC} Yarn is not installed. Installing..."
-    
-    # Add Yarn GPG key
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo gpg --dearmor -o /usr/share/keyrings/yarnkey.gpg
-    
-    # Add Yarn repository
-    echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-    
-    # Update and install Yarn
+    # Install package
     sudo apt update
     sudo apt install -y yarn
     
-    echo -e "${GREEN}✓${NC} Yarn installation complete."
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installYarn
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package
+    sudo apt remove -y yarn
+    sudo apt autoremove -y
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

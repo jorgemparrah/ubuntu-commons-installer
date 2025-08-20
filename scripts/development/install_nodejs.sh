@@ -1,30 +1,22 @@
 #!/bin/bash
+# install_nodejs.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Node.js"
 
-# Function to check if Node.js is installed
-check_nodejs_installed() {
+# Function to check status
+check_status() {
     if command -v node &> /dev/null && command -v npm &> /dev/null; then
-        return 0  # Installed
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installNodeJS() {
-    echo "Checking Node.js installation status..."
-    
-    if check_nodejs_installed; then
-        echo -e "${GREEN}✓${NC} Node.js is already installed."
-        echo "Node version: $(node --version)"
-        echo "NPM version: $(npm --version)"
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} Node.js is not installed. Installing..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
     # Install NVM
     wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
@@ -33,15 +25,69 @@ installNodeJS() {
     export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     
-    # Install Node.js LTS and latest
+    # Install Node.js LTS
     nvm install --lts
-    nvm install node
-    
-    # Use LTS as default
     nvm use --lts
     
-    echo -e "${GREEN}✓${NC} Node.js installation complete."
-    echo "Please restart your terminal or run: source ~/.bashrc"
+    # Verify installation
+    if command -v node &> /dev/null && command -v npm &> /dev/null; then
+        echo "Node.js instalado correctamente."
+        echo "Node version: $(node --version)"
+        echo "NPM version: $(npm --version)"
+        echo "Por favor, reinicia tu terminal o ejecuta: source ~/.bashrc"
+    else
+        echo "Error: Node.js no se instaló correctamente."
+        return 1
+    fi
 }
 
-installNodeJS
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove NVM directory
+    if [[ -d "$HOME/.nvm" ]]; then
+        rm -rf "$HOME/.nvm"
+    fi
+    
+    # Remove NVM from shell configuration files
+    for file in ~/.bashrc ~/.zshrc ~/.profile; do
+        if [[ -f "$file" ]]; then
+            sed -i '/NVM_DIR/d' "$file"
+            sed -i '/nvm/d' "$file"
+        fi
+    done
+    
+    echo "Node.js desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

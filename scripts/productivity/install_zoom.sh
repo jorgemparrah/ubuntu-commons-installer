@@ -1,34 +1,67 @@
 #!/bin/bash
+# install_zoom.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Zoom"
 
-# Function to check if a package is installed
-check_package_installed() {
-    local package="$1"
-    if dpkg -l | grep -q "^ii.*$package"; then
-        return 0  # Installed
+# Function to check status
+check_status() {
+    if snap list | grep -q "zoom-client"; then
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installZoom() {
-    echo "Checking Zoom installation status..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
-    if check_package_installed "zoom-client"; then
-        echo -e "${GREEN}✓${NC} Zoom is already installed."
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} Zoom is not installed. Installing..."
-    
-    # Install Zoom
+    # Install Zoom via snap
+    echo "Installing Zoom via snap..."
     sudo snap install zoom-client
     
-    echo -e "${GREEN}✓${NC} Zoom installation complete."
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installZoom
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package via snap
+    sudo snap remove zoom-client
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

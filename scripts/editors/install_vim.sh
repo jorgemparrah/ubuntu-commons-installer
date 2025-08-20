@@ -1,39 +1,68 @@
 #!/bin/bash
+# install_vim.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Vim"
 
-# Function to check if Vim is installed
-check_vim_installed() {
-    if command -v vim &> /dev/null; then
-        return 0  # Installed
+# Function to check status
+check_status() {
+    if command -v vim &> /dev/null || snap list | grep -q "^vim "; then
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installVim() {
-    echo "Checking Vim installation status..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
-    if check_vim_installed; then
-        echo -e "${GREEN}✓${NC} Vim is already installed."
-        echo "Vim version: $(vim --version | head -n 1)"
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} Vim is not installed. Installing..."
-    
-    # Update package list
+    # Install package
     sudo apt update
-    
-    # Install Vim via apt
-    echo "Installing Vim via apt..."
     sudo apt install -y vim
     
-    echo -e "${GREEN}✓${NC} Vim installation complete."
-    echo "Vim version: $(vim --version | head -n 1)"
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installVim
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package
+    sudo apt remove -y vim
+    sudo apt autoremove -y
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

@@ -1,39 +1,68 @@
 #!/bin/bash
+# install_ranger.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Ranger"
 
-# Function to check if Ranger is installed
-check_ranger_installed() {
-    if command -v ranger &> /dev/null; then
-        return 0  # Installed
+# Function to check status
+check_status() {
+    if command -v ranger &> /dev/null || snap list | grep -q "^ranger "; then
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installRanger() {
-    echo "Checking Ranger installation status..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
-    if check_ranger_installed; then
-        echo -e "${GREEN}✓${NC} Ranger is already installed."
-        echo "Ranger version: $(ranger --version | head -n 1)"
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} Ranger is not installed. Installing..."
-    
-    # Update package list
+    # Install package
     sudo apt update
-    
-    # Install Ranger via apt
-    echo "Installing Ranger via apt..."
     sudo apt install -y ranger
     
-    echo -e "${GREEN}✓${NC} Ranger installation complete."
-    echo "Ranger version: $(ranger --version | head -n 1)"
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installRanger
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package
+    sudo apt remove -y ranger
+    sudo apt autoremove -y
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

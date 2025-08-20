@@ -1,35 +1,67 @@
 #!/bin/bash
+# install_dbeaver.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="DBeaver"
 
-# Function to check if DBeaver is installed
-check_dbeaver_installed() {
+# Function to check status
+check_status() {
     if snap list | grep -q "dbeaver-ce"; then
-        return 0  # Installed
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installDBeaver() {
-    echo "Checking DBeaver installation status..."
-    
-    if check_dbeaver_installed; then
-        echo -e "${GREEN}✓${NC} DBeaver is already installed."
-        echo "DBeaver version: $(snap list dbeaver-ce | grep dbeaver-ce | awk '{print $3}')"
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} DBeaver is not installed. Installing..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
     # Install DBeaver via snap
     echo "Installing DBeaver via snap..."
     sudo snap install dbeaver-ce --classic
     
-    echo -e "${GREEN}✓${NC} DBeaver installation complete."
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installDBeaver
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package via snap
+    sudo snap remove dbeaver-ce
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

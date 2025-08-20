@@ -1,35 +1,67 @@
 #!/bin/bash
+# install_gitkraken.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="GitKraken"
 
-# Function to check if GitKraken is installed
-check_gitkraken_installed() {
+# Function to check status
+check_status() {
     if snap list | grep -q "gitkraken"; then
-        return 0  # Installed
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installGitKraken() {
-    echo "Checking GitKraken installation status..."
-    
-    if check_gitkraken_installed; then
-        echo -e "${GREEN}✓${NC} GitKraken is already installed."
-        echo "GitKraken version: $(snap list gitkraken | grep gitkraken | awk '{print $3}')"
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} GitKraken is not installed. Installing..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
     # Install GitKraken via snap
     echo "Installing GitKraken via snap..."
     sudo snap install gitkraken --classic
     
-    echo -e "${GREEN}✓${NC} GitKraken installation complete."
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installGitKraken
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package via snap
+    sudo snap remove gitkraken
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

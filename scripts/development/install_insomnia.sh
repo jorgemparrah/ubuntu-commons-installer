@@ -1,35 +1,67 @@
 #!/bin/bash
+# install_insomnia.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Insomnia"
 
-# Function to check if Insomnia is installed
-check_insomnia_installed() {
+# Function to check status
+check_status() {
     if snap list | grep -q "insomnia"; then
-        return 0  # Installed
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installInsomnia() {
-    echo "Checking Insomnia installation status..."
-    
-    if check_insomnia_installed; then
-        echo -e "${GREEN}✓${NC} Insomnia is already installed."
-        echo "Insomnia version: $(snap list insomnia | grep insomnia | awk '{print $3}')"
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} Insomnia is not installed. Installing..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
     # Install Insomnia via snap
     echo "Installing Insomnia via snap..."
     sudo snap install insomnia --classic
     
-    echo -e "${GREEN}✓${NC} Insomnia installation complete."
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installInsomnia
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package via snap
+    sudo snap remove insomnia
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

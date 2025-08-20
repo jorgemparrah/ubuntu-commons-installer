@@ -61,6 +61,22 @@ El proyecto está organizado en instaladores modulares por categorías:
 - **👥 Colaboración**: Más fácil para equipos trabajar en categorías específicas
 - **📋 Separación clara**: Actualizaciones y mantenimiento separados de instalaciones
 
+## Estructura del Proyecto
+
+```
+post-install/
+├── setup.sh              # Script principal (Bash)
+├── setup.js              # Interfaz interactiva (Node.js)
+├── package.json          # Dependencias de Node.js
+├── README.md             # Documentación
+└── scripts/
+    ├── system/           # Herramientas del sistema
+    ├── editors/          # Editores de código
+    ├── development/      # Herramientas de desarrollo
+    ├── productivity/     # Aplicaciones de productividad
+    └── maintenance/      # Utilidades de mantenimiento
+```
+
 ## Uso
 
 ### **Ejecución Simple:**
@@ -71,34 +87,126 @@ El proyecto está organizado en instaladores modulares por categorías:
 ### **Flujo de Ejecución:**
 
 1. **📋 Introducción del Proyecto**
-   - Ventana informativa con explicación del proyecto
+   - Mensaje informativo con explicación del proyecto
    - Características principales
    - Organización por categorías
 
-2. **🔍 Validación de Dependencias**
-   - Verificación automática de dependencias del sistema
-   - Ventana de confirmación para instalación automática
-   - Instrucciones manuales si es necesario
+2. **🔍 Validación de Dependencias Básicas**
+   - Verificación automática de dependencias del sistema (sudo, apt, snapd, curl, wget)
+   - Opción de instalación automática si faltan
 
-3. **🖥️ Interfaz GUI de Selección**
-   - Ventana con lista de herramientas organizadas por categorías
+3. **📦 Instalación de Node.js**
+   - Verificación de Node.js
+   - Instalación automática usando el script existente si es necesario
+   - Configuración de dependencias de Node.js (inquirer, chalk)
+   - Verificación de archivos permanentes (setup.js, package.json)
+
+4. **🖥️ Interfaz Interactiva de Selección**
+   - Menú con herramientas organizadas por categorías
    - Checkboxes para selección múltiple
    - Estado de instalación visible (✓ Instalado / ✗ No instalado)
 
-4. **📊 Progreso de Instalación**
-   - Barra de progreso en tiempo real
-   - Ventana de progreso con detalles de cada instalación
+5. **📊 Progreso de Instalación**
+   - Ejecución de scripts de instalación seleccionados
+   - Feedback en tiempo real
    - Resumen final de instalaciones exitosas y fallidas
 
-El script te mostrará una interfaz gráfica moderna que te permitirá:
+El script te mostrará una interfaz híbrida que combina:
 
-1. **Ver el estado actual** de todas las herramientas (instaladas o no) con ✓/✗
-2. **Todas las herramientas vienen desmarcadas** - selecciona solo las que quieres instalar
-3. **Selección múltiple** con checkboxes en ventanas gráficas
-4. **Navegación intuitiva** con el mouse
-5. **Confirmación visual** antes de proceder con la instalación
-6. **Ver categorías organizadas** en columnas separadas (SYSTEM, EDITORS, DEVELOPMENT, PRODUCTIVITY, MAINTENANCE)
-7. **Barra de progreso** que muestra el avance de la instalación
+1. **Bash para validaciones** - Verificación de dependencias y configuración inicial
+2. **Node.js para el menú** - Interfaz interactiva moderna y estable
+3. **Scripts modulares** - Cada herramienta con funciones de status, install, uninstall, reinstall
+
+### **Características de la Interfaz:**
+
+- **✅ Sin parpadeo** - Interfaz completamente estable
+- **✅ Navegación intuitiva** - Uso del teclado y checkboxes
+- **✅ Estados visuales** - ✓/✗ para cada herramienta
+- **✅ Categorías organizadas** - Separadores por grupos
+- **✅ Confirmaciones** - Seguridad antes de ejecutar
+- **✅ Progreso visual** - Feedback durante la instalación
+
+### Estructura de Scripts Modulares
+
+Cada script de instalación sigue una estructura estándar con 4 funciones principales:
+
+#### **📋 Funciones de Cada Script:**
+
+```bash
+#!/bin/bash
+# install_example.sh
+
+TOOL_NAME="Example Tool"
+
+# 1. Verificar estado actual
+check_status() {
+    if command -v example &> /dev/null; then
+        echo "INSTALLED"
+        return 0
+    else
+        echo "NOT_INSTALLED"
+        return 1
+    fi
+}
+
+# 2. Instalar herramienta
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
+    # Lógica de instalación
+}
+
+# 3. Desinstalar herramienta
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    # Lógica de desinstalación
+}
+
+# 4. Reinstalar herramienta
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Función principal
+main() {
+    case "$1" in
+        "status") check_status ;;
+        "install") install_tool ;;
+        "uninstall") uninstall_tool ;;
+        "reinstall") reinstall_tool ;;
+        *) echo "Uso: $0 {status|install|uninstall|reinstall}" ;;
+    esac
+}
+
+main "$@"
+```
+
+#### **🔧 Uso de Scripts Individuales:**
+
+```bash
+# Verificar estado
+./scripts/editors/install_vscode.sh status
+
+# Instalar
+./scripts/editors/install_vscode.sh install
+
+# Desinstalar
+./scripts/editors/install_vscode.sh uninstall
+
+# Reinstalar
+./scripts/editors/install_vscode.sh reinstall
+```
+
+#### **📋 Scripts Modulares Implementados:**
+
+Todos los scripts del proyecto ahora tienen la estructura modular estándar:
+
+- **✅ System**: `install_system_update.sh`, `install_kernel.sh`, `install_development_tools.sh`, `install_system_utils.sh`, `install_multimedia.sh`, `install_terminator.sh`, `install_oh_my_zsh.sh`, `install_powerlevel10k.sh`, `install_ranger.sh`, `install_cmatrix.sh`, `install_gimp.sh`, `install_obs_studio.sh`
+- **✅ Editors**: `install_vscode.sh`, `install_cursor.sh`, `install_vim.sh`
+- **✅ Development**: `install_docker.sh`, `install_nodejs.sh`, `install_yarn.sh`, `install_postman.sh`, `install_dbeaver.sh`, `install_gitkraken.sh`, `install_insomnia.sh`, `install_mongodb_compass.sh`, `install_kubectl.sh`
+- **✅ Productivity**: `install_ulauncher.sh`, `install_chrome.sh`, `install_spotify.sh`, `install_zoom.sh`, `install_flameshot.sh`
+- **✅ Maintenance**: `install_final_update.sh`
 
 ### Organización por Categorías
 
@@ -144,64 +252,115 @@ Las herramientas están organizadas en las siguientes categorías:
 #### **🔧 MAINTENANCE**
 - **Final System Update**: Actualización final del sistema
 
-### Ejemplo de la Interfaz GUI
+### Ejemplo de la Interfaz Híbrida
 
-La nueva interfaz utiliza ventanas gráficas modernas con zenity:
+La nueva interfaz combina Bash y Node.js para una experiencia óptima:
 
-#### **1. Ventana de Introducción:**
-- **Título**: "🚀 Post-Install Setup"
-- **Contenido**: Explicación completa del proyecto
-- **Tamaño**: 600x400 píxeles
-
-#### **2. Ventana de Validación de Dependencias:**
-- **Título**: "⚠️ Dependencias Faltantes"
-- **Tipo**: Ventana de confirmación (Sí/No)
-- **Contenido**: Lista de dependencias faltantes con opción de instalación automática
-
-#### **3. Ventana de Selección de Herramientas:**
-- **Título**: "🛠️ Seleccionar Herramientas para Instalar"
-- **Tipo**: Lista con checkboxes
-- **Columnas**: Seleccionar | Categoría | Herramienta | Estado
-- **Tamaño**: 800x600 píxeles
-- **Características**: Selección múltiple, categorías organizadas, estado de instalación visible
-
-**Ejemplo visual:**
+#### **1. Mensaje de Introducción (Bash):**
 ```
-┌─ 🛠️ Seleccionar Herramientas para Instalar ─┐
-│ Selecciona las herramientas que deseas instalar: │
-├─────────────────────────────────────────────────┤
-│ ☐ SYSTEM    System Updates        ✓ Instalado  │
-│ ☐ SYSTEM    Kernel & Headers      ✗ No instalado│
-│ ☐ EDITORS   Visual Studio Code    ✗ No instalado│
-│ ☐ EDITORS   Cursor AI IDE         ✓ Instalado  │
-│ ☐ DEVELOPMENT Docker              ✗ No instalado│
-│ ☐ DEVELOPMENT Node.js              ✗ No instalado│
-│ ☐ PRODUCTIVITY Google Chrome       ✗ No instalado│
-│ ☐ PRODUCTIVITY Spotify             ✗ No instalado│
-│ ...         ...                   ...          │
-├─────────────────────────────────────────────────┤
-│ [Cancelar] [OK]                                │
-└─────────────────────────────────────────────────┘
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           🚀 POST-INSTALL SETUP 🚀                           ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║  Este proyecto automatiza la instalación de herramientas esenciales para     ║
+║  desarrolladores en sistemas Ubuntu/Debian. Incluye editores de código,      ║
+║  herramientas de desarrollo, aplicaciones de productividad y utilidades      ║
+║  del sistema.                                                                ║
+║                                                                              ║
+║  🎯 Características principales:                                             ║
+║     • Instalación selectiva de herramientas                                  ║
+║     • Interfaz moderna con categorías organizadas                            ║
+║     • Detección automática de herramientas ya instaladas                     ║
+║     • Instalación desatendida y segura                                       ║
+║     • Scripts modulares y reutilizables                                      ║
+║                                                                              ║
+║  📁 Organización por categorías:                                             ║
+║     • SYSTEM: Actualizaciones, kernel, utilidades del sistema                ║
+║     • EDITORS: VS Code, Cursor AI, Vim                                       ║
+║     • DEVELOPMENT: Docker, Node.js, herramientas de desarrollo               ║
+║     • PRODUCTIVITY: Chrome, Spotify, Zoom, etc.                              ║
+║     • MAINTENANCE: Actualizaciones finales del sistema                       ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+ℹ Presiona ENTER para continuar...
 ```
 
-#### **4. Ventana de Progreso:**
-- **Título**: "🚀 Instalando Herramientas"
-- **Tipo**: Barra de progreso
-- **Características**: Progreso en tiempo real, texto descriptivo
-- **Tamaño**: 500x200 píxeles
+#### **2. Validación de Dependencias (Bash):**
+- Verificación automática de dependencias básicas
+- Instalación automática de Node.js si es necesario
+- Configuración de dependencias de Node.js
 
-#### **5. Ventana de Resultados:**
-- **Título**: "✅ Instalación Completada" o "⚠️ Instalación Parcial"
-- **Tipo**: Información o advertencia
-- **Contenido**: Resumen de instalaciones exitosas y fallidas
+#### **3. Menú Interactivo (Node.js):**
+```
+🚀 Post-Install Setup
 
-### Controles de la Interfaz GUI
+? Selecciona las herramientas:
+  === SYSTEM ===
+  ☐ ✓ System Updates (Instalado)
+  ☐ ✗ Kernel & Headers (No instalado)
+  ☐ ✗ Development Tools (No instalado)
+  ☐ ✗ System Utilities (No instalado)
+  ☐ ✗ Multimedia Tools (No instalado)
+  ☐ ✗ Terminator (No instalado)
+  ☐ ✗ Oh My Zsh (No instalado)
+  ☐ ✗ Powerlevel10k (No instalado)
+  ☐ ✗ Ranger (No instalado)
+  ☐ ✗ cmatrix (No instalado)
+  ☐ ✗ GIMP (No instalado)
+  ☐ ✗ OBS Studio (No instalado)
+  
+  === EDITORS ===
+  ☐ ✗ Visual Studio Code (No instalado)
+  ☐ ✓ Cursor AI IDE (Instalado)
+  ☐ ✗ Vim (No instalado)
+  
+  === DEVELOPMENT ===
+  ☐ ✗ Docker (No instalado)
+  ☐ ✗ Yarn (No instalado)
+  ☐ ✗ Postman (No instalado)
+  ☐ ✗ DBeaver (No instalado)
+  ☐ ✗ GitKraken (No instalado)
+  ☐ ✗ Insomnia (No instalado)
+  ☐ ✗ MongoDB Compass (No instalado)
+  ☐ ✗ kubectl (No instalado)
+  
+  === PRODUCTIVITY ===
+  ☐ ✗ ULauncher (No instalado)
+  ☐ ✗ Google Chrome (No instalado)
+  ☐ ✗ Spotify (No instalado)
+  ☐ ✗ Zoom (No instalado)
+  ☐ ✗ Flameshot (No instalado)
+  
+  === MAINTENANCE ===
+  ☐ ✗ Final System Update (No instalado)
 
-- **Mouse**: Navegación intuitiva con clics
-- **Checkboxes**: Marcar/desmarcar herramientas individuales
-- **Botones**: Confirmar o cancelar acciones
-- **Ventanas modales**: Interacción clara y directa
-- **Barra de progreso**: Visualización del avance en tiempo real
+[↑/↓] Mover, [ESPACIO] Seleccionar, [ENTER] Confirmar
+```
+
+#### **4. Progreso de Instalación (Node.js):**
+```
+🚀 Ejecutando acciones...
+
+📦 Instalando Visual Studio Code...
+[Progreso de instalación...]
+✅ Visual Studio Code completado
+
+📦 Instalando Docker...
+[Progreso de instalación...]
+✅ Docker completado
+
+🎉 ¡Instalación completada!
+```
+
+### Controles de la Interfaz
+
+- **↑/↓ Flechas**: Navegar por las opciones
+- **ESPACIO**: Marcar/desmarcar checkbox
+- **ENTER**: Confirmar selección
+- **A**: Seleccionar todas las herramientas
+- **N**: Deseleccionar todas las herramientas
+- **Q**: Salir sin instalar
 
 ### Solución de Problemas
 
@@ -223,23 +382,28 @@ Si la tecla ESPACIO no funciona para marcar/desmarcar:
 - **🔄 Reinstalación Segura**: Puedes ejecutar el script múltiples veces sin problemas
 - **📁 Organización Modular**: Scripts organizados por categorías en carpetas específicas
 - **✅ Validaciones**: Cada script verifica si la herramienta ya está instalada antes de proceder
-- **🖥️ Interfaz GUI Moderna**: Interfaz gráfica con zenity, sin parpadeo y completamente estable
+- **🖥️ Interfaz Híbrida Moderna**: Bash para validaciones + Node.js para menú interactivo
 - **🚀 Instalación Desatendida**: Una vez seleccionadas, las herramientas se instalan automáticamente
 - **📊 Categorías Organizadas**: Herramientas agrupadas por categorías (SYSTEM, EDITORS, DEVELOPMENT, PRODUCTIVITY, MAINTENANCE)
 - **📋 Introducción Informativa**: Explicación clara del proyecto al inicio
 - **🔍 Validación de Dependencias**: Verificación automática de dependencias del sistema
 - **⚡ Instalación Automática**: Opción para instalar dependencias faltantes automáticamente
 - **📊 Barra de Progreso**: Visualización del progreso de instalación en tiempo real
+- **🔧 Scripts Modulares**: Cada herramienta tiene funciones de status, install, uninstall y reinstall
+- **📁 Archivos Permanentes**: setup.js y package.json son parte del proyecto, no se crean dinámicamente
 
 ## Dependencias del Sistema
 
 El script verifica automáticamente las siguientes dependencias del sistema:
 
 ### **Dependencias Principales:**
-- **`zenity`**: Para la interfaz gráfica (se instala automáticamente si no está presente)
 - **`sudo`**: Para ejecutar comandos con privilegios de administrador
 - **`apt`**: Gestor de paquetes de Debian/Ubuntu
 - **`snapd`**: Gestor de paquetes Snap
+- **`curl`**: Para descargas de archivos
+- **`wget`**: Para descargas de archivos
+- **`nodejs`**: Runtime de JavaScript (se instala automáticamente si no está presente)
+- **`npm`**: Gestor de paquetes de Node.js (se instala con Node.js)
 
 ### **Instalación Automática:**
 Si alguna dependencia falta, el script:
@@ -250,7 +414,7 @@ Si alguna dependencia falta, el script:
 
 ### **Instalación Manual (si es necesario):**
 ```bash
-sudo apt update && sudo apt install zenity sudo apt snapd
+sudo apt update && sudo apt install sudo apt snapd curl wget
 ```
 
 ## Validaciones de Instalación

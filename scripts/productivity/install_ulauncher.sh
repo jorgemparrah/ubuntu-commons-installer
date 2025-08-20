@@ -1,39 +1,68 @@
 #!/bin/bash
+# install_ulauncher.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="ULauncher"
 
-# Function to check if a package is installed
-check_package_installed() {
-    local package="$1"
-    if dpkg -l | grep -q "^ii.*$package"; then
-        return 0  # Installed
+# Function to check status
+check_status() {
+    if command -v ulauncher &> /dev/null || snap list | grep -q "^ulauncher "; then
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installULauncher() {
-    echo "Checking ULauncher installation status..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
-    if check_package_installed "ulauncher"; then
-        echo -e "${GREEN}✓${NC} ULauncher is already installed."
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} ULauncher is not installed. Installing..."
-    
-    # Add repositories
-    sudo add-apt-repository universe -y
-    sudo add-apt-repository ppa:agornostal/ulauncher -y
+    # Install package
     sudo apt update
-    
-    # Install ULauncher
     sudo apt install -y ulauncher
     
-    echo -e "${GREEN}✓${NC} ULauncher installation complete."
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installULauncher
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package
+    sudo apt remove -y ulauncher
+    sudo apt autoremove -y
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

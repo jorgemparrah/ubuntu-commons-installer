@@ -1,39 +1,68 @@
 #!/bin/bash
+# install_cmatrix.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="cmatrix"
 
-# Function to check if cmatrix is installed
-check_cmatrix_installed() {
-    if command -v cmatrix &> /dev/null; then
-        return 0  # Installed
+# Function to check status
+check_status() {
+    if command -v cmatrix &> /dev/null || snap list | grep -q "^cmatrix "; then
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installCmatrix() {
-    echo "Checking cmatrix installation status..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
-    if check_cmatrix_installed; then
-        echo -e "${GREEN}✓${NC} cmatrix is already installed."
-        echo "cmatrix version: $(cmatrix -V 2>/dev/null || echo 'Version info not available')"
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} cmatrix is not installed. Installing..."
-    
-    # Update package list
+    # Install package
     sudo apt update
-    
-    # Install cmatrix via apt
-    echo "Installing cmatrix via apt..."
     sudo apt install -y cmatrix
     
-    echo -e "${GREEN}✓${NC} cmatrix installation complete."
-    echo "cmatrix version: $(cmatrix -V 2>/dev/null || echo 'Version info not available')"
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installCmatrix
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package
+    sudo apt remove -y cmatrix
+    sudo apt autoremove -y
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

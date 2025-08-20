@@ -1,35 +1,67 @@
 #!/bin/bash
+# install_postman.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Postman"
 
-# Function to check if Postman is installed
-check_postman_installed() {
+# Function to check status
+check_status() {
     if snap list | grep -q "postman"; then
-        return 0  # Installed
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installPostman() {
-    echo "Checking Postman installation status..."
-    
-    if check_postman_installed; then
-        echo -e "${GREEN}✓${NC} Postman is already installed."
-        echo "Postman version: $(snap list postman | grep postman | awk '{print $3}')"
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} Postman is not installed. Installing..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
     # Install Postman via snap
     echo "Installing Postman via snap..."
     sudo snap install postman --classic
     
-    echo -e "${GREEN}✓${NC} Postman installation complete."
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installPostman
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package via snap
+    sudo snap remove postman
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

@@ -1,44 +1,75 @@
 #!/bin/bash
+# install_chrome.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Google Chrome"
 
-# Function to check if Chrome is installed
-check_chrome_installed() {
+# Function to check status
+check_status() {
     if command -v google-chrome &> /dev/null || dpkg -l | grep -q "google-chrome-stable"; then
-        return 0  # Installed
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installChrome() {
-    echo "Checking Google Chrome installation status..."
-    
-    if check_chrome_installed; then
-        echo -e "${GREEN}✓${NC} Google Chrome is already installed."
-        if command -v google-chrome &> /dev/null; then
-            echo "Chrome version: $(google-chrome --version)"
-        fi
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} Google Chrome is not installed. Installing..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
     # Download Chrome
-    echo "Downloading Google Chrome..."
+    echo "Descargando Google Chrome..."
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     
     # Install Chrome
-    echo "Installing Google Chrome..."
+    echo "Instalando Google Chrome..."
     sudo apt install -y ./google-chrome-stable_current_amd64.deb
     
     # Clean up
     rm -f google-chrome-stable_current_amd64.deb
     
-    echo -e "${GREEN}✓${NC} Google Chrome installation complete."
+    echo "Google Chrome instalado correctamente."
 }
 
-installChrome
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove Chrome
+    sudo apt remove -y google-chrome-stable
+    sudo apt autoremove -y
+    
+    echo "Google Chrome desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

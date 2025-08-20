@@ -1,40 +1,68 @@
 #!/bin/bash
+# install_flameshot.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Flameshot"
 
-# Function to check if a package is installed
-check_package_installed() {
-    local package="$1"
-    if dpkg -l | grep -q "^ii.*$package"; then
-        return 0  # Installed
+# Function to check status
+check_status() {
+    if command -v flameshot &> /dev/null || snap list | grep -q "^flameshot "; then
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # Not installed
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
-installFlameshot() {
-    echo "Checking Flameshot installation status..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
-    if check_package_installed "flameshot"; then
-        echo -e "${GREEN}✓${NC} Flameshot is already installed."
-        return 0
-    fi
-    
-    echo -e "${YELLOW}!${NC} Flameshot is not installed. Installing..."
-    
-    # Install Flameshot
+    # Install package
+    sudo apt update
     sudo apt install -y flameshot
     
-    # Configure keyboard shortcut for Print key
-    dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/flameshot/']"
-    dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/flameshot/name "'Flameshot'"
-    dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/flameshot/command "'flameshot gui'"
-    dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/flameshot/binding "'Print'"
-    
-    echo -e "${GREEN}✓${NC} Flameshot installation complete. Print key is now configured for screenshot."
+    echo "$TOOL_NAME instalado correctamente."
 }
 
-installFlameshot
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package
+    sudo apt remove -y flameshot
+    sudo apt autoremove -y
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

@@ -1,17 +1,16 @@
 #!/bin/bash
+# install_kernel.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+TOOL_NAME="Kernel & Headers"
 
-# Function to check if any HWE kernel is installed
-check_hwe_kernel_installed() {
+# Function to check status
+check_status() {
     if dpkg -l | grep -q "linux-generic-hwe"; then
-        return 0  # HWE kernel installed
+        echo "INSTALLED"
+        return 0
     else
-        return 1  # No HWE kernel
+        echo "NOT_INSTALLED"
+        return 1
     fi
 }
 
@@ -42,39 +41,82 @@ check_kernel_update_available() {
     fi
 }
 
-installKernel() {
-    echo "Checking Kernel & Headers installation status..."
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
     
     # Check if any HWE kernel is installed
-    if check_hwe_kernel_installed; then
-        echo -e "${GREEN}✓${NC} HWE Kernel is installed."
+    if check_status > /dev/null; then
+        echo "HWE Kernel ya está instalado."
         
         # Check if kernel update is available
         if check_kernel_update_available; then
-            echo -e "${YELLOW}!${NC} Kernel update available. Updating..."
+            echo "Actualización de kernel disponible. Actualizando..."
             
             # Update kernel packages
             sudo apt upgrade -y linux-generic-hwe* linux-headers-generic linux-firmware
             
-            echo -e "${GREEN}✓${NC} Kernel updated successfully."
+            echo "Kernel actualizado exitosamente."
         else
-            echo -e "${BLUE}ℹ${NC} Kernel is up to date."
+            echo "Kernel está actualizado."
         fi
         return 0
     fi
     
-    echo -e "${YELLOW}!${NC} HWE Kernel not found. Installing latest version..."
+    echo "HWE Kernel no encontrado. Instalando última versión..."
     
     # Get the latest available HWE kernel
     local latest_kernel=$(get_latest_hwe_kernel)
-    echo -e "${BLUE}ℹ${NC} Installing: $latest_kernel"
+    echo "Instalando: $latest_kernel"
     
     # Install kernel packages
     sudo apt install -y --install-recommends "$latest_kernel"
     sudo apt install -y linux-firmware linux-headers-generic
     
-    echo -e "${GREEN}✓${NC} Kernel & Headers installation complete."
-    echo -e "${BLUE}ℹ${NC} You may need to reboot for the new kernel to take effect."
+    echo "Kernel & Headers instalado correctamente."
+    echo "Es posible que necesites reiniciar para que el nuevo kernel surta efecto."
 }
 
-installKernel
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    echo "ADVERTENCIA: Desinstalar el kernel puede hacer que el sistema no arranque."
+    echo "Este comando solo eliminará kernels HWE específicos, manteniendo el kernel base."
+    
+    # Remove HWE kernel packages
+    sudo apt remove -y linux-generic-hwe* linux-headers-generic-hwe*
+    sudo apt autoremove -y
+    
+    echo "Kernels HWE desinstalados correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

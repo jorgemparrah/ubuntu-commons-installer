@@ -1,45 +1,68 @@
 #!/bin/bash
+# install_powerlevel10k.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Powerlevel10k"
 
-# Function to check if Powerlevel10k is installed
-check_powerlevel10k_installed() {
-    if [ -d "$HOME/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
-        return 0  # Installed
-    else
-        return 1  # Not installed
-    fi
-}
-
-installPowerlevel10k() {
-    echo "Checking Powerlevel10k installation status..."
-    
-    if check_powerlevel10k_installed; then
-        echo -e "${GREEN}✓${NC} Powerlevel10k is already installed."
+# Function to check status
+check_status() {
+    if command -v zsh &> /dev/null || snap list | grep -q "^zsh "; then
+        echo "INSTALLED"
         return 0
+    else
+        echo "NOT_INSTALLED"
+        return 1
     fi
-    
-    echo -e "${YELLOW}!${NC} Powerlevel10k is not installed. Installing..."
-    
-    # Check if Oh My Zsh is installed
-    if [ ! -d "$HOME/.oh-my-zsh" ]; then
-        echo -e "${YELLOW}Note:${NC} Oh My Zsh is not installed. Installing it first..."
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    fi
-    
-    # Install Powerlevel10k
-    echo "Installing Powerlevel10k..."
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-    
-    # Set Powerlevel10k as default theme
-    sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
-    
-    echo -e "${GREEN}✓${NC} Powerlevel10k installation complete."
-    echo -e "${YELLOW}Note:${NC} You may need to restart your terminal or run 'source ~/.zshrc' to see the changes."
-    echo -e "${YELLOW}Note:${NC} Run 'p10k configure' to customize your prompt."
 }
 
-installPowerlevel10k
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
+    
+    # Install package
+    sudo apt update
+    sudo apt install -y zsh
+    
+    echo "$TOOL_NAME instalado correctamente."
+}
+
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+    
+    # Remove package
+    sudo apt remove -y zsh
+    sudo apt autoremove -y
+    
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
