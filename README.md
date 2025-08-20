@@ -63,31 +63,145 @@ El proyecto está organizado en instaladores modulares por categorías:
 
 ## Uso
 
-### Instalación Interactiva (Recomendado)
-
-Para instalar herramientas de forma interactiva:
-
+### **Ejecución Simple:**
 ```bash
 ./setup.sh
 ```
 
-El script te mostrará una interfaz moderna con checkboxes que te permitirá:
+### **Flujo de Ejecución:**
+
+1. **📋 Introducción del Proyecto**
+   - Ventana informativa con explicación del proyecto
+   - Características principales
+   - Organización por categorías
+
+2. **🔍 Validación de Dependencias**
+   - Verificación automática de dependencias del sistema
+   - Ventana de confirmación para instalación automática
+   - Instrucciones manuales si es necesario
+
+3. **🖥️ Interfaz GUI de Selección**
+   - Ventana con lista de herramientas organizadas por categorías
+   - Checkboxes para selección múltiple
+   - Estado de instalación visible (✓ Instalado / ✗ No instalado)
+
+4. **📊 Progreso de Instalación**
+   - Barra de progreso en tiempo real
+   - Ventana de progreso con detalles de cada instalación
+   - Resumen final de instalaciones exitosas y fallidas
+
+El script te mostrará una interfaz gráfica moderna que te permitirá:
 
 1. **Ver el estado actual** de todas las herramientas (instaladas o no) con ✓/✗
 2. **Todas las herramientas vienen desmarcadas** - selecciona solo las que quieres instalar
-3. **Navegar con flechas** arriba/abajo para seleccionar herramientas
-4. **Marcar/desmarcar con ESPACIO** para seleccionar herramientas específicas
-5. **Usar atajos de teclado** para selección rápida
-6. **Confirmar con ENTER** para proceder con la instalación
+3. **Selección múltiple** con checkboxes en ventanas gráficas
+4. **Navegación intuitiva** con el mouse
+5. **Confirmación visual** antes de proceder con la instalación
+6. **Ver categorías organizadas** en columnas separadas (SYSTEM, EDITORS, DEVELOPMENT, PRODUCTIVITY, MAINTENANCE)
+7. **Barra de progreso** que muestra el avance de la instalación
 
-### Controles de la Interfaz
+### Organización por Categorías
 
-- **↑/↓ Flechas**: Navegar por las opciones
-- **ESPACIO o X**: Marcar/desmarcar checkbox
-- **ENTER**: Confirmar selección
-- **A**: Seleccionar todas las herramientas
-- **N**: Deseleccionar todas las herramientas
-- **Q**: Salir sin instalar
+Las herramientas están organizadas en las siguientes categorías:
+
+#### **🖥️ SYSTEM**
+- **System Updates**: Actualizaciones del sistema
+- **Kernel & Headers**: Kernel y headers del sistema
+- **Development Tools**: Herramientas básicas de desarrollo
+- **System Utilities**: Utilidades del sistema
+- **Multimedia Tools**: Herramientas multimedia
+- **Terminator**: Terminal avanzado
+- **Oh My Zsh**: Framework para Zsh
+- **Powerlevel10k**: Tema para Oh My Zsh
+- **Ranger**: Navegador de archivos en terminal
+- **cmatrix**: Efecto visual de Matrix
+- **GIMP**: Editor de imágenes
+- **OBS Studio**: Software de grabación y streaming
+
+#### **📝 EDITORS**
+- **Visual Studio Code**: Editor de código de Microsoft
+- **Cursor AI IDE**: Editor con IA integrada
+- **Vim**: Editor de texto avanzado
+
+#### **⚙️ DEVELOPMENT**
+- **Docker**: Contenedores de aplicaciones
+- **Node.js**: Runtime de JavaScript
+- **Yarn**: Gestor de paquetes de Node.js
+- **Postman**: Cliente para APIs
+- **DBeaver**: Cliente universal de base de datos
+- **GitKraken**: Cliente gráfico de Git
+- **Insomnia**: Cliente para APIs REST
+- **MongoDB Compass**: Cliente gráfico de MongoDB
+- **kubectl**: Cliente de línea de comandos para Kubernetes
+
+#### **🎯 PRODUCTIVITY**
+- **ULauncher**: Lanzador de aplicaciones
+- **Google Chrome**: Navegador web
+- **Spotify**: Reproductor de música
+- **Zoom**: Software de videoconferencia
+- **Flameshot**: Herramienta de captura de pantalla
+
+#### **🔧 MAINTENANCE**
+- **Final System Update**: Actualización final del sistema
+
+### Ejemplo de la Interfaz GUI
+
+La nueva interfaz utiliza ventanas gráficas modernas con zenity:
+
+#### **1. Ventana de Introducción:**
+- **Título**: "🚀 Post-Install Setup"
+- **Contenido**: Explicación completa del proyecto
+- **Tamaño**: 600x400 píxeles
+
+#### **2. Ventana de Validación de Dependencias:**
+- **Título**: "⚠️ Dependencias Faltantes"
+- **Tipo**: Ventana de confirmación (Sí/No)
+- **Contenido**: Lista de dependencias faltantes con opción de instalación automática
+
+#### **3. Ventana de Selección de Herramientas:**
+- **Título**: "🛠️ Seleccionar Herramientas para Instalar"
+- **Tipo**: Lista con checkboxes
+- **Columnas**: Seleccionar | Categoría | Herramienta | Estado
+- **Tamaño**: 800x600 píxeles
+- **Características**: Selección múltiple, categorías organizadas, estado de instalación visible
+
+**Ejemplo visual:**
+```
+┌─ 🛠️ Seleccionar Herramientas para Instalar ─┐
+│ Selecciona las herramientas que deseas instalar: │
+├─────────────────────────────────────────────────┤
+│ ☐ SYSTEM    System Updates        ✓ Instalado  │
+│ ☐ SYSTEM    Kernel & Headers      ✗ No instalado│
+│ ☐ EDITORS   Visual Studio Code    ✗ No instalado│
+│ ☐ EDITORS   Cursor AI IDE         ✓ Instalado  │
+│ ☐ DEVELOPMENT Docker              ✗ No instalado│
+│ ☐ DEVELOPMENT Node.js              ✗ No instalado│
+│ ☐ PRODUCTIVITY Google Chrome       ✗ No instalado│
+│ ☐ PRODUCTIVITY Spotify             ✗ No instalado│
+│ ...         ...                   ...          │
+├─────────────────────────────────────────────────┤
+│ [Cancelar] [OK]                                │
+└─────────────────────────────────────────────────┘
+```
+
+#### **4. Ventana de Progreso:**
+- **Título**: "🚀 Instalando Herramientas"
+- **Tipo**: Barra de progreso
+- **Características**: Progreso en tiempo real, texto descriptivo
+- **Tamaño**: 500x200 píxeles
+
+#### **5. Ventana de Resultados:**
+- **Título**: "✅ Instalación Completada" o "⚠️ Instalación Parcial"
+- **Tipo**: Información o advertencia
+- **Contenido**: Resumen de instalaciones exitosas y fallidas
+
+### Controles de la Interfaz GUI
+
+- **Mouse**: Navegación intuitiva con clics
+- **Checkboxes**: Marcar/desmarcar herramientas individuales
+- **Botones**: Confirmar o cancelar acciones
+- **Ventanas modales**: Interacción clara y directa
+- **Barra de progreso**: Visualización del avance en tiempo real
 
 ### Solución de Problemas
 
@@ -103,19 +217,41 @@ Si la tecla ESPACIO no funciona para marcar/desmarcar:
 - **N**: Deselecciona todas las herramientas
 - **Q**: Sale del programa sin instalar nada
 
-### Características del Setup
+## Características
 
-- ✅ **Interfaz visual moderna** con checkboxes y colores
-- ✅ **Lista unificada** que muestra estado de instalación y selección en una sola vista
-- ✅ **Todas las herramientas desmarcadas por defecto** - tú decides qué instalar
-- ✅ **Detección automática** de herramientas ya instaladas (✓ installed / ✗ not installed)
-- ✅ **Navegación intuitiva** con flechas del teclado
-- ✅ **Validación previa** en cada script de instalación
-- ✅ **Atajos de teclado** para selección rápida
-- ✅ **Instalación desatendida** una vez seleccionadas las herramientas
-- ✅ **Resumen de instalación** con herramientas exitosas y fallidas
-- ✅ **Confirmación antes de instalar** para evitar instalaciones accidentales
-- ✅ **Mensajes informativos** con colores y estado de instalación
+- **🎯 Instalación Selectiva**: Todas las herramientas vienen desmarcadas por defecto. Selecciona solo las que necesites instalar.
+- **🔄 Reinstalación Segura**: Puedes ejecutar el script múltiples veces sin problemas
+- **📁 Organización Modular**: Scripts organizados por categorías en carpetas específicas
+- **✅ Validaciones**: Cada script verifica si la herramienta ya está instalada antes de proceder
+- **🖥️ Interfaz GUI Moderna**: Interfaz gráfica con zenity, sin parpadeo y completamente estable
+- **🚀 Instalación Desatendida**: Una vez seleccionadas, las herramientas se instalan automáticamente
+- **📊 Categorías Organizadas**: Herramientas agrupadas por categorías (SYSTEM, EDITORS, DEVELOPMENT, PRODUCTIVITY, MAINTENANCE)
+- **📋 Introducción Informativa**: Explicación clara del proyecto al inicio
+- **🔍 Validación de Dependencias**: Verificación automática de dependencias del sistema
+- **⚡ Instalación Automática**: Opción para instalar dependencias faltantes automáticamente
+- **📊 Barra de Progreso**: Visualización del progreso de instalación en tiempo real
+
+## Dependencias del Sistema
+
+El script verifica automáticamente las siguientes dependencias del sistema:
+
+### **Dependencias Principales:**
+- **`zenity`**: Para la interfaz gráfica (se instala automáticamente si no está presente)
+- **`sudo`**: Para ejecutar comandos con privilegios de administrador
+- **`apt`**: Gestor de paquetes de Debian/Ubuntu
+- **`snapd`**: Gestor de paquetes Snap
+
+### **Instalación Automática:**
+Si alguna dependencia falta, el script:
+1. **Detecta automáticamente** las dependencias faltantes
+2. **Muestra una ventana** con la lista de lo que necesita instalarse
+3. **Ofrece instalar automáticamente** las dependencias
+4. **Proporciona comandos manuales** si prefieres instalarlas tú mismo
+
+### **Instalación Manual (si es necesario):**
+```bash
+sudo apt update && sudo apt install zenity sudo apt snapd
+```
 
 ## Validaciones de Instalación
 
@@ -186,20 +322,24 @@ NPM version: 10.8.2
 $ ./setup.sh
 
 === Post-Install Setup ===
-Select tools to install (use 'x' or SPACE to toggle, ENTER to confirm, 'q' to quit):
+Select tools to install (use ↑↓ to navigate, SPACE to toggle, A for all, N for none, ENTER to confirm, Q to quit)
 
-=== Tool Selection ===
-Use 'x' or SPACE to toggle selection, ENTER to confirm, 'a' to select all, 'n' to select none, 'q' to quit
-
+SYSTEM
 > ☐ System Updates ✓ (installed)
   ☐ Kernel & Headers ✓ (installed)
   ☐ Development Tools ✓ (installed)
   ☐ System Utilities ✓ (installed)
   ☐ Multimedia Tools ✓ (installed)
+
+PRODUCTIVITY
   ☐ ULauncher ✓ (installed)
+
+EDITORS
   ☐ Visual Studio Code ✓ (installed)
   ☐ Cursor AI IDE ✓ (installed)
   ☐ Vim ✓ (installed)
+
+DEVELOPMENT
   ☐ Docker ✓ (installed)
   ☐ Node.js ✓ (installed)
   ☐ Yarn ✓ (installed)
@@ -209,6 +349,8 @@ Use 'x' or SPACE to toggle selection, ENTER to confirm, 'a' to select all, 'n' t
   ☐ Insomnia ✗ (not installed)
   ☐ MongoDB Compass ✓ (installed)
   ☐ kubectl ✗ (not installed)
+
+SYSTEM
   ☐ Terminator ✗ (not installed)
   ☐ Oh My Zsh ✓ (installed)
   ☐ Powerlevel10k ✓ (installed)
@@ -216,11 +358,17 @@ Use 'x' or SPACE to toggle selection, ENTER to confirm, 'a' to select all, 'n' t
   ☐ cmatrix ✓ (installed)
   ☐ GIMP ✓ (installed)
   ☐ OBS Studio ✗ (not installed)
+
+PRODUCTIVITY
   ☐ Google Chrome ✓ (installed)
   ☐ Spotify ✓ (installed)
   ☐ Zoom ✓ (installed)
   ☐ Flameshot ✓ (installed)
+
+MAINTENANCE
   ☐ Final System Update ✓ (installed)
+
+Controls: ↑↓ Navigate | SPACE Toggle | A Select All | N Select None | ENTER Confirm | Q Quit
 ```
 
 ## Notas Importantes
