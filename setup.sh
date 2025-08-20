@@ -30,11 +30,66 @@ check_installed() {
     local tool_name="$1"
     local check_command="$2"
     
+    # First check if it's a command (APT packages)
     if command -v $check_command &> /dev/null; then
         return 0  # Installed
-    else
-        return 1  # Not installed
     fi
+    
+    # Then check if it's a snap package
+    if snap list | grep -q "^$check_command "; then
+        return 0  # Installed
+    fi
+    
+    # Check for special cases
+    case "$check_command" in
+        "ulauncher")
+            if [ -d "$HOME/.config/ulauncher" ]; then
+                return 0  # Installed
+            fi
+            ;;
+        "cursor")
+            if [ -f "$HOME/.local/share/applications/cursor.desktop" ] || [ -f "/usr/share/applications/cursor.desktop" ]; then
+                return 0  # Installed
+            fi
+            ;;
+        "code")
+            if command -v code &> /dev/null || snap list | grep -q "^code "; then
+                return 0  # Installed
+            fi
+            ;;
+        "docker")
+            if command -v docker &> /dev/null || snap list | grep -q "^docker "; then
+                return 0  # Installed
+            fi
+            ;;
+        "node")
+            if command -v node &> /dev/null; then
+                return 0  # Installed
+            fi
+            ;;
+        "yarn")
+            if command -v yarn &> /dev/null; then
+                return 0  # Installed
+            fi
+            ;;
+        "google-chrome")
+            if command -v google-chrome &> /dev/null || snap list | grep -q "^google-chrome "; then
+                return 0  # Installed
+            fi
+            ;;
+        "zoom-client")
+            if command -v zoom &> /dev/null || snap list | grep -q "^zoom-client "; then
+                return 0  # Installed
+            fi
+            ;;
+        "flameshot")
+            if command -v flameshot &> /dev/null; then
+                return 0  # Installed
+            fi
+            ;;
+    esac
+    
+    return 1  # Not installed
 }
 
 # Function to install a tool
@@ -42,11 +97,6 @@ install_tool() {
     local tool_name="$1"
     local script_name="$2"
     local check_command="$3"
-    
-    if check_installed "$tool_name" "$check_command"; then
-        print_warning "$tool_name is already installed. Skipping..."
-        return 0
-    fi
     
     print_status "Installing $tool_name..."
     if "$SCRIPT_DIR/$script_name"; then
@@ -220,9 +270,25 @@ main_setup() {
         "ulauncher"
         "vscode"
         "cursor"
+        "vim"
         "docker"
         "nodejs"
         "yarn"
+        "postman"
+        "dbeaver"
+        "gitkraken"
+        "insomnia"
+        "mongodb_compass"
+        "kubectl"
+        "terminator"
+        "oh_my_zsh"
+        "powerlevel10k"
+        "ranger"
+        "cmatrix"
+        "gimp"
+        "obs_studio"
+        "chrome"
+        "spotify"
         "zoom"
         "flameshot"
         "final_update"

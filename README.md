@@ -121,9 +121,9 @@ Si la tecla ESPACIO no funciona para marcar/desmarcar:
 
 Cada script de instalación incluye validaciones inteligentes que:
 
-- **Verifican si la herramienta ya está instalada** antes de proceder
+- **Verifican si la herramienta ya está instalada** antes de proceder (solo para mostrar estado, no para saltar)
 - **Muestran mensajes informativos** con colores (✓ verde para instalado, ! amarillo para instalando)
-- **Evitan instalaciones duplicadas** innecesarias
+- **Permiten reinstalaciones** si seleccionas una herramienta ya instalada
 - **Muestran información adicional** como versiones cuando están disponibles
 - **Actualizan automáticamente** componentes como kernels cuando hay versiones más nuevas disponibles
 
