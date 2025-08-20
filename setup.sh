@@ -89,12 +89,8 @@ display_checkbox_menu() {
         menu_keys+=("${tool_keys_ref[$i]}")
         menu_names+=("${tool_names_ref[$i]}")
         
-        # Check if already selected
-        if [[ " ${selected_ref[@]} " =~ " ${tool_keys_ref[$i]} " ]]; then
-            menu_status+=("true")
-        else
-            menu_status+=("false")
-        fi
+        # Always start unchecked (but keep installation status display)
+        menu_status+=("false")
         ((index++))
     done
     

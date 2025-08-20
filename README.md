@@ -73,11 +73,12 @@ Para instalar herramientas de forma interactiva:
 
 El script te mostrará una interfaz moderna con checkboxes que te permitirá:
 
-1. **Ver el estado actual** de todas las herramientas (instaladas o no)
-2. **Navegar con flechas** arriba/abajo para seleccionar herramientas
-3. **Marcar/desmarcar con ESPACIO** para seleccionar herramientas específicas
-4. **Usar atajos de teclado** para selección rápida
-5. **Confirmar con ENTER** para proceder con la instalación
+1. **Ver el estado actual** de todas las herramientas (instaladas o no) con ✓/✗
+2. **Todas las herramientas vienen desmarcadas** - selecciona solo las que quieres instalar
+3. **Navegar con flechas** arriba/abajo para seleccionar herramientas
+4. **Marcar/desmarcar con ESPACIO** para seleccionar herramientas específicas
+5. **Usar atajos de teclado** para selección rápida
+6. **Confirmar con ENTER** para proceder con la instalación
 
 ### Controles de la Interfaz
 
@@ -106,8 +107,9 @@ Si la tecla ESPACIO no funciona para marcar/desmarcar:
 
 - ✅ **Interfaz visual moderna** con checkboxes y colores
 - ✅ **Lista unificada** que muestra estado de instalación y selección en una sola vista
+- ✅ **Todas las herramientas desmarcadas por defecto** - tú decides qué instalar
+- ✅ **Detección automática** de herramientas ya instaladas (✓ installed / ✗ not installed)
 - ✅ **Navegación intuitiva** con flechas del teclado
-- ✅ **Detección automática** de herramientas ya instaladas
 - ✅ **Validación previa** en cada script de instalación
 - ✅ **Atajos de teclado** para selección rápida
 - ✅ **Instalación desatendida** una vez seleccionadas las herramientas
