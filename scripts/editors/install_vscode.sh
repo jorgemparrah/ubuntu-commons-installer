@@ -7,8 +7,7 @@ NC='\033[0m' # No Color
 
 # Function to check if a package is installed
 check_package_installed() {
-    local package="$1"
-    if dpkg -l | grep -q "^ii.*$package"; then
+    if command -v code &> /dev/null; then
         return 0  # Installed
     else
         return 1  # Not installed
@@ -18,7 +17,7 @@ check_package_installed() {
 installVSCode() {
     echo "Checking Visual Studio Code installation status..."
     
-    if check_package_installed "code"; then
+    if check_vim_installed; then
         echo -e "${GREEN}✓${NC} Visual Studio Code is already installed."
         return 0
     fi
