@@ -2,6 +2,42 @@ const inquirer = require('inquirer');
 const { execSync } = require('child_process');
 const chalk = require('chalk');
 
+// Contrato de estado enriquecido (Hito 3, ver docs/adr/0012-modelo-de-estado-enriquecido.md).
+// Los instaladores existentes solo devuelven INSTALLED/NOT_INSTALLED todavía;
+// se adoptan aquí de forma incremental (ver docs/adr/0004-idempotencia-instalado-igual-skip.md).
+const KNOWN_STATUSES = ['INSTALLED', 'NOT_INSTALLED', 'OUTDATED', 'BROKEN', 'UNSUPPORTED', 'UNKNOWN'];
+
+// Acción por defecto según el estado. INSTALLED nunca dispara 'reinstall' por
+// defecto (ADR 0004): la persona usuaria debe pedirlo explícitamente.
+const DEFAULT_ACTION_BY_STATUS = {
+    INSTALLED: 'skip',
+    NOT_INSTALLED: 'install',
+    OUTDATED: 'update',
+    BROKEN: 'repair',
+    UNSUPPORTED: 'skip',
+    UNKNOWN: 'skip'
+};
+
+const STATUS_LABELS = {
+    INSTALLED: { icon: '✓', text: 'Instalado' },
+    NOT_INSTALLED: { icon: '✗', text: 'No instalado' },
+    OUTDATED: { icon: '⚠', text: 'Desactualizado' },
+    BROKEN: { icon: '⚠', text: 'Roto' },
+    UNSUPPORTED: { icon: '?', text: 'No soportado' },
+    UNKNOWN: { icon: '?', text: 'Estado desconocido' }
+};
+
+// Motivo mostrado cuando una herramienta seleccionada se omite (acción 'skip').
+const SKIP_REASON_BY_STATUS = {
+    INSTALLED: 'ya está instalado y no requiere ninguna acción',
+    UNSUPPORTED: 'no es compatible con este sistema, se omite',
+    UNKNOWN: 'su estado no se pudo determinar, se omite por seguridad'
+};
+
+function normalizeStatus(rawStatus) {
+    return KNOWN_STATUSES.includes(rawStatus) ? rawStatus : 'UNKNOWN';
+}
+
 // Tools configuration (Node.js removed from list since it's installed as dependency)
 const tools = [
     // SYSTEM
@@ -47,9 +83,11 @@ const tools = [
 // Get tool status
 async function getToolStatus(tool) {
     try {
-        const status = execSync(`./${tool.script} status`, { encoding: 'utf8' }).trim();
-        return status;
+        const rawStatus = execSync(`./${tool.script} status`, { encoding: 'utf8' }).trim();
+        return normalizeStatus(rawStatus);
     } catch (error) {
+        // Convención existente: el script de status sale con código != 0
+        // específicamente para señalar "no instalado" (ver install_vim.sh).
         return 'NOT_INSTALLED';
     }
 }
@@ -59,24 +97,23 @@ async function showMainMenu() {
     const toolsWithStatus = await Promise.all(
         tools.map(async (tool) => {
             const status = await getToolStatus(tool);
-            return { ...tool, status };
+            const action = DEFAULT_ACTION_BY_STATUS[status] || 'skip';
+            return { ...tool, status, action };
         })
     );
     const choices = [];
     const categories = ['SYSTEM', 'EDITORS', 'DEVELOPMENT', 'PRODUCTIVITY', 'MAINTENANCE'];
-    
+
     categories.forEach(category => {
         choices.push(new inquirer.Separator(`=== ${category} ===`));
-        
+
         const categoryTools = toolsWithStatus.filter(t => t.category === category);
         categoryTools.forEach(tool => {
-            const statusIcon = tool.status === 'INSTALLED' ? '✓' : '✗';
-            const statusText = tool.status === 'INSTALLED' ? 'Instalado' : 'No instalado';
-            const action = tool.status === 'INSTALLED' ? 'reinstall' : 'install';
-            
+            const { icon, text } = STATUS_LABELS[tool.status];
+
             choices.push({
-                name: `${statusIcon} ${tool.name} (${statusText})`,
-                value: { ...tool, action },
+                name: `${icon} ${tool.name} (${text})`,
+                value: tool,
                 checked: false
             });
         });
@@ -95,21 +132,58 @@ async function showMainMenu() {
     return selectedTools;
 }
 
+// Para cada herramienta seleccionada cuya acción por defecto sea 'skip'
+// porque ya está INSTALLED, se ofrece explícitamente forzar un reinstall.
+// Nunca ocurre automáticamente (ver docs/adr/0004-idempotencia-instalado-igual-skip.md).
+async function confirmForcedReinstalls(selectedTools) {
+    for (const tool of selectedTools) {
+        if (tool.status !== 'INSTALLED') {
+            continue;
+        }
+
+        const { forceReinstall } = await inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'forceReinstall',
+                message: `${tool.name} ya está instalado y aparenta estar sano. ¿Forzar reinstalación de todas formas?`,
+                default: false
+            }
+        ]);
+
+        tool.action = forceReinstall ? 'reinstall' : 'skip';
+    }
+}
+
 // Execute actions
 async function executeActions(selectedTools) {
     console.log(chalk.blue('\n🚀 Ejecutando acciones...\n'));
-    
+
+    const ACTION_TEXT = {
+        install: 'Instalando',
+        update: 'Actualizando',
+        repair: 'Reparando',
+        reinstall: 'Reinstalando',
+        uninstall: 'Desinstalando'
+    };
+
     for (const tool of selectedTools) {
-        const actionText = tool.action === 'reinstall' ? 'Reinstalando' : 'Instalando';
+        if (tool.action === 'skip') {
+            const reason = SKIP_REASON_BY_STATUS[tool.status] || 'no requiere ninguna acción';
+            console.log(chalk.gray(`⏭️  ${tool.name}: ${reason}.`));
+            console.log('');
+            continue;
+        }
+
+        const actionText = ACTION_TEXT[tool.action] || 'Ejecutando acción sobre';
         console.log(chalk.yellow(`📦 ${actionText} ${tool.name}...`));
-        
+
         try {
             execSync(`./${tool.script} ${tool.action}`, { stdio: 'inherit' });
             console.log(chalk.green(`✅ ${tool.name} completado`));
         } catch (error) {
-            console.log(chalk.red(`❌ Error con ${tool.name}`));
+            console.log(chalk.red(`❌ Error con ${tool.name} (acción '${tool.action}' no disponible o falló; ver salida arriba)`));
         }
-        
+
         console.log('');
     }
 }
@@ -120,11 +194,13 @@ async function main() {
         console.log(chalk.cyan.bold('🚀 Post-Install Setup\n'));
         
         const selectedTools = await showMainMenu();
-        
+
         if (selectedTools.length === 0) {
             console.log(chalk.yellow('No se seleccionaron herramientas.'));
             return;
         }
+
+        await confirmForcedReinstalls(selectedTools);
 
         const { confirm } = await inquirer.prompt([
             {
@@ -146,4 +222,17 @@ async function main() {
     }
 }
 
-main();
+// Solo se ejecuta el flujo interactivo cuando este archivo corre como
+// programa principal (`node setup.js`), no cuando se importa para pruebas
+// (ver tests/test_status_mapping.js).
+if (require.main === module) {
+    main();
+}
+
+module.exports = {
+    KNOWN_STATUSES,
+    DEFAULT_ACTION_BY_STATUS,
+    STATUS_LABELS,
+    SKIP_REASON_BY_STATUS,
+    normalizeStatus
+};

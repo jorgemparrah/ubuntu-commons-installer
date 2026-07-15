@@ -27,7 +27,7 @@
 |---|---|---|
 | `install_vscode.sh` | Visual Studio Code | Mantener |
 | `install_cursor.sh` | Cursor | Mantener; revisar mecanismo de descarga/actualización |
-| `install_vim.sh` | Vim | Mantener como editor base |
+| `install_vim.sh` | Vim | Mantener como editor base; instalador de referencia del contrato de estado enriquecido (`status` soporta `INSTALLED\|NOT_INSTALLED\|OUTDATED\|BROKEN\|UNSUPPORTED`, y agrega las acciones `update`/`repair`). Ver [ADR 0012](adr/0012-modelo-de-estado-enriquecido.md) |
 
 ## Development
 

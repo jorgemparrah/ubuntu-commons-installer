@@ -165,7 +165,7 @@ Crítica
 
 **Estado**
 
-Blocked
+Review
 
 Depende de:
 
@@ -183,13 +183,15 @@ Corregir el hallazgo crítico de idempotencia (una herramienta instalada se rein
 
 ### Entregables
 
-Menú interactivo que ya no reinstala automáticamente una herramienta sana.
+* `setup.js`: normalización de estado (`normalizeStatus`), mapeo estado→acción por defecto, y confirmación explícita (`confirmForcedReinstalls`) antes de forzar un `reinstall` sobre algo ya instalado
+* `scripts/editors/install_vim.sh`: instalador de referencia con el contrato de estado enriquecido completo (`status` + `update` + `repair`)
+* `tests/test_status_mapping.js`: prueba no destructiva del mapeo estado→acción
 
 ### Criterios de aceptación
 
-* Seleccionar una herramienta ya instalada y sana no dispara `uninstall`/`install`
-* `reinstall` sigue disponible como acción explícita
-* Al menos un instalador de referencia expone el contrato de estado enriquecido de punta a punta
+* [x] Seleccionar una herramienta ya instalada y sana no dispara `uninstall`/`install`
+* [x] `reinstall` sigue disponible como acción explícita
+* [x] Al menos un instalador de referencia expone el contrato de estado enriquecido de punta a punta
 
 ### Decisiones relacionadas
 
