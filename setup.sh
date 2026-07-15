@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # setup.sh - Router de comandos de Ubuntu Workstation.
 #
-# Hito 2 (Bootstrap) de docs/ROADMAP.md: convierte setup.sh en un router que
-# puede resolver `help`, `--help` y `version` sin Node.js. El flujo interactivo
-# histórico (antes toda la lógica de este archivo) se preserva sin cambios de
-# comportamiento dentro de main_setup().
+# Router de comandos Bash (Hito 2), con `doctor` de solo lectura (Hito 4).
+# Ver docs/ROADMAP.md. El flujo interactivo histórico (antes toda la lógica
+# de este archivo) se preserva sin cambios de comportamiento dentro de
+# main_setup().
 #
 # Ver docs/adr/0001-bootstrap-bash-sin-node.md.
 set -Eeuo pipefail
@@ -18,6 +18,8 @@ readonly UCI_ROOT_DIR
 source "${UCI_ROOT_DIR}/scripts/lib/logging.sh"
 # shellcheck source=scripts/bootstrap/preflight.sh
 source "${UCI_ROOT_DIR}/scripts/bootstrap/preflight.sh"
+# shellcheck source=scripts/diagnostics/doctor.sh
+source "${UCI_ROOT_DIR}/scripts/diagnostics/doctor.sh"
 
 # --- Flujo interactivo histórico ------------------------------------------
 # Todo lo que sigue hasta main_setup() es el contenido original de este
@@ -303,17 +305,30 @@ Uso:
   ./setup.sh help           Muestra esta ayuda
   ./setup.sh --help         Igual que 'help'
   ./setup.sh version        Muestra la versión del proyecto
+  ./setup.sh doctor         Diagnóstico de solo lectura de la workstation
+  ./setup.sh doctor --verbose   Diagnóstico con detalle adicional
 
 Variables de entorno:
   UCI_DEBUG=1               Activa mensajes de depuración (log_debug)
 
 Comandos planificados, todavía no disponibles (ver docs/ROADMAP.md):
-  doctor, backup, migrate, validate
+  backup, migrate, validate
 EOF
 }
 
 cmd_version() {
     echo "Ubuntu Workstation $(resolve_version)"
+}
+
+cmd_doctor() {
+    if ! preflight_core; then
+        log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
+        exit 1
+    fi
+
+    if ! doctor_run "$@"; then
+        exit 1
+    fi
 }
 
 cmd_interactive() {
@@ -333,6 +348,9 @@ cmd_interactive() {
 
 main() {
     local cmd="${1:-interactive}"
+    if [[ $# -gt 0 ]]; then
+        shift
+    fi
 
     case "${cmd}" in
         interactive)
@@ -343,6 +361,9 @@ main() {
             ;;
         version|--version|-v)
             cmd_version
+            ;;
+        doctor)
+            cmd_doctor "$@"
             ;;
         *)
             log_error "Comando desconocido: '${cmd}'"

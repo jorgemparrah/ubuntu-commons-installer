@@ -94,10 +94,12 @@ post-install/
 ./setup.sh help           # ayuda, no requiere Node.js
 ./setup.sh --help         # igual que 'help'
 ./setup.sh version        # versión del proyecto, no requiere Node.js
+./setup.sh doctor         # diagnóstico de solo lectura de la workstation
+./setup.sh doctor --verbose   # diagnóstico con detalle adicional
 UCI_DEBUG=1 ./setup.sh help   # mensajes de depuración
 ```
 
-Un comando desconocido muestra un error y la ayuda, y termina con código de salida distinto de cero. Ver `docs/ARCHITECTURE.md` y `docs/adr/0001-bootstrap-bash-sin-node.md` para el diseño detrás de este router.
+Un comando desconocido muestra un error y la ayuda, y termina con código de salida distinto de cero. `doctor` nunca modifica el sistema, solo reporta (ver AGENT.md sección 10). Ver `docs/ARCHITECTURE.md` y `docs/adr/0001-bootstrap-bash-sin-node.md` para el diseño detrás de este router.
 
 ### **Flujo de Ejecución:**
 

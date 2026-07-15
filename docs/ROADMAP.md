@@ -210,7 +210,7 @@ Crítica
 
 **Estado**
 
-Blocked
+Review
 
 Depende de:
 
@@ -224,31 +224,30 @@ Inspeccionar el estado de la workstation.
 
 Detectar:
 
-* versión de Ubuntu
-* shell
-* Git
-* Docker
-* Node
-* Mise
-* AWS CLI
-* kubectl
-* Helm
-* SSH
-* runtimes existentes
+* [x] versión de Ubuntu
+* [x] shell
+* [x] Git
+* [x] Docker (instalado + si el demonio está activo)
+* [x] Node (instalado + de dónde viene: nvm/mise/apt/snap)
+* [x] Mise
+* [x] AWS CLI
+* [x] kubectl
+* [x] Helm
+* [x] SSH (solo presencia y cantidad de claves, nunca contenido)
+* [x] runtimes existentes / indicadores de home retenido (rutas de la [ADR 0003](adr/0003-migracion-nvm-sin-borrado-directo.md))
 
 ### Entregables
 
-`setup.sh doctor`
+* `setup.sh doctor` / `setup.sh doctor --verbose`
+* `scripts/diagnostics/doctor.sh`
+* `tests/test_doctor.sh` — incluye una verificación de que `doctor` no modifica `$HOME`
 
 ### Criterios de aceptación
 
-Doctor nunca modifica el sistema.
-
-Produce un reporte legible.
-
-Soporta modo verbose.
-
-Usa el contrato de estado enriquecido del Hito 3.
+* [x] Doctor nunca modifica el sistema
+* [x] Produce un reporte legible
+* [x] Soporta modo verbose (`--verbose`/`-v`)
+* [x] Usa el contrato de estado enriquecido del Hito 3 — **nota de diseño:** Doctor no invoca el `status` de cada instalador de `scripts/`; inspecciona directamente las herramientas de sistema que le pide AGENT.md sección 10 (Git, Docker, Node, Mise, AWS CLI, kubectl, Helm) y reporta información más rica que un simple instalado/no-instalado (por ejemplo, origen de Node —nvm/mise/apt/snap— y si el demonio de Docker está activo). Si se prefiere que Doctor además reporte el estado enriquecido de cada herramienta gestionada por `scripts/*/install_*.sh`, es un ajuste incremental a futuro, no bloqueante para este hito.
 
 ---
 
