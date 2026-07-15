@@ -84,6 +84,21 @@ post-install/
 ./setup.sh
 ```
 
+### **Comandos del router (Hito 2: Bootstrap, ver `docs/ROADMAP.md`)**
+
+`setup.sh` es un router de comandos. Sin argumentos, o con `interactive`, conserva el flujo de siempre (introducción, validaciones y menú de Node.js). `help`, `--help` y `version` funcionan en Bash puro, sin requerir Node.js:
+
+```bash
+./setup.sh                # flujo interactivo (comportamiento histórico)
+./setup.sh interactive    # lo mismo, de forma explícita
+./setup.sh help           # ayuda, no requiere Node.js
+./setup.sh --help         # igual que 'help'
+./setup.sh version        # versión del proyecto, no requiere Node.js
+UCI_DEBUG=1 ./setup.sh help   # mensajes de depuración
+```
+
+Un comando desconocido muestra un error y la ayuda, y termina con código de salida distinto de cero. Ver `docs/ARCHITECTURE.md` y `docs/adr/0001-bootstrap-bash-sin-node.md` para el diseño detrás de este router.
+
 ### **Flujo de Ejecución:**
 
 1. **📋 Introducción del Proyecto**

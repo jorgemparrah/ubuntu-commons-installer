@@ -117,7 +117,7 @@ Crítica
 
 **Estado**
 
-Ready
+Review
 
 Depende de:
 
@@ -138,11 +138,16 @@ Crear un proceso de bootstrap robusto e independiente de Node.js.
 
 ### Entregables
 
-Módulo de bootstrap.
+* `setup.sh` como router de comandos (`interactive` por defecto, `help`, `--help`, `version`)
+* `scripts/lib/logging.sh` — biblioteca mínima de logging (`log_info`, `log_warn`, `log_error`, `log_success`, `log_debug`)
+* `scripts/bootstrap/preflight.sh` — verificaciones de solo lectura, separadas en `preflight_core` (requisitos de los comandos Bash) y `preflight_interactive` (requisitos exclusivos del modo interactivo)
+* `tests/test_router.sh` — pruebas no destructivas del router y el preflight
 
 ### Criterios de aceptación
 
 El bootstrap se completa exitosamente sin modificar la configuración del usuario.
+
+**Pendiente:** la tarea "Verificación de conexión a internet" listada arriba no se implementó en esta iteración — no formaba parte del alcance mínimo de preflight solicitado explícitamente para este hito. Queda para una iteración posterior de Bootstrap o para Doctor (Hito 4).
 
 ### Decisión relacionada
 

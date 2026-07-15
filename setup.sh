@@ -1,16 +1,35 @@
-#!/bin/bash
-# setup.sh - Script principal híbrido (Bash + Node.js)
+#!/usr/bin/env bash
+# setup.sh - Router de comandos de Ubuntu Workstation.
+#
+# Hito 2 (Bootstrap) de docs/ROADMAP.md: convierte setup.sh en un router que
+# puede resolver `help`, `--help` y `version` sin Node.js. El flujo interactivo
+# histórico (antes toda la lógica de este archivo) se preserva sin cambios de
+# comportamiento dentro de main_setup().
+#
+# Ver docs/adr/0001-bootstrap-bash-sin-node.md.
+set -Eeuo pipefail
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-PURPLE='\033[0;35m'
-NC='\033[0m' # No Color
+# Ruta absoluta del repositorio, calculada desde la ubicación real de este
+# script, para poder ejecutarse desde cualquier directorio.
+UCI_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly UCI_ROOT_DIR
 
-# Function to print colored text
+# shellcheck source=scripts/lib/logging.sh
+source "${UCI_ROOT_DIR}/scripts/lib/logging.sh"
+# shellcheck source=scripts/bootstrap/preflight.sh
+source "${UCI_ROOT_DIR}/scripts/bootstrap/preflight.sh"
+
+# --- Flujo interactivo histórico ------------------------------------------
+# Todo lo que sigue hasta main_setup() es el contenido original de este
+# archivo antes del Hito 2, sin cambios de comportamiento. Los únicos ajustes
+# son: (a) usar las variables de color definidas en scripts/lib/logging.sh en
+# vez de redeclararlas aquí, y (b) blindar los `read` que solo pausan la
+# ejecución (o que alimentan una decisión y/n) para que un EOF/entrada vacía
+# no aborte el script bajo `set -e` — antes, sin modo estricto, un `read`
+# fallido simplemente dejaba la variable vacía y el flujo caía a la rama
+# "no instalado"; con `set -e` un `read` fallido sin blindar habría cortado
+# la ejecución en seco, lo cual sería un cambio de comportamiento real.
+
 print_header() {
     echo -e "${BLUE}=== $1 ===${NC}"
 }
@@ -62,34 +81,34 @@ show_introduction() {
     echo -e "${NC}"
     echo ""
     print_info "Presiona ENTER para continuar..."
-    read -r
+    read -r || true
 }
 
 # Function to check basic dependencies
 check_basic_dependencies() {
     local missing_deps=()
-    
+
     # Check for essential commands
     if ! command -v sudo &> /dev/null; then
         missing_deps+=("sudo")
     fi
-    
+
     if ! command -v apt &> /dev/null; then
         missing_deps+=("apt")
     fi
-    
+
     if ! command -v snap &> /dev/null; then
         missing_deps+=("snapd")
     fi
-    
+
     if ! command -v curl &> /dev/null; then
         missing_deps+=("curl")
     fi
-    
+
     if ! command -v wget &> /dev/null; then
         missing_deps+=("wget")
     fi
-    
+
     if [[ ${#missing_deps[@]} -gt 0 ]]; then
         echo -e "${RED}"
         echo "╔══════════════════════════════════════════════════════════════════════════════╗"
@@ -112,16 +131,17 @@ check_basic_dependencies() {
         echo "╚══════════════════════════════════════════════════════════════════════════════╝"
         echo -e "${NC}"
         echo ""
-        
-        read -p "¿Instalar dependencias automáticamente? (y/N): " install_deps
-        
+
+        local install_deps=""
+        read -p "¿Instalar dependencias automáticamente? (y/N): " install_deps || true
+
         if [[ "$install_deps" =~ ^[Yy]$ ]]; then
             print_info "Instalando dependencias básicas..."
             if sudo apt update && sudo apt install -y "${missing_deps[@]}"; then
                 print_status "Dependencias básicas instaladas correctamente."
                 echo ""
                 print_info "Presiona ENTER para continuar..."
-                read -r
+                read -r || true
                 return 0
             else
                 print_error "Error al instalar dependencias básicas. Por favor, instálalas manualmente."
@@ -130,7 +150,7 @@ check_basic_dependencies() {
                 echo -e "${CYAN}sudo apt update && sudo apt install ${missing_deps[*]}${NC}"
                 echo ""
                 print_info "Presiona ENTER para salir..."
-                read -r
+                read -r || true
                 exit 1
             fi
         else
@@ -139,7 +159,7 @@ check_basic_dependencies() {
             print_info "Instala las dependencias manualmente y vuelve a ejecutar el script."
             echo ""
             print_info "Presiona ENTER para salir..."
-            read -r
+            read -r || true
             exit 1
         fi
     fi
@@ -158,24 +178,25 @@ check_and_install_nodejs() {
         echo "╚══════════════════════════════════════════════════════════════════════════════╝"
         echo -e "${NC}"
         echo ""
-        
-        read -p "¿Instalar Node.js automáticamente? (y/N): " install_node
-        
+
+        local install_node=""
+        read -p "¿Instalar Node.js automáticamente? (y/N): " install_node || true
+
         if [[ "$install_node" =~ ^[Yy]$ ]]; then
             print_info "Instalando Node.js usando el script existente..."
-            
+
             # Check if Node.js installation script exists
             if [[ -f "scripts/development/install_nodejs.sh" ]]; then
                 chmod +x scripts/development/install_nodejs.sh
                 if ./scripts/development/install_nodejs.sh install; then
                     print_status "Node.js instalado correctamente."
-                    
+
                     # Verify installation
                     if command -v node &> /dev/null && command -v npm &> /dev/null; then
                         print_status "Node.js y npm están disponibles."
                         echo ""
                         print_info "Presiona ENTER para continuar..."
-                        read -r
+                        read -r || true
                         return 0
                     else
                         print_error "Error: Node.js no se instaló correctamente."
@@ -190,7 +211,7 @@ check_and_install_nodejs() {
                 print_info "Puedes instalarlo manualmente visitando: https://nodejs.org/"
                 echo ""
                 print_info "Presiona ENTER para salir..."
-                read -r
+                read -r || true
                 exit 1
             fi
         else
@@ -199,7 +220,7 @@ check_and_install_nodejs() {
             print_info "Instala Node.js manualmente y vuelve a ejecutar el script."
             echo ""
             print_info "Presiona ENTER para salir..."
-            read -r
+            read -r || true
             exit 1
         fi
     fi
@@ -212,13 +233,13 @@ setup_nodejs_dependencies() {
         print_error "package.json no encontrado. Asegúrate de que esté en el directorio del proyecto."
         exit 1
     fi
-    
+
     # Check if setup.js exists
     if [[ ! -f "setup.js" ]]; then
         print_error "setup.js no encontrado. Asegúrate de que esté en el directorio del proyecto."
         exit 1
     fi
-    
+
     # Install Node.js dependencies
     if [[ ! -d "node_modules" ]]; then
         print_info "Instalando dependencias de Node.js..."
@@ -231,23 +252,27 @@ setup_nodejs_dependencies() {
     fi
 }
 
-# Main function
+# Main function (flujo interactivo histórico). El único agregado del Hito 2
+# es el `cd` inicial, para que el proyecto pueda ejecutarse desde cualquier
+# directorio y no solo desde la raíz del repositorio.
 main_setup() {
+    cd "${UCI_ROOT_DIR}"
+
     # Show introduction
     show_introduction
-    
+
     # Check basic dependencies
     check_basic_dependencies
-    
+
     # Check and install Node.js using existing script
     check_and_install_nodejs
-    
+
     # Setup Node.js dependencies
     setup_nodejs_dependencies
-    
+
     # Make all install scripts executable
     chmod +x scripts/*/*.sh 2>/dev/null || true
-    
+
     # Launch Node.js interface
     print_info "Iniciando interfaz interactiva..."
     echo ""
@@ -256,5 +281,76 @@ main_setup() {
     node setup.js
 }
 
-# Run main setup
-main_setup
+# --- Router de comandos (Hito 2) ------------------------------------------
+
+# Versión del proyecto, leída de package.json sin depender de Node.js.
+resolve_version() {
+    local pkg="${UCI_ROOT_DIR}/package.json"
+    if [[ -f "${pkg}" ]]; then
+        grep -m1 '"version"' "${pkg}" | sed -E 's/^[^:]*:[[:space:]]*"([^"]*)".*/\1/'
+    else
+        echo "desconocida"
+    fi
+}
+
+print_usage() {
+    cat <<'EOF'
+Ubuntu Workstation - setup.sh
+
+Uso:
+  ./setup.sh                Ejecuta el flujo interactivo (comportamiento por defecto)
+  ./setup.sh interactive    Ejecuta explícitamente el flujo interactivo
+  ./setup.sh help           Muestra esta ayuda
+  ./setup.sh --help         Igual que 'help'
+  ./setup.sh version        Muestra la versión del proyecto
+
+Variables de entorno:
+  UCI_DEBUG=1               Activa mensajes de depuración (log_debug)
+
+Comandos planificados, todavía no disponibles (ver docs/ROADMAP.md):
+  doctor, backup, migrate, validate
+EOF
+}
+
+cmd_version() {
+    echo "Ubuntu Workstation $(resolve_version)"
+}
+
+cmd_interactive() {
+    if ! preflight_core; then
+        log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
+        exit 1
+    fi
+
+    # Diagnóstico no bloqueante de los requisitos exclusivos del modo
+    # interactivo (archivos del repo, Node.js/npm). No es una compuerta dura:
+    # el propio flujo histórico (check_and_install_nodejs) ya le ofrece a la
+    # persona usuaria instalar Node.js si falta.
+    preflight_interactive "${UCI_ROOT_DIR}" || true
+
+    main_setup
+}
+
+main() {
+    local cmd="${1:-interactive}"
+
+    case "${cmd}" in
+        interactive)
+            cmd_interactive
+            ;;
+        help|--help|-h)
+            print_usage
+            ;;
+        version|--version|-v)
+            cmd_version
+            ;;
+        *)
+            log_error "Comando desconocido: '${cmd}'"
+            echo ""
+            print_usage
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

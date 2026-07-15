@@ -32,7 +32,7 @@ Qué se vuelve más fácil o más difícil como resultado. Trabajo futuro que es
 
 ## Índice
 
-Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del repositorio (2026-07-13; el informe original ya no se mantiene como archivo aparte, ver `AGENT.md` sección 5). La ADR 0015 documenta una decisión posterior sobre el idioma de la documentación. Las ADR 0016–0021 documentan decisiones tomadas al revisar el inventario de herramientas con el dueño del proyecto (2026-07-15, ver `docs/TOOLS.md`).
+Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del repositorio (2026-07-13; el informe original ya no se mantiene como archivo aparte, ver `AGENT.md` sección 5). La ADR 0015 documenta una decisión posterior sobre el idioma de la documentación. Las ADR 0016–0021 documentan decisiones tomadas al revisar el inventario de herramientas con el dueño del proyecto (2026-07-15, ver `docs/TOOLS.md`). La ADR 0022 surgió al implementar el Hito 2 (Bootstrap).
 
 | ID | Título | Estado |
 |---|---|---|
@@ -57,3 +57,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0019](0019-flameshot-atajo-printscreen.md) | Flameshot se confirma como herramienta de captura, con atajo en PrintScreen | Aceptada |
 | [0020](0020-alcance-fuera-nvidia-dotfiles-agentes.md) | NVIDIA/CUDA y los dotfiles de agentes de IA quedan fuera de alcance | Aceptada |
 | [0021](0021-reutilizar-personalizacion-shell-en-home.md) | Reutilizar/respaldar la personalización de Oh My Zsh y Powerlevel10k al reutilizar `/home` | Aceptada |
+| [0022](0022-modo-estricto-en-bibliotecas-sourceadas.md) | Las bibliotecas pensadas para `source` no declaran su propio modo estricto | Aceptada |
