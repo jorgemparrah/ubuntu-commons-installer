@@ -464,7 +464,7 @@ Alta
 
 **Estado**
 
-Blocked
+Review
 
 Depende de:
 
@@ -476,19 +476,30 @@ Centralizar la gestión de runtimes.
 
 ### Tareas
 
-Soportar:
+Soportar (catálogo en `scripts/lib/runtime.sh`, ver `docs/ARCHITECTURE.md` sección 10):
 
-* Node
-* Python
-* Java
-* Go
-* Rust
+* [x] Node — probado de punta a punta (instalación + status)
+* [x] Python — probado de punta a punta (instalación + status), confirma que la abstracción es genérica
+* [x] Java, Go, Rust — soportados por el mismo catálogo/mecanismo; no se instalaron realmente en las pruebas (nadie los pidió todavía), pero `runtime status` los reporta correctamente como "no gestionado" cuando no están
 
 a través de Mise siempre que sea posible.
 
+### Entregables
+
+* `scripts/lib/runtime.sh` — `runtime_ensure_mise`, `runtime_install`, `runtime_use_global`, `runtime_status_all`, catálogo de runtimes soportados
+* `setup.sh runtime status` — reporte de solo lectura de qué runtimes gestiona Mise
+* `scripts/migrations/001_nvm_to_mise.sh` refactorizado para usar esta librería en vez de duplicar la instalación de Mise (sin cambios de comportamiento, revalidado)
+* `tests/docker/test_runtime_status.sh`
+
 ### Criterios de aceptación
 
-Todos los runtimes soportados se gestionan de forma consistente.
+* [x] Todos los runtimes soportados se gestionan de forma consistente (mismo catálogo, mismas funciones `runtime_install`/`runtime_use_global`/`runtime_status_all` para cualquiera de los 5)
+
+Validado en Docker instalando y gestionando **dos runtimes distintos (Node y Python)** con el mismo mecanismo, más la revalidación completa de la migración NVM→Mise tras el refactor. Ver `docs/TEST_CASES.md` (casos R01-R06).
+
+### Decisión relacionada
+
+[ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md) — Mise como único gestor de runtimes; este hito construye el mecanismo compartido que aplica esa decisión de forma consistente para Node, Python, Java, Go y Rust.
 
 ---
 

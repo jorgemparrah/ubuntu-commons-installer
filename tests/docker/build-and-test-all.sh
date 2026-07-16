@@ -117,6 +117,12 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
         "bootstrap interactivo vía Mise, sin NVM (imagen base)" \
         "tests/docker/test_bootstrap_mise_no_nvm.sh"
 
+    # Nivel 3 (docs/TEST_CASES.md, R01-R06): gestor de runtimes centralizado
+    # (scripts/lib/runtime.sh, setup.sh runtime status).
+    run_case "R01-R05" "${base_tag}" \
+        "gestor de runtimes (Node y Python vía Mise, imagen base)" \
+        "tests/docker/test_runtime_status.sh"
+
     # Nivel 2 (docs/TEST_CASES.md, M01/M02/M05): desde cero, instalando NVM
     # en tiempo de ejecución dentro del propio contenedor.
     run_case "M01,M02,M05,M08" "${base_tag}" \
@@ -153,7 +159,7 @@ done
 
 echo ""
 if [[ "${FAILED}" -eq 0 ]]; then
-    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, BOOT01, M01-M08."
+    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, BOOT01, M01-M08, R01-R06."
 else
     echo "RESULTADO: HUBO FALLOS. Revisa las líneas 'FALLÓ' arriba."
 fi
