@@ -63,7 +63,18 @@ bash tests/docker/build-and-test-all.sh          # 24.04 y 26.04
 bash tests/docker/build-and-test-all.sh 24.04     # solo una versión
 ```
 
-Este script construye la imagen base y las variantes `Dockerfile.nvm-single`/`Dockerfile.nvm-multi` (ver `docs/TEST_CASES.md` para qué condición inicial representa cada una), corre `run-all-tests.sh` en la base, y corre las pruebas de la migración NVM→Mise en cada imagen correspondiente. Termina con un resumen de qué combinación pasó o falló.
+Este es el **único punto de entrada** para correr toda la batería. Construye la imagen base y las variantes `Dockerfile.nvm-single`/`Dockerfile.nvm-multi` (ver `docs/TEST_CASES.md` para qué condición inicial representa cada una), corre `run-all-tests.sh` en la base, `test_bootstrap_mise_no_nvm.sh`, y las pruebas de la migración NVM→Mise en cada imagen correspondiente. Termina con un resumen de qué combinación pasó o falló, con `RESULTADO: TODO PASÓ` o `RESULTADO: HUBO FALLOS` inequívoco al final.
+
+**Dónde queda la salida:** el script muestra todo en vivo por terminal (`docker build`/`docker run` van imprimiendo a medida que corren) y, además, siempre guarda una copia completa en disco, sin necesitar redirección manual:
+
+- `/tmp/ubuntu-workstation-tests/build-and-test-all-<timestamp>.log` — copia de esa corrida específica.
+- `/tmp/ubuntu-workstation-tests/build-and-test-all-latest.log` — symlink a la corrida más reciente; siempre la misma ruta, útil para analizar el resultado después sin tener que buscar el timestamp exacto.
+
+Por ejemplo, para revisar solo lo que falló de la corrida más reciente:
+
+```bash
+grep '^FALLÓ' /tmp/ubuntu-workstation-tests/build-and-test-all-latest.log
+```
 
 ### Shell interactiva para explorar/depurar
 

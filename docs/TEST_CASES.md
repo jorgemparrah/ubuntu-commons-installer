@@ -6,6 +6,15 @@ Este documento lista los casos de prueba funcionales por comando (o combinación
 
 Convención de estado: `✅ pasa` / `❌ falla` / `🚧 pendiente de implementar`.
 
+## Cómo correr TODO
+
+```bash
+bash tests/docker/build-and-test-all.sh          # Ubuntu 24.04 y 26.04
+bash tests/docker/build-and-test-all.sh 24.04     # solo una versión
+```
+
+Este es el **único punto de entrada**: arma las 3 imágenes (base, `nvm-single`, `nvm-multi`) para cada versión de Ubuntu listada, y corre dentro de cada una todos los casos de este documento. No hace falta ejecutar ningún otro script de `tests/docker/` por separado salvo que quieras aislar un caso puntual para depurar.
+
 ## Nivel 1 — Comandos de solo lectura / con estado mínimo
 
 No requieren software real preinstalado. Corren sobre la imagen base.
@@ -19,8 +28,10 @@ No requieren software real preinstalado. Corren sobre la imagen base.
 | U05 | `doctor`, `doctor --verbose` | Home vacío (sin NVM/Mise/etc.) | `Dockerfile` (base) | Código 0, reporta todo como "no instalado", no modifica `$HOME` | ✅ pasa |
 | U06 | `backup`, `backup --dry-run` | Home con `tests/fixtures/sample_home/` copiado | `Dockerfile` (base) | Sesión con timestamp, manifest.tsv, dry-run no crea nada, no sobrescribe | ✅ pasa |
 | U07 | `migrate --list`/`--dry-run`/`migrate` (framework genérico) | Home vacío + migración de ejemplo `000_example_noop` | `Dockerfile` (base) | Ciclo completo list→dry-run→apply→list, idempotente | ✅ pasa |
+| U08 | `backup_dir_manifest`/`backup_move_dir`: integridad completa antes de eliminar el origen | Directorios de prueba con archivo, symlink y subdirectorio vacío; 5 variantes deliberadamente alteradas (contenido, symlink, directorio vacío faltante, permiso, contenido distinto mismo tamaño) | `Dockerfile` (base) | Cada alteración cambia el manifiesto; el camino feliz mueve todo correctamente; no se reutiliza un destino ya presente | ✅ pasa |
+| BOOT01 | Flujo interactivo (`./setup.sh` sin argumentos) en workstation limpia | Node/npm de apt inhabilitados dentro del contenedor, sin NVM ni Mise | `Dockerfile` (base) | Nunca instala NVM; instala Mise con confirmación explícita, instala Node vía Mise, dejan el bloque gestionado en `.bashrc`; `install_nodejs.sh` (legado) rechaza ejecutarse sin `UCI_ALLOW_LEGACY_NVM=1` | ✅ pasa |
 
-Cubierto hoy por: `tests/docker/run-all-tests.sh` (agrupa U01-U07 vía `tests/test_router.sh`, `tests/test_doctor.sh`, `tests/test_backup.sh`, `tests/test_migrations.sh`, `tests/test_status_mapping.js`).
+Cubierto hoy por: `tests/docker/run-all-tests.sh` (agrupa U01-U08 vía `tests/test_router.sh`, `tests/test_doctor.sh`, `tests/test_backup.sh`, `tests/test_backup_move_dir.sh`, `tests/test_migrations.sh`, `tests/test_status_mapping.js`) y `tests/docker/test_bootstrap_mise_no_nvm.sh` (BOOT01).
 
 ## Nivel 2 — Migración NVM → Mise (`001_nvm_to_mise.sh`)
 
@@ -35,11 +46,12 @@ Instalan software real (NVM, Node, Mise); solo corren en contenedores desechable
 | M05 | Ejecutar `migrate` dos veces sobre el mismo estado ya migrado | Cualquiera de M02-M04, ya aplicada una vez | Las mismas de M02-M04 | No se crea una segunda sesión de backup; el archivo informativo/estado no cambia | ✅ pasa (incluido al final de M02-M04) |
 | M06 | Mise ya instalado antes de migrar (por ejemplo, de una corrida anterior fallida a medias) | NVM + Mise ya presente | 🚧 sin imagen dedicada todavía | La migración detecta Mise existente y no lo reinstala, pero sigue instalando las versiones de Node y moviendo `.nvm` | 🚧 pendiente de implementar |
 | M07 | `apply` falla a mitad de camino (por ejemplo, sin conexión a internet para instalar Mise) | NVM instalado, sin acceso de red dentro del contenedor | 🚧 sin imagen dedicada todavía | La migración no marca finalización, muestra notas de rollback, no deja `.nvm` a medio mover | 🚧 pendiente de implementar |
+| M08 | Limpieza de líneas conocidas de NVM en `.bashrc` + reportes de inventario persistidos | Cualquiera de M02-M04 | Las mismas de M02-M04 | Las líneas exactas del instalador de NVM se eliminan de `.bashrc`; `.bashrc` final no contiene ninguna mención a "nvm"; `reports/nvm-versions.tsv`, `reports/nvm-global-packages.tsv` y `reports/shell-changes.tsv` quedan escritos en la sesión de backup con datos reales (incluye un paquete global instalado a propósito con `npm install -g`) | ✅ pasa (verificado también manualmente inspeccionando el contenido de los tres reportes) |
 
 Cubierto hoy por:
-- `tests/docker/test_nvm_to_mise_apply.sh` → M01, M02, M05 (imagen base)
-- `tests/docker/test_nvm_to_mise_prebaked.sh` → M03, M04, M05 (imágenes `nvm-single` y `nvm-multi`)
-- `tests/docker/build-and-test-all.sh` → arma todas las imágenes (24.04 y 26.04) y corre Nivel 1 + Nivel 2 (M02-M05) en cada una
+- `tests/docker/test_nvm_to_mise_apply.sh` → M01, M02, M05, M08 (imagen base)
+- `tests/docker/test_nvm_to_mise_prebaked.sh` → M03, M04, M05, M08 (imágenes `nvm-single` y `nvm-multi`)
+- `tests/docker/build-and-test-all.sh` → **único punto de entrada**: arma todas las imágenes (24.04 y 26.04) y corre Nivel 1 (incluido BOOT01) + Nivel 2 (M01-M05, M08) en cada una
 
 ## Matriz de sistema operativo
 

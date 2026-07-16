@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
 # tests/docker/build-and-test-all.sh
 #
-# Arma todas las imágenes de prueba (base, con NVM+1 versión, con NVM+2
-# versiones) para Ubuntu 24.04 y 26.04, y corre la batería de pruebas
-# correspondiente en cada una dentro de contenedores desechables. Ver
-# docs/TESTING.md.
+# ÚNICO PUNTO DE ENTRADA para correr TODA la batería de pruebas del
+# repositorio. Arma las imágenes de prueba (base, con NVM+1 versión, con
+# NVM+2 versiones) para Ubuntu 24.04 y 26.04, y corre dentro de cada una
+# los casos de prueba funcionales definidos en docs/TEST_CASES.md — esa
+# tabla es la fuente de verdad; este script es su ejecución. Si agregas un
+# caso nuevo a docs/TEST_CASES.md, agrega también su bloque acá.
 #
 # Uso (desde la raíz del repositorio, en el host):
 #   bash tests/docker/build-and-test-all.sh
 #   bash tests/docker/build-and-test-all.sh 24.04       # solo una versión de Ubuntu
+#
+# Todo lo que hace este script corre DENTRO de contenedores Docker
+# desechables (`docker build`/`docker run`); nunca toca el $HOME real de
+# la máquina donde se ejecuta.
 set -Eeuo pipefail
 
 UCI_TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -26,6 +32,25 @@ else
     UBUNTU_VERSIONS=("24.04" "26.04")
 fi
 readonly UBUNTU_VERSIONS
+
+# Toda la salida se ve en vivo por terminal Y queda guardada en un log fijo
+# y predecible, para poder analizarla después (buscar fallos puntuales,
+# adjuntarla a un reporte, etc.) sin tener que recordar una ruta distinta
+# cada vez que se corre. UCI_LOG_LATEST siempre apunta a la corrida más
+# reciente; UCI_LOG_FILE queda con timestamp para no perder corridas
+# anteriores si se necesita compararlas.
+UCI_LOG_DIR="/tmp/ubuntu-workstation-tests"
+mkdir -p "${UCI_LOG_DIR}"
+UCI_LOG_FILE="${UCI_LOG_DIR}/build-and-test-all-$(date +%Y%m%dT%H%M%S).log"
+readonly UCI_LOG_FILE
+UCI_LOG_LATEST="${UCI_LOG_DIR}/build-and-test-all-latest.log"
+readonly UCI_LOG_LATEST
+
+exec > >(tee "${UCI_LOG_FILE}") 2>&1
+ln -sf "${UCI_LOG_FILE}" "${UCI_LOG_LATEST}"
+
+echo "Log completo de esta corrida: ${UCI_LOG_FILE}"
+echo "(siempre disponible también en: ${UCI_LOG_LATEST}, apunta a la corrida más reciente)"
 
 FAILED=0
 declare -a RESULTS=()
@@ -47,6 +72,20 @@ record() {
     fi
 }
 
+# run_case <ids_de_TEST_CASES.md> <tag_de_imagen> <descripcion> <script>
+# Corre un caso (o grupo de casos) dentro de un contenedor desechable y
+# registra el resultado. <ids_de_TEST_CASES.md> es solo para trazabilidad
+# en la salida (por ejemplo "U01-U07" o "M02,M05").
+run_case() {
+    local ids="$1" tag="$2" description="$3" script="$4"
+    section "[${ids}] Ubuntu ${ubuntu_version} — ${description}"
+    set +e
+    docker run --rm "${tag}" bash "${script}"
+    local code=$?
+    set -e
+    record "[${ids}] Ubuntu ${ubuntu_version} / ${description}" "${code}"
+}
+
 for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
     base_tag="ubuntu-workstation-test:${ubuntu_version}"
     single_tag="ubuntu-workstation-test-nvm-single:${ubuntu_version}"
@@ -55,51 +94,53 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
     section "Ubuntu ${ubuntu_version} — construyendo imagen base"
     docker build --build-arg "UBUNTU_VERSION=${ubuntu_version}" -t "${base_tag}" -f "${DOCKER_DIR}/Dockerfile" .
 
-    section "Ubuntu ${ubuntu_version} — construyendo variante NVM (1 versión)"
+    section "Ubuntu ${ubuntu_version} — construyendo variante NVM (1 versión, alias default = lts/*)"
     docker build --build-arg "UBUNTU_VERSION=${ubuntu_version}" -t "${single_tag}" -f "${DOCKER_DIR}/Dockerfile.nvm-single" .
 
-    section "Ubuntu ${ubuntu_version} — construyendo variante NVM (2 versiones)"
+    section "Ubuntu ${ubuntu_version} — construyendo variante NVM (2 versiones, alias default = la más vieja)"
     docker build --build-arg "UBUNTU_VERSION=${ubuntu_version}" -t "${multi_tag}" -f "${DOCKER_DIR}/Dockerfile.nvm-multi" .
 
-    section "Ubuntu ${ubuntu_version} — batería general (imagen base)"
-    set +e
-    docker run --rm "${base_tag}" bash tests/docker/run-all-tests.sh
-    code=$?
-    set -e
-    record "Ubuntu ${ubuntu_version} / imagen base / run-all-tests.sh" "${code}"
+    # Nivel 1 (docs/TEST_CASES.md, U01-U08): sintaxis, ShellCheck,
+    # node --check, y todas las suites de tests/*.sh y tests/*.js
+    # (router, doctor, backup, backup_move_dir, migrations, status_mapping).
+    run_case "U01-U08" "${base_tag}" \
+        "batería general (imagen base)" \
+        "tests/docker/run-all-tests.sh"
 
-    section "Ubuntu ${ubuntu_version} — bootstrap interactivo vía Mise, sin NVM (imagen base)"
-    set +e
-    docker run --rm "${base_tag}" bash tests/docker/test_bootstrap_mise_no_nvm.sh
-    code=$?
-    set -e
-    record "Ubuntu ${ubuntu_version} / imagen base / test_bootstrap_mise_no_nvm.sh" "${code}"
+    # Hito 2/7 estabilización: bootstrap interactivo vía Mise, nunca NVM.
+    run_case "BOOT01" "${base_tag}" \
+        "bootstrap interactivo vía Mise, sin NVM (imagen base)" \
+        "tests/docker/test_bootstrap_mise_no_nvm.sh"
 
-    section "Ubuntu ${ubuntu_version} — migración NVM->Mise instalando NVM en tiempo de ejecución (imagen base)"
-    set +e
-    docker run --rm "${base_tag}" bash tests/docker/test_nvm_to_mise_apply.sh
-    code=$?
-    set -e
-    record "Ubuntu ${ubuntu_version} / imagen base / test_nvm_to_mise_apply.sh" "${code}"
+    # Nivel 2 (docs/TEST_CASES.md, M01/M02/M05): desde cero, instalando NVM
+    # en tiempo de ejecución dentro del propio contenedor.
+    run_case "M01,M02,M05,M08" "${base_tag}" \
+        "migración NVM->Mise instalando NVM en tiempo de ejecución (imagen base)" \
+        "tests/docker/test_nvm_to_mise_apply.sh"
 
-    section "Ubuntu ${ubuntu_version} — migración NVM->Mise con NVM+1 versión preinstalada"
-    set +e
-    docker run --rm "${single_tag}" bash tests/docker/test_nvm_to_mise_prebaked.sh
-    code=$?
-    set -e
-    record "Ubuntu ${ubuntu_version} / nvm-single / test_nvm_to_mise_prebaked.sh" "${code}"
+    # Nivel 2 (M03,M05): home reutilizado simple, NVM+1 versión ya en la imagen.
+    run_case "M03,M05,M08" "${single_tag}" \
+        "migración NVM->Mise con NVM+1 versión preinstalada" \
+        "tests/docker/test_nvm_to_mise_prebaked.sh"
 
-    section "Ubuntu ${ubuntu_version} — migración NVM->Mise con NVM+2 versiones preinstaladas (alias default != versión más alta)"
-    set +e
-    docker run --rm "${multi_tag}" bash tests/docker/test_nvm_to_mise_prebaked.sh
-    code=$?
-    set -e
-    record "Ubuntu ${ubuntu_version} / nvm-multi / test_nvm_to_mise_prebaked.sh" "${code}"
+    # Nivel 2 (M04,M05): home reutilizado con múltiples versiones, alias
+    # default != versión más alta detectada.
+    run_case "M04,M05,M08" "${multi_tag}" \
+        "migración NVM->Mise con NVM+2 versiones preinstaladas (alias default != versión más alta)" \
+        "tests/docker/test_nvm_to_mise_prebaked.sh"
 done
 
 section "Resumen general"
 for line in "${RESULTS[@]}"; do
     echo "${line}"
 done
+
+echo ""
+if [[ "${FAILED}" -eq 0 ]]; then
+    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, BOOT01, M01-M05, M08."
+else
+    echo "RESULTADO: HUBO FALLOS. Revisa las líneas 'FALLÓ' arriba."
+fi
+echo "Log completo: ${UCI_LOG_FILE} (o ${UCI_LOG_LATEST} para la corrida más reciente)"
 
 exit "${FAILED}"
