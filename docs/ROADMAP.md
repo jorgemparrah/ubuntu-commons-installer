@@ -261,7 +261,7 @@ Crítica
 
 **Estado**
 
-Blocked
+Review
 
 Depende de:
 
@@ -275,26 +275,29 @@ Crear un sistema de backups centralizado.
 
 Respaldar:
 
-* configuración del shell
-* configuración de runtime
-* carpetas migradas
-* archivos modificados
+* [x] configuración del shell (`.bashrc`, `.zshrc`, `.profile`)
+* [x] configuración de runtime (`.gitconfig`, `.config/mise/config.toml`)
+* [ ] carpetas migradas — primitiva lista (`backup_move_dir`), sin un llamador todavía; la usará la migración NVM→Mise del Hito 7
+* [ ] archivos modificados por instaladores — se conectará al modernizar instaladores (Hito 11) o al implementar migraciones concretas (Hito 6-7)
 
 ### Entregables
 
-Módulo de backup.
+* `scripts/lib/backup.sh` — `backup_init_session`, `backup_copy_file`, `backup_copy_dir`, `backup_move_dir` (primitiva para mover con verificación, aún sin usar), manifiesto TSV
+* `setup.sh backup` / `setup.sh backup --dry-run`
+* `tests/fixtures/sample_home/` — home de ejemplo para probar backups sin tocar `$HOME` real
+* `tests/test_backup.sh`
 
 ### Criterios de aceptación
 
-Backups con timestamp.
-
-Sin sobrescritura.
-
-Sin comportamiento destructivo.
+* [x] Backups con timestamp (`<timestamp>-<pid>`, único por sesión)
+* [x] Sin sobrescritura (una sesión existente nunca se reutiliza; un archivo ya respaldado en la sesión no se pisa)
+* [x] Sin comportamiento destructivo (`backup_copy_file`/`backup_copy_dir` nunca tocan el origen; `backup_move_dir` solo borra el origen tras verificar la copia, y no se invoca desde ningún flujo todavía)
+* [x] Soporta `--dry-run` (no crea nada en el filesystem, solo reporta)
 
 ### Decisión relacionada
 
 [ADR 0005](adr/0005-gestor-de-backups-centralizado.md).
+[ADR 0023](adr/0023-variable-uci-home-dir-para-pruebas.md) — `UCI_HOME_DIR` se usó para probar este hito de punta a punta sin tocar el `$HOME` real.
 
 ---
 

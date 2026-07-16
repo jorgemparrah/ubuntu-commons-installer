@@ -1,0 +1,3 @@
+# Fixture para tests/test_backup.sh (Hito 5). No es una config real.
+[tools]
+node = "lts"

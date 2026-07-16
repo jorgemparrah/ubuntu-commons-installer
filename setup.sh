@@ -28,6 +28,8 @@ source "${UCI_ROOT_DIR}/scripts/lib/logging.sh"
 source "${UCI_ROOT_DIR}/scripts/bootstrap/preflight.sh"
 # shellcheck source=scripts/diagnostics/doctor.sh
 source "${UCI_ROOT_DIR}/scripts/diagnostics/doctor.sh"
+# shellcheck source=scripts/lib/backup.sh
+source "${UCI_ROOT_DIR}/scripts/lib/backup.sh"
 
 # --- Flujo interactivo histórico ------------------------------------------
 # Todo lo que sigue hasta main_setup() es el contenido original de este
@@ -315,13 +317,15 @@ Uso:
   ./setup.sh version        Muestra la versión del proyecto
   ./setup.sh doctor         Diagnóstico de solo lectura de la workstation
   ./setup.sh doctor --verbose   Diagnóstico con detalle adicional
+  ./setup.sh backup         Respalda la configuración conocida de shell/runtime
+  ./setup.sh backup --dry-run   Muestra qué se respaldaría, sin crear nada
 
 Variables de entorno:
   UCI_DEBUG=1               Activa mensajes de depuración (log_debug)
   UCI_HOME_DIR=<ruta>       Home a usar en vez de $HOME (para pruebas/simulación)
 
 Comandos planificados, todavía no disponibles (ver docs/ROADMAP.md):
-  backup, migrate, validate
+  migrate, validate
 EOF
 }
 
@@ -336,6 +340,31 @@ cmd_doctor() {
     fi
 
     if ! doctor_run "${UCI_HOME_DIR}" "$@"; then
+        exit 1
+    fi
+}
+
+cmd_backup() {
+    local dry_run=0
+    local arg
+    for arg in "$@"; do
+        case "${arg}" in
+            --dry-run)
+                dry_run=1
+                ;;
+            *)
+                log_error "Opción desconocida para 'backup': '${arg}'"
+                exit 1
+                ;;
+        esac
+    done
+
+    if ! preflight_core; then
+        log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
+        exit 1
+    fi
+
+    if ! backup_run "${UCI_HOME_DIR}" "${dry_run}"; then
         exit 1
     fi
 }
@@ -373,6 +402,9 @@ main() {
             ;;
         doctor)
             cmd_doctor "$@"
+            ;;
+        backup)
+            cmd_backup "$@"
             ;;
         *)
             log_error "Comando desconocido: '${cmd}'"

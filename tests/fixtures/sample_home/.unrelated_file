@@ -1,0 +1,2 @@
+Este archivo NO está en la lista de configuración por defecto de backup_run;
+sirve para verificar que el backup no copia cosas fuera de su alcance.
