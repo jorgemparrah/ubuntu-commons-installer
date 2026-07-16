@@ -117,11 +117,13 @@ Crítica
 
 **Estado**
 
-Review
+Done
 
 Depende de:
 
 * Evaluación del repositorio
+
+Cerrado como `Done` en el cierre de la fase de estabilización (2026-07-16). Ver evidencia detallada en [`docs/ACCEPTANCE_2_7.md`](ACCEPTANCE_2_7.md#hito-2--bootstrap).
 
 ### Objetivo
 
@@ -167,11 +169,13 @@ Crítica
 
 **Estado**
 
-Review
+Done
 
 Depende de:
 
 * Bootstrap
+
+Cerrado como `Done` en el cierre de la fase de estabilización (2026-07-16). Ver evidencia detallada en [`docs/ACCEPTANCE_2_7.md`](ACCEPTANCE_2_7.md#hito-3--idempotencia-del-menú-y-modelo-de-estado-enriquecido).
 
 ### Objetivo
 
@@ -214,11 +218,13 @@ Crítica
 
 **Estado**
 
-Review
+Done
 
 Depende de:
 
 * Idempotencia del menú y modelo de estado enriquecido
+
+Cerrado como `Done` en el cierre de la fase de estabilización (2026-07-16). Ver evidencia detallada en [`docs/ACCEPTANCE_2_7.md`](ACCEPTANCE_2_7.md#hito-4--doctor).
 
 ### Objetivo
 
@@ -265,11 +271,13 @@ Crítica
 
 **Estado**
 
-Review
+Done
 
 Depende de:
 
 * Doctor
+
+Cerrado como `Done` en el cierre de la fase de estabilización (2026-07-16). Ver evidencia detallada en [`docs/ACCEPTANCE_2_7.md`](ACCEPTANCE_2_7.md#hito-5--gestor-de-backups).
 
 ### Objetivo
 
@@ -315,11 +323,13 @@ Crítica
 
 **Estado**
 
-Review
+Done
 
 Depende de:
 
 * Gestor de Backups
+
+Cerrado como `Done` en el cierre de la fase de estabilización (2026-07-16). Ver evidencia detallada en [`docs/ACCEPTANCE_2_7.md`](ACCEPTANCE_2_7.md#hito-6--framework-de-migraciones).
 
 ### Objetivo
 
@@ -367,6 +377,8 @@ Review
 Depende de:
 
 Framework de migraciones
+
+Permanece en `Review` tras el cierre de la fase de estabilización (2026-07-16): M06 (Mise ya instalado antes de migrar) y M07 (`apply` falla a mitad de camino) siguen sin caso de prueba automatizado. Ver evidencia y razón detallada en [`docs/ACCEPTANCE_2_7.md`](ACCEPTANCE_2_7.md#hito-7--migración-nvm--mise). Sin limitación de Ubuntu 26.04: las 5 combinaciones Docker de este hito corrieron exitosamente también en 26.04.
 
 ### Objetivo
 
