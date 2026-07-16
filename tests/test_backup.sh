@@ -19,6 +19,15 @@ readonly SETUP_SH
 FIXTURE_HOME="${UCI_TEST_DIR}/fixtures/sample_home"
 readonly FIXTURE_HOME
 
+# Hash del contenido del fixture, independiente de git (dentro del
+# contenedor de tests/docker/ no hay .git: se excluye a propósito vía
+# .dockerignore para no infartar el build context).
+fixture_hash() {
+    find "${FIXTURE_HOME}" -type f -exec sha256sum {} \; | sort | sha256sum
+}
+FIXTURE_HASH_BEFORE="$(fixture_hash)"
+readonly FIXTURE_HASH_BEFORE
+
 UCI_TESTS_RUN=0
 UCI_TESTS_FAILED=0
 
@@ -166,10 +175,10 @@ assert_failure "'backup --esto-no-existe' sale con código distinto de cero" "${
 
 echo ""
 echo "== fixture del repositorio permanece intacto =="
-if git -C "${UCI_REPO_ROOT}" diff --quiet -- tests/fixtures/sample_home 2>/dev/null; then
+if [[ "$(fixture_hash)" == "${FIXTURE_HASH_BEFORE}" ]]; then
     pass "tests/fixtures/sample_home no fue modificado por las pruebas"
 else
-    fail "tests/fixtures/sample_home fue modificado por las pruebas (revisar git diff)"
+    fail "tests/fixtures/sample_home fue modificado por las pruebas"
 fi
 
 echo ""
