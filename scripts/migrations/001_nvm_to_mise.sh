@@ -93,8 +93,188 @@ nvm_global_packages() {
     fi
 }
 
+# nvm_package_version <version> <paquete>
+# Versión del paquete global, leída de su propio package.json. "desconocida"
+# si no se puede determinar (nunca es un error: es solo para el reporte).
+nvm_package_version() {
+    local version="$1" package="$2"
+    local pkg_json="${UCI_NVM_DIR}/versions/node/${version}/lib/node_modules/${package}/package.json"
+    if [[ -f "${pkg_json}" ]]; then
+        local pkg_version
+        pkg_version="$(grep -m1 '"version"' "${pkg_json}" 2>/dev/null | sed -E 's/^[^:]*:[[:space:]]*"([^"]*)".*/\1/')"
+        [[ -n "${pkg_version}" ]] && echo "${pkg_version}" && return 0
+    fi
+    echo "desconocida"
+}
+
+# nvm_write_versions_report <report_file> <versions_multilinea> <default_alias> <default_version_mise>
+nvm_write_versions_report() {
+    local report_file="$1" versions="$2" default_alias="$3" default_version="$4"
+    local v
+
+    printf 'version_node\truta_original\talias_default_nvm\tversion_global_mise\n' > "${report_file}"
+    if [[ -n "${versions}" ]]; then
+        while IFS= read -r v; do
+            [[ -z "${v}" ]] && continue
+            printf '%s\t%s\t%s\t%s\n' \
+                "${v}" "${UCI_NVM_DIR}/versions/node/${v}" "${default_alias:--}" "${default_version:--}" \
+                >> "${report_file}"
+        done <<< "${versions}"
+    fi
+}
+
+# nvm_write_global_packages_report <report_file> <versions_multilinea>
+# No reinstala nada; es puramente informativo (ver ADR 0024).
+nvm_write_global_packages_report() {
+    local report_file="$1" versions="$2"
+    local v pkg pkgs
+
+    printf 'version_node\tpaquete\tversion_paquete\truta_original\n' > "${report_file}"
+    if [[ -z "${versions}" ]]; then
+        return 0
+    fi
+
+    while IFS= read -r v; do
+        [[ -z "${v}" ]] && continue
+        pkgs="$(nvm_global_packages "${v}")"
+        [[ -z "${pkgs}" ]] && continue
+        while IFS= read -r pkg; do
+            [[ -z "${pkg}" ]] && continue
+            printf '%s\t%s\t%s\t%s\n' \
+                "${v}" "${pkg}" "$(nvm_package_version "${v}" "${pkg}")" \
+                "${UCI_NVM_DIR}/versions/node/${v}/lib/node_modules/${pkg}" \
+                >> "${report_file}"
+        done <<< "${pkgs}"
+    done <<< "${versions}"
+}
+
+# --- Limpieza de referencias conocidas de NVM en archivos de shell -------
+#
+# Solo se eliminan líneas que calcen EXACTO (normalizando espacios) con las
+# que agrega el instalador oficial de NVM o nuestro propio
+# scripts/development/install_nodejs.sh (legado). Nunca se usa un patrón
+# amplio tipo "cualquier línea que contenga nvm" (ver ADR 0007/HI-04).
+# Cualquier otra línea que mencione "nvm" se deja intacta y se reporta como
+# ambigua para revisión manual.
+
+# nvm_normalize_line <línea>
+# Colapsa espacios/tabs repetidos y quita espacios al final, para comparar
+# con las líneas conocidas sin ser tan frágil como una comparación byte a
+# byte (por ejemplo, un espacio de más antes de un comentario).
+nvm_normalize_line() {
+    printf '%s' "$1" | sed -E 's/[[:space:]]+/ /g; s/[[:space:]]+$//'
+}
+
+# nvm_is_known_shell_line <línea>
+# exit 0 si la línea es un patrón exacto y reconocido del instalador de
+# NVM (oficial o el legado de este repo); exit 1 en cualquier otro caso.
+nvm_is_known_shell_line() {
+    local normalized
+    normalized="$(nvm_normalize_line "$1")"
+    case "${normalized}" in
+        'export NVM_DIR="$HOME/.nvm"')
+            return 0
+            ;;
+        'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"')
+            return 0
+            ;;
+        '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm')
+            return 0
+            ;;
+        '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"')
+            return 0
+            ;;
+        '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion')
+            return 0
+            ;;
+        '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"')
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+# nvm_scan_shell_file <rc_file>
+# De solo lectura: imprime, separadas por tab, cuántas líneas conocidas se
+# eliminarían y cuántas ambiguas quedarían sin tocar. Usado por dry-run.
+nvm_scan_shell_file() {
+    local rc_file="$1"
+    local known=0 ambiguous=0 line
+
+    if [[ ! -f "${rc_file}" ]]; then
+        printf '0\t0\n'
+        return 0
+    fi
+
+    while IFS= read -r line || [[ -n "${line}" ]]; do
+        if nvm_is_known_shell_line "${line}"; then
+            known=$((known + 1))
+        elif printf '%s' "${line}" | grep -qi 'nvm'; then
+            ambiguous=$((ambiguous + 1))
+        fi
+    done < "${rc_file}"
+
+    printf '%s\t%s\n' "${known}" "${ambiguous}"
+}
+
+# nvm_cleanup_shell_file <rc_file> <report_file>
+# Reescribe <rc_file> eliminando solo las líneas exactas reconocidas.
+# Cualquier línea ambigua (menciona "nvm" pero no calza con un patrón
+# conocido) se conserva intacta y se registra en <report_file>. Maneja
+# archivos sin salto de línea final. No es un no-op seguro para dry-run:
+# para eso usar nvm_scan_shell_file.
+nvm_cleanup_shell_file() {
+    local rc_file="$1" report_file="$2"
+    local tmp_file line removed=0
+
+    if [[ ! -f "${rc_file}" ]]; then
+        return 0
+    fi
+
+    tmp_file="$(mktemp)"
+
+    while IFS= read -r line || [[ -n "${line}" ]]; do
+        if nvm_is_known_shell_line "${line}"; then
+            removed=$((removed + 1))
+            printf '%s\t%s\t%s\n' "${rc_file}" "eliminada: patrón conocido de NVM" "${line}" >> "${report_file}"
+            continue
+        fi
+
+        if printf '%s' "${line}" | grep -qi 'nvm'; then
+            printf '%s\t%s\t%s\n' "${rc_file}" "ambigua: se deja sin tocar, revisar manualmente" "${line}" >> "${report_file}"
+        fi
+
+        printf '%s\n' "${line}" >> "${tmp_file}"
+    done < "${rc_file}"
+
+    if [[ "${removed}" -gt 0 ]]; then
+        mv "${tmp_file}" "${rc_file}"
+        log_success "Se limpiaron ${removed} línea(s) conocida(s) de NVM en ${rc_file}"
+    else
+        rm -f "${tmp_file}"
+    fi
+
+    return 0
+}
+
+# nvm_shell_files_still_reference_nvm_sh
+# exit 0 (verdadero) si algún archivo de shell todavía intenta cargar
+# $NVM_DIR/nvm.sh — señal de que la limpieza no funcionó o de que queda un
+# patrón no reconocido apuntando a una ruta ya inexistente.
+nvm_shell_files_still_reference_nvm_sh() {
+    local rc_file
+    for rc_file in "${UCI_HOME_DIR}/.bashrc" "${UCI_HOME_DIR}/.zshrc" "${UCI_HOME_DIR}/.profile"; do
+        if [[ -f "${rc_file}" ]] && grep -qF 'NVM_DIR/nvm.sh' "${rc_file}"; then
+            return 0
+        fi
+    done
+    return 1
+}
+
 migration_describe() {
-    echo "Migra Node.js de NVM a Mise: instala Mise, reinstala las versiones de Node detectadas, activa Mise vía un bloque gestionado del shell, y mueve ~/.nvm a un backup (no lo borra)"
+    echo "Migra Node.js de NVM a Mise: instala Mise, reinstala las versiones de Node detectadas, limpia las referencias conocidas de NVM en los archivos de shell, activa Mise vía un bloque gestionado del shell, y mueve ~/.nvm a un backup (no lo borra)"
 }
 
 migration_check() {
@@ -133,6 +313,18 @@ migration_dry_run() {
     fi
 
     log_info "[dry-run] Respaldaría .bashrc/.zshrc/.profile y movería ${UCI_NVM_DIR} a un backup (copiar + verificar + recién ahí eliminar el origen)"
+
+    local rc_file scan known ambiguous
+    for rc_file in "${UCI_HOME_DIR}/.bashrc" "${UCI_HOME_DIR}/.zshrc" "${UCI_HOME_DIR}/.profile"; do
+        [[ -f "${rc_file}" ]] || continue
+        scan="$(nvm_scan_shell_file "${rc_file}")"
+        known="$(echo "${scan}" | cut -f1)"
+        ambiguous="$(echo "${scan}" | cut -f2)"
+        if [[ "${known}" -gt 0 || "${ambiguous}" -gt 0 ]]; then
+            log_info "[dry-run] ${rc_file}: eliminaría ${known} línea(s) conocida(s) de NVM, dejaría ${ambiguous} línea(s) ambigua(s) sin tocar"
+        fi
+    done
+
     log_info "[dry-run] Agregaría/actualizaría el bloque gestionado de Mise en los archivos de shell presentes"
     if [[ -n "${versions}" ]]; then
         log_info "[dry-run] Instalaría vía Mise cada versión detectada: $(echo "${versions}" | tr '\n' ' ')"
@@ -190,12 +382,23 @@ migration_apply() {
         backup_copy_file "${session_dir}" "${UCI_HOME_DIR}" "${rc_file}" "0" || return 1
     done
 
+    # 1.5) Limpiar referencias conocidas de NVM en los archivos de shell ya
+    # respaldados. Solo patrones exactos reconocidos (ver ADR 0007); las
+    # líneas ambiguas se dejan intactas y quedan reportadas.
+    mkdir -p "${session_dir}/reports"
+    local shell_changes_report="${session_dir}/reports/shell-changes.tsv"
+    printf 'archivo\taccion\tlinea\n' > "${shell_changes_report}"
+    for rc_file in "${UCI_HOME_DIR}/.bashrc" "${UCI_HOME_DIR}/.zshrc" "${UCI_HOME_DIR}/.profile"; do
+        nvm_cleanup_shell_file "${rc_file}" "${shell_changes_report}"
+    done
+
     # 2) Inventariar (no reinstalar) paquetes globales, solo para el reporte.
     local versions
     versions="$(nvm_installed_versions)"
     if [[ -n "${versions}" ]]; then
         log_info "Versiones de Node detectadas en NVM: $(echo "${versions}" | tr '\n' ' ')"
     fi
+    nvm_write_global_packages_report "${session_dir}/reports/nvm-global-packages.tsv" "${versions}"
 
     # 3) Instalar Mise si falta.
     if [[ ! -x "${UCI_MISE_BIN}" ]]; then
@@ -263,6 +466,8 @@ migration_apply() {
         fi
     fi
 
+    nvm_write_versions_report "${session_dir}/reports/nvm-versions.tsv" "${versions}" "${default_alias}" "${default_version}"
+
     # 7) Mover .nvm al backup (copiar + verificar + recién ahí eliminar el
     # origen). Nunca se borra directamente (ADR 0003).
     if ! backup_move_dir "${session_dir}" "${UCI_HOME_DIR}" "${UCI_NVM_DIR}" "0"; then
@@ -271,12 +476,18 @@ migration_apply() {
     fi
 
     log_success "Migración NVM -> Mise aplicada. Backup en: ${session_dir}"
+    log_info "Reportes: ${session_dir}/reports/ (nvm-versions.tsv, nvm-global-packages.tsv, shell-changes.tsv)"
     return 0
 }
 
 migration_validate() {
     if [[ ! -x "${UCI_MISE_BIN}" ]]; then
         log_error "Validación: Mise no está instalado en ${UCI_MISE_BIN}"
+        return 1
+    fi
+
+    if nvm_shell_files_still_reference_nvm_sh; then
+        log_error "Validación: algún archivo de shell todavía intenta cargar \$NVM_DIR/nvm.sh, una ruta que ya no existe"
         return 1
     fi
 
@@ -305,7 +516,7 @@ migration_rollback_notes() {
 Para revertir manualmente esta migración:
 1. Ubicar la sesión de backup más reciente en ${UCI_HOME_DIR}/.local/state/ubuntu-workstation/backups/
 2. Mover de vuelta <sesión>/home/.nvm a ${UCI_NVM_DIR}
-3. Restaurar <sesión>/home/.bashrc, .zshrc y .profile a sus ubicaciones originales
+3. Restaurar <sesión>/home/.bashrc, .zshrc y .profile a sus ubicaciones originales (esto también deshace la limpieza de líneas de NVM; ver <sesión>/reports/shell-changes.tsv para el detalle de qué se quitó)
 4. Eliminar el bloque gestionado de Mise (entre '${UCI_MISE_BLOCK_BEGIN}' y '${UCI_MISE_BLOCK_END}') de los archivos de shell restaurados, si quedó alguno agregado por una corrida parcial
 5. Opcionalmente, desinstalar Mise eliminando ${UCI_HOME_DIR}/.local/bin/mise, ${UCI_HOME_DIR}/.config/mise y ${UCI_HOME_DIR}/.local/share/mise
 EOF
