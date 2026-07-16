@@ -1,0 +1,23 @@
+# tests/docker/Dockerfile.nvm-single
+#
+# Variante de tests/docker/Dockerfile con NVM y UNA sola versión de Node ya
+# instalados en tiempo de build (marcada como default de NVM), para simular
+# una workstation reutilizada que ya tenía Node vía NVM antes de correr la
+# migración. Requiere que la imagen base ya exista:
+#
+#   docker build --build-arg UBUNTU_VERSION=24.04 -t ubuntu-workstation-test:24.04 -f tests/docker/Dockerfile .
+#   docker build --build-arg UBUNTU_VERSION=24.04 -t ubuntu-workstation-test-nvm-single:24.04 -f tests/docker/Dockerfile.nvm-single .
+
+ARG UBUNTU_VERSION=24.04
+FROM ubuntu-workstation-test:${UBUNTU_VERSION}
+
+ARG NVM_VERSION=v0.40.1
+ARG NODE_VERSION=lts/*
+
+RUN curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh" | bash \
+    && export NVM_DIR="${HOME}/.nvm" \
+    && . "${NVM_DIR}/nvm.sh" \
+    && nvm install "${NODE_VERSION}" \
+    && nvm alias default "${NODE_VERSION}"
+
+CMD ["/bin/bash"]

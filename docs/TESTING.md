@@ -4,6 +4,8 @@
 
 Este documento explica cómo validar el repositorio sin arriesgar la máquina de desarrollo real, especialmente para lo que instala software real o modifica archivos de shell (por ejemplo, la migración NVM → Mise del Hito 7).
 
+Ver `docs/TEST_CASES.md` para la lista completa de casos de prueba funcionales (por comando/escenario, con su condición inicial y qué imagen los cubre) — ese documento es la fuente de verdad; los Dockerfiles de `tests/docker/` se crean a partir de él, no al revés.
+
 ## Niveles de prueba
 
 1. **Sintaxis y pruebas unitarias/de contrato** (`bash -n`, ShellCheck, `tests/*.sh`, `tests/*.js`): seguras en cualquier máquina, incluida la de desarrollo. No instalan nada ni tocan `$HOME` real — usan `UCI_HOME_DIR` apuntando a un directorio temporal (ver `docs/adr/0023-variable-uci-home-dir-para-pruebas.md`).
@@ -54,6 +56,15 @@ docker run --rm ubuntu-workstation-test:24.04 bash tests/docker/run-all-tests.sh
 docker run --rm ubuntu-workstation-test:26.04 bash tests/docker/run-all-tests.sh
 ```
 
+### Correr TODO (todos los casos de `docs/TEST_CASES.md`, todas las imágenes, ambas versiones de Ubuntu)
+
+```bash
+bash tests/docker/build-and-test-all.sh          # 24.04 y 26.04
+bash tests/docker/build-and-test-all.sh 24.04     # solo una versión
+```
+
+Este script construye la imagen base y las variantes `Dockerfile.nvm-single`/`Dockerfile.nvm-multi` (ver `docs/TEST_CASES.md` para qué condición inicial representa cada una), corre `run-all-tests.sh` en la base, y corre las pruebas de la migración NVM→Mise en cada imagen correspondiente. Termina con un resumen de qué combinación pasó o falló.
+
 ### Shell interactiva para explorar/depurar
 
 ```bash
@@ -64,7 +75,18 @@ Dentro del contenedor, el repositorio vive en `~/ubuntu-commons-installer` (el n
 
 ### Probar la migración NVM → Mise (Hito 7) de punta a punta
 
-Dentro de una sesión interactiva del contenedor:
+`scripts/migrations/001_nvm_to_mise.sh` instala software real (Mise) y solo se prueba dentro de este contenedor — nunca en una máquina de desarrollo real, ni siquiera con `UCI_HOME_DIR` apuntando a una carpeta temporal (el instalador de Mise usa `$HOME`, no `UCI_HOME_DIR`).
+
+**Automatizado** — un solo comando desde el host, sin entrar al contenedor:
+
+```bash
+docker run --rm ubuntu-workstation-test:24.04 bash tests/docker/test_nvm_to_mise_apply.sh
+docker run --rm ubuntu-workstation-test:26.04 bash tests/docker/test_nvm_to_mise_apply.sh
+```
+
+Este script instala NVM real, instala Node vía NVM, corre `doctor`, `migrate --list`, `migrate --dry-run`, aplica la migración de verdad, y verifica: que `~/.nvm` ya no exista, que quedó dentro del backup, que Mise resuelve un `node` ejecutable, que hay una marca de finalización, y que correr `migrate` de nuevo no crea una segunda sesión de backup (idempotencia).
+
+**Manual** — para explorar paso a paso, dentro de una sesión interactiva del contenedor:
 
 ```bash
 cd ~/ubuntu-commons-installer

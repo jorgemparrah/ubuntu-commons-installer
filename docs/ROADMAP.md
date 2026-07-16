@@ -358,7 +358,7 @@ Crítica
 
 **Estado**
 
-Blocked
+Review
 
 Depende de:
 
@@ -372,36 +372,43 @@ Reemplazar NVM por Mise.
 
 Detectar:
 
-* versiones de Node instaladas
-* paquetes globales
+* [x] versiones de Node instaladas (`~/.nvm/versions/node/*`)
+* [x] paquetes globales (se inventarían en el log/dry-run; no se reinstalan automáticamente, ver [ADR 0024](adr/0024-alcance-migracion-nvm-a-mise.md))
 
 Respaldar:
 
-* .nvm
-* configuración del shell
+* [x] .nvm (movido, no copiado ni borrado directo — copiar + verificar + recién ahí eliminar el origen)
+* [x] configuración del shell (`.bashrc`, `.zshrc`, `.profile`, respaldados antes de tocarlos)
 
 Instalar:
 
-* Mise
+* [x] Mise
 
 Restaurar:
 
-* runtimes de Node
+* [x] runtimes de Node (cada versión detectada, reinstalada vía Mise; versión global tomada del alias `default` de NVM)
 
 Validar:
 
-* PATH
-* ejecutables
+* [x] PATH / ejecutables (Mise resuelve un `node` ejecutable y corre)
+
+### Entregables
+
+* `scripts/migrations/001_nvm_to_mise.sh` (contrato del Hito 6: `describe|check|dry-run|apply|validate|rollback-notes`)
+* `tests/docker/Dockerfile.nvm-single`, `tests/docker/Dockerfile.nvm-multi` — imágenes con NVM+Node ya instalados, para probar sobre un "home reutilizado" realista
+* `tests/docker/test_nvm_to_mise_apply.sh`, `tests/docker/test_nvm_to_mise_prebaked.sh`, `tests/docker/build-and-test-all.sh`
+* `docs/TEST_CASES.md` — casos de prueba funcionales por comando/escenario
 
 ### Criterios de aceptación
 
-Node ya no depende de NVM.
+* [x] Node ya no depende de NVM (validado con Node real instalado vía NVM, migrado a Mise, dentro de contenedores desechables)
+* [x] La migración es repetible (correr `migrate` dos veces no crea una segunda sesión de backup ni reaplica)
 
-La migración es repetible.
+Validado de punta a punta en **8 combinaciones** (imagen base + `nvm-single` + `nvm-multi`, en Ubuntu 24.04 y 26.04), todas en verde. Ver `docs/TEST_CASES.md` (casos M01-M05).
 
 ### Decisiones relacionadas
 
-[ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md), [ADR 0003](adr/0003-migracion-nvm-sin-borrado-directo.md), [ADR 0007](adr/0007-bloques-gestionados-en-archivos-de-shell.md).
+[ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md), [ADR 0003](adr/0003-migracion-nvm-sin-borrado-directo.md), [ADR 0007](adr/0007-bloques-gestionados-en-archivos-de-shell.md), [ADR 0024](adr/0024-alcance-migracion-nvm-a-mise.md).
 
 ---
 

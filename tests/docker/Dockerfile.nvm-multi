@@ -1,0 +1,24 @@
+# tests/docker/Dockerfile.nvm-multi
+#
+# Variante de tests/docker/Dockerfile con NVM y DOS versiones de Node ya
+# instaladas en tiempo de build, con el alias 'default' apuntando a la
+# versión MÁS VIEJA (no la más nueva) — para probar que la migración toma
+# la versión global de Mise desde el alias 'default' de NVM y no
+# simplemente "la más alta detectada" (ver docs/adr/0024-alcance-migracion-nvm-a-mise.md).
+# Requiere que la imagen base ya exista (ver Dockerfile.nvm-single).
+
+ARG UBUNTU_VERSION=24.04
+FROM ubuntu-workstation-test:${UBUNTU_VERSION}
+
+ARG NVM_VERSION=v0.40.1
+ARG OLDER_NODE_VERSION=18
+ARG NEWER_NODE_VERSION=lts/*
+
+RUN curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh" | bash \
+    && export NVM_DIR="${HOME}/.nvm" \
+    && . "${NVM_DIR}/nvm.sh" \
+    && nvm install "${OLDER_NODE_VERSION}" \
+    && nvm install "${NEWER_NODE_VERSION}" \
+    && nvm alias default "${OLDER_NODE_VERSION}"
+
+CMD ["/bin/bash"]

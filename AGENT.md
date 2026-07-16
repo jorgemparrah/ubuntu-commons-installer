@@ -150,6 +150,7 @@ docs/
 ├── ROADMAP.md        ⭐ Plan de evolución
 ├── CONTRIBUTING.md   ⭐ Guía para humanos
 ├── TESTING.md        ⭐ Cómo probar (incluye Docker para lo que instala/modifica de verdad)
+├── TEST_CASES.md      ⭐ Casos de prueba funcionales por comando, con su condición inicial
 ├── adr/              ⭐ Decisiones de arquitectura (ADRs), una por archivo
 ├── MIGRATIONS.md      ⭐ Migraciones importantes ya ejecutadas
 ├── RELEASES.md        ⭐ Historial de versiones
@@ -162,6 +163,7 @@ Cada archivo se mantiene vivo a medida que se implementa, no solo al inicio del 
 - **ROADMAP.md** — se actualiza al cerrar o reordenar una etapa del plan de evolución.
 - **CONTRIBUTING.md** — se actualiza cuando cambia el flujo de trabajo esperado para contribuir (convenciones de commits, cómo correr validaciones, cómo probar un instalador).
 - **TESTING.md** — se actualiza cuando cambia cómo se prueba el proyecto: nuevos niveles de prueba, cambios al `Dockerfile` de `tests/docker/`, o instrucciones nuevas para validar un hito de punta a punta sin arriesgar una máquina real.
+- **TEST_CASES.md** — es la fuente de verdad de los casos de prueba funcionales: se agrega una fila nueva (con su condición inicial) **antes** de crear el Dockerfile/script que la implementa, nunca después. Se actualiza el estado (`pasa`/`falla`/`pendiente`) cada vez que se corre la batería.
 - **docs/adr/** — se agrega un archivo nuevo (`NNNN-slug.md`) cada vez que se toma una decisión de arquitectura no trivial. Nunca se edita una ADR aceptada para cambiar su contenido: se agrega una ADR nueva que la reemplaza y se marca el estado de la anterior como `Reemplazada por NNNN`. Ver la convención completa en `docs/adr/README.md`.
 - **MIGRATIONS.md** — se actualiza cada vez que una migración versionada (`scripts/migrations/NNN_*.sh`) se da por completada en el proyecto, documentando qué cambió y para quién aplica.
 - **RELEASES.md** — se actualiza en cada versión o hito entregado del proyecto.

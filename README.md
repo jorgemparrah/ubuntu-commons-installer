@@ -109,6 +109,8 @@ UCI_HOME_DIR="$(mktemp -d)" ./setup.sh doctor --verbose   # simular un home vac�
 
 `migrate` descubre las migraciones en `scripts/migrations/*.sh` (ver el contrato en `scripts/migrations/README.md`), nunca reaplica una ya marcada como hecha, y se detiene sin marcar finalización si una migración falla. Ver `docs/adr/0006-framework-de-migraciones-versionado.md`.
 
+La migración `001_nvm_to_mise` reemplaza NVM por Mise: respalda la configuración de shell, mueve `~/.nvm` a un backup (nunca lo borra directo), instala Mise, reinstala las versiones de Node detectadas, y activa Mise mediante un bloque gestionado del shell. Instala software real, así que solo se prueba dentro de contenedores Docker desechables — ver `docs/TESTING.md` y `docs/TEST_CASES.md`.
+
 Un comando desconocido muestra un error y la ayuda, y termina con código de salida distinto de cero. `doctor` nunca modifica el sistema, solo reporta (ver AGENT.md sección 10). Ver `docs/ARCHITECTURE.md` y `docs/adr/0001-bootstrap-bash-sin-node.md` para el diseño detrás de este router.
 
 ### **Flujo de Ejecución:**
