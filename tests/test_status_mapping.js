@@ -17,7 +17,9 @@ const {
     KNOWN_STATUSES,
     DEFAULT_ACTION_BY_STATUS,
     STATUS_LABELS,
-    normalizeStatus
+    normalizeStatus,
+    resolveStatusFromExecResult,
+    resolveStatusFromExecError
 } = require(path.join(__dirname, '..', 'scripts', 'lib', 'status_contract.js'));
 
 let run = 0;
@@ -71,6 +73,51 @@ assertEqual(
 assertEqual(
     "normalizeStatus('installed') (minúscula) cae a UNKNOWN, no se asume INSTALLED",
     normalizeStatus('installed'),
+    'UNKNOWN'
+);
+
+// resolveStatusFromExecResult / resolveStatusFromExecError: distinguir un
+// fallo real de ejecución de un "NOT_INSTALLED" legítimo (auditoría de
+// estabilización de los Hitos 2-7).
+assertEqual(
+    "resolveStatusFromExecResult('INSTALLED\\n') devuelve INSTALLED",
+    resolveStatusFromExecResult('INSTALLED\n'),
+    'INSTALLED'
+);
+assertEqual(
+    'resolveStatusFromExecResult(salida vacía) cae a UNKNOWN',
+    resolveStatusFromExecResult(''),
+    'UNKNOWN'
+);
+
+assertEqual(
+    "resolveStatusFromExecError: script que imprime NOT_INSTALLED y sale 1 -> NOT_INSTALLED",
+    resolveStatusFromExecError({ status: 1, stdout: 'NOT_INSTALLED\n' }),
+    'NOT_INSTALLED'
+);
+assertEqual(
+    "resolveStatusFromExecError: script que imprime UNSUPPORTED y sale 1 -> UNSUPPORTED",
+    resolveStatusFromExecError({ status: 1, stdout: 'UNSUPPORTED\n' }),
+    'UNSUPPORTED'
+);
+assertEqual(
+    'resolveStatusFromExecError: ENOENT (script inexistente, sin stdout) -> UNKNOWN, no NOT_INSTALLED',
+    resolveStatusFromExecError({ code: 'ENOENT', stdout: null }),
+    'UNKNOWN'
+);
+assertEqual(
+    'resolveStatusFromExecError: permiso denegado (sin stdout) -> UNKNOWN, no NOT_INSTALLED',
+    resolveStatusFromExecError({ status: 126, stdout: '' }),
+    'UNKNOWN'
+);
+assertEqual(
+    'resolveStatusFromExecError: crash sin imprimir nada reconocible -> UNKNOWN',
+    resolveStatusFromExecError({ status: 2, stdout: 'Traceback inesperado sin estado válido\n' }),
+    'UNKNOWN'
+);
+assertEqual(
+    'resolveStatusFromExecError: error sin objeto stdout en absoluto -> UNKNOWN',
+    resolveStatusFromExecError({}),
     'UNKNOWN'
 );
 

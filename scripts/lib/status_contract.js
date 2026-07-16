@@ -38,10 +38,38 @@ function normalizeStatus(rawStatus) {
     return KNOWN_STATUSES.includes(rawStatus) ? rawStatus : 'UNKNOWN';
 }
 
+// resolveStatusFromExecResult(rawStdout)
+// Caso feliz: el script de status corrió y salió con código 0.
+function resolveStatusFromExecResult(rawStdout) {
+    return normalizeStatus((rawStdout || '').toString().trim());
+}
+
+// resolveStatusFromExecError(error)
+//
+// El script de status sale con código != 0 tanto para señalar un estado
+// legítimo (por convención, NOT_INSTALLED/UNSUPPORTED imprimen su valor y
+// salen 1, ver install_vim.sh) como para una falla real de ejecución
+// (script inexistente/ENOENT, sin permiso, timeout, crash sin imprimir
+// nada). Hay que distinguirlos:
+//
+// - Si el proceso alcanzó a escribir algo reconocible en stdout antes de
+//   fallar, se respeta ese estado.
+// - Si no escribió nada útil, es una falla real: se reporta UNKNOWN, nunca
+//   NOT_INSTALLED por defecto (ver docs/adr/0012-modelo-de-estado-enriquecido.md).
+function resolveStatusFromExecError(error) {
+    const stdout = ((error && error.stdout) || '').toString().trim();
+    if (stdout) {
+        return normalizeStatus(stdout);
+    }
+    return 'UNKNOWN';
+}
+
 module.exports = {
     KNOWN_STATUSES,
     DEFAULT_ACTION_BY_STATUS,
     STATUS_LABELS,
     SKIP_REASON_BY_STATUS,
-    normalizeStatus
+    normalizeStatus,
+    resolveStatusFromExecResult,
+    resolveStatusFromExecError
 };

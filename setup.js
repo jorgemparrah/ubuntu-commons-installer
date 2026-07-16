@@ -5,7 +5,8 @@ const {
     DEFAULT_ACTION_BY_STATUS,
     STATUS_LABELS,
     SKIP_REASON_BY_STATUS,
-    normalizeStatus
+    resolveStatusFromExecResult,
+    resolveStatusFromExecError
 } = require('./scripts/lib/status_contract');
 
 // Tools configuration (Node.js removed from list since it's installed as dependency)
@@ -50,15 +51,15 @@ const tools = [
     { name: 'Final System Update', script: 'scripts/maintenance/install_final_update.sh', category: 'MAINTENANCE' }
 ];
 
-// Get tool status
+// Get tool status. La distinción entre "no instalado" y "falla real de
+// ejecución" vive en scripts/lib/status_contract.js (resolveStatusFromExec*),
+// para poder probarla sin depender de execSync/inquirer/chalk.
 async function getToolStatus(tool) {
     try {
-        const rawStatus = execSync(`./${tool.script} status`, { encoding: 'utf8' }).trim();
-        return normalizeStatus(rawStatus);
+        const rawStatus = execSync(`./${tool.script} status`, { encoding: 'utf8' });
+        return resolveStatusFromExecResult(rawStatus);
     } catch (error) {
-        // Convención existente: el script de status sale con código != 0
-        // específicamente para señalar "no instalado" (ver install_vim.sh).
-        return 'NOT_INSTALLED';
+        return resolveStatusFromExecError(error);
     }
 }
 
