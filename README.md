@@ -1,590 +1,156 @@
-# Post-Install Scripts
+# Ubuntu Workstation
 
-Este repositorio contiene scripts de instalación automatizada para configurar un sistema Ubuntu con todas las herramientas de desarrollo necesarias.
+> Nombre interno del proyecto: **Ubuntu Workstation**. El repositorio en GitHub mantiene su nombre histórico (`ubuntu-commons-installer`) — ver [ADR 0015](docs/adr/0015-idioma-de-la-documentacion.md) y [`AGENT.md`](AGENT.md).
 
-## Estructura
+Gestor del ciclo de vida de una workstation Ubuntu: aprovisiona herramientas de desarrollo, diagnostica el estado de la máquina, respalda configuración antes de tocarla, y migra estado histórico (por ejemplo, NVM) de forma segura.
 
-El proyecto está organizado en instaladores modulares por categorías:
+**Documentación de referencia:**
 
-### Scripts de Instalación por Categorías
-
-#### **📁 `scripts/editors/`** - Editores de Código
-- **`install_vscode.sh`** - Editor Visual Studio Code
-- **`install_cursor.sh`** - Editor Cursor AI IDE
-- **`install_vim.sh`** - Editor modal Vim
-
-#### **📁 `scripts/development/`** - Herramientas de Desarrollo
-- **`install_docker.sh`** - Plataforma de contenedores Docker
-- **`install_nodejs.sh`** - Runtime de JavaScript Node.js con NVM
-- **`install_yarn.sh`** - Gestor de paquetes Yarn
-- **`install_postman.sh`** - Cliente API Postman
-- **`install_dbeaver.sh`** - Cliente universal de base de datos DBeaver
-- **`install_gitkraken.sh`** - Cliente Git visual GitKraken
-- **`install_insomnia.sh`** - Cliente REST alternativo a Postman
-- **`install_mongodb_compass.sh`** - GUI para MongoDB
-- **`install_kubectl.sh`** - Cliente de línea de comandos para Kubernetes (via snap)
-
-#### **📁 `scripts/system/`** - Herramientas del Sistema
-- **`install_system_update.sh`** - Actualización del sistema
-- **`install_kernel.sh`** - Kernel HWE y headers
-- **`install_development_tools.sh`** - Herramientas básicas de desarrollo
-- **`install_system_utils.sh`** - Utilidades del sistema
-- **`install_multimedia.sh`** - Herramientas multimedia
-- **`install_terminator.sh`** - Terminal con múltiples pestañas
-- **`install_oh_my_zsh.sh`** - Framework para gestión de Zsh
-- **`install_powerlevel10k.sh`** - Tema rápido para Zsh
-- **`install_ranger.sh`** - Gestor de archivos en terminal
-- **`install_cmatrix.sh`** - Efecto visual Matrix en terminal
-- **`install_gimp.sh`** - Editor de imágenes GIMP (via snap)
-- **`install_obs_studio.sh`** - Software de grabación y streaming (via snap)
-
-#### **📁 `scripts/productivity/`** - Aplicaciones de Productividad
-- **`install_ulauncher.sh`** - Lanzador de aplicaciones ULauncher
-- **`install_chrome.sh`** - Navegador web Google Chrome
-- **`install_spotify.sh`** - Música en streaming Spotify
-- **`install_zoom.sh`** - Cliente de videoconferencia Zoom
-- **`install_flameshot.sh`** - Herramienta de captura de pantalla con configuración de teclas
-
-#### **📁 `scripts/maintenance/`** - Mantenimiento del Sistema
-- **`install_final_update.sh`** - Actualización final del sistema
-
-### Script Principal
-
-- **`setup.sh`** - Script principal interactivo con interfaz de checkboxes
-
-### Ventajas de la Organización por Carpetas
-
-- **📂 Mantenimiento más fácil**: Encontrar scripts por categoría lógica
-- **🔧 Escalabilidad**: Fácil agregar nuevos scripts en la categoría correcta
-- **🎯 Claridad**: Estructura clara y profesional
-- **♻️ Reutilización**: Puedes copiar carpetas completas a otros proyectos
-- **👥 Colaboración**: Más fácil para equipos trabajar en categorías específicas
-- **📋 Separación clara**: Actualizaciones y mantenimiento separados de instalaciones
-
-## Estructura del Proyecto
-
-```
-post-install/
-├── setup.sh              # Script principal (Bash)
-├── setup.js              # Interfaz interactiva (Node.js)
-├── package.json          # Dependencias de Node.js
-├── README.md             # Documentación
-└── scripts/
-    ├── system/           # Herramientas del sistema
-    ├── editors/          # Editores de código
-    ├── development/      # Herramientas de desarrollo
-    ├── productivity/     # Aplicaciones de productividad
-    └── maintenance/      # Utilidades de mantenimiento
-```
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — diseño técnico
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — plan de evolución y estado de cada hito
+- [`docs/TESTING.md`](docs/TESTING.md) — cómo probar el proyecto (incluye Docker para lo que instala/modifica de verdad)
+- [`docs/TEST_CASES.md`](docs/TEST_CASES.md) — casos de prueba funcionales
+- [`docs/TOOLS.md`](docs/TOOLS.md) — inventario de herramientas gestionadas
+- [`docs/adr/`](docs/adr/README.md) — decisiones de arquitectura (ADRs)
 
 ## Uso
 
-### **Ejecución Simple:**
-```bash
-./setup.sh
-```
-
-### **Comandos del router (Hito 2: Bootstrap, ver `docs/ROADMAP.md`)**
-
-`setup.sh` es un router de comandos. Sin argumentos, o con `interactive`, conserva el flujo de siempre (introducción, validaciones y menú de Node.js). `help`, `--help` y `version` funcionan en Bash puro, sin requerir Node.js:
+`setup.sh` es un **router de comandos**:
 
 ```bash
-./setup.sh                # flujo interactivo (comportamiento histórico)
-./setup.sh interactive    # lo mismo, de forma explícita
-./setup.sh help           # ayuda, no requiere Node.js
-./setup.sh --help         # igual que 'help'
-./setup.sh version        # versión del proyecto, no requiere Node.js
-./setup.sh doctor         # diagnóstico de solo lectura de la workstation
-./setup.sh doctor --verbose   # diagnóstico con detalle adicional
-./setup.sh backup         # respalda la configuración conocida de shell/runtime
-./setup.sh backup --dry-run   # muestra qué se respaldaría, sin crear nada
-./setup.sh migrate --list     # lista las migraciones y su estado
-./setup.sh migrate --dry-run  # muestra qué haría cada migración pendiente
-./setup.sh migrate            # aplica las migraciones pendientes
-UCI_DEBUG=1 ./setup.sh help   # mensajes de depuración
-UCI_HOME_DIR="$(mktemp -d)" ./setup.sh doctor --verbose   # simular un home vacío, sin tocar el real
+./setup.sh                    # flujo interactivo (comportamiento por defecto)
+./setup.sh interactive        # lo mismo, de forma explícita
+./setup.sh help                # ayuda; no requiere Node.js
+./setup.sh --help              # igual que 'help'
+./setup.sh version              # versión del proyecto; no requiere Node.js
+./setup.sh doctor                # diagnóstico de solo lectura de la workstation
+./setup.sh doctor --verbose       # diagnóstico con detalle adicional
+./setup.sh backup                 # respalda la configuración conocida de shell/runtime
+./setup.sh backup --dry-run        # muestra qué se respaldaría, sin crear nada
+./setup.sh migrate --list           # lista las migraciones y su estado
+./setup.sh migrate --dry-run         # muestra qué haría cada migración pendiente, sin aplicar nada
+./setup.sh migrate                    # aplica las migraciones pendientes
 ```
 
-`backup` crea una sesión con timestamp en `<home>/.local/state/ubuntu-workstation/backups/<sesión>/`, con un `manifest.tsv` (origen, destino, tipo, fecha) y nunca sobrescribe una sesión existente. Ver `docs/adr/0005-gestor-de-backups-centralizado.md`.
+Un comando desconocido muestra un error y la ayuda, y termina con código de salida distinto de cero. `doctor` nunca modifica el sistema, solo reporta (ver `AGENT.md` sección 10 y [ADR 0001](docs/adr/0001-bootstrap-bash-sin-node.md)).
 
-`migrate` descubre las migraciones en `scripts/migrations/*.sh` (ver el contrato en `scripts/migrations/README.md`), nunca reaplica una ya marcada como hecha, y se detiene sin marcar finalización si una migración falla. Ver `docs/adr/0006-framework-de-migraciones-versionado.md`.
-
-La migración `001_nvm_to_mise` reemplaza NVM por Mise: respalda la configuración de shell, mueve `~/.nvm` a un backup (nunca lo borra directo), instala Mise, reinstala las versiones de Node detectadas, y activa Mise mediante un bloque gestionado del shell. Instala software real, así que solo se prueba dentro de contenedores Docker desechables — ver `docs/TESTING.md` y `docs/TEST_CASES.md`.
-
-Un comando desconocido muestra un error y la ayuda, y termina con código de salida distinto de cero. `doctor` nunca modifica el sistema, solo reporta (ver AGENT.md sección 10). Ver `docs/ARCHITECTURE.md` y `docs/adr/0001-bootstrap-bash-sin-node.md` para el diseño detrás de este router.
-
-### **Flujo de Ejecución:**
-
-1. **📋 Introducción del Proyecto**
-   - Mensaje informativo con explicación del proyecto
-   - Características principales
-   - Organización por categorías
-
-2. **🔍 Validación de Dependencias Básicas**
-   - Verificación automática de dependencias del sistema (sudo, apt, snapd, curl, wget)
-   - Opción de instalación automática si faltan
-
-3. **📦 Instalación de Node.js**
-   - Verificación de Node.js
-   - Instalación automática usando el script existente si es necesario
-   - Configuración de dependencias de Node.js (inquirer, chalk)
-   - Verificación de archivos permanentes (setup.js, package.json)
-
-4. **🖥️ Interfaz Interactiva de Selección**
-   - Menú con herramientas organizadas por categorías
-   - Checkboxes para selección múltiple
-   - Estado de instalación visible (✓ Instalado / ✗ No instalado)
-
-5. **📊 Progreso de Instalación**
-   - Ejecución de scripts de instalación seleccionados
-   - Feedback en tiempo real
-   - Resumen final de instalaciones exitosas y fallidas
-
-El script te mostrará una interfaz híbrida que combina:
-
-1. **Bash para validaciones** - Verificación de dependencias y configuración inicial
-2. **Node.js para el menú** - Interfaz interactiva moderna y estable
-3. **Scripts modulares** - Cada herramienta con funciones de status, install, uninstall, reinstall
-
-### **Características de la Interfaz:**
-
-- **✅ Sin parpadeo** - Interfaz completamente estable
-- **✅ Navegación intuitiva** - Uso del teclado y checkboxes
-- **✅ Estados visuales** - ✓/✗ para cada herramienta
-- **✅ Categorías organizadas** - Separadores por grupos
-- **✅ Confirmaciones** - Seguridad antes de ejecutar
-- **✅ Progreso visual** - Feedback durante la instalación
-
-### Estructura de Scripts Modulares
-
-Cada script de instalación sigue una estructura estándar con 4 funciones principales:
-
-#### **📋 Funciones de Cada Script:**
+### Variables de entorno
 
 ```bash
-#!/bin/bash
-# install_example.sh
-
-TOOL_NAME="Example Tool"
-
-# 1. Verificar estado actual
-check_status() {
-    if command -v example &> /dev/null; then
-        echo "INSTALLED"
-        return 0
-    else
-        echo "NOT_INSTALLED"
-        return 1
-    fi
-}
-
-# 2. Instalar herramienta
-install_tool() {
-    echo "Instalando $TOOL_NAME..."
-    # Lógica de instalación
-}
-
-# 3. Desinstalar herramienta
-uninstall_tool() {
-    echo "Desinstalando $TOOL_NAME..."
-    # Lógica de desinstalación
-}
-
-# 4. Reinstalar herramienta
-reinstall_tool() {
-    echo "Reinstalando $TOOL_NAME..."
-    uninstall_tool
-    install_tool
-}
-
-# Función principal
-main() {
-    case "$1" in
-        "status") check_status ;;
-        "install") install_tool ;;
-        "uninstall") uninstall_tool ;;
-        "reinstall") reinstall_tool ;;
-        *) echo "Uso: $0 {status|install|uninstall|reinstall}" ;;
-    esac
-}
-
-main "$@"
+UCI_DEBUG=1               # activa mensajes de depuración (log_debug)
+UCI_HOME_DIR=<ruta>        # home a usar en vez de $HOME, para pruebas/simulación
 ```
 
-#### **🔧 Uso de Scripts Individuales:**
+`UCI_HOME_DIR` es la forma en que este proyecto se prueba a sí mismo sin arriesgar el `$HOME` real: apunta a una carpeta temporal para simular un home (por ejemplo `UCI_HOME_DIR="$(mktemp -d)" ./setup.sh doctor --verbose`). Ver [ADR 0023](docs/adr/0023-variable-uci-home-dir-para-pruebas.md).
 
-```bash
-# Verificar estado
-./scripts/editors/install_vscode.sh status
+### Idempotencia del menú interactivo
 
-# Instalar
-./scripts/editors/install_vscode.sh install
+Una herramienta ya instalada **nunca se reinstala por defecto**. El mapeo de estado a acción es:
 
-# Desinstalar
-./scripts/editors/install_vscode.sh uninstall
-
-# Reinstalar
-./scripts/editors/install_vscode.sh reinstall
+```
+NOT_INSTALLED → install
+INSTALLED     → skip
+OUTDATED      → update
+BROKEN        → repair
+UNSUPPORTED   → skip
+UNKNOWN       → skip
 ```
 
-#### **📋 Scripts Modulares Implementados:**
+`reinstall` sigue existiendo, pero solo como acción explícita: si seleccionas una herramienta ya instalada, el menú pregunta específicamente si quieres forzar la reinstalación (por defecto, no). Ver [ADR 0004](docs/adr/0004-idempotencia-instalado-igual-skip.md) y [ADR 0012](docs/adr/0012-modelo-de-estado-enriquecido.md) (modelo de estado enriquecido: `INSTALLED`/`NOT_INSTALLED`/`OUTDATED`/`BROKEN`/`UNSUPPORTED`/`UNKNOWN`).
 
-Todos los scripts del proyecto ahora tienen la estructura modular estándar:
+### Mise como único gestor de runtimes
 
-- **✅ System**: `install_system_update.sh`, `install_kernel.sh`, `install_development_tools.sh`, `install_system_utils.sh`, `install_multimedia.sh`, `install_terminator.sh`, `install_oh_my_zsh.sh`, `install_powerlevel10k.sh`, `install_ranger.sh`, `install_cmatrix.sh`, `install_gimp.sh`, `install_obs_studio.sh`
-- **✅ Editors**: `install_vscode.sh`, `install_cursor.sh`, `install_vim.sh`
-- **✅ Development**: `install_docker.sh`, `install_nodejs.sh`, `install_yarn.sh`, `install_postman.sh`, `install_dbeaver.sh`, `install_gitkraken.sh`, `install_insomnia.sh`, `install_mongodb_compass.sh`, `install_kubectl.sh`
-- **✅ Productivity**: `install_ulauncher.sh`, `install_chrome.sh`, `install_spotify.sh`, `install_zoom.sh`, `install_flameshot.sh`
-- **✅ Maintenance**: `install_final_update.sh`
+Este proyecto usa **Mise** para gestionar Node.js (y, a futuro, otros runtimes) — ver [ADR 0002](docs/adr/0002-mise-como-unico-gestor-runtime.md). El flujo interactivo (`./setup.sh` sin argumentos) instala Mise con confirmación explícita si falta, y Node.js a través de Mise; **no instala NVM**.
 
-### Organización por Categorías
+**NVM solo existe como estado histórico que puede migrarse.** Si tu máquina ya tiene NVM instalado (por ejemplo, de una instalación anterior con `/home` reutilizado), `./setup.sh migrate` lo detecta y lo reemplaza por Mise de forma segura: respalda la configuración de shell, limpia solo las líneas exactas y reconocidas que agregó el instalador de NVM (nunca un patrón amplio), reinstala cada versión de Node detectada vía Mise, y mueve `~/.nvm` a un backup — nunca lo borra directamente. Ver [ADR 0003](docs/adr/0003-migracion-nvm-sin-borrado-directo.md), [ADR 0007](docs/adr/0007-bloques-gestionados-en-archivos-de-shell.md) y [ADR 0024](docs/adr/0024-alcance-migracion-nvm-a-mise.md).
 
-Las herramientas están organizadas en las siguientes categorías:
+Esta migración instala software real, así que solo se prueba dentro de contenedores Docker desechables — ver `docs/TESTING.md` y `docs/TEST_CASES.md`.
 
-#### **🖥️ SYSTEM**
-- **System Updates**: Actualizaciones del sistema
-- **Kernel & Headers**: Kernel y headers del sistema
-- **Development Tools**: Herramientas básicas de desarrollo
-- **System Utilities**: Utilidades del sistema
-- **Multimedia Tools**: Herramientas multimedia
-- **Terminator**: Terminal avanzado
-- **Oh My Zsh**: Framework para Zsh
-- **Powerlevel10k**: Tema para Oh My Zsh
-- **Ranger**: Navegador de archivos en terminal
-- **cmatrix**: Efecto visual de Matrix
-- **GIMP**: Editor de imágenes
-- **OBS Studio**: Software de grabación y streaming
+### Backups
 
-#### **📝 EDITORS**
-- **Visual Studio Code**: Editor de código de Microsoft
-- **Cursor AI IDE**: Editor con IA integrada
-- **Vim**: Editor de texto avanzado
+`backup` crea una sesión con timestamp en `<home>/.local/state/ubuntu-workstation/backups/<sesión>/`, con un `manifest.tsv` (origen, destino, tipo, fecha), y **nunca sobrescribe una sesión existente**. `backup_move_dir` (usado por las migraciones) solo elimina el origen si un manifiesto completo — rutas, tipos, permisos, tamaños, symlinks y hashes — coincide exactamente entre origen y destino; si no coincide, no borra nada y reporta la discrepancia. Ver [ADR 0005](docs/adr/0005-gestor-de-backups-centralizado.md).
 
-#### **⚙️ DEVELOPMENT**
-- **Docker**: Contenedores de aplicaciones
-- **Node.js**: Runtime de JavaScript
-- **Yarn**: Gestor de paquetes de Node.js
-- **Postman**: Cliente para APIs
-- **DBeaver**: Cliente universal de base de datos
-- **GitKraken**: Cliente gráfico de Git
-- **Insomnia**: Cliente para APIs REST
-- **MongoDB Compass**: Cliente gráfico de MongoDB
-- **kubectl**: Cliente de línea de comandos para Kubernetes
+### `/home` reutilizado
 
-#### **🎯 PRODUCTIVITY**
-- **ULauncher**: Lanzador de aplicaciones
-- **Google Chrome**: Navegador web
-- **Spotify**: Reproductor de música
-- **Zoom**: Software de videoconferencia
-- **Flameshot**: Herramienta de captura de pantalla
+El proyecto asume que `/home` puede venir de una instalación anterior (runtimes, claves SSH, configuración de shell ya existentes). Ninguna acción destructiva ocurre sin un backup previo, y `doctor`/`--dry-run` permiten inspeccionar el estado antes de cambiar nada. Ver `AGENT.md` sección 7 y [ADR 0003](docs/adr/0003-migracion-nvm-sin-borrado-directo.md).
 
-#### **🔧 MAINTENANCE**
-- **Final System Update**: Actualización final del sistema
+### Framework de migraciones
 
-### Ejemplo de la Interfaz Híbrida
+`migrate` descubre las migraciones en `scripts/migrations/*.sh` (contrato completo en `scripts/migrations/README.md`), nunca reaplica una ya marcada como hecha, y se detiene sin marcar finalización si una migración falla. Ver [ADR 0006](docs/adr/0006-framework-de-migraciones-versionado.md).
 
-La nueva interfaz combina Bash y Node.js para una experiencia óptima:
+## Estructura del repositorio
 
-#### **1. Mensaje de Introducción (Bash):**
 ```
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                           🚀 POST-INSTALL SETUP 🚀                           ║
-╠══════════════════════════════════════════════════════════════════════════════╣
-║                                                                              ║
-║  Este proyecto automatiza la instalación de herramientas esenciales para     ║
-║  desarrolladores en sistemas Ubuntu/Debian. Incluye editores de código,      ║
-║  herramientas de desarrollo, aplicaciones de productividad y utilidades      ║
-║  del sistema.                                                                ║
-║                                                                              ║
-║  🎯 Características principales:                                             ║
-║     • Instalación selectiva de herramientas                                  ║
-║     • Interfaz moderna con categorías organizadas                            ║
-║     • Detección automática de herramientas ya instaladas                     ║
-║     • Instalación desatendida y segura                                       ║
-║     • Scripts modulares y reutilizables                                      ║
-║                                                                              ║
-║  📁 Organización por categorías:                                             ║
-║     • SYSTEM: Actualizaciones, kernel, utilidades del sistema                ║
-║     • EDITORS: VS Code, Cursor AI, Vim                                       ║
-║     • DEVELOPMENT: Docker, Node.js, herramientas de desarrollo               ║
-║     • PRODUCTIVITY: Chrome, Spotify, Zoom, etc.                              ║
-║     • MAINTENANCE: Actualizaciones finales del sistema                       ║
-║                                                                              ║
-╚══════════════════════════════════════════════════════════════════════════════╝
-
-ℹ Presiona ENTER para continuar...
+.
+├── setup.sh                    # Router de comandos (Bash)
+├── setup.js                    # Interfaz interactiva (Node.js)
+├── package.json                 # Dependencias de Node.js
+├── AGENT.md                      # Lineamientos del proyecto
+├── docs/                          # Documentación (ver arriba)
+│   └── adr/                        # Decisiones de arquitectura
+├── scripts/
+│   ├── lib/                        # Bibliotecas compartidas (logging, backup, migrations)
+│   ├── bootstrap/                   # Verificaciones de preflight
+│   ├── diagnostics/                  # doctor
+│   ├── migrations/                    # Migraciones versionadas
+│   ├── system/                         # Instaladores: sistema
+│   ├── editors/                         # Instaladores: editores de código
+│   ├── development/                      # Instaladores: herramientas de desarrollo
+│   ├── productivity/                      # Instaladores: productividad
+│   └── maintenance/                        # Instaladores: mantenimiento
+└── tests/
+    ├── docker/                     # Imágenes y pruebas que instalan software real
+    └── fixtures/                    # Datos de prueba (home de ejemplo, etc.)
 ```
 
-#### **2. Validación de Dependencias (Bash):**
-- Verificación automática de dependencias básicas
-- Instalación automática de Node.js si es necesario
-- Configuración de dependencias de Node.js
+## Instaladores por categoría
 
-#### **3. Menú Interactivo (Node.js):**
-```
-🚀 Post-Install Setup
+Cada instalador es un script Bash independiente bajo `scripts/<categoría>/`, con una interfaz común (`status`, `install`, `uninstall`, `reinstall`, y de forma incremental `update`/`repair` — ver [ADR 0012](docs/adr/0012-modelo-de-estado-enriquecido.md)). Ver el detalle y la clasificación de cada herramienta en [`docs/TOOLS.md`](docs/TOOLS.md).
 
-? Selecciona las herramientas:
-  === SYSTEM ===
-  ☐ ✓ System Updates (Instalado)
-  ☐ ✗ Kernel & Headers (No instalado)
-  ☐ ✗ Development Tools (No instalado)
-  ☐ ✗ System Utilities (No instalado)
-  ☐ ✗ Multimedia Tools (No instalado)
-  ☐ ✗ Terminator (No instalado)
-  ☐ ✗ Oh My Zsh (No instalado)
-  ☐ ✗ Powerlevel10k (No instalado)
-  ☐ ✗ Ranger (No instalado)
-  ☐ ✗ cmatrix (No instalado)
-  ☐ ✗ GIMP (No instalado)
-  ☐ ✗ OBS Studio (No instalado)
-  
-  === EDITORS ===
-  ☐ ✗ Visual Studio Code (No instalado)
-  ☐ ✓ Cursor AI IDE (Instalado)
-  ☐ ✗ Vim (No instalado)
-  
-  === DEVELOPMENT ===
-  ☐ ✗ Docker (No instalado)
-  ☐ ✗ Yarn (No instalado)
-  ☐ ✗ Postman (No instalado)
-  ☐ ✗ DBeaver (No instalado)
-  ☐ ✗ GitKraken (No instalado)
-  ☐ ✗ Insomnia (No instalado)
-  ☐ ✗ MongoDB Compass (No instalado)
-  ☐ ✗ kubectl (No instalado)
-  
-  === PRODUCTIVITY ===
-  ☐ ✗ ULauncher (No instalado)
-  ☐ ✗ Google Chrome (No instalado)
-  ☐ ✗ Spotify (No instalado)
-  ☐ ✗ Zoom (No instalado)
-  ☐ ✗ Flameshot (No instalado)
-  
-  === MAINTENANCE ===
-  ☐ ✗ Final System Update (No instalado)
+#### **📝 `scripts/editors/`**
+- `install_vscode.sh` — Visual Studio Code
+- `install_cursor.sh` — Cursor AI IDE
+- `install_vim.sh` — Vim (instalador de referencia del contrato de estado enriquecido)
 
-[↑/↓] Mover, [ESPACIO] Seleccionar, [ENTER] Confirmar
-```
+#### **⚙️ `scripts/development/`**
+- `install_docker.sh` — Docker Engine
+- `install_nodejs.sh` — **legado/deprecado**: instalaba Node.js vía NVM; el bootstrap ya no lo usa (ver arriba). Requiere `UCI_ALLOW_LEGACY_NVM=1` explícito para ejecutar sus acciones de instalación
+- `install_yarn.sh` — Yarn
+- `install_postman.sh` — Postman
+- `install_dbeaver.sh` — DBeaver
+- `install_gitkraken.sh` — GitKraken
+- `install_insomnia.sh` — Insomnia
+- `install_mongodb_compass.sh` — MongoDB Compass
+- `install_kubectl.sh` — kubectl (vía snap)
 
-#### **4. Progreso de Instalación (Node.js):**
-```
-🚀 Ejecutando acciones...
+#### **🖥️ `scripts/system/`**
+- `install_system_update.sh`, `install_kernel.sh`, `install_development_tools.sh`, `install_system_utils.sh`, `install_multimedia.sh`, `install_terminator.sh`, `install_oh_my_zsh.sh`, `install_powerlevel10k.sh`, `install_ranger.sh`, `install_cmatrix.sh`, `install_gimp.sh`, `install_obs_studio.sh`
 
-📦 Instalando Visual Studio Code...
-[Progreso de instalación...]
-✅ Visual Studio Code completado
+#### **🎯 `scripts/productivity/`**
+- `install_ulauncher.sh`, `install_chrome.sh`, `install_spotify.sh`, `install_zoom.sh`, `install_flameshot.sh`
 
-📦 Instalando Docker...
-[Progreso de instalación...]
-✅ Docker completado
-
-🎉 ¡Instalación completada!
-```
-
-### Controles de la Interfaz
-
-- **↑/↓ Flechas**: Navegar por las opciones
-- **ESPACIO**: Marcar/desmarcar checkbox
-- **ENTER**: Confirmar selección
-- **A**: Seleccionar todas las herramientas
-- **N**: Deseleccionar todas las herramientas
-- **Q**: Salir sin instalar
-
-### Solución de Problemas
-
-Si la tecla ESPACIO no funciona para marcar/desmarcar:
-
-1. **Usa la tecla 'X'** como alternativa
-2. **Ejecuta el debug de teclas**: `./debug_keys.sh` para verificar qué teclas se detectan
-3. **Prueba el test simple**: `./test_space.sh` para verificar la funcionalidad básica
-
-### Opciones Especiales
-
-- **A**: Selecciona automáticamente todas las herramientas
-- **N**: Deselecciona todas las herramientas
-- **Q**: Sale del programa sin instalar nada
-
-## Características
-
-- **🎯 Instalación Selectiva**: Todas las herramientas vienen desmarcadas por defecto. Selecciona solo las que necesites instalar.
-- **🔄 Reinstalación Segura**: Puedes ejecutar el script múltiples veces sin problemas
-- **📁 Organización Modular**: Scripts organizados por categorías en carpetas específicas
-- **✅ Validaciones**: Cada script verifica si la herramienta ya está instalada antes de proceder
-- **🖥️ Interfaz Híbrida Moderna**: Bash para validaciones + Node.js para menú interactivo
-- **🚀 Instalación Desatendida**: Una vez seleccionadas, las herramientas se instalan automáticamente
-- **📊 Categorías Organizadas**: Herramientas agrupadas por categorías (SYSTEM, EDITORS, DEVELOPMENT, PRODUCTIVITY, MAINTENANCE)
-- **📋 Introducción Informativa**: Explicación clara del proyecto al inicio
-- **🔍 Validación de Dependencias**: Verificación automática de dependencias del sistema
-- **⚡ Instalación Automática**: Opción para instalar dependencias faltantes automáticamente
-- **📊 Barra de Progreso**: Visualización del progreso de instalación en tiempo real
-- **🔧 Scripts Modulares**: Cada herramienta tiene funciones de status, install, uninstall y reinstall
-- **📁 Archivos Permanentes**: setup.js y package.json son parte del proyecto, no se crean dinámicamente
-
-## Dependencias del Sistema
-
-El script verifica automáticamente las siguientes dependencias del sistema:
-
-### **Dependencias Principales:**
-- **`sudo`**: Para ejecutar comandos con privilegios de administrador
-- **`apt`**: Gestor de paquetes de Debian/Ubuntu
-- **`snapd`**: Gestor de paquetes Snap
-- **`curl`**: Para descargas de archivos
-- **`wget`**: Para descargas de archivos
-- **`nodejs`**: Runtime de JavaScript (se instala automáticamente si no está presente)
-- **`npm`**: Gestor de paquetes de Node.js (se instala con Node.js)
-
-### **Instalación Automática:**
-Si alguna dependencia falta, el script:
-1. **Detecta automáticamente** las dependencias faltantes
-2. **Muestra una ventana** con la lista de lo que necesita instalarse
-3. **Ofrece instalar automáticamente** las dependencias
-4. **Proporciona comandos manuales** si prefieres instalarlas tú mismo
-
-### **Instalación Manual (si es necesario):**
-```bash
-sudo apt update && sudo apt install sudo apt snapd curl wget
-```
-
-## Validaciones de Instalación
-
-Cada script de instalación incluye validaciones inteligentes que:
-
-- **Verifican si la herramienta ya está instalada** antes de proceder (solo para mostrar estado, no para saltar)
-- **Muestran mensajes informativos** con colores (✓ verde para instalado, ! amarillo para instalando)
-- **Permiten reinstalaciones** si seleccionas una herramienta ya instalada
-- **Muestran información adicional** como versiones cuando están disponibles
-- **Actualizan automáticamente** componentes como kernels cuando hay versiones más nuevas disponibles
-
-### Ejemplos de Validación:
-
-```bash
-# Herramienta ya instalada
-✓ ULauncher is already installed.
-
-# Herramienta no instalada
-! Zoom is not installed. Installing...
-
-# Con información de versión
-✓ Node.js is already installed.
-Node version: v20.18.0
-NPM version: 10.8.2
-
-# Kernel con actualización automática
-✓ HWE Kernel is installed.
-ℹ Kernel is up to date.
-```
-
-## Herramientas Instaladas
-
-### Editores de Código
-- **Visual Studio Code** - Editor de código con extensiones
-- **Cursor AI IDE** - Editor con IA integrada
-- **Vim** - Editor modal potente para terminal
-
-### Herramientas de Desarrollo
-- **Docker** - Plataforma de contenedores
-- **Node.js** - Runtime de JavaScript (con NVM para gestión de versiones)
-- **Yarn** - Gestor de paquetes para Node.js
-- **Postman** - Cliente API para testing y desarrollo
-- **DBeaver** - Cliente universal de base de datos
-- **GitKraken** - Cliente Git visual
-- **Insomnia** - Cliente REST alternativo a Postman
-- **MongoDB Compass** - GUI para MongoDB
-- **kubectl** - Cliente de línea de comandos para Kubernetes (via snap)
-
-### Herramientas del Sistema
-- **Terminator** - Terminal con múltiples pestañas y división
-- **Oh My Zsh** - Framework para gestión de Zsh
-- **Powerlevel10k** - Tema rápido y flexible para Zsh
-- **Ranger** - Gestor de archivos en terminal
-- **cmatrix** - Efecto visual Matrix en terminal
-- **GIMP** - Editor de imágenes (alternativa a Photoshop, via snap)
-- **OBS Studio** - Software de grabación y streaming (via snap)
-
-### Aplicaciones de Productividad
-- **ULauncher** - Lanzador de aplicaciones rápido
-- **Google Chrome** - Navegador web
-- **Spotify** - Música en streaming
-- **Zoom** - Cliente de videoconferencia
-- **Flameshot** - Captura de pantalla (configurado con tecla Print)
-
-## Ejemplo de Uso
-
-```bash
-$ ./setup.sh
-
-=== Post-Install Setup ===
-Select tools to install (use ↑↓ to navigate, SPACE to toggle, A for all, N for none, ENTER to confirm, Q to quit)
-
-SYSTEM
-> ☐ System Updates ✓ (installed)
-  ☐ Kernel & Headers ✓ (installed)
-  ☐ Development Tools ✓ (installed)
-  ☐ System Utilities ✓ (installed)
-  ☐ Multimedia Tools ✓ (installed)
-
-PRODUCTIVITY
-  ☐ ULauncher ✓ (installed)
-
-EDITORS
-  ☐ Visual Studio Code ✓ (installed)
-  ☐ Cursor AI IDE ✓ (installed)
-  ☐ Vim ✓ (installed)
-
-DEVELOPMENT
-  ☐ Docker ✓ (installed)
-  ☐ Node.js ✓ (installed)
-  ☐ Yarn ✓ (installed)
-  ☐ Postman ✓ (installed)
-  ☐ DBeaver ✓ (installed)
-  ☐ GitKraken ✗ (not installed)
-  ☐ Insomnia ✗ (not installed)
-  ☐ MongoDB Compass ✓ (installed)
-  ☐ kubectl ✗ (not installed)
-
-SYSTEM
-  ☐ Terminator ✗ (not installed)
-  ☐ Oh My Zsh ✓ (installed)
-  ☐ Powerlevel10k ✓ (installed)
-  ☐ Ranger ✗ (not installed)
-  ☐ cmatrix ✓ (installed)
-  ☐ GIMP ✓ (installed)
-  ☐ OBS Studio ✗ (not installed)
-
-PRODUCTIVITY
-  ☐ Google Chrome ✓ (installed)
-  ☐ Spotify ✓ (installed)
-  ☐ Zoom ✓ (installed)
-  ☐ Flameshot ✓ (installed)
-
-MAINTENANCE
-  ☐ Final System Update ✓ (installed)
-
-Controls: ↑↓ Navigate | SPACE Toggle | A Select All | N Select None | ENTER Confirm | Q Quit
-```
-
-## Notas Importantes
-
-### Después de la Instalación
-
-1. **Docker**: Es posible que necesites cerrar sesión y volver a iniciar para que los cambios de grupo surtan efecto
-2. **Node.js**: Reinicia tu terminal o ejecuta `source ~/.bashrc` para que NVM funcione correctamente
-3. **Cursor AI IDE**: Se puede encontrar en el menú de aplicaciones
-4. **Flameshot**: Está configurado con la tecla Print para capturas de pantalla
-5. **Oh My Zsh**: Reinicia tu terminal o ejecuta `source ~/.zshrc` para ver los cambios
-6. **Powerlevel10k**: Ejecuta `p10k configure` para personalizar tu prompt
-
-### Permisos
-
-Todos los scripts se ejecutan con permisos de administrador (sudo) cuando es necesario. Asegúrate de tener permisos de administrador antes de ejecutar los scripts.
-
-## Personalización
-
-Cada script de instalación es independiente y puede ser modificado según tus necesidades específicas. Los scripts están diseñados para ser idempotentes, por lo que pueden ejecutarse múltiples veces sin causar problemas.
+#### **🔧 `scripts/maintenance/`**
+- `install_final_update.sh`
 
 ## Requisitos
 
-- Ubuntu 22.04 LTS o superior
+- Ubuntu 24.04 LTS o 26.04 (política de soporte vigente, ver `docs/ROADMAP.md`)
 - Conexión a internet
-- Permisos de administrador
+- Permisos de administrador (`sudo`)
+
+## Cómo probar
+
+Ver [`docs/TESTING.md`](docs/TESTING.md) para el detalle completo. Resumen:
+
+```bash
+# Sintaxis y pruebas unitarias (seguras en cualquier máquina)
+bash -n setup.sh
+find scripts tests -type f -name '*.sh' -exec bash -n {} \;
+bash tests/test_router.sh
+bash tests/test_doctor.sh
+node tests/test_status_mapping.js
+
+# Todo lo que instala/modifica de verdad (Mise, NVM, backups reales):
+# único punto de entrada, corre dentro de contenedores Docker desechables
+bash tests/docker/build-and-test-all.sh
+```
