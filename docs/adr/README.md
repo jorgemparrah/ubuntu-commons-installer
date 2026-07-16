@@ -60,3 +60,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0022](0022-modo-estricto-en-bibliotecas-sourceadas.md) | Las bibliotecas pensadas para `source` no declaran su propio modo estricto | Aceptada |
 | [0023](0023-variable-uci-home-dir-para-pruebas.md) | `UCI_HOME_DIR` como home lógico, simulable para pruebas | Aceptada |
 | [0024](0024-alcance-migracion-nvm-a-mise.md) | La migración NVM→Mise preserva lo detectado, no aplica la política de versiones por defecto | Aceptada |
+| [0025](0025-metodo-instalacion-oficial-de-mise.md) | Mise se instala con su script oficial (`https://mise.run`), verificando después | Aceptada |
