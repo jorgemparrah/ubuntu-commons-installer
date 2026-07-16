@@ -311,7 +311,7 @@ Crítica
 
 **Estado**
 
-Blocked
+Review
 
 Depende de:
 
@@ -323,22 +323,24 @@ Proveer un sistema de migraciones reutilizable.
 
 ### Tareas
 
-* registro de migraciones
-* marcas de finalización
-* estrategia de rollback
-* ejecución de migraciones
+* [x] registro de migraciones (`migrations_discover`, `setup.sh migrate --list`)
+* [x] marcas de finalización (`<home>/.local/state/ubuntu-workstation/migrations/<id>.done`)
+* [x] estrategia de rollback (acción `rollback-notes` del contrato; notas legibles, no rollback automático)
+* [x] ejecución de migraciones (`setup.sh migrate`, `--dry-run`)
 
 ### Entregables
 
-Framework de migraciones.
+* `scripts/lib/migrations.sh` — motor: descubrimiento, listado, ejecución con marcas de finalización
+* `scripts/migrations/README.md` — contrato completo para escribir migraciones (`describe|check|dry-run|apply|validate|rollback-notes`)
+* `scripts/migrations/000_example_noop.sh` — migración de referencia, no toca nada real, sirve de plantilla para el Hito 7
+* `setup.sh migrate` / `--list` / `--dry-run`
+* `tests/test_migrations.sh`
 
 ### Criterios de aceptación
 
-Ejecución repetible.
-
-Ejecución segura.
-
-Historial de migraciones registrado.
+* [x] Ejecución repetible (una migración ya hecha nunca se reaplica; probado corriendo `migrate` dos veces)
+* [x] Ejecución segura (`--dry-run` no toca el filesystem; una migración fallida no se marca como hecha y no se sigue con la siguiente)
+* [x] Historial de migraciones registrado (marcas `.done` + `migrate --list`)
 
 ### Decisión relacionada
 

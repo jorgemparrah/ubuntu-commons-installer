@@ -98,11 +98,16 @@ post-install/
 ./setup.sh doctor --verbose   # diagnóstico con detalle adicional
 ./setup.sh backup         # respalda la configuración conocida de shell/runtime
 ./setup.sh backup --dry-run   # muestra qué se respaldaría, sin crear nada
+./setup.sh migrate --list     # lista las migraciones y su estado
+./setup.sh migrate --dry-run  # muestra qué haría cada migración pendiente
+./setup.sh migrate            # aplica las migraciones pendientes
 UCI_DEBUG=1 ./setup.sh help   # mensajes de depuración
 UCI_HOME_DIR="$(mktemp -d)" ./setup.sh doctor --verbose   # simular un home vacío, sin tocar el real
 ```
 
 `backup` crea una sesión con timestamp en `<home>/.local/state/ubuntu-workstation/backups/<sesión>/`, con un `manifest.tsv` (origen, destino, tipo, fecha) y nunca sobrescribe una sesión existente. Ver `docs/adr/0005-gestor-de-backups-centralizado.md`.
+
+`migrate` descubre las migraciones en `scripts/migrations/*.sh` (ver el contrato en `scripts/migrations/README.md`), nunca reaplica una ya marcada como hecha, y se detiene sin marcar finalización si una migración falla. Ver `docs/adr/0006-framework-de-migraciones-versionado.md`.
 
 Un comando desconocido muestra un error y la ayuda, y termina con código de salida distinto de cero. `doctor` nunca modifica el sistema, solo reporta (ver AGENT.md sección 10). Ver `docs/ARCHITECTURE.md` y `docs/adr/0001-bootstrap-bash-sin-node.md` para el diseño detrás de este router.
 

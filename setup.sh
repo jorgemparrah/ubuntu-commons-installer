@@ -19,8 +19,11 @@ readonly UCI_ROOT_DIR
 # defecto es el $HOME real; se puede apuntar a una carpeta de prueba para
 # simular un home sin tocar el de esta máquina, por ejemplo:
 #   UCI_HOME_DIR="$(mktemp -d)" ./setup.sh doctor --verbose
+# Se exporta porque las migraciones (scripts/migrations/*.sh) corren como
+# procesos separados y la necesitan heredada del entorno.
 UCI_HOME_DIR="${UCI_HOME_DIR:-${HOME}}"
 readonly UCI_HOME_DIR
+export UCI_HOME_DIR
 
 # shellcheck source=scripts/lib/logging.sh
 source "${UCI_ROOT_DIR}/scripts/lib/logging.sh"
@@ -30,6 +33,8 @@ source "${UCI_ROOT_DIR}/scripts/bootstrap/preflight.sh"
 source "${UCI_ROOT_DIR}/scripts/diagnostics/doctor.sh"
 # shellcheck source=scripts/lib/backup.sh
 source "${UCI_ROOT_DIR}/scripts/lib/backup.sh"
+# shellcheck source=scripts/lib/migrations.sh
+source "${UCI_ROOT_DIR}/scripts/lib/migrations.sh"
 
 # --- Flujo interactivo histórico ------------------------------------------
 # Todo lo que sigue hasta main_setup() es el contenido original de este
@@ -319,13 +324,16 @@ Uso:
   ./setup.sh doctor --verbose   Diagnóstico con detalle adicional
   ./setup.sh backup         Respalda la configuración conocida de shell/runtime
   ./setup.sh backup --dry-run   Muestra qué se respaldaría, sin crear nada
+  ./setup.sh migrate --list     Lista las migraciones y su estado
+  ./setup.sh migrate --dry-run  Muestra qué haría cada migración pendiente
+  ./setup.sh migrate            Aplica las migraciones pendientes
 
 Variables de entorno:
   UCI_DEBUG=1               Activa mensajes de depuración (log_debug)
   UCI_HOME_DIR=<ruta>       Home a usar en vez de $HOME (para pruebas/simulación)
 
 Comandos planificados, todavía no disponibles (ver docs/ROADMAP.md):
-  migrate, validate
+  validate
 EOF
 }
 
@@ -369,6 +377,39 @@ cmd_backup() {
     fi
 }
 
+cmd_migrate() {
+    local list=0 dry_run=0
+    local arg
+    for arg in "$@"; do
+        case "${arg}" in
+            --list)
+                list=1
+                ;;
+            --dry-run)
+                dry_run=1
+                ;;
+            *)
+                log_error "Opción desconocida para 'migrate': '${arg}'"
+                exit 1
+                ;;
+        esac
+    done
+
+    if ! preflight_core; then
+        log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
+        exit 1
+    fi
+
+    if [[ "${list}" == "1" ]]; then
+        migrations_list "${UCI_HOME_DIR}"
+        return 0
+    fi
+
+    if ! migrations_run "${UCI_HOME_DIR}" "${dry_run}"; then
+        exit 1
+    fi
+}
+
 cmd_interactive() {
     if ! preflight_core; then
         log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
@@ -405,6 +446,9 @@ main() {
             ;;
         backup)
             cmd_backup "$@"
+            ;;
+        migrate)
+            cmd_migrate "$@"
             ;;
         *)
             log_error "Comando desconocido: '${cmd}'"
