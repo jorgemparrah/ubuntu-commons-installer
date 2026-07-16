@@ -140,13 +140,61 @@ backup_copy_dir() {
     return 0
 }
 
+# backup_dir_manifest <dir>
+#
+# Manifiesto de solo lectura de todo el contenido de <dir>: una línea por
+# entrada (archivo regular, directorio -incluidos los vacíos-, o symlink),
+# con ruta relativa, tipo, permisos, tamaño, destino de symlink, y sha256
+# para archivos regulares. Ordenado por ruta relativa, para poder comparar
+# dos manifiestos de directorios distintos como texto plano y detectar
+# cualquier diferencia real (no solo la cantidad de archivos).
+backup_dir_manifest() {
+    local dir="$1"
+    local entry rel_path type mode size target hash
+
+    find "${dir}" \( -type f -o -type d -o -type l \) 2>/dev/null | LC_ALL=C sort | while IFS= read -r entry; do
+        rel_path="${entry#"${dir}"}"
+        rel_path="${rel_path#/}"
+        [[ -z "${rel_path}" ]] && continue
+
+        if [[ -L "${entry}" ]]; then
+            type="l"
+            mode="-"
+            size="-"
+            target="$(readlink "${entry}" 2>/dev/null || echo '?')"
+            hash="-"
+        elif [[ -d "${entry}" ]]; then
+            type="d"
+            mode="$(stat -c%a "${entry}" 2>/dev/null || echo '?')"
+            size="-"
+            target="-"
+            hash="-"
+        elif [[ -f "${entry}" ]]; then
+            type="f"
+            mode="$(stat -c%a "${entry}" 2>/dev/null || echo '?')"
+            size="$(stat -c%s "${entry}" 2>/dev/null || echo '?')"
+            target="-"
+            hash="$(sha256sum "${entry}" 2>/dev/null | cut -d' ' -f1)"
+            [[ -z "${hash}" ]] && hash="?"
+        else
+            type="?"; mode="-"; size="-"; target="-"; hash="-"
+        fi
+
+        printf '%s\t%s\t%s\t%s\t%s\t%s\n' "${rel_path}" "${type}" "${mode}" "${size}" "${target}" "${hash}"
+    done
+}
+
 # backup_move_dir <session_dir> <home_dir> <source_dir> <dry_run:0|1>
 #
-# NO se usa todavía en ningún flujo de este hito: es la primitiva que
-# necesitará la migración NVM->Mise (Hito 7, ver ADR 0003) para mover .nvm
-# en vez de borrarlo. Copia primero, verifica que la cantidad de archivos
-# coincida, y solo entonces elimina el origen. Si algo no calza, no borra
-# nada y reporta error.
+# Usada por la migración NVM->Mise (Hito 7, ver ADR 0003) para mover .nvm
+# en vez de borrarlo. Copia primero, y solo elimina el origen si el
+# manifiesto completo del origen (rutas relativas, tipos, permisos,
+# tamaños, destinos de symlink y hashes de archivos regulares) coincide
+# EXACTAMENTE con el del destino ya copiado — nunca se decide en base solo
+# a la cantidad de archivos. Si algo no calza, no se borra nada, se
+# conserva la copia (parcial o completa) en la sesión de backup, se reporta
+# claramente dónde está esa sesión y el detalle de la discrepancia, y se
+# retorna código distinto de cero.
 backup_move_dir() {
     local session_dir="$1" home_dir="$2" source_dir="$3" dry_run="$4"
 
@@ -157,7 +205,7 @@ backup_move_dir() {
 
     if [[ "${dry_run}" == "1" ]]; then
         local rel_path="${source_dir#"${home_dir}"/}"
-        log_info "[dry-run] movería ${source_dir} -> ${session_dir}/home/${rel_path} (copiar + verificar + eliminar origen)"
+        log_info "[dry-run] movería ${source_dir} -> ${session_dir}/home/${rel_path} (copiar + verificar íntegramente + eliminar origen)"
         return 0
     fi
 
@@ -168,15 +216,31 @@ backup_move_dir() {
     local rel_path="${source_dir#"${home_dir}"/}"
     local dest_path="${session_dir}/home/${rel_path}"
 
-    local source_count dest_count
-    source_count="$(find "${source_dir}" -type f 2>/dev/null | wc -l || true)"
-    dest_count="$(find "${dest_path}" -type f 2>/dev/null | wc -l || true)"
+    log_info "Verificando integridad completa de la copia antes de eliminar el origen..."
+    local source_manifest dest_manifest
+    source_manifest="$(backup_dir_manifest "${source_dir}")"
+    dest_manifest="$(backup_dir_manifest "${dest_path}")"
 
-    if [[ "${source_count}" != "${dest_count}" ]]; then
-        log_error "La copia de ${source_dir} no coincide en cantidad de archivos (origen: ${source_count}, backup: ${dest_count}); no se elimina el origen"
+    if [[ "${source_manifest}" != "${dest_manifest}" ]]; then
+        mkdir -p "${session_dir}/reports"
+        local mismatch_report="${session_dir}/reports/move-verification-mismatch-$(basename "${source_dir}").tsv"
+        {
+            echo "# manifiesto origen: ${source_dir}"
+            echo "# ruta_relativa\ttipo\tpermisos\ttamaño\tdestino_symlink\tsha256"
+            echo "${source_manifest}"
+            echo ""
+            echo "# manifiesto destino: ${dest_path}"
+            echo "# ruta_relativa\ttipo\tpermisos\ttamaño\tdestino_symlink\tsha256"
+            echo "${dest_manifest}"
+        } > "${mismatch_report}"
+
+        log_error "La copia de ${source_dir} no coincide íntegramente con el backup (rutas, tipos, permisos, tamaños, symlinks o hashes distintos)."
+        log_error "NO se elimina el origen. La copia queda conservada en la sesión de backup: ${session_dir}"
+        log_error "Detalle de la discrepancia: ${mismatch_report}"
         return 1
     fi
 
+    log_success "Copia verificada íntegramente (rutas, tipos, permisos, tamaños, symlinks y hashes coinciden)."
     rm -rf "${source_dir}"
     log_success "Movido ${source_dir} al backup (origen eliminado tras verificar la copia)"
     return 0

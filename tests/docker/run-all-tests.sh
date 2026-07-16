@@ -73,6 +73,7 @@ fi
 run_suite "tests/test_router.sh" bash tests/test_router.sh
 run_suite "tests/test_doctor.sh" bash tests/test_doctor.sh
 run_suite "tests/test_backup.sh" bash tests/test_backup.sh
+run_suite "tests/test_backup_move_dir.sh" bash tests/test_backup_move_dir.sh
 run_suite "tests/test_migrations.sh" bash tests/test_migrations.sh
 
 section "Resumen general"
