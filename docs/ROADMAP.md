@@ -149,6 +149,8 @@ El bootstrap se completa exitosamente sin modificar la configuración del usuari
 
 **Pendiente:** la tarea "Verificación de conexión a internet" listada arriba no se implementó en esta iteración — no formaba parte del alcance mínimo de preflight solicitado explícitamente para este hito. Queda para una iteración posterior de Bootstrap o para Doctor (Hito 4).
 
+**Corrección de la auditoría de estabilización (2026-07-16):** el flujo interactivo (`main_setup`/`ensure_node_via_mise` en `setup.sh`) instalaba Node.js vía NVM (`scripts/development/install_nodejs.sh`), pese a que el Hito 7 ya reemplazaba NVM por Mise para quien migraba. Corregido: ver el detalle en la sección "Auditoría de estabilización" del Hito 7.
+
 ### Decisión relacionada
 
 [ADR 0001](adr/0001-bootstrap-bash-sin-node.md) — `setup.sh` como router de comandos Bash, independiente de Node.
@@ -186,12 +188,14 @@ Corregir el hallazgo crítico de idempotencia (una herramienta instalada se rein
 * `setup.js`: normalización de estado (`normalizeStatus`), mapeo estado→acción por defecto, y confirmación explícita (`confirmForcedReinstalls`) antes de forzar un `reinstall` sobre algo ya instalado
 * `scripts/editors/install_vim.sh`: instalador de referencia con el contrato de estado enriquecido completo (`status` + `update` + `repair`)
 * `tests/test_status_mapping.js`: prueba no destructiva del mapeo estado→acción
+* `scripts/lib/status_contract.js`: `resolveStatusFromExecResult`/`resolveStatusFromExecError` (agregado en la auditoría de estabilización) — distinguen un `NOT_INSTALLED` legítimo (el script lo imprime y sale con código ≠0, convención existente) de una falla real de ejecución (ENOENT, sin permiso, crash sin salida reconocible), que ahora se reporta como `UNKNOWN`, nunca como `NOT_INSTALLED` por defecto
 
 ### Criterios de aceptación
 
-* [x] Seleccionar una herramienta ya instalada y sana no dispara `uninstall`/`install`
-* [x] `reinstall` sigue disponible como acción explícita
-* [x] Al menos un instalador de referencia expone el contrato de estado enriquecido de punta a punta
+* [x] Seleccionar una herramienta ya instalada y sana no dispara `uninstall`/`install` — `tests/test_status_mapping.js`
+* [x] `reinstall` sigue disponible como acción explícita — `confirmForcedReinstalls` en `setup.js`
+* [x] Al menos un instalador de referencia expone el contrato de estado enriquecido de punta a punta — `scripts/editors/install_vim.sh`
+* [x] Un error ejecutando `status` no se confunde con `NOT_INSTALLED` (auditoría 2026-07-16) — `tests/test_status_mapping.js` (8 casos: ENOENT, permiso denegado, crash sin salida reconocible, error sin stdout)
 
 ### Decisiones relacionadas
 
@@ -277,21 +281,21 @@ Respaldar:
 
 * [x] configuración del shell (`.bashrc`, `.zshrc`, `.profile`)
 * [x] configuración de runtime (`.gitconfig`, `.config/mise/config.toml`)
-* [ ] carpetas migradas — primitiva lista (`backup_move_dir`), sin un llamador todavía; la usará la migración NVM→Mise del Hito 7
-* [ ] archivos modificados por instaladores — se conectará al modernizar instaladores (Hito 11) o al implementar migraciones concretas (Hito 6-7)
+* [x] carpetas migradas — `backup_move_dir` tiene llamador desde el Hito 7 (`scripts/migrations/001_nvm_to_mise.sh`, mueve `.nvm`); fortalecido en la auditoría de estabilización con verificación de manifiesto completo (ver más abajo)
+* [ ] archivos modificados por instaladores — se conectará al modernizar instaladores (Hito 11)
 
 ### Entregables
 
-* `scripts/lib/backup.sh` — `backup_init_session`, `backup_copy_file`, `backup_copy_dir`, `backup_move_dir` (primitiva para mover con verificación, aún sin usar), manifiesto TSV
+* `scripts/lib/backup.sh` — `backup_init_session`, `backup_copy_file`, `backup_copy_dir`, `backup_move_dir` (mover con verificación de integridad completa), `backup_dir_manifest`, manifiesto TSV
 * `setup.sh backup` / `setup.sh backup --dry-run`
 * `tests/fixtures/sample_home/` — home de ejemplo para probar backups sin tocar `$HOME` real
-* `tests/test_backup.sh`
+* `tests/test_backup.sh`, `tests/test_backup_move_dir.sh` (agregado en la auditoría de estabilización, 17 casos incluyendo 5 negativos deliberados)
 
 ### Criterios de aceptación
 
 * [x] Backups con timestamp (`<timestamp>-<pid>`, único por sesión)
 * [x] Sin sobrescritura (una sesión existente nunca se reutiliza; un archivo ya respaldado en la sesión no se pisa)
-* [x] Sin comportamiento destructivo (`backup_copy_file`/`backup_copy_dir` nunca tocan el origen; `backup_move_dir` solo borra el origen tras verificar la copia, y no se invoca desde ningún flujo todavía)
+* [x] Sin comportamiento destructivo — `backup_copy_file`/`backup_copy_dir` nunca tocan el origen; `backup_move_dir` solo borra el origen si el manifiesto completo (rutas, tipos, permisos, tamaños, symlinks, hashes) coincide exactamente entre origen y destino, no solo la cantidad de archivos (corregido en la auditoría de estabilización del 2026-07-16, ver `tests/test_backup_move_dir.sh`)
 * [x] Soporta `--dry-run` (no crea nada en el filesystem, solo reporta)
 
 ### Decisión relacionada
@@ -373,12 +377,12 @@ Reemplazar NVM por Mise.
 Detectar:
 
 * [x] versiones de Node instaladas (`~/.nvm/versions/node/*`)
-* [x] paquetes globales (se inventarían en el log/dry-run; no se reinstalan automáticamente, ver [ADR 0024](adr/0024-alcance-migracion-nvm-a-mise.md))
+* [x] paquetes globales (se inventarían en `reports/nvm-global-packages.tsv` con nombre y versión del propio `package.json`; no se reinstalan automáticamente, ver [ADR 0024](adr/0024-alcance-migracion-nvm-a-mise.md))
 
 Respaldar:
 
-* [x] .nvm (movido, no copiado ni borrado directo — copiar + verificar + recién ahí eliminar el origen)
-* [x] configuración del shell (`.bashrc`, `.zshrc`, `.profile`, respaldados antes de tocarlos)
+* [x] .nvm (movido, no copiado ni borrado directo — copiar + verificar íntegramente + recién ahí eliminar el origen; ver Hito 5)
+* [x] configuración del shell (`.bashrc`, `.zshrc`, `.profile`, respaldados antes de tocarlos, y limpiados de líneas exactas conocidas de NVM — ver auditoría más abajo)
 
 Instalar:
 
@@ -386,25 +390,46 @@ Instalar:
 
 Restaurar:
 
-* [x] runtimes de Node (cada versión detectada, reinstalada vía Mise; versión global tomada del alias `default` de NVM)
+* [x] runtimes de Node (cada versión detectada, reinstalada vía Mise; versión global resuelta correctamente desde el alias `default` de NVM contra las versiones instaladas — no asumida literal)
 
 Validar:
 
 * [x] PATH / ejecutables (Mise resuelve un `node` ejecutable y corre)
+* [x] Ningún archivo de shell sigue intentando cargar `$NVM_DIR/nvm.sh` (ruta que ya no existiría tras mover `.nvm`) — `migration_validate` falla si detecta esto
 
 ### Entregables
 
 * `scripts/migrations/001_nvm_to_mise.sh` (contrato del Hito 6: `describe|check|dry-run|apply|validate|rollback-notes`)
 * `tests/docker/Dockerfile.nvm-single`, `tests/docker/Dockerfile.nvm-multi` — imágenes con NVM+Node ya instalados, para probar sobre un "home reutilizado" realista
-* `tests/docker/test_nvm_to_mise_apply.sh`, `tests/docker/test_nvm_to_mise_prebaked.sh`, `tests/docker/build-and-test-all.sh`
+* `tests/docker/test_nvm_to_mise_apply.sh`, `tests/docker/test_nvm_to_mise_prebaked.sh`, `tests/docker/test_bootstrap_mise_no_nvm.sh`, `tests/docker/build-and-test-all.sh` (único punto de entrada de toda la batería)
 * `docs/TEST_CASES.md` — casos de prueba funcionales por comando/escenario
 
 ### Criterios de aceptación
 
-* [x] Node ya no depende de NVM (validado con Node real instalado vía NVM, migrado a Mise, dentro de contenedores desechables)
+* [x] Node ya no depende de NVM — **ahora cierto tanto para la migración como para una workstation nueva**: el bootstrap interactivo (`./setup.sh` sin argumentos) también usa Mise desde la auditoría de estabilización (ver más abajo); antes de eso, solo la migración lo garantizaba, y una workstation nueva seguía instalando NVM
 * [x] La migración es repetible (correr `migrate` dos veces no crea una segunda sesión de backup ni reaplica)
 
-Validado de punta a punta en **8 combinaciones** (imagen base + `nvm-single` + `nvm-multi`, en Ubuntu 24.04 y 26.04), todas en verde. Ver `docs/TEST_CASES.md` (casos M01-M05).
+Validado de punta a punta en **10 combinaciones** (imagen base + `nvm-single` + `nvm-multi`, en Ubuntu 24.04 y 26.04), todas en verde. Ver `docs/TEST_CASES.md` (casos M01-M08, BOOT01, U08).
+
+### Auditoría de estabilización (2026-07-16)
+
+Antes de esta auditoría, el Hito 7 estaba marcado `Review` con estos criterios en `[x]`, pero una revisión línea por línea del código publicado encontró varias diferencias reales entre lo documentado y lo implementado. Todas se corrigieron en la rama `estabilizacion-hitos-2-7`:
+
+| Hallazgo | Estado antes | Corrección |
+|---|---|---|
+| El bootstrap interactivo (`./setup.sh` sin argumentos) seguía instalando NVM vía `install_nodejs.sh` | El criterio "Node ya no depende de NVM" solo era cierto para quien ya tenía NVM y corría `migrate`; una workstation nueva seguía recibiendo NVM | `ensure_node_via_mise()` reemplaza ese camino; `install_nodejs.sh` marcado legado, requiere `UCI_ALLOW_LEGACY_NVM=1` explícito |
+| No existía limpieza de líneas de NVM en `.bashrc`/`.zshrc`/`.profile` | Tras migrar, esos archivos seguían intentando cargar `$NVM_DIR/nvm.sh`, una ruta ya movida al backup | `nvm_cleanup_shell_file` elimina solo patrones exactos reconocidos; líneas ambiguas se reportan, nunca se borran a ciegas |
+| El inventario de NVM (versiones, paquetes globales) solo se imprimía por log, no se persistía | Se perdía al cerrar la terminal | `reports/nvm-versions.tsv`, `reports/nvm-global-packages.tsv`, `reports/shell-changes.tsv` dentro de la sesión de backup |
+| `backup_move_dir` decidía eliminar el origen solo por cantidad de archivos | Un archivo alterado con el mismo conteo, o un symlink retargeteado, no se detectaba | `backup_dir_manifest` compara rutas, tipos, permisos, tamaños, symlinks y hashes completos antes de cualquier `rm -rf` (ver Hito 5) |
+| `getToolStatus()` en `setup.js` convertía cualquier fallo de ejecución en `NOT_INSTALLED` | No se distinguía un error real de un "no instalado" legítimo | `resolveStatusFromExecError` reporta `UNKNOWN` cuando el script no imprimió nada reconocible (ver Hito 3) |
+
+Ver la matriz de cumplimiento completa (Hito | Entregable | Estado real | Prueba | Diferencia encontrada) en el historial de la conversación que originó esta auditoría; los commits `e0d3104`, `bf6456f`, `ba6dda9`, `a4d0b3a`, `556d6ca` documentan cada corrección individualmente.
+
+**Diferencias que quedan pendientes, documentadas explícitamente (no implementadas todavía):**
+
+* M06 — Mise ya instalado antes de migrar (sin imagen Docker dedicada)
+* M07 — `apply` falla a mitad de camino, por ejemplo sin red al instalar Mise (sin imagen Docker dedicada)
+* El `uninstall`/`reinstall` legado de `install_nodejs.sh` sigue usando `sed` amplio si alguien fuerza `UCI_ALLOW_LEGACY_NVM=1` — no se reescribió, porque el camino recomendado es `./setup.sh migrate`, no ese script
 
 ### Decisiones relacionadas
 
