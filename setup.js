@@ -1,42 +1,12 @@
 const inquirer = require('inquirer');
 const { execSync } = require('child_process');
 const chalk = require('chalk');
-
-// Contrato de estado enriquecido (Hito 3, ver docs/adr/0012-modelo-de-estado-enriquecido.md).
-// Los instaladores existentes solo devuelven INSTALLED/NOT_INSTALLED todavía;
-// se adoptan aquí de forma incremental (ver docs/adr/0004-idempotencia-instalado-igual-skip.md).
-const KNOWN_STATUSES = ['INSTALLED', 'NOT_INSTALLED', 'OUTDATED', 'BROKEN', 'UNSUPPORTED', 'UNKNOWN'];
-
-// Acción por defecto según el estado. INSTALLED nunca dispara 'reinstall' por
-// defecto (ADR 0004): la persona usuaria debe pedirlo explícitamente.
-const DEFAULT_ACTION_BY_STATUS = {
-    INSTALLED: 'skip',
-    NOT_INSTALLED: 'install',
-    OUTDATED: 'update',
-    BROKEN: 'repair',
-    UNSUPPORTED: 'skip',
-    UNKNOWN: 'skip'
-};
-
-const STATUS_LABELS = {
-    INSTALLED: { icon: '✓', text: 'Instalado' },
-    NOT_INSTALLED: { icon: '✗', text: 'No instalado' },
-    OUTDATED: { icon: '⚠', text: 'Desactualizado' },
-    BROKEN: { icon: '⚠', text: 'Roto' },
-    UNSUPPORTED: { icon: '?', text: 'No soportado' },
-    UNKNOWN: { icon: '?', text: 'Estado desconocido' }
-};
-
-// Motivo mostrado cuando una herramienta seleccionada se omite (acción 'skip').
-const SKIP_REASON_BY_STATUS = {
-    INSTALLED: 'ya está instalado y no requiere ninguna acción',
-    UNSUPPORTED: 'no es compatible con este sistema, se omite',
-    UNKNOWN: 'su estado no se pudo determinar, se omite por seguridad'
-};
-
-function normalizeStatus(rawStatus) {
-    return KNOWN_STATUSES.includes(rawStatus) ? rawStatus : 'UNKNOWN';
-}
+const {
+    DEFAULT_ACTION_BY_STATUS,
+    STATUS_LABELS,
+    SKIP_REASON_BY_STATUS,
+    normalizeStatus
+} = require('./scripts/lib/status_contract');
 
 // Tools configuration (Node.js removed from list since it's installed as dependency)
 const tools = [
@@ -223,16 +193,10 @@ async function main() {
 }
 
 // Solo se ejecuta el flujo interactivo cuando este archivo corre como
-// programa principal (`node setup.js`), no cuando se importa para pruebas
-// (ver tests/test_status_mapping.js).
+// programa principal (`node setup.js`). El contrato de estado enriquecido
+// vive en scripts/lib/status_contract.js, sin dependencias externas, para
+// poder probarse (ver tests/test_status_mapping.js) sin requerir
+// `npm install` ni la interfaz interactiva.
 if (require.main === module) {
     main();
 }
-
-module.exports = {
-    KNOWN_STATUSES,
-    DEFAULT_ACTION_BY_STATUS,
-    STATUS_LABELS,
-    SKIP_REASON_BY_STATUS,
-    normalizeStatus
-};

@@ -58,3 +58,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0020](0020-alcance-fuera-nvidia-dotfiles-agentes.md) | NVIDIA/CUDA y los dotfiles de agentes de IA quedan fuera de alcance | Aceptada |
 | [0021](0021-reutilizar-personalizacion-shell-en-home.md) | Reutilizar/respaldar la personalización de Oh My Zsh y Powerlevel10k al reutilizar `/home` | Aceptada |
 | [0022](0022-modo-estricto-en-bibliotecas-sourceadas.md) | Las bibliotecas pensadas para `source` no declaran su propio modo estricto | Aceptada |
+| [0023](0023-variable-uci-home-dir-para-pruebas.md) | `UCI_HOME_DIR` como home lógico, simulable para pruebas | Aceptada |

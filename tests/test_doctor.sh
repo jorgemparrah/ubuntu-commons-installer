@@ -64,7 +64,7 @@ UCI_TMP_HOME=""
 
 run_doctor() {
     set +e
-    RUN_OUTPUT="$(HOME="${UCI_TMP_HOME}" bash "${SETUP_SH}" doctor "$@" 2>&1)"
+    RUN_OUTPUT="$(UCI_HOME_DIR="${UCI_TMP_HOME}" bash "${SETUP_SH}" doctor "$@" 2>&1)"
     RUN_CODE=$?
     set -e
 }
@@ -91,7 +91,7 @@ echo "== doctor --verbose =="
 
 run_doctor --verbose
 assert_success "'doctor --verbose' sale con código 0" "${RUN_OUTPUT}" "${RUN_CODE}" "Ubuntu Workstation - Doctor"
-if [[ "${RUN_OUTPUT}" == *"~/.nvm"* ]]; then
+if [[ "${RUN_OUTPUT}" == *"${UCI_TMP_HOME}/.nvm"* ]]; then
     pass "'doctor --verbose' detalla las rutas individuales de home retenido"
 else
     fail "'doctor --verbose' no mostró el detalle de rutas de home retenido"

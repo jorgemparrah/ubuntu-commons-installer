@@ -89,7 +89,9 @@ doctor_check_command() {
     return 0
 }
 
+# doctor_detect_node_source <home_dir>
 doctor_detect_node_source() {
+    local home_dir="$1"
     local node_path
     node_path="$(command -v node 2>/dev/null || true)"
 
@@ -103,10 +105,10 @@ doctor_detect_node_source() {
 
     local source="desconocida"
     case "${node_path}" in
-        "${HOME}"/.nvm/*)
+        "${home_dir}"/.nvm/*)
             source="nvm"
             ;;
-        "${HOME}"/.local/share/mise/*|"${HOME}"/.config/mise/*)
+        "${home_dir}"/.local/share/mise/*|"${home_dir}"/.config/mise/*)
             source="mise"
             ;;
         /snap/*)
@@ -140,8 +142,10 @@ doctor_check_docker_daemon() {
 
 # Solo reporta cantidad de archivos de clave; nunca lee ni imprime su
 # contenido (ver AGENT.md sección 16, Seguridad).
+# doctor_check_ssh <home_dir>
 doctor_check_ssh() {
-    local ssh_dir="${HOME}/.ssh"
+    local home_dir="$1"
+    local ssh_dir="${home_dir}/.ssh"
 
     if [[ ! -d "${ssh_dir}" ]]; then
         echo "no existe ${ssh_dir}"
@@ -154,19 +158,20 @@ doctor_check_ssh() {
     return 0
 }
 
+# doctor_check_home_reuse_indicators <home_dir> <verbose:0|1>
 doctor_check_home_reuse_indicators() {
-    local verbose="$1"
+    local home_dir="$1" verbose="$2"
     local present=0
     local total=${#UCI_DOCTOR_HOME_PATHS[@]}
     local details=()
 
     local rel_path
     for rel_path in "${UCI_DOCTOR_HOME_PATHS[@]}"; do
-        if [[ -e "${HOME}/${rel_path}" ]]; then
+        if [[ -e "${home_dir}/${rel_path}" ]]; then
             present=$((present + 1))
-            details+=("  ✓ ~/${rel_path}")
+            details+=("  ✓ ${home_dir}/${rel_path}")
         else
-            details+=("  ✗ ~/${rel_path}")
+            details+=("  ✗ ${home_dir}/${rel_path}")
         fi
     done
 
@@ -181,10 +186,13 @@ doctor_check_home_reuse_indicators() {
     return 0
 }
 
-# doctor_run [--verbose|-v]
+# doctor_run <home_dir> [--verbose|-v]
 # Nunca modifica el sistema. Retorna != 0 solo por una opción inválida
 # (error de invocación), nunca porque falte alguna herramienta.
 doctor_run() {
+    local home_dir="$1"
+    shift
+
     local verbose=0
     local arg
     for arg in "$@"; do
@@ -201,6 +209,7 @@ doctor_run() {
 
     echo "Ubuntu Workstation - Doctor"
     echo "=========================="
+    doctor_line "Home usado por Doctor:" "${home_dir}"
     doctor_line "Sistema operativo:" "$(doctor_detect_os)"
     doctor_line "Arquitectura:" "$(doctor_detect_arch)"
     doctor_line "Shell activo:" "$(doctor_detect_shell)"
@@ -209,19 +218,19 @@ doctor_run() {
     doctor_check_command "snap" snap --version
     doctor_check_command "Git" git --version
     doctor_line "Docker:" "$(doctor_check_docker_daemon)"
-    doctor_line "Node.js:" "$(doctor_detect_node_source)"
+    doctor_line "Node.js:" "$(doctor_detect_node_source "${home_dir}")"
     doctor_check_command "Mise" mise --version
     doctor_check_command "AWS CLI" aws --version
-    doctor_check_command "kubectl" kubectl version --client --short
+    doctor_check_command "kubectl" kubectl version --client
     doctor_check_command "Helm" helm version --short
     echo ""
-    doctor_line "SSH:" "$(doctor_check_ssh)"
-    doctor_check_home_reuse_indicators "${verbose}"
+    doctor_line "SSH:" "$(doctor_check_ssh "${home_dir}")"
+    doctor_check_home_reuse_indicators "${home_dir}" "${verbose}"
 
-    if [[ "${verbose}" == "1" && -d "${HOME}/.nvm/versions/node" ]]; then
+    if [[ "${verbose}" == "1" && -d "${home_dir}/.nvm/versions/node" ]]; then
         echo ""
         echo "Versiones de Node instaladas vía NVM:"
-        find "${HOME}/.nvm/versions/node" -maxdepth 1 -mindepth 1 -type d -printf '  %f\n' 2>/dev/null || true
+        find "${home_dir}/.nvm/versions/node" -maxdepth 1 -mindepth 1 -type d -printf '  %f\n' 2>/dev/null || true
     fi
 
     return 0

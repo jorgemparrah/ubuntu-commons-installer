@@ -18,7 +18,7 @@ const {
     DEFAULT_ACTION_BY_STATUS,
     STATUS_LABELS,
     normalizeStatus
-} = require(path.join(__dirname, '..', 'setup.js'));
+} = require(path.join(__dirname, '..', 'scripts', 'lib', 'status_contract.js'));
 
 let run = 0;
 let failed = 0;

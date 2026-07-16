@@ -14,6 +14,14 @@ set -Eeuo pipefail
 UCI_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly UCI_ROOT_DIR
 
+# Home "lógico" que usan Doctor y (a futuro) Backups/Migraciones para todo lo
+# que hoy se buscaría bajo $HOME (~/.nvm, ~/.ssh, ~/.bashrc, etc.). Por
+# defecto es el $HOME real; se puede apuntar a una carpeta de prueba para
+# simular un home sin tocar el de esta máquina, por ejemplo:
+#   UCI_HOME_DIR="$(mktemp -d)" ./setup.sh doctor --verbose
+UCI_HOME_DIR="${UCI_HOME_DIR:-${HOME}}"
+readonly UCI_HOME_DIR
+
 # shellcheck source=scripts/lib/logging.sh
 source "${UCI_ROOT_DIR}/scripts/lib/logging.sh"
 # shellcheck source=scripts/bootstrap/preflight.sh
@@ -310,6 +318,7 @@ Uso:
 
 Variables de entorno:
   UCI_DEBUG=1               Activa mensajes de depuración (log_debug)
+  UCI_HOME_DIR=<ruta>       Home a usar en vez de $HOME (para pruebas/simulación)
 
 Comandos planificados, todavía no disponibles (ver docs/ROADMAP.md):
   backup, migrate, validate
@@ -326,7 +335,7 @@ cmd_doctor() {
         exit 1
     fi
 
-    if ! doctor_run "$@"; then
+    if ! doctor_run "${UCI_HOME_DIR}" "$@"; then
         exit 1
     fi
 }
