@@ -3,8 +3,12 @@
 #
 # Router de comandos Bash (Hito 2), con `doctor` de solo lectura (Hito 4).
 # Ver docs/ROADMAP.md. El flujo interactivo histórico (antes toda la lógica
-# de este archivo) se preserva sin cambios de comportamiento dentro de
-# main_setup().
+# de este archivo) se preserva dentro de main_setup(), con una excepción
+# deliberada: la instalación de Node.js ya no pasa por NVM
+# (scripts/development/install_nodejs.sh, ahora legado/deprecado), sino por
+# Mise (ver ensure_node_via_mise() y docs/adr/0002-mise-como-unico-gestor-runtime.md).
+# Ese cambio se hizo en la fase de estabilización de los Hitos 2-7, no en
+# el Hito 2 original.
 #
 # Ver docs/adr/0001-bootstrap-bash-sin-node.md.
 set -Eeuo pipefail
@@ -35,6 +39,12 @@ source "${UCI_ROOT_DIR}/scripts/diagnostics/doctor.sh"
 source "${UCI_ROOT_DIR}/scripts/lib/backup.sh"
 # shellcheck source=scripts/lib/migrations.sh
 source "${UCI_ROOT_DIR}/scripts/lib/migrations.sh"
+
+# Bloque gestionado de activación de Mise en archivos de shell (ADR 0007).
+# Mismos marcadores que usa scripts/migrations/001_nvm_to_mise.sh.
+UCI_MISE_BLOCK_BEGIN="# >>> ubuntu-workstation: mise >>>"
+UCI_MISE_BLOCK_END="# <<< ubuntu-workstation: mise <<<"
+readonly UCI_MISE_BLOCK_BEGIN UCI_MISE_BLOCK_END
 
 # --- Flujo interactivo histórico ------------------------------------------
 # Todo lo que sigue hasta main_setup() es el contenido original de este
@@ -69,7 +79,7 @@ print_info() {
 
 # Function to show project introduction
 show_introduction() {
-    clear
+    clear || true
     echo -e "${PURPLE}"
     echo "╔══════════════════════════════════════════════════════════════════════════════╗"
     echo "║                           🚀 POST-INSTALL SETUP 🚀                           ║"
@@ -182,65 +192,125 @@ check_basic_dependencies() {
     fi
 }
 
-# Function to check and install Node.js using existing script
-check_and_install_nodejs() {
-    if ! command -v node &> /dev/null; then
-        echo -e "${YELLOW}"
-        echo "╔══════════════════════════════════════════════════════════════════════════════╗"
-        echo "║                           📦 INSTALACIÓN DE NODE.JS 📦                       ║"
-        echo "╠══════════════════════════════════════════════════════════════════════════════╣"
-        echo "║                                                                              ║"
-        echo "║  Para usar la interfaz interactiva, necesitas Node.js instalado.             ║"
-        echo "║                                                                              ║"
-        echo "╚══════════════════════════════════════════════════════════════════════════════╝"
-        echo -e "${NC}"
+# mise_bootstrap_shell_block_ensure <rc_file> <shell_name> <mise_bin>
+# Agrega el bloque gestionado de activación de Mise (ADR 0007) a <rc_file>
+# si todavía no está, para que futuras terminales tengan Node disponible
+# sin pasar por el bootstrap de nuevo. Nunca duplica el bloque.
+mise_bootstrap_shell_block_ensure() {
+    local rc_file="$1" shell_name="$2" mise_bin="$3"
+
+    if grep -qF "${UCI_MISE_BLOCK_BEGIN}" "${rc_file}" 2>/dev/null; then
+        return 0
+    fi
+
+    {
         echo ""
+        echo "${UCI_MISE_BLOCK_BEGIN}"
+        echo "eval \"\$(${mise_bin} activate ${shell_name})\""
+        echo "${UCI_MISE_BLOCK_END}"
+    } >> "${rc_file}"
+}
 
-        local install_node=""
-        read -p "¿Instalar Node.js automáticamente? (y/N): " install_node || true
+# Function to ensure Node.js/npm are available via Mise.
+#
+# Reemplaza el antiguo check_and_install_nodejs(), que instalaba NVM vía
+# scripts/development/install_nodejs.sh (ahora legado/deprecado, ver ese
+# archivo). El proyecto usa Mise como único gestor de runtimes (ADR 0002).
+ensure_node_via_mise() {
+    if command -v node &> /dev/null && command -v npm &> /dev/null; then
+        return 0
+    fi
 
-        if [[ "$install_node" =~ ^[Yy]$ ]]; then
-            print_info "Instalando Node.js usando el script existente..."
+    echo -e "${YELLOW}"
+    echo "╔══════════════════════════════════════════════════════════════════════════════╗"
+    echo "║                  📦 NODE.JS VÍA MISE (runtime del bootstrap) 📦             ║"
+    echo "╠══════════════════════════════════════════════════════════════════════════════╣"
+    echo "║                                                                              ║"
+    echo "║  Para usar la interfaz interactiva, necesitas Node.js. Este proyecto usa    ║"
+    echo "║  Mise como único gestor de runtimes (ya no NVM, ver ADR 0002).              ║"
+    echo "║                                                                              ║"
+    echo "╚══════════════════════════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
+    echo ""
 
-            # Check if Node.js installation script exists
-            if [[ -f "scripts/development/install_nodejs.sh" ]]; then
-                chmod +x scripts/development/install_nodejs.sh
-                if ./scripts/development/install_nodejs.sh install; then
-                    print_status "Node.js instalado correctamente."
+    local mise_bin="${UCI_HOME_DIR}/.local/bin/mise"
 
-                    # Verify installation
-                    if command -v node &> /dev/null && command -v npm &> /dev/null; then
-                        print_status "Node.js y npm están disponibles."
-                        echo ""
-                        print_info "Presiona ENTER para continuar..."
-                        read -r || true
-                        return 0
-                    else
-                        print_error "Error: Node.js no se instaló correctamente."
-                        exit 1
-                    fi
-                else
-                    print_error "Error al instalar Node.js usando el script existente."
-                    exit 1
-                fi
-            else
-                print_error "Script de instalación de Node.js no encontrado."
-                print_info "Puedes instalarlo manualmente visitando: https://nodejs.org/"
-                echo ""
-                print_info "Presiona ENTER para salir..."
-                read -r || true
-                exit 1
-            fi
-        else
-            print_warning "Node.js no instalado. El script no puede continuar."
+    # 1) Detectar Mise.
+    if [[ ! -x "${mise_bin}" ]] && ! command -v mise &> /dev/null; then
+        # 2) Instalar Mise si falta, con confirmación explícita.
+        local install_mise=""
+        read -p "¿Instalar Mise para gestionar Node.js? (y/N): " install_mise || true
+
+        if [[ ! "${install_mise}" =~ ^[Yy]$ ]]; then
+            print_warning "Mise no instalado. El script no puede continuar."
             echo ""
-            print_info "Instala Node.js manualmente y vuelve a ejecutar el script."
-            echo ""
-            print_info "Presiona ENTER para salir..."
-            read -r || true
+            print_info "Instala Mise manualmente (https://mise.jdx.dev/) y vuelve a ejecutar el script."
+            exit 1
+        fi
+
+        print_info "Instalando Mise (https://mise.run)..."
+        if ! curl -fsSL https://mise.run | sh; then
+            print_error "No se pudo instalar Mise (revisa el código de salida y la salida de curl arriba)."
             exit 1
         fi
     fi
+
+    local mise_cmd_bin=""
+    if [[ -x "${mise_bin}" ]]; then
+        mise_cmd_bin="${mise_bin}"
+    elif command -v mise &> /dev/null; then
+        mise_cmd_bin="$(command -v mise)"
+    fi
+
+    if [[ -z "${mise_cmd_bin}" ]]; then
+        print_error "Mise no quedó instalado en ${mise_bin} tras el intento de instalación."
+        exit 1
+    fi
+
+    local mise_version
+    mise_version="$("${mise_cmd_bin}" --version 2>/dev/null || echo 'versión desconocida')"
+    print_status "Mise listo: ${mise_version} (${mise_cmd_bin})"
+
+    # 3) Instalar mediante Mise la versión de Node de la política del
+    # proyecto. El bootstrap solo necesita UNA versión funcional para
+    # correr la interfaz; ver ADR 0016 para la política completa de
+    # versiones (que aplica de forma más completa en el Gestor de runtimes).
+    print_info "Instalando Node.js (LTS) vía Mise..."
+    if ! "${mise_cmd_bin}" use --global node@lts; then
+        print_error "No se pudo instalar Node.js vía Mise."
+        exit 1
+    fi
+
+    local node_bin
+    node_bin="$("${mise_cmd_bin}" which node 2>/dev/null || true)"
+    if [[ -z "${node_bin}" ]]; then
+        print_error "Mise no resolvió un ejecutable de node tras instalarlo."
+        exit 1
+    fi
+    export PATH="$(dirname "${node_bin}"):${PATH}"
+
+    # 4) Verificar node y npm.
+    if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
+        print_error "Node.js/npm no quedaron disponibles en PATH tras instalar vía Mise."
+        exit 1
+    fi
+
+    print_status "Node.js $(node --version) y npm $(npm --version) disponibles vía Mise."
+
+    # Dejar Mise activado en los archivos de shell existentes, para que
+    # futuras terminales tengan Node disponible sin repetir este bootstrap.
+    local rc_file
+    for rc_file in "${UCI_HOME_DIR}/.bashrc" "${UCI_HOME_DIR}/.zshrc"; do
+        if [[ -f "${rc_file}" ]]; then
+            local shell_name="bash"
+            [[ "${rc_file}" == *.zshrc ]] && shell_name="zsh"
+            mise_bootstrap_shell_block_ensure "${rc_file}" "${shell_name}" "${mise_cmd_bin}"
+        fi
+    done
+
+    echo ""
+    print_info "Presiona ENTER para continuar..."
+    read -r || true
 }
 
 # Function to setup Node.js dependencies
@@ -281,8 +351,8 @@ main_setup() {
     # Check basic dependencies
     check_basic_dependencies
 
-    # Check and install Node.js using existing script
-    check_and_install_nodejs
+    # Asegurar Node.js vía Mise (ya no NVM, ver ADR 0002)
+    ensure_node_via_mise
 
     # Setup Node.js dependencies
     setup_nodejs_dependencies
@@ -294,7 +364,7 @@ main_setup() {
     print_info "Iniciando interfaz interactiva..."
     echo ""
     sleep 2
-    clear
+    clear || true
     node setup.js
 }
 
@@ -418,8 +488,8 @@ cmd_interactive() {
 
     # Diagnóstico no bloqueante de los requisitos exclusivos del modo
     # interactivo (archivos del repo, Node.js/npm). No es una compuerta dura:
-    # el propio flujo histórico (check_and_install_nodejs) ya le ofrece a la
-    # persona usuaria instalar Node.js si falta.
+    # el propio flujo histórico (ensure_node_via_mise) ya le ofrece a la
+    # persona usuaria instalar Mise/Node si falta.
     preflight_interactive "${UCI_ROOT_DIR}" || true
 
     main_setup

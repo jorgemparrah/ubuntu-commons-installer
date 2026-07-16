@@ -68,6 +68,13 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
     set -e
     record "Ubuntu ${ubuntu_version} / imagen base / run-all-tests.sh" "${code}"
 
+    section "Ubuntu ${ubuntu_version} — bootstrap interactivo vía Mise, sin NVM (imagen base)"
+    set +e
+    docker run --rm "${base_tag}" bash tests/docker/test_bootstrap_mise_no_nvm.sh
+    code=$?
+    set -e
+    record "Ubuntu ${ubuntu_version} / imagen base / test_bootstrap_mise_no_nvm.sh" "${code}"
+
     section "Ubuntu ${ubuntu_version} — migración NVM->Mise instalando NVM en tiempo de ejecución (imagen base)"
     set +e
     docker run --rm "${base_tag}" bash tests/docker/test_nvm_to_mise_apply.sh
