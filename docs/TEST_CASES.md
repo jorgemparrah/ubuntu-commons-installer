@@ -84,7 +84,9 @@ Ver `docs/UBUNTU_COMPATIBILITY.md` para la matriz completa de compatibilidad Ubu
 
 | I06 | `install_cursor.sh` revisa la arquitectura antes de descargar el AppImage x86_64 | Ninguna (validación estática, no ejecuta el instalador) | N/A (validación estática) | Existe una función de revisión basada en `uname -m` que rechaza explícitamente cualquier arquitectura distinta de x86_64, invocada en `install_tool()` antes del primer `wget`/`mkdir`, con un mensaje de error que menciona x86_64 | ✅ pasa |
 
-Cubierto hoy por: `tests/test_system_utils_contract.sh` (I01-I04), `tests/test_system_update_contract.sh` (I05) y `tests/test_cursor_arch_check.sh` (I06 — validación estática, nunca ejecuta `install_cursor.sh`), todos incluidos en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh` y en el job `lint`/`base` del CI).
+| I07 | `install_mongodb_compass.sh` falla con mensaje claro y limpia el `.deb` parcial si la descarga o la instalación fallan | Mocks de `wget`/`apt` devolviendo error | Prueba simulada (mocks) | Código ≠0 si `wget` falla, mensaje claro, sin `.deb` residual; código ≠0 si `apt install` del `.deb` falla, igual sin `.deb` residual | ✅ pasa |
+
+Cubierto hoy por: `tests/test_system_utils_contract.sh` (I01-I04), `tests/test_system_update_contract.sh` (I05), `tests/test_cursor_arch_check.sh` (I06 — validación estática, nunca ejecuta `install_cursor.sh`) y `tests/test_mongodb_compass_download.sh` (I07), todos incluidos en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh` y en el job `lint`/`base` del CI).
 
 Instala software real (Mise, kubectl); solo corre en contenedores desechables.
 

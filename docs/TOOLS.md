@@ -40,7 +40,7 @@
 | `install_dbeaver.sh` | DBeaver | Mantener |
 | `install_gitkraken.sh` | GitKraken | **Mantener** — confirmado |
 | `install_insomnia.sh` | Insomnia | **Mantener** — confirmado, junto con Postman |
-| `install_mongodb_compass.sh` | MongoDB Compass | **Mantener** — confirmado |
+| `install_mongodb_compass.sh` | MongoDB Compass | **Mantener** — confirmado; manejo de errores de descarga corregido en el Hito 9 (mensaje claro + limpieza si falla, ver `docs/UBUNTU_COMPATIBILITY.md`); versión fija en la URL sigue como riesgo aceptado (documentado en el propio script) |
 | `install_kubectl.sh` | kubectl | **Vía Mise** (ver [ADR 0018](adr/0018-kubectl-via-mise.md)) — implementado en el Hito 9 usando `scripts/lib/runtime.sh` (Hito 8); antes se recomendaba mantener Snap, y el script siguió en Snap hasta esta corrección |
 
 ## Productivity

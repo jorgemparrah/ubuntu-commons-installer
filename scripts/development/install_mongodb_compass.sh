@@ -1,5 +1,15 @@
 #!/bin/bash
 # install_mongodb_compass.sh
+#
+# Riesgo conocido y aceptado (ver docs/UBUNTU_COMPATIBILITY.md): la URL de
+# descarga fija una versión y arquitectura exactas
+# (mongodb-compass_1.46.8_amd64.deb). MongoDB no publica un alias estable
+# tipo "latest" para Compass, así que resolver la versión dinámicamente
+# requeriría además scrapear su centro de descargas — fuera de alcance de
+# este hito. Mitigación aplicada: la descarga ahora se verifica
+# explícitamente (en vez de dejar que un wget fallido produzca un error
+# de apt confuso más adelante), y el `.deb` parcial se limpia también si
+# la descarga falla.
 
 TOOL_NAME="MongoDB Compass"
 
@@ -17,18 +27,26 @@ check_status() {
 # Function to install
 install_tool() {
     echo "Instalando $TOOL_NAME..."
-    
-    # Download MongoDB Compass
+
+    local deb_name="mongodb-compass_1.46.8_amd64.deb"
+    local deb_url="https://downloads.mongodb.com/compass/${deb_name}"
+
     echo "Descargando MongoDB Compass..."
-    wget https://downloads.mongodb.com/compass/mongodb-compass_1.46.8_amd64.deb
-    
-    # Install MongoDB Compass
+    if ! wget -O "${deb_name}" "${deb_url}"; then
+        echo "No se pudo descargar MongoDB Compass desde ${deb_url}" >&2
+        echo "La versión fijada (1.46.8) podría ya no estar publicada; revisar https://www.mongodb.com/try/download/compass" >&2
+        rm -f "${deb_name}"
+        return 1
+    fi
+
     echo "Instalando MongoDB Compass..."
-    sudo apt install -y ./mongodb-compass_1.46.8_amd64.deb
-    
-    # Clean up
-    rm -f mongodb-compass_1.46.8_amd64.deb
-    
+    if ! sudo apt install -y "./${deb_name}"; then
+        rm -f "${deb_name}"
+        return 1
+    fi
+
+    rm -f "${deb_name}"
+
     echo "$TOOL_NAME instalado correctamente."
 }
 
