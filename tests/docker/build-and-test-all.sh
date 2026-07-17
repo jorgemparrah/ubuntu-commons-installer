@@ -133,6 +133,12 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
         "Yarn vía Mise, no vía apt (imagen base)" \
         "tests/docker/test_yarn_via_mise.sh"
 
+    # Nivel 4 (Hito 9, Fase B): Oh My Zsh y Powerlevel10k instalan de
+    # verdad el framework/tema, no solo el paquete zsh.
+    run_case "Z01" "${base_tag}" \
+        "Oh My Zsh y Powerlevel10k instalan el framework/tema real (imagen base)" \
+        "tests/docker/test_zsh_personalization.sh"
+
     # Nivel 2 (docs/TEST_CASES.md, M01/M02/M05): desde cero, instalando NVM
     # en tiempo de ejecución dentro del propio contenedor.
     run_case "M01,M02,M05,M08" "${base_tag}" \

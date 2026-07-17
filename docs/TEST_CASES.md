@@ -97,6 +97,12 @@ Cubierto hoy por: `tests/docker/test_kubectl_via_mise.sh` (K01), incluido en `te
 
 Cubierto hoy por: `tests/docker/test_yarn_via_mise.sh` (Y01), incluido en `tests/docker/build-and-test-all.sh`.
 
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| Z01 | `install_oh_my_zsh.sh`/`install_powerlevel10k.sh` instalan el framework/tema real, no solo el paquete `zsh` | Home vacío | `Dockerfile` (base) | `~/.oh-my-zsh` y el tema `powerlevel10k` quedan clonados con su archivo principal; `status` INSTALLED después; segunda corrida de `install` no reclona (mismo commit git); ninguno crea/modifica `~/.zshrc`; subcomando inválido falla | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_zsh_personalization.sh` (Z01), incluido en `tests/docker/build-and-test-all.sh`.
+
 ## Matriz de sistema operativo
 
 Todos los casos anteriores corren en **Ubuntu 24.04 y 26.04** (`--build-arg UBUNTU_VERSION=`).

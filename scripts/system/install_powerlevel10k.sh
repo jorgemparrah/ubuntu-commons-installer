@@ -1,11 +1,21 @@
 #!/bin/bash
 # install_powerlevel10k.sh
+#
+# Instala zsh y el tema Powerlevel10k (clonado directamente desde su repo
+# oficial, sin correr ningún script remoto) como tema custom de Oh My Zsh
+# — antes este script solo instalaba el paquete `zsh` y nunca el tema,
+# pese a su nombre (hallazgo de docs/UBUNTU_COMPATIBILITY.md). No toca
+# `.zshrc` ni `.p10k.zsh`: si `/home` se reutiliza, la personalización
+# existente (ver docs/adr/0021-reutilizar-personalizacion-shell-en-home.md)
+# no se sobreescribe — solo se clona el tema si todavía no existe.
 
 TOOL_NAME="Powerlevel10k"
+P10K_DIR="${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
+P10K_REPO="https://github.com/romkatv/powerlevel10k.git"
 
 # Function to check status
 check_status() {
-    if command -v zsh &> /dev/null || snap list | grep -q "^zsh "; then
+    if command -v zsh &> /dev/null && [[ -d "${P10K_DIR}" ]]; then
         echo "INSTALLED"
         return 0
     else
@@ -17,22 +27,28 @@ check_status() {
 # Function to install
 install_tool() {
     echo "Instalando $TOOL_NAME..."
-    
-    # Install package
+
     sudo apt update
-    sudo apt install -y zsh
-    
+    sudo apt install -y zsh git
+
+    if [[ -d "${P10K_DIR}" ]]; then
+        echo "Powerlevel10k ya está presente en ${P10K_DIR}, no se reinstala."
+    else
+        mkdir -p "$(dirname "${P10K_DIR}")"
+        git clone --depth=1 "${P10K_REPO}" "${P10K_DIR}"
+    fi
+
     echo "$TOOL_NAME instalado correctamente."
 }
 
 # Function to uninstall
 uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
-    
-    # Remove package
+
+    rm -rf "${P10K_DIR}"
     sudo apt remove -y zsh
     sudo apt autoremove -y
-    
+
     echo "$TOOL_NAME desinstalado correctamente."
 }
 

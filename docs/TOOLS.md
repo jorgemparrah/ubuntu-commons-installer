@@ -14,8 +14,8 @@
 | `install_system_utils.sh` | Utilidades del sistema | Mantener; inventariar paquetes explícitamente |
 | `install_multimedia.sh` | Paquetes multimedia | Mantener; verificar nombres de paquetes y códecs |
 | `install_terminator.sh` | Terminal Terminator | **Mantener** — confirmado, sigue siendo la terminal preferida |
-| `install_oh_my_zsh.sh` | Oh My Zsh | **Mantener** — al reutilizar `/home`, respaldar/reutilizar la personalización existente en vez de sobrescribirla (ver [ADR 0021](adr/0021-reutilizar-personalizacion-shell-en-home.md)) |
-| `install_powerlevel10k.sh` | Powerlevel10k | **Mantener** — misma lógica de reutilización de personalización que Oh My Zsh (ver [ADR 0021](adr/0021-reutilizar-personalizacion-shell-en-home.md)) |
+| `install_oh_my_zsh.sh` | Oh My Zsh | **Mantener** — corregido en el Hito 9: antes solo instalaba `zsh`, nunca clonaba el framework (hallazgo de `docs/UBUNTU_COMPATIBILITY.md`); no toca `.zshrc`, respeta la personalización existente al reutilizar `/home` (ver [ADR 0021](adr/0021-reutilizar-personalizacion-shell-en-home.md)) |
+| `install_powerlevel10k.sh` | Powerlevel10k | **Mantener** — corregido en el Hito 9: antes solo instalaba `zsh`, nunca clonaba el tema; misma lógica de no tocar `.zshrc`/reutilizar personalización que Oh My Zsh (ver [ADR 0021](adr/0021-reutilizar-personalizacion-shell-en-home.md)) |
 | `install_ranger.sh` | Gestor de archivos de terminal | Mantener, salvo que surja una alternativa más amigable |
 | `install_cmatrix.sh` | Utilidad visual de terminal | **Mantener** — confirmado |
 | `install_gimp.sh` | GIMP vía Snap | Revisar fuente deseada |
