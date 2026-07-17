@@ -84,13 +84,16 @@ check "el bloque gestionado de Mise quedó en .bashrc" 'grep -qF "ubuntu-worksta
 rm -f "${LOG_FILE}"
 
 echo ""
-echo "== install_nodejs.sh (legado) rechaza ejecutarse sin confirmación explícita =="
+echo "== install_nodejs.sh (legado) se niega a instalar, siempre, sin excepción =="
+# Ver tests/test_install_nodejs_legacy.sh para la prueba exhaustiva
+# (incluye intentar forzarlo con UCI_ALLOW_LEGACY_NVM=1, que ya no tiene
+# ningún efecto: la variable fue eliminada del script).
 set +e
 ./scripts/development/install_nodejs.sh install >/tmp/legacy_output.log 2>&1
 LEGACY_CODE=$?
 set -e
-check "'install_nodejs.sh install' sin UCI_ALLOW_LEGACY_NVM sale con código distinto de cero" '[[ ${LEGACY_CODE} -ne 0 ]]'
-check "avisa que está deprecado" 'grep -qi "deprecado" /tmp/legacy_output.log'
+check "'install_nodejs.sh install' sale con código distinto de cero" '[[ ${LEGACY_CODE} -ne 0 ]]'
+check "avisa que está deshabilitada/deprecada" 'grep -qiE "deshabilitada|deprecado" /tmp/legacy_output.log'
 check "NVM sigue sin instalarse tras el intento rechazado" '[[ ! -d "${HOME}/.nvm" ]]'
 rm -f /tmp/legacy_output.log
 

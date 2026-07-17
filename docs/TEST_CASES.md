@@ -13,7 +13,7 @@ bash tests/docker/build-and-test-all.sh          # Ubuntu 24.04 y 26.04
 bash tests/docker/build-and-test-all.sh 24.04     # solo una versión
 ```
 
-Este es el **único punto de entrada**: arma las 3 imágenes (base, `nvm-single`, `nvm-multi`) para cada versión de Ubuntu listada, y corre dentro de cada una todos los casos de este documento. No hace falta ejecutar ningún otro script de `tests/docker/` por separado salvo que quieras aislar un caso puntual para depurar.
+Este es el **único punto de entrada**: arma las 4 imágenes (base, `nvm-single`, `nvm-multi`, `nvm-mise-preexisting`) para cada versión de Ubuntu listada, y corre dentro de cada una todos los casos de este documento. No hace falta ejecutar ningún otro script de `tests/docker/` por separado salvo que quieras aislar un caso puntual para depurar.
 
 ## Nivel 1 — Comandos de solo lectura / con estado mínimo
 
@@ -29,9 +29,9 @@ No requieren software real preinstalado. Corren sobre la imagen base.
 | U06 | `backup`, `backup --dry-run` | Home con `tests/fixtures/sample_home/` copiado | `Dockerfile` (base) | Sesión con timestamp, manifest.tsv, dry-run no crea nada, no sobrescribe | ✅ pasa |
 | U07 | `migrate --list`/`--dry-run`/`migrate` (framework genérico) | Home vacío + migración de ejemplo `000_example_noop` | `Dockerfile` (base) | Ciclo completo list→dry-run→apply→list, idempotente | ✅ pasa |
 | U08 | `backup_dir_manifest`/`backup_move_dir`: integridad completa antes de eliminar el origen | Directorios de prueba con archivo, symlink y subdirectorio vacío; 5 variantes deliberadamente alteradas (contenido, symlink, directorio vacío faltante, permiso, contenido distinto mismo tamaño) | `Dockerfile` (base) | Cada alteración cambia el manifiesto; el camino feliz mueve todo correctamente; no se reutiliza un destino ya presente | ✅ pasa |
-| BOOT01 | Flujo interactivo (`./setup.sh` sin argumentos) en workstation limpia | Node/npm de apt inhabilitados dentro del contenedor, sin NVM ni Mise | `Dockerfile` (base) | Nunca instala NVM; instala Mise con confirmación explícita, instala Node vía Mise, dejan el bloque gestionado en `.bashrc`; `install_nodejs.sh` (legado) rechaza ejecutarse sin `UCI_ALLOW_LEGACY_NVM=1` | ✅ pasa |
+| BOOT01 | Flujo interactivo (`./setup.sh` sin argumentos) en workstation limpia | Node/npm de apt inhabilitados dentro del contenedor, sin NVM ni Mise | `Dockerfile` (base) | Nunca instala NVM; instala Mise con confirmación explícita, instala Node vía Mise, dejan el bloque gestionado en `.bashrc`; `install_nodejs.sh` (legado) se niega siempre a instalar/desinstalar/reinstalar, sin ninguna variable de entorno que lo reactive | ✅ pasa |
 
-Cubierto hoy por: `tests/docker/run-all-tests.sh` (agrupa U01-U08 vía `tests/test_router.sh`, `tests/test_doctor.sh`, `tests/test_backup.sh`, `tests/test_backup_move_dir.sh`, `tests/test_migrations.sh`, `tests/test_status_mapping.js`) y `tests/docker/test_bootstrap_mise_no_nvm.sh` (BOOT01).
+Cubierto hoy por: `tests/docker/run-all-tests.sh` (agrupa U01-U08 vía `tests/test_router.sh`, `tests/test_doctor.sh`, `tests/test_backup.sh`, `tests/test_backup_move_dir.sh`, `tests/test_migrations.sh`, `tests/test_status_mapping.js`, `tests/test_install_nodejs_legacy.sh`) y `tests/docker/test_bootstrap_mise_no_nvm.sh` (BOOT01).
 
 ## Nivel 2 — Migración NVM → Mise (`001_nvm_to_mise.sh`)
 
@@ -44,14 +44,16 @@ Instalan software real (NVM, Node, Mise); solo corren en contenedores desechable
 | M03 | Home reutilizado simple: NVM + 1 versión de Node ya en la imagen | NVM + Node (alias `default` = `lts/*`) horneados en el build | `Dockerfile.nvm-single` | Igual que M02, partiendo de un estado "ya existente" en vez de instalado en la corrida | ✅ pasa |
 | M04 | Home reutilizado con múltiples versiones, alias `default` != versión más alta | NVM + 2 versiones (Node 18 y la LTS vigente), alias `default` fijado a la más vieja (18) | `Dockerfile.nvm-multi` | La versión global que queda en Mise coincide con la que resuelve el alias `default` de NVM, **no** con "la más alta detectada" | ✅ pasa (encontró y corrigió un bug real: `alias/default` guarda el valor tal cual, ej. `"18"`, no la versión resuelta `"v18.20.8"`) |
 | M05 | Ejecutar `migrate` dos veces sobre el mismo estado ya migrado | Cualquiera de M02-M04, ya aplicada una vez | Las mismas de M02-M04 | No se crea una segunda sesión de backup; el archivo informativo/estado no cambia | ✅ pasa (incluido al final de M02-M04) |
-| M06 | Mise ya instalado antes de migrar (por ejemplo, de una corrida anterior fallida a medias) | NVM + Mise ya presente | 🚧 sin imagen dedicada todavía | La migración detecta Mise existente y no lo reinstala, pero sigue instalando las versiones de Node y moviendo `.nvm` | 🚧 pendiente de implementar |
-| M07 | `apply` falla a mitad de camino (por ejemplo, sin conexión a internet para instalar Mise) | NVM instalado, sin acceso de red dentro del contenedor | 🚧 sin imagen dedicada todavía | La migración no marca finalización, muestra notas de rollback, no deja `.nvm` a medio mover | 🚧 pendiente de implementar |
+| M06 | Mise ya instalado antes de migrar (por ejemplo, de una corrida anterior fallida a medias) | NVM + Mise ya presente | `Dockerfile.nvm-mise-preexisting` | La migración detecta Mise existente y no lo reinstala (misma versión antes/después), pero sigue instalando las versiones de Node vía Mise, resuelve el alias global y mueve `.nvm` | ✅ pasa |
+| M07 | `apply` falla a mitad de camino, en 5 checkpoints inyectados vía `UCI_TEST_FAIL_MIGRATION_AT` (variable exclusiva de pruebas, sin efecto si no se define): `after_shell_backup`, `before_mise_install`, `after_mise_before_node`, `after_node_before_move`, `before_done_marker` | NVM + Node instalados en tiempo de ejecución, sin Mise | `Dockerfile` (base) | Código de salida ≠ 0 en cada checkpoint; nunca se marca `.done`; `.nvm` no se pierde (intacto o ya movido de forma segura al backup si el fallo es el último checkpoint); la sesión de backup del intento fallido se conserva; los archivos de shell quedan recuperables desde esa sesión; una corrida posterior sin la variable completa la migración y marca `.done`, sin duplicar el bloque gestionado de Mise. Recuperación por **reanudación idempotente** (no rollback automático) — ver `scripts/migrations/001_nvm_to_mise.sh` y `docs/TESTING.md` | ✅ pasa |
 | M08 | Limpieza de líneas conocidas de NVM en `.bashrc` + reportes de inventario persistidos | Cualquiera de M02-M04 | Las mismas de M02-M04 | Las líneas exactas del instalador de NVM se eliminan de `.bashrc`; `.bashrc` final no contiene ninguna mención a "nvm"; `reports/nvm-versions.tsv`, `reports/nvm-global-packages.tsv` y `reports/shell-changes.tsv` quedan escritos en la sesión de backup con datos reales (incluye un paquete global instalado a propósito con `npm install -g`) | ✅ pasa (verificado también manualmente inspeccionando el contenido de los tres reportes) |
 
 Cubierto hoy por:
 - `tests/docker/test_nvm_to_mise_apply.sh` → M01, M02, M05, M08 (imagen base)
 - `tests/docker/test_nvm_to_mise_prebaked.sh` → M03, M04, M05, M08 (imágenes `nvm-single` y `nvm-multi`)
-- `tests/docker/build-and-test-all.sh` → **único punto de entrada**: arma todas las imágenes (24.04 y 26.04) y corre Nivel 1 (incluido BOOT01) + Nivel 2 (M01-M05, M08) en cada una
+- `tests/docker/test_nvm_to_mise_mise_preexisting.sh` → M06 (imagen `nvm-mise-preexisting`)
+- `tests/docker/test_nvm_to_mise_fault_injection.sh` → M07 (imagen base)
+- `tests/docker/build-and-test-all.sh` → **único punto de entrada**: arma todas las imágenes (24.04 y 26.04) y corre Nivel 1 (incluido BOOT01) + Nivel 2 (M01-M08) en cada una
 
 ## Matriz de sistema operativo
 
@@ -61,8 +63,9 @@ Todos los casos anteriores corren en **Ubuntu 24.04 y 26.04** (`--build-arg UBUN
 
 Cada Dockerfile de `tests/docker/` existe porque un caso de prueba de este documento necesita esa condición inicial específica:
 
-- `Dockerfile` → condición inicial "vacío" (U01-U07, M01, M02)
+- `Dockerfile` → condición inicial "vacío" (U01-U07, M01, M02, M07)
 - `Dockerfile.nvm-single` → condición inicial "NVM + 1 versión de Node, alias default = lts/*" (M03)
 - `Dockerfile.nvm-multi` → condición inicial "NVM + 2 versiones, alias default = la más vieja" (M04)
+- `Dockerfile.nvm-mise-preexisting` → condición inicial "NVM + 1 versión de Node + Mise ya instalado" (M06)
 
-Si se agrega un caso de prueba nuevo que necesite una condición inicial que ningún Dockerfile actual provee (por ejemplo M06 o M07), el flujo es: **primero** agregar la fila a este documento con su condición inicial, **después** crear el Dockerfile/script que la implemente.
+Si se agrega un caso de prueba nuevo que necesite una condición inicial que ningún Dockerfile actual provee, el flujo es: **primero** agregar la fila a este documento con su condición inicial, **después** crear el Dockerfile/script que la implemente.

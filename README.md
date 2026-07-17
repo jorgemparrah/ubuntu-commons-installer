@@ -68,7 +68,7 @@ Esta migración instala software real, así que solo se prueba dentro de contene
 
 ### Backups
 
-`backup` crea una sesión con timestamp en `<home>/.local/state/ubuntu-workstation/backups/<sesión>/`, con un `manifest.tsv` (origen, destino, tipo, fecha), y **nunca sobrescribe una sesión existente**. `backup_move_dir` (usado por las migraciones) solo elimina el origen si un manifiesto completo — rutas, tipos, permisos, tamaños, symlinks y hashes — coincide exactamente entre origen y destino; si no coincide, no borra nada y reporta la discrepancia. Ver [ADR 0005](docs/adr/0005-gestor-de-backups-centralizado.md).
+`backup` crea una sesión con timestamp en `${UCI_HOME_DIR:-$HOME}/.local/state/ubuntu-workstation/backups/SESSION_ID/`, con un `manifest.tsv` (origen, destino, tipo, fecha), y **nunca sobrescribe una sesión existente**. `backup_move_dir` (usado por las migraciones) solo elimina el origen si un manifiesto completo — rutas, tipos, permisos, tamaños, symlinks y hashes — coincide exactamente entre origen y destino; si no coincide, no borra nada y reporta la discrepancia. Ver [ADR 0005](docs/adr/0005-gestor-de-backups-centralizado.md).
 
 ### `/home` reutilizado
 
@@ -105,7 +105,7 @@ El proyecto asume que `/home` puede venir de una instalación anterior (runtimes
 
 ## Instaladores por categoría
 
-Cada instalador es un script Bash independiente bajo `scripts/<categoría>/`, con una interfaz común (`status`, `install`, `uninstall`, `reinstall`, y de forma incremental `update`/`repair` — ver [ADR 0012](docs/adr/0012-modelo-de-estado-enriquecido.md)). Ver el detalle y la clasificación de cada herramienta en [`docs/TOOLS.md`](docs/TOOLS.md).
+Cada instalador es un script Bash independiente bajo `scripts/CATEGORY/`, con una interfaz común (`status`, `install`, `uninstall`, `reinstall`, y de forma incremental `update`/`repair` — ver [ADR 0012](docs/adr/0012-modelo-de-estado-enriquecido.md)). Ver el detalle y la clasificación de cada herramienta en [`docs/TOOLS.md`](docs/TOOLS.md).
 
 #### **📝 `scripts/editors/`**
 - `install_vscode.sh` — Visual Studio Code
@@ -114,7 +114,7 @@ Cada instalador es un script Bash independiente bajo `scripts/<categoría>/`, co
 
 #### **⚙️ `scripts/development/`**
 - `install_docker.sh` — Docker Engine
-- `install_nodejs.sh` — **legado/deprecado**: instalaba Node.js vía NVM; el bootstrap ya no lo usa (ver arriba). Requiere `UCI_ALLOW_LEGACY_NVM=1` explícito para ejecutar sus acciones de instalación
+- `install_nodejs.sh` — **legado/deprecado**: instalaba Node.js vía NVM; el bootstrap ya no lo usa (ver arriba). `install`/`uninstall`/`reinstall` se niegan a operar siempre, sin ninguna variable de entorno que los reactive (`status` se mantiene, de solo lectura)
 - `install_yarn.sh` — Yarn
 - `install_postman.sh` — Postman
 - `install_dbeaver.sh` — DBeaver

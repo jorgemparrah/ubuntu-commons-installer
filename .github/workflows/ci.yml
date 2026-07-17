@@ -1,0 +1,114 @@
+name: CI
+
+# Gate de calidad automatizado (Hito 10, ver docs/ROADMAP.md y
+# docs/adr/0026-adelantar-hito-10-ci-antes-que-hito-9.md).
+#
+# La matriz de este workflow refleja exactamente docs/TEST_CASES.md — esa
+# tabla sigue siendo la fuente de verdad; si agregas un caso nuevo ahí,
+# agrega también su entrada acá (y en tests/docker/build-and-test-all.sh,
+# que sigue siendo el punto de entrada equivalente para correr todo en
+# local). No se elimina build-and-test-all.sh: sigue siendo útil para
+# depurar un caso puntual sin depender de CI.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Sintaxis y estilo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: bash -n
+        run: |
+          bash -n setup.sh
+          find scripts tests -type f -name '*.sh' -exec bash -n {} \;
+
+      - name: ShellCheck
+        # -S error: el proyecto nunca corrió ShellCheck en CI hasta ahora
+        # (localmente no estaba disponible, ver AGENT.md sección 18). Su
+        # primera corrida real encontró varios hallazgos 'warning'/'info'
+        # preexistentes (SC2155, SC2034, SC1091, SC2016, SC2028, SC2162) en
+        # código que no forma parte de este cierre del Hito 7. Se gatea
+        # solo por 'error' para no bloquear este PR con una limpieza de
+        # estilo no relacionada y de mayor alcance; esa limpieza queda
+        # pendiente como deuda técnica (ver docs/ROADMAP.md).
+        run: |
+          shellcheck -S error setup.sh scripts/lib/*.sh scripts/bootstrap/*.sh \
+            scripts/diagnostics/*.sh scripts/migrations/*.sh
+
+      - name: node --check
+        run: |
+          node --check setup.js
+          node --check scripts/lib/status_contract.js
+
+  docker-matrix:
+    name: ${{ matrix.variant }} — Ubuntu ${{ matrix.ubuntu }}
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu: ["24.04", "26.04"]
+        variant:
+          - base
+          - nvm-single
+          - nvm-multi
+          - nvm-mise-preexisting
+        include:
+          - variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "U01-U08, BOOT01, M01,M02,M05,M08, M07"
+            scripts: >-
+              tests/docker/run-all-tests.sh
+              tests/docker/test_bootstrap_mise_no_nvm.sh
+              tests/docker/test_nvm_to_mise_apply.sh
+              tests/docker/test_nvm_to_mise_fault_injection.sh
+          - variant: nvm-single
+            dockerfile: tests/docker/Dockerfile.nvm-single
+            ids: "M03,M05,M08"
+            scripts: tests/docker/test_nvm_to_mise_prebaked.sh
+          - variant: nvm-multi
+            dockerfile: tests/docker/Dockerfile.nvm-multi
+            ids: "M04,M05,M08"
+            scripts: tests/docker/test_nvm_to_mise_prebaked.sh
+          - variant: nvm-mise-preexisting
+            dockerfile: tests/docker/Dockerfile.nvm-mise-preexisting
+            ids: "M06"
+            scripts: tests/docker/test_nvm_to_mise_mise_preexisting.sh
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Construir imagen base (Ubuntu ${{ matrix.ubuntu }})
+        run: |
+          docker build --build-arg UBUNTU_VERSION=${{ matrix.ubuntu }} \
+            -t ubuntu-workstation-test:${{ matrix.ubuntu }} \
+            -f tests/docker/Dockerfile .
+
+      - name: Construir variante ${{ matrix.variant }}
+        if: matrix.variant != 'base'
+        run: |
+          docker build --build-arg UBUNTU_VERSION=${{ matrix.ubuntu }} \
+            -t ubuntu-workstation-test-${{ matrix.variant }}:${{ matrix.ubuntu }} \
+            -f ${{ matrix.dockerfile }} .
+
+      - name: Correr casos ${{ matrix.ids }}
+        run: |
+          if [ "${{ matrix.variant }}" = "base" ]; then
+            TAG="ubuntu-workstation-test:${{ matrix.ubuntu }}"
+          else
+            TAG="ubuntu-workstation-test-${{ matrix.variant }}:${{ matrix.ubuntu }}"
+          fi
+          FAILED=0
+          for script in ${{ matrix.scripts }}; do
+            echo "::group::${script}"
+            if ! docker run --rm "${TAG}" bash "${script}"; then
+              FAILED=1
+            fi
+            echo "::endgroup::"
+          done
+          exit "${FAILED}"

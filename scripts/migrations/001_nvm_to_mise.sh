@@ -34,6 +34,50 @@ UCI_MISE_BLOCK_BEGIN="# >>> ubuntu-workstation: mise >>>"
 UCI_MISE_BLOCK_END="# <<< ubuntu-workstation: mise <<<"
 readonly UCI_MISE_BLOCK_BEGIN UCI_MISE_BLOCK_END
 
+# Identificador de esta migración (coincide con el nombre del propio
+# archivo, sin extensión) y rutas de marcas de estado bajo
+# ${UCI_HOME_DIR}/.local/state/ubuntu-workstation/migrations/ — el mismo
+# esquema que usa scripts/lib/migrations.sh (migrations_marker_path).
+UCI_MIGRATION_ID="$(basename "${BASH_SOURCE[0]}" .sh)"
+readonly UCI_MIGRATION_ID
+UCI_MIGRATIONS_STATE_DIR="${UCI_HOME_DIR}/.local/state/ubuntu-workstation/migrations"
+readonly UCI_MIGRATIONS_STATE_DIR
+UCI_MIGRATION_DONE_MARKER="${UCI_MIGRATIONS_STATE_DIR}/${UCI_MIGRATION_ID}.done"
+readonly UCI_MIGRATION_DONE_MARKER
+# Sentinel PROPIO de esta migración (distinto de la marca ".done" oficial,
+# que solo escribe scripts/lib/migrations.sh tras un apply+validate
+# exitosos). Se escribe al final de migration_apply(), justo después de
+# mover .nvm con éxito. Sirve para distinguir "ya no queda nada que migrar"
+# de "esta corrida ya movió todo lo real, pero la validación final falló
+# antes de marcar la migración como hecha" (ver UCI_TEST_FAIL_MIGRATION_AT
+# más abajo y el checkpoint 'before_done_marker'): en ese segundo caso,
+# migration_check() debe seguir diciendo que hay algo pendiente, para que
+# un reintento sin fallo inyectado pueda completar la validación y marcar
+# la migración como hecha, en vez de quedar huérfana para siempre.
+UCI_MIGRATION_APPLY_SENTINEL="${UCI_MIGRATIONS_STATE_DIR}/.${UCI_MIGRATION_ID}.apply-completado"
+readonly UCI_MIGRATION_APPLY_SENTINEL
+
+# --- Inyección de fallos exclusiva para pruebas (nunca activa por defecto) -
+#
+# UCI_TEST_FAIL_MIGRATION_AT: si se define con uno de los checkpoints de
+# abajo, migration_test_fail_at() simula que la migración falló justo en
+# ese punto, sin depender de cortar Internet de verdad. Vacía por defecto:
+# sin efecto alguno en una ejecución normal. Ver docs/TESTING.md y
+# docs/TEST_CASES.md (caso M07) para el detalle de cada checkpoint.
+UCI_TEST_FAIL_MIGRATION_AT="${UCI_TEST_FAIL_MIGRATION_AT:-}"
+
+# migration_test_fail_at <checkpoint>
+# exit 1 si UCI_TEST_FAIL_MIGRATION_AT coincide con <checkpoint>; exit 0 en
+# cualquier otro caso (incluida la variable vacía/no definida).
+migration_test_fail_at() {
+    local checkpoint="$1"
+    if [[ -n "${UCI_TEST_FAIL_MIGRATION_AT}" && "${UCI_TEST_FAIL_MIGRATION_AT}" == "${checkpoint}" ]]; then
+        log_error "[UCI_TEST_FAIL_MIGRATION_AT] Fallo inyectado deliberadamente en el checkpoint '${checkpoint}' (solo pruebas)"
+        return 1
+    fi
+    return 0
+}
+
 # mise_cmd <args...>
 mise_cmd() {
     "${UCI_MISE_BIN}" "$@"
@@ -278,7 +322,22 @@ migration_describe() {
 }
 
 migration_check() {
-    [[ -d "${UCI_NVM_DIR}" ]]
+    if [[ -d "${UCI_NVM_DIR}" ]]; then
+        return 0
+    fi
+
+    # .nvm ya no existe, pero esta migración nunca se marcó como hecha: es
+    # el estado que deja una corrida anterior que llegó a mover .nvm de
+    # verdad (ver UCI_MIGRATION_APPLY_SENTINEL) y luego falló en la
+    # validación final. Se permite reintentar apply/validate — son
+    # idempotentes (backup_move_dir no falla si el origen ya no existe,
+    # Mise/Node ya instalados se omiten) — en vez de omitir la migración
+    # silenciosamente para siempre.
+    if [[ -f "${UCI_MIGRATION_APPLY_SENTINEL}" && ! -f "${UCI_MIGRATION_DONE_MARKER}" ]]; then
+        return 0
+    fi
+
+    return 1
 }
 
 migration_dry_run() {
@@ -373,6 +432,10 @@ mise_shell_block_upsert() {
 }
 
 migration_apply() {
+    if [[ -n "${UCI_TEST_FAIL_MIGRATION_AT}" ]]; then
+        log_warn "Modo de inyección de fallos de prueba activo: UCI_TEST_FAIL_MIGRATION_AT=${UCI_TEST_FAIL_MIGRATION_AT} (nunca debe estar definida en una ejecución real)"
+    fi
+
     local session_dir
     session_dir="$(backup_init_session "${UCI_HOME_DIR}" "0")" || return 1
 
@@ -381,6 +444,8 @@ migration_apply() {
     for rc_file in "${UCI_HOME_DIR}/.bashrc" "${UCI_HOME_DIR}/.zshrc" "${UCI_HOME_DIR}/.profile"; do
         backup_copy_file "${session_dir}" "${UCI_HOME_DIR}" "${rc_file}" "0" || return 1
     done
+
+    migration_test_fail_at "after_shell_backup" || return 1
 
     # 1.5) Limpiar referencias conocidas de NVM en los archivos de shell ya
     # respaldados. Solo patrones exactos reconocidos (ver ADR 0007); las
@@ -400,6 +465,8 @@ migration_apply() {
     fi
     nvm_write_global_packages_report "${session_dir}/reports/nvm-global-packages.tsv" "${versions}"
 
+    migration_test_fail_at "before_mise_install" || return 1
+
     # 3) Instalar Mise si falta.
     if [[ ! -x "${UCI_MISE_BIN}" ]]; then
         log_info "Instalando Mise..."
@@ -413,6 +480,8 @@ migration_apply() {
         log_error "Mise no quedó instalado en ${UCI_MISE_BIN} tras el intento de instalación"
         return 1
     fi
+
+    migration_test_fail_at "after_mise_before_node" || return 1
 
     # 4) Bloque gestionado de activación (ADR 0007), solo en los archivos
     # que ya existan.
@@ -468,6 +537,8 @@ migration_apply() {
 
     nvm_write_versions_report "${session_dir}/reports/nvm-versions.tsv" "${versions}" "${default_alias}" "${default_version}"
 
+    migration_test_fail_at "after_node_before_move" || return 1
+
     # 7) Mover .nvm al backup (copiar + verificar + recién ahí eliminar el
     # origen). Nunca se borra directamente (ADR 0003).
     if ! backup_move_dir "${session_dir}" "${UCI_HOME_DIR}" "${UCI_NVM_DIR}" "0"; then
@@ -475,12 +546,22 @@ migration_apply() {
         return 1
     fi
 
+    # Sentinel de reanudación: el trabajo real de esta migración ya
+    # terminó (Mise instalado, Node vía Mise, .nvm movido). Si lo que
+    # sigue (validate(), o el propio marcado de ".done" en
+    # scripts/lib/migrations.sh) falla, migration_check() seguirá
+    # detectando que falta completar esta migración.
+    mkdir -p "$(dirname "${UCI_MIGRATION_APPLY_SENTINEL}")"
+    date -Iseconds > "${UCI_MIGRATION_APPLY_SENTINEL}"
+
     log_success "Migración NVM -> Mise aplicada. Backup en: ${session_dir}"
     log_info "Reportes: ${session_dir}/reports/ (nvm-versions.tsv, nvm-global-packages.tsv, shell-changes.tsv)"
     return 0
 }
 
 migration_validate() {
+    migration_test_fail_at "before_done_marker" || return 1
+
     if [[ ! -x "${UCI_MISE_BIN}" ]]; then
         log_error "Validación: Mise no está instalado en ${UCI_MISE_BIN}"
         return 1
