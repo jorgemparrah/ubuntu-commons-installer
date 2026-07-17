@@ -70,6 +70,53 @@ Instala software real (Mise, Node, Python); solo corre en contenedores desechabl
 
 Cubierto hoy por: `tests/docker/test_runtime_status.sh` (R01-R05, imagen base), re-ejecución de `test_nvm_to_mise_apply.sh`/`test_nvm_to_mise_prebaked.sh` tras el refactor (R06), todo incluido en `tests/docker/build-and-test-all.sh`.
 
+## Nivel 4 — Instaladores: contrato de interfaz (Hito 9, Fase B)
+
+Ver `docs/UBUNTU_COMPATIBILITY.md` para la matriz completa de compatibilidad Ubuntu 24.04/26.04 de los 30 instaladores. Esta sección solo cubre los casos de prueba nuevos agregados junto con las correcciones de la Fase B. Prueba simulada (comandos `apt`/`sudo`/`dpkg` interceptados con mocks en PATH, nunca instala nada real) — corre en cualquier máquina, incluida la de desarrollo.
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I01 | `install_system_utils.sh` ya no se autoejecuta al invocarse sin argumentos | Ninguna (mocks de apt/sudo/dpkg) | Prueba simulada (mocks) | Código != 0, ningún `apt install` interceptado | ✅ pasa |
+| I02 | `install_system_utils.sh` contrato `status\|install\|uninstall\|reinstall` | Mocks con dpkg "instalado"/"no instalado" | Prueba simulada (mocks) | `status` reporta INSTALLED/NOT_INSTALLED correctamente, de solo lectura; `install` invoca `apt install`; subcomando inválido falla | ✅ pasa |
+| I03 | `install_development_tools.sh` — mismo caso que I01/I02 | Igual que I01/I02 | Prueba simulada (mocks) | Igual que I01/I02 | ✅ pasa |
+| I04 | `install_multimedia.sh` — mismo caso que I01/I02, más `DEBIAN_FRONTEND=noninteractive` para el EULA de `ubuntu-restricted-extras` | Igual que I01/I02 | Prueba simulada (mocks) | Igual que I01/I02, y el código fuente fija `DEBIAN_FRONTEND=noninteractive` antes de instalar | ✅ pasa |
+| I05 | `install_system_update.sh`/`install_final_update.sh`: `status` deja de ser un stub fijo en `INSTALLED` | Mocks de `apt list --upgradable`/`apt-get --simulate autoremove` con 0 o N pendientes | Prueba simulada (mocks) | Sin pendientes: INSTALLED, código 0, `status` no ejecuta upgrade/autoremove real; con pendientes (o paquetes huérfanos en Final Update): NOT_INSTALLED, código ≠0; `install` sí invoca `apt upgrade` real; subcomando inválido falla | ✅ pasa |
+| I07 | `install_mongodb_compass.sh` falla con mensaje claro y limpia el `.deb` parcial si la descarga o la instalación fallan | Mocks de `wget`/`apt` devolviendo error | Prueba simulada (mocks) | Código ≠0 si `wget` falla, mensaje claro, sin `.deb` residual; código ≠0 si `apt install` del `.deb` falla, igual sin `.deb` residual | ✅ pasa |
+
+Cubierto hoy por: `tests/test_system_utils_contract.sh` (I01-I04), `tests/test_system_update_contract.sh` (I05) y `tests/test_mongodb_compass_download.sh` (I07), todos incluidos en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh` y en el job `lint`/`base` del CI). El caso de Cursor (antes I06, validación estática del AppImage) se retiró y reemplazó por C01 (prueba funcional Docker), ver más abajo — Cursor pasó a instalarse vía su repo APT oficial, no AppImage.
+
+Instala software real (Mise, kubectl); solo corre en contenedores desechables.
+
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| K01 | `install_kubectl.sh` instala kubectl vía Mise, nunca vía Snap | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` instala Mise+kubectl; `status` INSTALLED después, código 0; `mise which kubectl` resuelve un ejecutable; `snap list` no incluye kubectl; una segunda corrida de `install` no falla (idempotencia); subcomando inválido falla | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_kubectl_via_mise.sh` (K01), incluido en `tests/docker/build-and-test-all.sh`.
+
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| Y01 | `install_yarn.sh` instala Yarn vía Mise, nunca vía apt (paquete `yarn` de Ubuntu es en realidad `cmdtest`) | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` instala Mise+Yarn; `status` INSTALLED después, código 0; `mise which yarn` resuelve un ejecutable; el paquete apt `yarn` nunca se instala; una segunda corrida de `install` no falla (idempotencia); subcomando inválido falla | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_yarn_via_mise.sh` (Y01), incluido en `tests/docker/build-and-test-all.sh`.
+
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| Z01 | `install_oh_my_zsh.sh`/`install_powerlevel10k.sh` instalan el framework/tema real, no solo el paquete `zsh` | Home vacío | `Dockerfile` (base) | `~/.oh-my-zsh` y el tema `powerlevel10k` quedan clonados con su archivo principal; `status` INSTALLED después; segunda corrida de `install` no reclona (mismo commit git); ninguno crea/modifica `~/.zshrc`; subcomando inválido falla | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_zsh_personalization.sh` (Z01), incluido en `tests/docker/build-and-test-all.sh`.
+
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| L01 | `install_ulauncher.sh` agrega el PPA oficial (`ppa:agornostal/ulauncher`) antes de instalar | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` agrega el PPA e instala el paquete real; `status` INSTALLED después, código 0; segunda corrida de `install` no falla (idempotencia); subcomando inválido falla | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_ulauncher_ppa.sh` (L01), incluido en `tests/docker/build-and-test-all.sh`.
+
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| C01 | `install_cursor.sh` instala vía su repo APT oficial (signed-by, amd64+arm64), nunca AppImage/apt-key | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` agrega la clave GPG (keyring, no apt-key) y el repo con `signed-by`; `status` INSTALLED después, código 0; segunda corrida de `install` no falla (idempotencia); `uninstall` limpia paquete+repo+keyring; subcomando inválido falla | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_cursor_apt_repo.sh` (C01), incluido en `tests/docker/build-and-test-all.sh`.
+
 ## Matriz de sistema operativo
 
 Todos los casos anteriores corren en **Ubuntu 24.04 y 26.04** (`--build-arg UBUNTU_VERSION=`).

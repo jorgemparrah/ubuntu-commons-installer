@@ -123,6 +123,32 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
         "gestor de runtimes (Node y Python vía Mise, imagen base)" \
         "tests/docker/test_runtime_status.sh"
 
+    # Nivel 4 (Hito 9, Fase B): kubectl vía Mise, no vía Snap (ADR 0018).
+    run_case "K01" "${base_tag}" \
+        "kubectl vía Mise, no vía Snap (imagen base)" \
+        "tests/docker/test_kubectl_via_mise.sh"
+
+    # Nivel 4 (Hito 9, Fase B): Yarn vía Mise, no vía apt (ADR 0017).
+    run_case "Y01" "${base_tag}" \
+        "Yarn vía Mise, no vía apt (imagen base)" \
+        "tests/docker/test_yarn_via_mise.sh"
+
+    # Nivel 4 (Hito 9, Fase B): Oh My Zsh y Powerlevel10k instalan de
+    # verdad el framework/tema, no solo el paquete zsh.
+    run_case "Z01" "${base_tag}" \
+        "Oh My Zsh y Powerlevel10k instalan el framework/tema real (imagen base)" \
+        "tests/docker/test_zsh_personalization.sh"
+
+    # Nivel 4 (Hito 9, Fase B): ULauncher agrega su PPA oficial faltante.
+    run_case "L01" "${base_tag}" \
+        "ULauncher agrega su PPA oficial antes de instalar (imagen base)" \
+        "tests/docker/test_ulauncher_ppa.sh"
+
+    # Nivel 4 (Hito 9, Fase B): Cursor vía su repo APT oficial (signed-by).
+    run_case "C01" "${base_tag}" \
+        "Cursor vía repo APT oficial, signed-by (imagen base)" \
+        "tests/docker/test_cursor_apt_repo.sh"
+
     # Nivel 2 (docs/TEST_CASES.md, M01/M02/M05): desde cero, instalando NVM
     # en tiempo de ejecución dentro del propio contenedor.
     run_case "M01,M02,M05,M08" "${base_tag}" \

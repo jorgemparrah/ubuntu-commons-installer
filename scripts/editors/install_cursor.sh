@@ -1,14 +1,39 @@
 #!/bin/bash
 # install_cursor.sh
+#
+# Cursor tiene un repositorio APT oficial (downloads.cursor.com/aptrepo),
+# con el mecanismo moderno de clave GPG (signed-by + keyring, nunca
+# apt-key) y soporte para amd64 y arm64. Antes este script descargaba un
+# AppImage fijado a x86_64 sin checksum (hallazgo de
+# docs/UBUNTU_COMPATIBILITY.md); el repo oficial resuelve ambos problemas
+# de una vez (arquitectura declarada explícitamente, clave y paquete
+# verificados por apt) — ver ADR 0027 (categoría "servicio/software
+# técnico con repositorio propio -> APT oficial del fabricante").
+#
+# El propio paquete 'cursor' gestiona, en su postinst, su propia entrada
+# de repositorio con signed-by=/usr/share/keyrings/anysphere.gpg
+# (encontrado al validar en CI: si nuestra entrada manual usa una ruta de
+# keyring distinta, apt detecta 'Conflicting values set for option
+# Signed-By' para la misma URL/suite y se niega a leer la lista de
+# fuentes en CUALQUIER operación posterior, incluido 'apt update' fuera
+# de este script). Por eso la clave se escribe directamente en esa misma
+# ruta que el paquete espera, en vez de una ruta propia — así, aunque el
+# postinst repita la misma entrada, coincide exactamente y no hay
+# conflicto.
 
-VERSION_CURSOR=1.4.5
-CURSOR_PATH=/opt/cursor
-APPIMAGE_PATH="$CURSOR_PATH/Cursor-$VERSION_CURSOR.AppImage"
 TOOL_NAME="Cursor AI IDE"
+CURSOR_KEYRING=/usr/share/keyrings/anysphere.gpg
+CURSOR_REPO_LIST=/etc/apt/sources.list.d/cursor.list
 
 # Function to check status
 check_status() {
-    if [ -f "$APPIMAGE_PATH" ] || [ -f "$HOME/.local/share/applications/cursor.desktop" ] || [ -f "/usr/share/applications/cursor.desktop" ]; then
+    # 'dpkg -s' sigue devolviendo éxito (código 0) para un paquete recién
+    # removido con 'apt remove' (queda en estado "config-files"
+    # remanente) — encontrado al validar en CI, reportaba INSTALLED
+    # incluso después de desinstalar. 'dpkg -l' con el flag "ii" (install
+    # ok installed) sí distingue ese caso, igual que el resto de los
+    # instaladores del proyecto.
+    if command -v cursor &> /dev/null || dpkg -l cursor 2>/dev/null | grep -q '^ii'; then
         echo "INSTALLED"
         return 0
     else
@@ -20,91 +45,48 @@ check_status() {
 # Function to install
 install_tool() {
     echo "Instalando $TOOL_NAME..."
-    
-    if [ -f "$APPIMAGE_PATH" ]; then
-        echo "Cursor AI IDE ya está instalado."
-        return 0
+
+    # gpg --dearmor requiere el paquete gnupg; no se puede asumir presente
+    # (encontrado al validar en CI: sin gnupg, el pipe no falla de forma
+    # visible y deja un keyring vacío en silencio, causando un error de
+    # firma NO_PUBKEY recién al hacer 'apt update' — ver docs/UBUNTU_COMPATIBILITY.md).
+    if ! command -v gpg &> /dev/null; then
+        sudo apt update
+        sudo apt install -y gnupg
     fi
 
-    # Prepare path
-    echo "Instalando dependencias..."
-    sudo add-apt-repository universe -y
-    sudo apt install -y libfuse2t64 wget
+    sudo mkdir -p "$(dirname "${CURSOR_KEYRING}")"
 
-    # Prepare path
-    echo "Preparando rutas..."
-    sudo mkdir -p $CURSOR_PATH
+    # Añade la clave GPG de Cursor, en la misma ruta que usa el propio
+    # paquete (ver nota arriba).
+    curl -fsSL https://downloads.cursor.com/keys/anysphere.asc | gpg --dearmor | sudo tee "${CURSOR_KEYRING}" > /dev/null
 
-    # Download icon
-    ICON_NAME=cursor.png
-    ICON_PATH=$CURSOR_PATH/$ICON_NAME
-    ICON_URL="https://raw.githubusercontent.com/rahuljangirwork/copmany-logos/refs/heads/main/$ICON_NAME"
-    echo "Descargando icono..."
-    sudo wget $ICON_URL
-    sudo mv $ICON_NAME $ICON_PATH
+    # Añade el repositorio de Cursor
+    echo "deb [arch=amd64,arm64 signed-by=${CURSOR_KEYRING}] https://downloads.cursor.com/aptrepo stable main" | sudo tee "${CURSOR_REPO_LIST}" > /dev/null
 
-    # Download installer
-    INSTALLER_NAME=Cursor-$VERSION_CURSOR-x86_64.AppImage
-    INSTALLER_URL="https://downloads.cursor.com/production/af58d92614edb1f72bdd756615d131bf8dfa5299/linux/x64/$INSTALLER_NAME"
-    echo "Descargando instalador..."
-    sudo wget $INSTALLER_URL
-    sudo mv $INSTALLER_NAME $APPIMAGE_PATH
-    sudo chmod +x $APPIMAGE_PATH
+    # Actualiza e instala
+    sudo apt update
+    sudo apt install -y cursor
 
-    # Create a .desktop entry for Cursor
-    DESKTOP_ENTRY_PATH="/usr/share/applications/cursor.desktop"
-    echo "Creando entrada .desktop para Cursor..."
-    sudo bash -c "cat > $DESKTOP_ENTRY_PATH" <<EOL
-[Desktop Entry]
-Name=Cursor AI IDE
-Exec=$APPIMAGE_PATH --no-sandbox
-Icon=$ICON_PATH
-Type=Application
-Categories=Development;
-EOL
-
-    # Create binary link
-    BINARY_LINK_PATH="/usr/local/bin/cursor"
-    echo "Creando comando 'cursor'..."
-    sudo bash -c "cat > $BINARY_LINK_PATH" <<EOL
-#!/usr/bin/env bash
-exec $APPIMAGE_PATH --no-sandbox "\$@"
-EOL
-    sudo chmod +x $BINARY_LINK_PATH
-
-    echo "Cursor AI IDE instalado correctamente. Puedes encontrarlo en el menú de aplicaciones."
+    echo "$TOOL_NAME instalado correctamente."
 }
 
 # Function to uninstall
 uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
-    
-    # Remove AppImage
-    if [ -f "$APPIMAGE_PATH" ]; then
-        sudo rm -f "$APPIMAGE_PATH"
-    fi
-    
-    # Remove icon
-    if [ -f "$CURSOR_PATH/cursor.png" ]; then
-        sudo rm -f "$CURSOR_PATH/cursor.png"
-    fi
-    
-    # Remove desktop entry
-    if [ -f "/usr/share/applications/cursor.desktop" ]; then
-        sudo rm -f "/usr/share/applications/cursor.desktop"
-    fi
-    
-    # Remove binary link
-    if [ -f "/usr/local/bin/cursor" ]; then
-        sudo rm -f "/usr/local/bin/cursor"
-    fi
-    
-    # Remove directory if empty
-    if [ -d "$CURSOR_PATH" ] && [ -z "$(ls -A $CURSOR_PATH)" ]; then
-        sudo rmdir "$CURSOR_PATH"
-    fi
-    
-    echo "Cursor AI IDE desinstalado correctamente."
+
+    sudo apt purge -y cursor
+    sudo apt autoremove -y
+    sudo rm -f "${CURSOR_REPO_LIST}"
+    sudo rm -f "${CURSOR_KEYRING}"
+
+    # Limpia también cualquier entrada que el propio paquete pudo haber
+    # agregado con un nombre de archivo distinto al nuestro (se confirmó en
+    # CI: crea /etc/apt/sources.list.d/cursor.sources en formato Deb822).
+    sudo rm -f /etc/apt/sources.list.d/anysphere.list
+    sudo rm -f /etc/apt/sources.list.d/cursor.sources
+
+    echo "$TOOL_NAME desinstalado correctamente."
 }
 
 # Function to reinstall

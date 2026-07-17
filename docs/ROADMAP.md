@@ -515,15 +515,19 @@ Alta
 
 **Estado**
 
-Blocked
+In Progress
 
 Depende de:
 
 Gestor de runtimes
 
+**Corrección administrativa (2026-07-17):** este hito estaba marcado `Blocked` pese a que su dependencia (Gestor de runtimes, Hito 8) ya está `Done`. Pasa a `In Progress` al iniciar la Fase A (auditoría e inventario, ver `docs/UBUNTU_COMPATIBILITY.md`).
+
+**Avance de la Fase B (2026-07-17):** 9 de los 13 puntos de la prioridad de intervención ya están corregidos y probados, con evidencia real en CI (`system_utils`, `development_tools`, `multimedia`, `kubectl`→Mise, `Yarn`→Mise, Oh My Zsh/Powerlevel10k, ULauncher, `system_update`/`final_update`, Cursor→repo APT oficial, MongoDB Compass). Validar contra CI real (no solo revisión de código) encontró y corrigió 6 bugs adicionales que ninguna revisión estática hubiera detectado: `software-properties-common` ausente en la imagen (rompía el PPA de ULauncher), `gnupg` ausente (rompía la clave de Cursor en silencio), un conflicto de `Signed-By` entre la entrada manual y la que el propio paquete de Cursor gestiona, y `dpkg -s`/`dpkg -l` reportando estado incorrecto tras `apt remove` en dos scripts. Además se dividió el job `base` del CI (antes 11 scripts en serie, ~15-18 min) en 5 grupos paralelos, bajando el tiempo total a ~11 min. Quedan pendientes: Snap-dependientes (8 instaladores, no verificables sin `snapd` en Docker), Docker/VS Code (esperan evidencia real contra Ubuntu 26.04; VS Code además comparte el riesgo latente de `gnupg` ausente encontrado en Cursor, sin corregir todavía), `install_kernel.sh` (bug de fallback de nombres, alto riesgo, no probar en Docker), y la decisión de alcance sobre `install_chrome.sh` (arquitectura `amd64`). Este hito permanece en `In Progress`, no se marca `Done` mientras estos puntos sigan abiertos. Ver `docs/UBUNTU_COMPATIBILITY.md` para la matriz completa y evidencia por instalador. CI verde: [PR #3](https://github.com/jorgemparrah/ubuntu-commons-installer/pull/3).
+
 ### Objetivo
 
-Revisar cada instalador para Ubuntu 26.
+Auditar todos los instaladores y operaciones de mantenimiento existentes para determinar y asegurar su compatibilidad con Ubuntu 24.04 y Ubuntu 26.04. La modernización en volumen de las interfaces de los instaladores corresponde al Hito 11, no a este.
 
 ### Tareas
 
@@ -536,7 +540,7 @@ Revisar:
 
 ### Criterios de aceptación
 
-Todos los instaladores soportados funcionan correctamente en Ubuntu 26.
+Todos los instaladores soportados funcionan correctamente en Ubuntu 26, con evidencia individual por instalador (ver `docs/UBUNTU_COMPATIBILITY.md`). No se declara este hito `Done` mientras queden instaladores sin clasificar o sin evidencia explícita de validación.
 
 ---
 
@@ -602,7 +606,9 @@ Blocked
 
 Depende de:
 
-Gate de calidad automatizado (CI)
+Gate de calidad automatizado (CI), Compatibilidad con Ubuntu 26
+
+**Corrección administrativa (2026-07-17):** se agrega Compatibilidad con Ubuntu 26 (Hito 9) como dependencia adicional — no tiene sentido estandarizar interfaces de instaladores antes de saber cuáles ya son compatibles con Ubuntu 26 y cuáles necesitan cambios reales primero.
 
 ### Objetivo
 

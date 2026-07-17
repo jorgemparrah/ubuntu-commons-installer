@@ -1,11 +1,21 @@
 #!/bin/bash
 # install_yarn.sh
+#
+# Yarn se instala vía Mise, no vía apt (ver
+# docs/adr/0017-mise-instala-yarn-pnpm-directo.md). El paquete `yarn` de
+# los repositorios de Ubuntu es en realidad `cmdtest` (Debian), no el Yarn
+# de JavaScript — un bug preexistente detectado en
+# docs/UBUNTU_COMPATIBILITY.md, no específico de Ubuntu 26. Usa
+# scripts/lib/runtime.sh (Hito 8), el mismo mecanismo que kubectl/Node/Python.
 
 TOOL_NAME="Yarn"
+UCI_YARN_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../lib/runtime.sh
+source "${UCI_YARN_SCRIPT_DIR}/../lib/runtime.sh"
 
 # Function to check status
 check_status() {
-    if command -v yarn &> /dev/null || snap list | grep -q "^yarn "; then
+    if runtime_mise_available "${HOME}" && "$(runtime_mise_bin "${HOME}")" which yarn &> /dev/null; then
         echo "INSTALLED"
         return 0
     else
@@ -17,22 +27,33 @@ check_status() {
 # Function to install
 install_tool() {
     echo "Instalando $TOOL_NAME..."
-    
-    # Install package
-    sudo apt update
-    sudo apt install -y yarn
-    
+
+    if ! runtime_ensure_mise "${HOME}"; then
+        echo "No se pudo instalar Mise" >&2
+        return 1
+    fi
+
+    if ! runtime_install "${HOME}" yarn latest; then
+        echo "No se pudo instalar Yarn vía Mise" >&2
+        return 1
+    fi
+
+    if ! runtime_use_global "${HOME}" yarn latest; then
+        echo "No se pudo fijar Yarn como versión global de Mise" >&2
+        return 1
+    fi
+
     echo "$TOOL_NAME instalado correctamente."
 }
 
 # Function to uninstall
 uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
-    
-    # Remove package
-    sudo apt remove -y yarn
-    sudo apt autoremove -y
-    
+
+    if runtime_mise_available "${HOME}"; then
+        runtime_cmd "${HOME}" uninstall yarn@latest || true
+    fi
+
     echo "$TOOL_NAME desinstalado correctamente."
 }
 

@@ -13,7 +13,13 @@ name: CI
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
   pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
   workflow_dispatch:
 
 jobs:
@@ -47,37 +53,75 @@ jobs:
           node --check scripts/lib/status_contract.js
 
   docker-matrix:
-    name: ${{ matrix.variant }} — Ubuntu ${{ matrix.ubuntu }}
+    # El job "base" agrupaba 11 scripts en serie (~15-18 min). Se separa en
+    # varios grupos más chicos (1-3 scripts cada uno) que corren en paralelo
+    # sobre la misma imagen base, en vez de uno detrás de otro en un solo
+    # job. Cada grupo sigue construyendo su propia copia de la imagen (no
+    # hay cache de capas compartido entre jobs de GitHub Actions), a costa
+    # de un poco de cómputo duplicado, a cambio de mucho menos tiempo de
+    # espera real (wall-clock).
+    name: ${{ matrix.job }} — Ubuntu ${{ matrix.ubuntu }}
     needs: lint
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         ubuntu: ["24.04", "26.04"]
-        variant:
-          - base
+        job:
+          - lint-suite
+          - bootstrap-migration
+          - fault-injection
+          - mise-tools
+          - editors-extra
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
         include:
-          - variant: base
+          - job: lint-suite
+            variant: base
             dockerfile: tests/docker/Dockerfile
-            ids: "U01-U08, BOOT01, M01,M02,M05,M08, M07, R01-R06"
+            ids: "U01-U08"
+            scripts: tests/docker/run-all-tests.sh
+          - job: bootstrap-migration
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "BOOT01, M01,M02,M05,M08"
             scripts: >-
-              tests/docker/run-all-tests.sh
               tests/docker/test_bootstrap_mise_no_nvm.sh
               tests/docker/test_nvm_to_mise_apply.sh
-              tests/docker/test_nvm_to_mise_fault_injection.sh
+          - job: fault-injection
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "M07"
+            scripts: tests/docker/test_nvm_to_mise_fault_injection.sh
+          - job: mise-tools
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "R01-R06, K01, Y01"
+            scripts: >-
               tests/docker/test_runtime_status.sh
-          - variant: nvm-single
+              tests/docker/test_kubectl_via_mise.sh
+              tests/docker/test_yarn_via_mise.sh
+          - job: editors-extra
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "Z01, L01, C01"
+            scripts: >-
+              tests/docker/test_zsh_personalization.sh
+              tests/docker/test_ulauncher_ppa.sh
+              tests/docker/test_cursor_apt_repo.sh
+          - job: nvm-single
+            variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
             ids: "M03,M05,M08"
             scripts: tests/docker/test_nvm_to_mise_prebaked.sh
-          - variant: nvm-multi
+          - job: nvm-multi
+            variant: nvm-multi
             dockerfile: tests/docker/Dockerfile.nvm-multi
             ids: "M04,M05,M08"
             scripts: tests/docker/test_nvm_to_mise_prebaked.sh
-          - variant: nvm-mise-preexisting
+          - job: nvm-mise-preexisting
+            variant: nvm-mise-preexisting
             dockerfile: tests/docker/Dockerfile.nvm-mise-preexisting
             ids: "M06"
             scripts: tests/docker/test_nvm_to_mise_mise_preexisting.sh
