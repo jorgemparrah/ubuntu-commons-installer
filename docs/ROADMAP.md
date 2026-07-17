@@ -782,6 +782,7 @@ Los siguientes puntos requieren revisión periódica:
 * instaladores deprecados
 * gestores de paquetes deprecados
 * dependencias innecesarias
+* hallazgos `warning`/`info` de ShellCheck preexistentes, descubiertos en la primera corrida real en CI (2026-07-17): SC2155/SC2034 en `scripts/lib/backup.sh` y `scripts/lib/logging.sh`, SC1091 (fuentes no resueltas, esperado), SC2016/SC2028/SC2162 en `setup.sh` y `scripts/migrations/001_nvm_to_mise.sh`. El CI (`.github/workflows/ci.yml`) solo gatea por severidad `error` por ahora; limpiarlos es una tarea separada, no bloqueante
 
 ---
 
