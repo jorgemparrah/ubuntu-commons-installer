@@ -464,11 +464,13 @@ Alta
 
 **Estado**
 
-Review
+Done
 
 Depende de:
 
 Migración NVM
+
+Cerrado como `Done` (2026-07-17) tras rebasar este hito sobre el `main` posterior al cierre del Hito 7 (checkpoints de fallo, sentinel de reanudación, instalador legado desactivado) y validar en CI que nada se rompió: 9/9 jobs en verde en ambas versiones de Ubuntu, incluidos los casos R01-R06 de este hito y M01-M08 del Hito 7. Ver [PR #2](https://github.com/jorgemparrah/ubuntu-commons-installer/pull/2).
 
 ### Objetivo
 
