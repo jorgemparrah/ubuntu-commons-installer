@@ -30,6 +30,17 @@ check_status() {
 install_tool() {
     echo "Instalando $TOOL_NAME..."
 
+    # gpg --dearmor requiere el paquete gnupg; no se puede asumir presente
+    # (encontrado al validar en CI: sin gnupg, el pipe no falla de forma
+    # visible y deja un keyring vacío en silencio, causando un error de
+    # firma NO_PUBKEY recién al hacer 'apt update' — ver docs/UBUNTU_COMPATIBILITY.md).
+    if ! command -v gpg &> /dev/null; then
+        sudo apt update
+        sudo apt install -y gnupg
+    fi
+
+    sudo mkdir -p "$(dirname "${CURSOR_KEYRING}")"
+
     # Añade la clave GPG de Cursor
     curl -fsSL https://downloads.cursor.com/keys/anysphere.asc | gpg --dearmor | sudo tee "${CURSOR_KEYRING}" > /dev/null
 
