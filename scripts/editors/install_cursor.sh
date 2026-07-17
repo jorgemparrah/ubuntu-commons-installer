@@ -27,7 +27,13 @@ CURSOR_REPO_LIST=/etc/apt/sources.list.d/cursor.list
 
 # Function to check status
 check_status() {
-    if command -v cursor &> /dev/null || dpkg -s cursor &> /dev/null; then
+    # 'dpkg -s' sigue devolviendo éxito (código 0) para un paquete recién
+    # removido con 'apt remove' (queda en estado "config-files"
+    # remanente) — encontrado al validar en CI, reportaba INSTALLED
+    # incluso después de desinstalar. 'dpkg -l' con el flag "ii" (install
+    # ok installed) sí distingue ese caso, igual que el resto de los
+    # instaladores del proyecto.
+    if command -v cursor &> /dev/null || dpkg -l cursor 2>/dev/null | grep -q '^ii'; then
         echo "INSTALLED"
         return 0
     else
@@ -69,14 +75,16 @@ install_tool() {
 uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
 
-    sudo apt remove -y cursor
+    sudo apt purge -y cursor
     sudo apt autoremove -y
     sudo rm -f "${CURSOR_REPO_LIST}"
     sudo rm -f "${CURSOR_KEYRING}"
 
     # Limpia también cualquier entrada que el propio paquete pudo haber
-    # agregado con un nombre de archivo distinto al nuestro.
+    # agregado con un nombre de archivo distinto al nuestro (se confirmó en
+    # CI: crea /etc/apt/sources.list.d/cursor.sources en formato Deb822).
     sudo rm -f /etc/apt/sources.list.d/anysphere.list
+    sudo rm -f /etc/apt/sources.list.d/cursor.sources
 
     echo "$TOOL_NAME desinstalado correctamente."
 }

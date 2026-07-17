@@ -60,14 +60,16 @@ check "'install' sale con código 0" '[[ ${INSTALL_CODE} -eq 0 ]]'
 
 echo ""
 echo "== 4. el mecanismo es moderno: signed-by + keyring, nunca apt-key =="
-# El propio paquete de Cursor puede tomar el control de su entrada de
-# repositorio después de instalarse (ver nota en install_cursor.sh), así
-# que no se asume que el archivo que agregamos a mano siga existiendo
-# igual — se busca la evidencia de 'signed-by' en cualquier archivo de
-# sources.list.d que mencione el repo de Cursor, no en uno específico.
+# El propio paquete de Cursor puede agregar SU PROPIA entrada de
+# repositorio en formato Deb822 (.sources, con un campo 'Signed-By:'),
+# distinto del formato de una línea que agrega este script ('signed-by=')
+# — se acepta cualquiera de los dos formatos, nunca apt-key. Tampoco se
+# asume que el archivo que agregamos a mano siga existiendo igual: se
+# busca la evidencia en cualquier archivo de sources.list.d que mencione
+# el repo de Cursor, no en uno específico.
 CURSOR_SOURCE_FILES="$(grep -rl "downloads.cursor.com/aptrepo" /etc/apt/sources.list.d/ 2>/dev/null || true)"
 check "queda al menos un archivo de repo apuntando a Cursor" '[[ -n "${CURSOR_SOURCE_FILES}" ]]'
-check "el/los archivo(s) de repo de Cursor usan 'signed-by' (nunca apt-key)" 'echo "${CURSOR_SOURCE_FILES}" | xargs -r grep -l "signed-by=" | grep -q .'
+check "el/los archivo(s) de repo de Cursor usan 'signed-by' (una línea o Deb822, nunca apt-key)" 'echo "${CURSOR_SOURCE_FILES}" | xargs -r grep -liE "signed-by[:=]" | grep -q .'
 check "ningún archivo de repo de Cursor depende de una clave gestionada por apt-key" '! echo "${CURSOR_SOURCE_FILES}" | xargs -r grep -qi "apt-key"'
 
 echo ""
@@ -87,7 +89,7 @@ check "una segunda corrida de 'install' sigue saliendo con código 0" '[[ ${SECO
 echo ""
 echo "== 7. uninstall limpia el paquete, el repo y la clave =="
 "${INSTALL_CURSOR_SH}" uninstall
-check "el paquete 'cursor' ya no está instalado" '! dpkg -s cursor &>/dev/null'
+check "el paquete 'cursor' ya no está instalado" '! dpkg -l cursor 2>/dev/null | grep -q "^ii"'
 check "el archivo de repo se eliminó" '[[ ! -f /etc/apt/sources.list.d/cursor.list ]]'
 check "el keyring se eliminó" '[[ ! -f /usr/share/keyrings/anysphere.gpg ]]'
 check "no queda ningún archivo de repo apuntando a Cursor" '! grep -rl "downloads.cursor.com/aptrepo" /etc/apt/sources.list.d/ 2>/dev/null | grep -q .'
