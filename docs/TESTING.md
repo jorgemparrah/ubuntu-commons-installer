@@ -12,6 +12,10 @@ Ver `docs/TEST_CASES.md` para la lista completa de casos de prueba funcionales (
 2. **Pruebas que instalan software real o modifican `$HOME` de verdad** (por ejemplo, instalar NVM y correr `setup.sh migrate` para probar la migración a Mise): **solo dentro de un contenedor Docker desechable** (ver más abajo). Nunca contra el `$HOME` real de una máquina de desarrollo.
 3. **Validación final en una máquina o VM real** (Ubuntu 24.04 / 26.04, con `/home` reutilizado si aplica): el objetivo final del proyecto, pero no un requisito para cada cambio pequeño.
 
+## CI (GitHub Actions)
+
+`.github/workflows/ci.yml` (Hito 10, ver [ADR 0026](adr/0026-adelantar-hito-10-ci-antes-que-hito-9.md)) corre automáticamente en cada push a `main` y en cada pull request: un job `lint` (Nivel 1, directo en el runner) y un job `docker-matrix` (Nivel 2, 8 combinaciones en paralelo — 4 variantes de imagen × Ubuntu 24.04/26.04, reflejando `docs/TEST_CASES.md`). Es el reemplazo recomendado a correr `tests/docker/build-and-test-all.sh` completo en una máquina de desarrollo local, que es lento y consume bastantes recursos. `build-and-test-all.sh` se mantiene para depurar un caso puntual en local sin depender de CI.
+
 ## Nivel 1 — Sintaxis y pruebas unitarias
 
 Desde la raíz del repositorio:
@@ -29,7 +33,9 @@ node --check scripts/lib/status_contract.js
 bash tests/test_router.sh
 bash tests/test_doctor.sh
 bash tests/test_backup.sh
+bash tests/test_backup_move_dir.sh
 bash tests/test_migrations.sh
+bash tests/test_install_nodejs_legacy.sh
 node tests/test_status_mapping.js
 ```
 
@@ -126,6 +132,28 @@ nvm install --lts
 ```
 
 Si algo sale mal, no hay nada que limpiar: se borra el contenedor (`exit`, y el `--rm` lo elimina) y se empieza de nuevo con `docker run`.
+
+### Mise ya instalado antes de migrar (M06)
+
+```bash
+docker build --build-arg UBUNTU_VERSION=24.04 -t ubuntu-workstation-test:24.04 -f tests/docker/Dockerfile .
+docker build --build-arg UBUNTU_VERSION=24.04 -t ubuntu-workstation-test-nvm-mise-preexisting:24.04 -f tests/docker/Dockerfile.nvm-mise-preexisting .
+docker run --rm ubuntu-workstation-test-nvm-mise-preexisting:24.04 bash tests/docker/test_nvm_to_mise_mise_preexisting.sh
+```
+
+Parte de una imagen con NVM+1 versión de Node **y** Mise ya instalado (`tests/docker/Dockerfile.nvm-mise-preexisting`). Confirma que la migración no reinstala Mise (misma versión antes/después), pero sigue instalando Node vía Mise, resolviendo el alias global y moviendo `.nvm` al backup.
+
+### Fallos parciales de `apply` (M07)
+
+`scripts/migrations/001_nvm_to_mise.sh` acepta `UCI_TEST_FAIL_MIGRATION_AT=CHECKPOINT` para simular que `apply` falla en un punto exacto, sin depender de cortar Internet de verdad. **Vacía por defecto; nunca debe definirse en una ejecución real.** Checkpoints disponibles: `after_shell_backup`, `before_mise_install`, `after_mise_before_node`, `after_node_before_move`, `before_done_marker`.
+
+```bash
+docker run --rm ubuntu-workstation-test:24.04 bash tests/docker/test_nvm_to_mise_fault_injection.sh
+```
+
+Para cada checkpoint, el script reinicia el entorno (NVM real recién instalado, sin Mise ni backups previos), corre `migrate` con el fallo inyectado, y verifica: código de salida ≠ 0, no se crea `.done`, `~/.nvm` no se pierde (intacto, o ya movido de forma segura al backup si el fallo es el último checkpoint), la sesión de backup del intento fallido se conserva, y los archivos de shell quedan recuperables desde esa sesión. Luego reintenta **sin** la variable y confirma que la migración se completa, se marca `.done`, y el bloque gestionado de Mise no queda duplicado en `.bashrc`.
+
+**Modelo de recuperación: reanudación idempotente, no rollback automático.** Cada intento de `apply` fallido deja su propia sesión de backup con lo que llegó a respaldar antes de fallar — nunca se sobreescribe ni se borra. Un reintento posterior repite las operaciones que ya son idempotentes por diseño (instalar Mise/Node vía Mise se omite si ya están hechos; `backup_move_dir` no falla si el origen ya no existe). Para el caso en que `apply` ya movió `.nvm` con éxito pero la validación final falla (checkpoint `before_done_marker`), la migración usa un sentinel propio (`.001_nvm_to_mise.apply-completado`, distinto de la marca oficial `.done`) para que `migrate` sepa que todavía falta completar la validación, en vez de omitir la migración para siempre. Quien prefiera revertir en vez de reintentar sigue teniendo `rollback-notes` disponible (`scripts/migrations/001_nvm_to_mise.sh rollback-notes`).
 
 ## Qué no reemplaza esto
 
