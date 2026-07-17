@@ -1,0 +1,35 @@
+# tests/docker/Dockerfile.nvm-mise-preexisting
+#
+# Variante de tests/docker/Dockerfile con NVM + 1 versión de Node (como
+# Dockerfile.nvm-single) y, además, Mise YA instalado en tiempo de build —
+# simula una workstation reutilizada donde una corrida anterior (fallida a
+# medias, o un bootstrap interactivo previo) ya dejó Mise presente antes de
+# correr la migración NVM -> Mise. Cubre el caso M06 de docs/TEST_CASES.md.
+#
+# La migración debe detectar que Mise ya existe y NO reinstalarlo (ver
+# `[[ ! -x "${UCI_MISE_BIN}" ]]` en scripts/migrations/001_nvm_to_mise.sh),
+# pero sí debe seguir instalando las versiones de Node detectadas y moviendo
+# .nvm al backup. Requiere que la imagen base ya exista:
+#
+#   docker build --build-arg UBUNTU_VERSION=24.04 -t ubuntu-workstation-test:24.04 -f tests/docker/Dockerfile .
+#   docker build --build-arg UBUNTU_VERSION=24.04 -t ubuntu-workstation-test-nvm-mise-preexisting:24.04 -f tests/docker/Dockerfile.nvm-mise-preexisting .
+
+ARG UBUNTU_VERSION=24.04
+FROM ubuntu-workstation-test:${UBUNTU_VERSION}
+
+ARG NVM_VERSION=v0.40.1
+ARG NODE_VERSION=lts/*
+
+RUN curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh" | bash \
+    && export NVM_DIR="${HOME}/.nvm" \
+    && . "${NVM_DIR}/nvm.sh" \
+    && nvm install "${NODE_VERSION}" \
+    && nvm alias default "${NODE_VERSION}"
+
+# Mise ya instalado antes de que exista la migración — versión horneada en
+# la imagen, guardada aparte para poder comparar "antes" vs "después" de
+# migrar (la migración no debería cambiarla).
+RUN curl -fsSL https://mise.run | sh \
+    && "${HOME}/.local/bin/mise" --version > "${HOME}/.mise-preexisting-version"
+
+CMD ["/bin/bash"]
