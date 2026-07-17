@@ -60,9 +60,15 @@ check "'install' sale con código 0" '[[ ${INSTALL_CODE} -eq 0 ]]'
 
 echo ""
 echo "== 4. el mecanismo es moderno: signed-by + keyring, nunca apt-key =="
-check "el keyring quedó en /etc/apt/keyrings/cursor.gpg" '[[ -f /etc/apt/keyrings/cursor.gpg ]]'
-check "el repo declara signed-by (no usa apt-key)" 'grep -q "signed-by=/etc/apt/keyrings/cursor.gpg" /etc/apt/sources.list.d/cursor.list'
-check "el repo declara arquitecturas amd64 y arm64" 'grep -q "arch=amd64,arm64" /etc/apt/sources.list.d/cursor.list'
+# El propio paquete de Cursor puede tomar el control de su entrada de
+# repositorio después de instalarse (ver nota en install_cursor.sh), así
+# que no se asume que el archivo que agregamos a mano siga existiendo
+# igual — se busca la evidencia de 'signed-by' en cualquier archivo de
+# sources.list.d que mencione el repo de Cursor, no en uno específico.
+CURSOR_SOURCE_FILES="$(grep -rl "downloads.cursor.com/aptrepo" /etc/apt/sources.list.d/ 2>/dev/null || true)"
+check "queda al menos un archivo de repo apuntando a Cursor" '[[ -n "${CURSOR_SOURCE_FILES}" ]]'
+check "el/los archivo(s) de repo de Cursor usan 'signed-by' (nunca apt-key)" 'echo "${CURSOR_SOURCE_FILES}" | xargs -r grep -l "signed-by=" | grep -q .'
+check "ningún archivo de repo de Cursor depende de una clave gestionada por apt-key" '! echo "${CURSOR_SOURCE_FILES}" | xargs -r grep -qi "apt-key"'
 
 echo ""
 echo "== 5. status después de instalar =="
@@ -84,6 +90,7 @@ echo "== 7. uninstall limpia el paquete, el repo y la clave =="
 check "el paquete 'cursor' ya no está instalado" '! dpkg -s cursor &>/dev/null'
 check "el archivo de repo se eliminó" '[[ ! -f /etc/apt/sources.list.d/cursor.list ]]'
 check "el keyring se eliminó" '[[ ! -f /etc/apt/keyrings/cursor.gpg ]]'
+check "no queda ningún archivo de repo apuntando a Cursor" '! grep -rl "downloads.cursor.com/aptrepo" /etc/apt/sources.list.d/ 2>/dev/null | grep -q .'
 
 echo ""
 if [[ "${FAILED}" -eq 0 ]]; then

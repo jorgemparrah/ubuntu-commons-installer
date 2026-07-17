@@ -51,6 +51,18 @@ install_tool() {
     sudo apt update
     sudo apt install -y cursor
 
+    # El propio paquete de Cursor agrega, en su postinst, su propia
+    # entrada de repositorio para el mismo repo (con
+    # signed-by=/usr/share/keyrings/anysphere.gpg) — encontrado al
+    # validar en CI: deja DOS entradas para la misma URL/suite con
+    # 'Signed-By' distinto, y apt se niega a leer la lista de fuentes en
+    # cualquier operación posterior ("Conflicting values set for option
+    # Signed-By"). Si el paquete ya tomó el control, se retira la entrada
+    # manual que agregamos para poder instalar por primera vez.
+    if [[ -f /usr/share/keyrings/anysphere.gpg ]]; then
+        sudo rm -f "${CURSOR_REPO_LIST}" "${CURSOR_KEYRING}"
+    fi
+
     echo "$TOOL_NAME instalado correctamente."
 }
 
@@ -62,6 +74,11 @@ uninstall_tool() {
     sudo apt autoremove -y
     sudo rm -f "${CURSOR_REPO_LIST}"
     sudo rm -f "${CURSOR_KEYRING}"
+
+    # Limpia también la entrada que el propio paquete pudo haber agregado
+    # (ver nota en install_tool()), si quedó alguna.
+    sudo rm -f /usr/share/keyrings/anysphere.gpg
+    sudo rm -f /etc/apt/sources.list.d/anysphere.list
 
     echo "$TOOL_NAME desinstalado correctamente."
 }
