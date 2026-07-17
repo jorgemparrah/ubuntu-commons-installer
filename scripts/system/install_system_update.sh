@@ -1,24 +1,35 @@
 #!/bin/bash
 # install_system_update.sh
+#
+# `status` es un diagnóstico real de solo lectura (no siempre "INSTALLED"
+# sin verificar nada, como antes — ver docs/adr/0013-separar-mantenimiento-de-instaladores.md
+# y el hallazgo de docs/UBUNTU_COMPATIBILITY.md): reporta si hay
+# actualizaciones pendientes según la última información de apt conocida,
+# sin ejecutar `apt update` (eso sería una acción, no un diagnóstico).
 
 TOOL_NAME="System Updates"
 
 # Function to check status
 check_status() {
-    # System updates don't have a specific "installed" state
-    # We'll consider it always available since it's a system command
-    echo "INSTALLED"
-    return 0
+    local upgradable_count
+    upgradable_count="$(apt list --upgradable 2>/dev/null | grep -cv '^Listing' || true)"
+
+    if [[ "${upgradable_count}" -eq 0 ]]; then
+        echo "INSTALLED"
+        return 0
+    else
+        echo "NOT_INSTALLED"
+        return 1
+    fi
 }
 
 # Function to install
 install_tool() {
     echo "Instalando $TOOL_NAME..."
-    
-    # Update system
+
     sudo apt update
     sudo apt upgrade -y
-    
+
     echo "Actualizaciones del sistema completadas."
 }
 

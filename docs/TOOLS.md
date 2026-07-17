@@ -8,7 +8,7 @@
 
 | Script | Propósito | Decisión |
 |---|---|---|
-| `install_system_update.sh` | Actualizaciones del sistema | Mantener; separar el estado de diagnóstico de la acción de actualización |
+| `install_system_update.sh` | Actualizaciones del sistema | Mantener; `status` corregido en el Hito 9 para reportar un diagnóstico real (paquetes con actualización pendiente), no un stub fijo en `INSTALLED` (ver [ADR 0013](adr/0013-separar-mantenimiento-de-instaladores.md)) |
 | `install_kernel.sh` | Kernel y headers | Alto riesgo; revisar versión de Ubuntu y comportamiento de reinicio |
 | `install_development_tools.sh` | Paquetes base de desarrollo | Mantener; convertir la lista de paquetes a configuración más adelante |
 | `install_system_utils.sh` | Utilidades del sistema | Mantener; inventariar paquetes explícitamente |
@@ -57,7 +57,7 @@
 
 | Script | Propósito | Decisión |
 |---|---|---|
-| `install_final_update.sh` | Actualización final y limpieza | Mantener, pero renombrar conceptualmente como una acción de mantenimiento (ver [ADR 0013](adr/0013-separar-mantenimiento-de-instaladores.md)) |
+| `install_final_update.sh` | Actualización final y limpieza | Mantener, pero renombrar conceptualmente como una acción de mantenimiento; `status` corregido en el Hito 9 para considerar actualizaciones y paquetes huérfanos pendientes (ver [ADR 0013](adr/0013-separar-mantenimiento-de-instaladores.md)) |
 
 ## Fuera de alcance (confirmado)
 
