@@ -3,7 +3,8 @@
 #
 # ÚNICO PUNTO DE ENTRADA para correr TODA la batería de pruebas del
 # repositorio. Arma las imágenes de prueba (base, con NVM+1 versión, con
-# NVM+2 versiones) para Ubuntu 24.04 y 26.04, y corre dentro de cada una
+# NVM+2 versiones, con NVM+Mise ya preinstalado) para Ubuntu 24.04 y 26.04,
+# y corre dentro de cada una
 # los casos de prueba funcionales definidos en docs/TEST_CASES.md — esa
 # tabla es la fuente de verdad; este script es su ejecución. Si agregas un
 # caso nuevo a docs/TEST_CASES.md, agrega también su bloque acá.
@@ -90,6 +91,7 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
     base_tag="ubuntu-workstation-test:${ubuntu_version}"
     single_tag="ubuntu-workstation-test-nvm-single:${ubuntu_version}"
     multi_tag="ubuntu-workstation-test-nvm-multi:${ubuntu_version}"
+    mise_preexisting_tag="ubuntu-workstation-test-nvm-mise-preexisting:${ubuntu_version}"
 
     section "Ubuntu ${ubuntu_version} — construyendo imagen base"
     docker build --build-arg "UBUNTU_VERSION=${ubuntu_version}" -t "${base_tag}" -f "${DOCKER_DIR}/Dockerfile" .
@@ -99,6 +101,9 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
 
     section "Ubuntu ${ubuntu_version} — construyendo variante NVM (2 versiones, alias default = la más vieja)"
     docker build --build-arg "UBUNTU_VERSION=${ubuntu_version}" -t "${multi_tag}" -f "${DOCKER_DIR}/Dockerfile.nvm-multi" .
+
+    section "Ubuntu ${ubuntu_version} — construyendo variante NVM + Mise ya preinstalado"
+    docker build --build-arg "UBUNTU_VERSION=${ubuntu_version}" -t "${mise_preexisting_tag}" -f "${DOCKER_DIR}/Dockerfile.nvm-mise-preexisting" .
 
     # Nivel 1 (docs/TEST_CASES.md, U01-U08): sintaxis, ShellCheck,
     # node --check, y todas las suites de tests/*.sh y tests/*.js
@@ -128,6 +133,17 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
     run_case "M04,M05,M08" "${multi_tag}" \
         "migración NVM->Mise con NVM+2 versiones preinstaladas (alias default != versión más alta)" \
         "tests/docker/test_nvm_to_mise_prebaked.sh"
+
+    # Nivel 2 (M06): Mise ya instalado antes de migrar (además de NVM+1 versión).
+    run_case "M06" "${mise_preexisting_tag}" \
+        "migración NVM->Mise con Mise ya preinstalado" \
+        "tests/docker/test_nvm_to_mise_mise_preexisting.sh"
+
+    # Nivel 2 (M07): apply falla a mitad de camino en 5 checkpoints distintos,
+    # vía UCI_TEST_FAIL_MIGRATION_AT, y se verifica la recuperación posterior.
+    run_case "M07" "${base_tag}" \
+        "recuperación ante fallos parciales de la migración (inyección de fallos)" \
+        "tests/docker/test_nvm_to_mise_fault_injection.sh"
 done
 
 section "Resumen general"
@@ -137,7 +153,7 @@ done
 
 echo ""
 if [[ "${FAILED}" -eq 0 ]]; then
-    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, BOOT01, M01-M05, M08."
+    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, BOOT01, M01-M08."
 else
     echo "RESULTADO: HUBO FALLOS. Revisa las líneas 'FALLÓ' arriba."
 fi
