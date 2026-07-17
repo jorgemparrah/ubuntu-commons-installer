@@ -2,11 +2,11 @@
 
 ## Aceptación de los Hitos 2 al 7 — cierre de la fase de estabilización
 
-Este documento registra la evidencia concreta (prueba automatizada, revisión de código o verificación manual documentada) que respalda cada criterio de aceptación de los Hitos 2 a 7 de `docs/ROADMAP.md`, al cierre de la fase de estabilización iniciada tras la auditoría del 2026-07-16.
+Este documento registra la evidencia concreta (prueba automatizada, revisión de código o verificación manual documentada) que respalda cada criterio de aceptación de los Hitos 2 a 7 de `docs/ROADMAP.md`. Se actualiza en dos momentos: el cierre inicial de la fase de estabilización de los Hitos 2-6 (2026-07-16, sección de metadatos original más abajo) y el cierre posterior de las brechas del Hito 7 — M06, M07 y la ruta legada de `install_nodejs.sh` (2026-07-16/17, ver "Cierre del Hito 7" más abajo).
 
 Una casilla marcada `[x]` en el roadmap **no se considera evidencia por sí sola**. Cada fila de este documento enlaza el criterio con la prueba o revisión concreta que lo respalda.
 
-### Metadatos de esta evaluación
+### Metadatos de la evaluación inicial (Hitos 2-6, cierre 2026-07-16)
 
 | Campo | Valor |
 |---|---|
@@ -18,7 +18,24 @@ Una casilla marcada `[x]` en el roadmap **no se considera evidencia por sí sola
 | Node.js (host, no usado para ejecutar código del proyecto) | v26.1.0 |
 | Imágenes Ubuntu probadas | 24.04 y 26.04 — ambas exitosas, **sin limitaciones** (no fue necesario invocar la salvedad de imagen no disponible) |
 | Ubicación de los logs | `/tmp/ubuntu-workstation-tests/build-and-test-all-20260716T185143.log` (corrida completa) y `/tmp/ubuntu-workstation-tests/build-and-test-all-latest.log` (symlink estable a la corrida más reciente) |
-| Fallos conocidos | Ninguno en esta corrida. Limitaciones de cobertura pendientes: ver Hito 7 más abajo (M06, M07, ruta legada de `install_nodejs.sh`) |
+| Fallos conocidos | Ninguno en esta corrida. Limitaciones de cobertura pendientes en ese momento: M06, M07, ruta legada de `install_nodejs.sh` — cerradas en la sección siguiente |
+
+### Metadatos del cierre del Hito 7 (M06, M07, instalador legado)
+
+| Campo | Valor |
+|---|---|
+| Fecha | 2026-07-17 |
+| Commit evaluado | `3f5e8c5` (rama `cierre-hito7-brechas`, sobre `main`) + los cambios de M07/instalador legado/documentación de este cierre |
+| Sistema host | Ubuntu 24.04.4 LTS, kernel 6.17.0-29-generic |
+| Docker | 29.6.1 (build 8900f1d) |
+| Bash | 5.2.21(1)-release |
+| Node.js (host, no usado para ejecutar código del proyecto) | v26.1.0 |
+| Imágenes Ubuntu probadas | 24.04 y 26.04, **8 combinaciones de imagen** (base, `nvm-single`, `nvm-multi`, `nvm-mise-preexisting` × 2 versiones) — todas exitosas, sin limitaciones |
+| Total de pruebas de Nivel 1 (por versión de Ubuntu) | 150 (29 mapeo de estado + 45 router + 7 doctor + 13 backup + 17 backup_move_dir + 12 migraciones + 27 instalador legado de Node) — 300 en total entre 24.04 y 26.04 |
+| Ubicación de los logs | Primera corrida (con 1 fallo, ver más abajo): `/tmp/docker_battery_hito7.log` → `/tmp/ubuntu-workstation-tests/build-and-test-all-20260716T201049.log`. Corrida final (todo en verde): `/tmp/docker_battery_hito7_v2.log` → `/tmp/ubuntu-workstation-tests/build-and-test-all-20260716T215020.log` (también disponible en `-latest.log`) |
+| Fallos encontrados y corregidos durante esta validación | La primera corrida de `tests/test_install_nodejs_legacy.sh` reportó 1 fallo falso positivo: su propio `grep 'rm -rf.*\.nvm'` detectaba esa cadena dentro del comentario del encabezado de `install_nodejs.sh` (que documenta en prosa qué patrón destructivo tenía el script antes), no código real. Corregido excluyendo líneas de comentario antes de buscar los patrones. Segunda corrida completa: 0 fallos |
+| Evidencia de segunda ejecución (idempotencia) | Cada uno de los scripts M02/M03/M04/M06 corre `migrate` dos veces y verifica que no se cree una segunda sesión de backup; `test_nvm_to_mise_fault_injection.sh` (M07) reintenta explícitamente tras cada fallo inyectado y verifica que la segunda corrida sí completa y marca `.done` |
+| Limitaciones conocidas | Ninguna. Los tres puntos pendientes al cierre de la fase anterior (M06, M07, ruta legada) quedan resueltos y probados en esta sección |
 
 ### Batería ejecutada
 
@@ -99,7 +116,7 @@ ShellCheck no está disponible en este entorno de evaluación; no se instaló (r
 
 | Criterio | Evidencia | Prueba | Resultado | Observaciones |
 |---|---|---|---|---|
-| Backups con timestamp único por sesión | Revisión de código: `backup_init_session` genera `<timestamp>-<pid>` | `tests/test_backup.sh` | OK (13 casos) | — |
+| Backups con timestamp único por sesión | Revisión de código: `backup_init_session` genera un `session-id` con el formato `TIMESTAMP-PID` | `tests/test_backup.sh` | OK (13 casos) | — |
 | Sin sobrescritura de sesión ni de archivo ya respaldado | Revisión de código: `backup_init_session`/`backup_copy_file` verifican existencia antes de escribir | `tests/test_backup.sh` | OK | — |
 | Sin comportamiento destructivo — `backup_move_dir` solo borra el origen si el manifiesto completo coincide | Revisión de código: `backup_dir_manifest` compara rutas, tipos, permisos, tamaños, symlinks y hashes SHA-256 (corregido en la auditoría; antes solo contaba archivos) | `tests/test_backup_move_dir.sh` (17 casos, incluidos 5 negativos deliberados: archivo alterado con mismo conteo, symlink retargeteado, etc.) | OK | Corrección crítica de la auditoría de estabilización 2026-07-16 |
 | Soporta `--dry-run` (no crea nada, solo reporta) | Revisión de código: rama `--dry-run` en `setup.sh backup` no invoca `backup_copy_*`/`backup_move_dir` | `tests/test_backup.sh` | OK | — |
@@ -133,15 +150,30 @@ ShellCheck no está disponible en este entorno de evaluación; no se instaló (r
 | Limpieza de líneas de shell de NVM, solo patrones exactos reconocidos | Revisión de código: `nvm_cleanup_shell_file`/`nvm_is_known_shell_line` en `001_nvm_to_mise.sh` | `M01-M04` + `reports/shell-changes.tsv` | OK | Corrección crítica de la auditoría; antes no existía limpieza, o se hacía con `sed` amplio |
 | PATH/ejecutables validados tras migrar (Mise resuelve un `node` ejecutable) | Revisión de código: `migration_validate` en `001_nvm_to_mise.sh` corre `mise which node` | `M01-M04, M08` | OK | — |
 | Ningún archivo de shell sigue cargando `$NVM_DIR/nvm.sh` tras la migración | Revisión de código: `migration_validate` falla explícitamente si detecta esta condición | `M05` | OK | — |
-| Instalación de Mise: mecanismo documentado y verificado | Revisión de decisión: [ADR 0025](adr/0025-metodo-instalacion-oficial-de-mise.md) registra `curl -fsSL https://mise.run \| sh` como único método soportado, con las 4 verificaciones posteriores obligatorias ya implementadas en código (código de salida, binario presente/ejecutable, versión registrada en log, `mise which node` resuelto) | `M01-M04, BOOT01` (todas ejecutan e implícitamente verifican la instalación de Mise) | OK | Ninguna implementación distinta introducida; la ADR documenta el mecanismo ya existente, sin cambiarlo |
+| Instalación de Mise: mecanismo documentado y verificado | Revisión de decisión: [ADR 0025](adr/0025-metodo-instalacion-oficial-de-mise.md) registra `curl -fsSL https://mise.run \| sh` como único método soportado, con las 4 verificaciones posteriores obligatorias ya implementadas en código (código de salida, binario presente/ejecutable, versión registrada en log, `mise which node` resuelto) | `M01-M04, BOOT01, M06` (todas ejecutan e implícitamente verifican la instalación de Mise) | OK | Ninguna implementación distinta introducida; la ADR documenta el mecanismo ya existente, sin cambiarlo |
 
-**Brechas explícitamente pendientes, no demostradas por prueba:**
+### Cierre del Hito 7 — M06, M07 e instalador legado (2026-07-17)
 
-* **M06 — Mise ya instalado antes de migrar:** no existe imagen Docker dedicada a este escenario. El código de `001_nvm_to_mise.sh` tiene una rama para detectar Mise preexistente, pero no hay un caso de prueba automatizado que la ejercite de punta a punta.
-* **M07 — `apply` falla a mitad de camino** (por ejemplo, sin red al instalar Mise): no hay imagen ni caso Docker que fuerce esta condición y verifique que la migración no queda a medio marcar como hecha.
-* **Ruta legada `install_nodejs.sh uninstall`/`reinstall` con `UCI_ALLOW_LEGACY_NVM=1`:** sigue usando `sed` de patrón amplio, no la limpieza por línea exacta introducida en la auditoría. No se corrigió a propósito (el camino recomendado es `./setup.sh migrate`), pero sigue siendo una ruta destructiva no cubierta por prueba si alguien la fuerza deliberadamente.
+| Criterio | Evidencia | Prueba | Resultado | Observaciones |
+|---|---|---|---|---|
+| M06 — Mise ya instalado antes de migrar: no se reinstala, versión sin cambios | Revisión de código: `[[ ! -x "${UCI_MISE_BIN}" ]]` en `migration_apply()` ya evitaba reinstalar Mise; era una brecha de prueba, no de código | `tests/docker/test_nvm_to_mise_mise_preexisting.sh` sobre `Dockerfile.nvm-mise-preexisting` (Mise instalado en tiempo de build) — compara `mise --version` antes/después de migrar y tras una segunda corrida | OK (24.04 y 26.04) | Nuevo Dockerfile + script de prueba; sin cambios de código en la migración |
+| M06 — Node de NVM se instala vía Mise; alias global resuelto; `.nvm` movido; shell limpiado | Igual que M02-M04 (Hito 7 original), aplicado sobre el estado "Mise ya presente" | Mismo script que la fila anterior | OK | — |
+| M06 — segunda corrida no repite la migración ni crea otro backup | `backup_init_session` + marca `.done` (Hito 6) | Mismo script, paso 6 | OK | — |
+| M07 — inyección de fallos sin depender de cortar Internet | Nueva variable `UCI_TEST_FAIL_MIGRATION_AT` en `001_nvm_to_mise.sh` (vacía por defecto, sin efecto en ejecución normal; `log_warn` explícito si se define) | `tests/docker/test_nvm_to_mise_fault_injection.sh` | OK (24.04 y 26.04) | 5 checkpoints: `after_shell_backup`, `before_mise_install`, `after_mise_before_node`, `after_node_before_move`, `before_done_marker` |
+| M07 — cada checkpoint: código de salida ≠ 0, no se crea `.done`, `.nvm` no se pierde | `migration_test_fail_at()` aborta `apply`/`validate` en el punto exacto; `backup_move_dir` solo mueve `.nvm` en el paso 7, después de los primeros 4 checkpoints | `test_nvm_to_mise_fault_injection.sh`, todos los checkpoints | OK | En `before_done_marker`, `.nvm` ya fue movido con éxito por `apply()` antes de que `validate()` falle — no está perdido, queda recuperable dentro de la sesión de backup |
+| M07 — sesión de backup del intento fallido se conserva; archivos de shell recuperables | `backup_init_session` nunca sobreescribe; `backup_copy_file` respalda `.bashrc`/`.zshrc`/`.profile` antes de cualquier limpieza (paso 1, anterior a todos los checkpoints) | `test_nvm_to_mise_fault_injection.sh` | OK | — |
+| M07 — una corrida posterior sin fallo inyectado completa la migración y marca `.done` | Ver "Hallazgo y corrección" más abajo: sentinel propio `.001_nvm_to_mise.apply-completado` + `migration_check()` extendido | `test_nvm_to_mise_fault_injection.sh` (paso 2 de cada checkpoint) | OK | Sin este cambio, el checkpoint `before_done_marker` dejaba la migración huérfana para siempre (ver detalle abajo) |
+| M07 — no se duplica el bloque gestionado de Mise en el reintento | `mise_shell_block_upsert` ya era un upsert (reemplaza, nunca duplica) | `test_nvm_to_mise_fault_injection.sh` (`grep -c` del marcador == 1 tras el reintento) | OK | — |
+| M07 — no se crean backups inconsistentes silenciosamente | Cada intento de `apply` (fallido o exitoso) crea su propia sesión con timestamp, nunca sobreescribe ni borra otra; todo queda logueado | `test_nvm_to_mise_fault_injection.sh` (verifica ≥2 sesiones tras cada checkpoint, ninguna perdida) | OK | Ver "Modelo de recuperación" abajo |
+| Instalador legado (`install_nodejs.sh`): `install`/`uninstall`/`reinstall` se niegan a operar siempre | `refuse_legacy_action()` reemplaza `require_legacy_confirmation()`; ya no existe ninguna variable de entorno que reactive las acciones | `tests/test_install_nodejs_legacy.sh` (27 casos, corre en Nivel 1 sin Docker) | OK | Se eliminó `UCI_ALLOW_LEGACY_NVM` por completo, no solo se mantuvo detrás de una confirmación |
+| Instalador legado: ningún camino ejecuta `rm -rf ~/.nvm` ni edita `.bashrc`/`.zshrc`/`.profile` | El código destructivo (`rm -rf "$HOME/.nvm"`, `sed -i` sobre los 3 archivos) se eliminó físicamente del script, no solo se deshabilitó | `tests/test_install_nodejs_legacy.sh` (hash del HOME de prueba antes/después idéntico en los 6 escenarios: 3 acciones × con/sin `UCI_ALLOW_LEGACY_NVM=1`) | OK | — |
+| Instalador legado: `status` se mantiene, mensaje claro apuntando a `migrate`/flujo interactivo | `refuse_legacy_action()` imprime el mensaje; `check_status()` sin cambios | `tests/test_install_nodejs_legacy.sh` | OK | — |
 
-**Determinación:** la mayoría de los criterios están demostrados con solidez (10/10 combinaciones Docker en verde, en ambas versiones de Ubuntu), pero quedan tres escenarios explícitamente sin prueba automatizada, uno de ellos (`apply` fallido a mitad de camino) relevante para la robustez del propio framework de migraciones. Por regla del cierre ("mantén en Review cualquier hito con pruebas fallidas o pendientes"), este hito **permanece en Review**, no se marca `Done`.
+**Hallazgo y corrección durante el diseño de M07 (checkpoint `before_done_marker`):** si `apply()` mueve `.nvm` con éxito pero `validate()` falla justo después, `migration_check()` original (`[[ -d "${UCI_NVM_DIR}" ]]`) deja de ser cierto en el reintento — la migración quedaría huérfana para siempre (nunca marcada `.done`, pero tampoco vuelta a intentar), aunque el sistema ya esté correctamente migrado. Se agregó un sentinel propio de esta migración (`${home}/.local/state/ubuntu-workstation/migrations/.001_nvm_to_mise.apply-completado`, distinto de la marca oficial `.done`), escrito al final de `migration_apply()` justo después de mover `.nvm`. `migration_check()` ahora también devuelve verdadero si ese sentinel existe y la marca `.done` todavía no — permitiendo que `apply`/`validate` se reintenten (son idempotentes). Se verificó que esto no afecta M01/BOOT01: el sentinel solo se crea si esta migración específica llegó a mover `.nvm` de verdad.
+
+**Modelo de recuperación:** reanudación idempotente, no rollback automático. Cada intento de `apply` fallido deja su propia sesión de backup con lo que llegó a respaldar antes de fallar — nunca se sobreescribe ni se borra. Quien prefiera revertir en vez de reintentar sigue teniendo `rollback-notes` disponible. Ver `docs/TESTING.md` para el detalle completo.
+
+**Determinación:** M06 y M07 pasan en ambas versiones de Ubuntu (24.04 y 26.04); la recuperación tras fallo parcial queda demostrada en los 5 checkpoints acordados, incluida la reanudación tras el hallazgo del sentinel; el instalador legado deja de ser destructivo bajo cualquier variable de entorno; toda la batería anterior (Hitos 2-6, más Nivel 1 y Nivel 2 de Hito 7 ya existentes) sigue pasando sin regresiones. Las tres brechas que mantenían este hito en `Review` quedan cerradas. → **Done**.
 
 ---
 
@@ -154,6 +186,6 @@ ShellCheck no está disponible en este entorno de evaluación; no se instaló (r
 | 4 — Doctor | **Done** | Todos los criterios demostrados; nota de diseño sobre alcance del contrato de estado no es una brecha |
 | 5 — Gestor de Backups | **Done** | Todos los criterios demostrados, incluida la corrección crítica de `backup_move_dir` |
 | 6 — Framework de migraciones | **Done** | Todos los criterios demostrados por prueba automatizada |
-| 7 — Migración NVM → Mise | **Review** | M06, M07 y la ruta legada forzada quedan sin prueba automatizada; no se fuerza el cierre pese a que el resto del hito está sólidamente probado |
+| 7 — Migración NVM → Mise | **Done** | M06 y M07 implementados y probados en ambas versiones de Ubuntu; instalador legado desactivado de forma permanente y probado; sin brechas pendientes |
 
-Ninguna limitación de Ubuntu 26.04 fue encontrada: las 5 combinaciones Docker corrieron exitosamente en ambas versiones soportadas (24.04 y 26.04), sin necesidad de invocar ninguna salvedad de imagen no disponible.
+Ninguna limitación de Ubuntu 26.04 fue encontrada, ni en el cierre inicial (Hitos 2-6, 5 combinaciones Docker) ni en el cierre del Hito 7 (8 combinaciones Docker): todas corrieron exitosamente en ambas versiones soportadas (24.04 y 26.04), sin necesidad de invocar ninguna salvedad de imagen no disponible.

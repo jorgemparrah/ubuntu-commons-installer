@@ -301,7 +301,7 @@ Respaldar:
 
 ### Criterios de aceptación
 
-* [x] Backups con timestamp (`<timestamp>-<pid>`, único por sesión)
+* [x] Backups con timestamp (`session-id` con el formato `TIMESTAMP-PID`, único por sesión)
 * [x] Sin sobrescritura (una sesión existente nunca se reutiliza; un archivo ya respaldado en la sesión no se pisa)
 * [x] Sin comportamiento destructivo — `backup_copy_file`/`backup_copy_dir` nunca tocan el origen; `backup_move_dir` solo borra el origen si el manifiesto completo (rutas, tipos, permisos, tamaños, symlinks, hashes) coincide exactamente entre origen y destino, no solo la cantidad de archivos (corregido en la auditoría de estabilización del 2026-07-16, ver `tests/test_backup_move_dir.sh`)
 * [x] Soporta `--dry-run` (no crea nada en el filesystem, solo reporta)
@@ -338,7 +338,7 @@ Proveer un sistema de migraciones reutilizable.
 ### Tareas
 
 * [x] registro de migraciones (`migrations_discover`, `setup.sh migrate --list`)
-* [x] marcas de finalización (`<home>/.local/state/ubuntu-workstation/migrations/<id>.done`)
+* [x] marcas de finalización (`${UCI_HOME_DIR:-$HOME}/.local/state/ubuntu-workstation/migrations/MIGRATION_ID.done`)
 * [x] estrategia de rollback (acción `rollback-notes` del contrato; notas legibles, no rollback automático)
 * [x] ejecución de migraciones (`setup.sh migrate`, `--dry-run`)
 
@@ -372,13 +372,13 @@ Crítica
 
 **Estado**
 
-Review
+Done
 
 Depende de:
 
 Framework de migraciones
 
-Permanece en `Review` tras el cierre de la fase de estabilización (2026-07-16): M06 (Mise ya instalado antes de migrar) y M07 (`apply` falla a mitad de camino) siguen sin caso de prueba automatizado. Ver evidencia y razón detallada en [`docs/ACCEPTANCE_2_7.md`](ACCEPTANCE_2_7.md#hito-7--migración-nvm--mise). Sin limitación de Ubuntu 26.04: las 5 combinaciones Docker de este hito corrieron exitosamente también en 26.04.
+Cerrado como `Done` (2026-07-17): las tres brechas que lo mantenían en `Review` (M06, M07, ruta legada de `install_nodejs.sh`) quedan resueltas y probadas en ambas versiones de Ubuntu. Ver evidencia detallada en [`docs/ACCEPTANCE_2_7.md`](ACCEPTANCE_2_7.md#cierre-del-hito-7--m06-m07-e-instalador-legado-2026-07-17). Sin limitación de Ubuntu 26.04: las 8 combinaciones Docker de este hito corrieron exitosamente también en 26.04.
 
 ### Objetivo
 
@@ -411,9 +411,10 @@ Validar:
 
 ### Entregables
 
-* `scripts/migrations/001_nvm_to_mise.sh` (contrato del Hito 6: `describe|check|dry-run|apply|validate|rollback-notes`)
-* `tests/docker/Dockerfile.nvm-single`, `tests/docker/Dockerfile.nvm-multi` — imágenes con NVM+Node ya instalados, para probar sobre un "home reutilizado" realista
-* `tests/docker/test_nvm_to_mise_apply.sh`, `tests/docker/test_nvm_to_mise_prebaked.sh`, `tests/docker/test_bootstrap_mise_no_nvm.sh`, `tests/docker/build-and-test-all.sh` (único punto de entrada de toda la batería)
+* `scripts/migrations/001_nvm_to_mise.sh` (contrato del Hito 6: `describe|check|dry-run|apply|validate|rollback-notes`; incluye `UCI_TEST_FAIL_MIGRATION_AT` para pruebas de recuperación y el sentinel de reanudación)
+* `tests/docker/Dockerfile.nvm-single`, `tests/docker/Dockerfile.nvm-multi`, `tests/docker/Dockerfile.nvm-mise-preexisting` — imágenes con NVM+Node (y, la última, Mise) ya instalados, para probar sobre un "home reutilizado" realista
+* `tests/docker/test_nvm_to_mise_apply.sh`, `tests/docker/test_nvm_to_mise_prebaked.sh`, `tests/docker/test_nvm_to_mise_mise_preexisting.sh`, `tests/docker/test_nvm_to_mise_fault_injection.sh`, `tests/docker/test_bootstrap_mise_no_nvm.sh`, `tests/docker/build-and-test-all.sh` (único punto de entrada de toda la batería)
+* `tests/test_install_nodejs_legacy.sh` — confirma que el instalador legado no puede borrar `.nvm` ni modificar archivos de shell
 * `docs/TEST_CASES.md` — casos de prueba funcionales por comando/escenario
 
 ### Criterios de aceptación
@@ -421,7 +422,7 @@ Validar:
 * [x] Node ya no depende de NVM — **ahora cierto tanto para la migración como para una workstation nueva**: el bootstrap interactivo (`./setup.sh` sin argumentos) también usa Mise desde la auditoría de estabilización (ver más abajo); antes de eso, solo la migración lo garantizaba, y una workstation nueva seguía instalando NVM
 * [x] La migración es repetible (correr `migrate` dos veces no crea una segunda sesión de backup ni reaplica)
 
-Validado de punta a punta en **10 combinaciones** (imagen base + `nvm-single` + `nvm-multi`, en Ubuntu 24.04 y 26.04), todas en verde. Ver `docs/TEST_CASES.md` (casos M01-M08, BOOT01, U08).
+Validado de punta a punta en **14 combinaciones** (imagen base + `nvm-single` + `nvm-multi` + `nvm-mise-preexisting`, en Ubuntu 24.04 y 26.04), todas en verde. Ver `docs/TEST_CASES.md` (casos M01-M08, BOOT01, U01-U08).
 
 ### Auditoría de estabilización (2026-07-16)
 
@@ -437,11 +438,15 @@ Antes de esta auditoría, el Hito 7 estaba marcado `Review` con estos criterios 
 
 Ver la matriz de cumplimiento completa (Hito | Entregable | Estado real | Prueba | Diferencia encontrada) en el historial de la conversación que originó esta auditoría; los commits `e0d3104`, `bf6456f`, `ba6dda9`, `a4d0b3a`, `556d6ca` documentan cada corrección individualmente.
 
-**Diferencias que quedan pendientes, documentadas explícitamente (no implementadas todavía):**
+Al cierre de esta auditoría (2026-07-16) quedaron tres diferencias pendientes, documentadas explícitamente: M06 (Mise ya instalado antes de migrar), M07 (`apply` falla a mitad de camino) y el `uninstall`/`reinstall` legado de `install_nodejs.sh` forzable con `UCI_ALLOW_LEGACY_NVM=1`. Las tres se cierran en la sección siguiente.
 
-* M06 — Mise ya instalado antes de migrar (sin imagen Docker dedicada)
-* M07 — `apply` falla a mitad de camino, por ejemplo sin red al instalar Mise (sin imagen Docker dedicada)
-* El `uninstall`/`reinstall` legado de `install_nodejs.sh` sigue usando `sed` amplio si alguien fuerza `UCI_ALLOW_LEGACY_NVM=1` — no se reescribió, porque el camino recomendado es `./setup.sh migrate`, no ese script
+### Cierre de brechas de M06/M07/instalador legado (2026-07-17)
+
+* **M06 — Mise ya instalado antes de migrar:** nuevo `tests/docker/Dockerfile.nvm-mise-preexisting` (NVM+1 versión de Node + Mise ya instalado en tiempo de build) y `tests/docker/test_nvm_to_mise_mise_preexisting.sh`. Confirma que la migración no reinstala Mise (misma versión antes/después) y sigue instalando Node vía Mise, resolviendo el alias global y moviendo `.nvm`. No requirió cambios de código en la migración: ya evitaba reinstalar Mise, era una brecha de prueba.
+* **M07 — `apply` falla a mitad de camino:** nueva variable `UCI_TEST_FAIL_MIGRATION_AT` en `scripts/migrations/001_nvm_to_mise.sh` (vacía por defecto, sin efecto en ejecución normal) que inyecta un fallo en 5 checkpoints (`after_shell_backup`, `before_mise_install`, `after_mise_before_node`, `after_node_before_move`, `before_done_marker`), probados por `tests/docker/test_nvm_to_mise_fault_injection.sh`. Se encontró y corrigió un gap real durante el diseño: si `apply()` mueve `.nvm` con éxito pero `validate()` falla justo después, la migración quedaba huérfana para siempre en el reintento. Se agregó un sentinel propio (`.001_nvm_to_mise.apply-completado`) para que `migration_check()` permita reintentar en ese caso. Modelo de recuperación: **reanudación idempotente, no rollback automático** (ver `docs/TESTING.md`).
+* **Instalador legado `install_nodejs.sh`:** `install`/`uninstall`/`reinstall` ahora se niegan a operar **siempre**, sin ninguna variable de entorno que los reactive (se eliminó `UCI_ALLOW_LEGACY_NVM` por completo). El código destructivo (`rm -rf ~/.nvm`, `sed -i` sobre `.bashrc`/`.zshrc`/`.profile`) se eliminó físicamente del script, no solo se deshabilitó. `status` se mantiene. Probado por el nuevo `tests/test_install_nodejs_legacy.sh` (27 casos, Nivel 1).
+
+Validado en **8 combinaciones de imagen** (base, `nvm-single`, `nvm-multi`, `nvm-mise-preexisting` × Ubuntu 24.04/26.04), todas en verde, más 300 pruebas de Nivel 1 (150 por versión de Ubuntu) sin fallos. Ver la matriz completa en [`docs/ACCEPTANCE_2_7.md`](ACCEPTANCE_2_7.md#cierre-del-hito-7--m06-m07-e-instalador-legado-2026-07-17).
 
 ### Decisiones relacionadas
 
@@ -532,34 +537,41 @@ Alta
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
-Compatibilidad con Ubuntu 26
+Migración NVM
+
+**Reordenado (2026-07-17):** este hito ya no depende de "Compatibilidad con Ubuntu 26" — ver [ADR 0026](adr/0026-adelantar-hito-10-ci-antes-que-hito-9.md). Se adelantó para poder correr la batería completa del Hito 7 (M06/M07, 8 combinaciones de imagen × Ubuntu 24.04/26.04) en GitHub Actions en vez de en la máquina de desarrollo local, que resultaba lenta y costosa para iterar.
 
 ### Objetivo
 
-Agregar un workflow de CI no destructivo antes de modernizar instaladores en volumen.
+Agregar un workflow de CI antes de modernizar instaladores en volumen.
 
 ### Tareas
 
-* Validar `bash -n` en todos los scripts de shell
-* Validar con ShellCheck
-* Lint del código Node.js
-* Ejecutar tests si existen
+* [x] Validar `bash -n` en todos los scripts de shell
+* [x] Validar con ShellCheck
+* [x] Lint del código Node.js (`node --check`)
+* [x] Ejecutar toda la batería de pruebas existente (Nivel 1 y Nivel 2, incluida la matriz Docker completa)
 
 ### Entregables
 
-Workflow de CI.
+* `.github/workflows/ci.yml` — job `lint` (sintaxis/estilo, corre directo en el runner) + job `docker-matrix` (8 combinaciones: 4 variantes de imagen × Ubuntu 24.04/26.04, reflejando `docs/TEST_CASES.md`)
 
 ### Criterios de aceptación
 
-El CI no ejecuta instaladores reales contra un sistema; solo valida sintaxis y estilo.
+* [x] El CI valida sintaxis y estilo (`bash -n`, ShellCheck, `node --check`) antes de correr nada más costoso
+* [x] El CI corre toda la batería funcional (Nivel 1 y Nivel 2) en paralelo, sin intervención manual
 
-### Decisión relacionada
+### Redefinición de alcance (2026-07-17)
 
-[ADR 0014](adr/0014-gate-de-calidad-ci.md).
+El criterio original ("El CI no ejecuta instaladores reales contra un sistema; solo valida sintaxis y estilo") describía un CI más acotado del que se terminó necesitando. El CI implementado sí instala software real (NVM, Node, Mise) dentro del job `docker-matrix` — pero siempre dentro de contenedores Docker desechables, corriendo dentro de un runner de GitHub Actions igualmente desechable: nunca toca un sistema persistente, en el mismo sentido en que `tests/docker/build-and-test-all.sh` tampoco lo hace en local. Ver [ADR 0026](adr/0026-adelantar-hito-10-ci-antes-que-hito-9.md) para el detalle completo de esta decisión.
+
+### Decisiones relacionadas
+
+[ADR 0014](adr/0014-gate-de-calidad-ci.md), [ADR 0026](adr/0026-adelantar-hito-10-ci-antes-que-hito-9.md).
 
 ---
 
