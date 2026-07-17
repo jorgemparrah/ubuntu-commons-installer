@@ -515,15 +515,17 @@ Alta
 
 **Estado**
 
-Blocked
+In Progress
 
 Depende de:
 
 Gestor de runtimes
 
+**Corrección administrativa (2026-07-17):** este hito estaba marcado `Blocked` pese a que su dependencia (Gestor de runtimes, Hito 8) ya está `Done`. Pasa a `In Progress` al iniciar la Fase A (auditoría e inventario, ver `docs/UBUNTU_COMPATIBILITY.md`).
+
 ### Objetivo
 
-Revisar cada instalador para Ubuntu 26.
+Auditar todos los instaladores y operaciones de mantenimiento existentes para determinar y asegurar su compatibilidad con Ubuntu 24.04 y Ubuntu 26.04. La modernización en volumen de las interfaces de los instaladores corresponde al Hito 11, no a este.
 
 ### Tareas
 
@@ -536,7 +538,7 @@ Revisar:
 
 ### Criterios de aceptación
 
-Todos los instaladores soportados funcionan correctamente en Ubuntu 26.
+Todos los instaladores soportados funcionan correctamente en Ubuntu 26, con evidencia individual por instalador (ver `docs/UBUNTU_COMPATIBILITY.md`). No se declara este hito `Done` mientras queden instaladores sin clasificar o sin evidencia explícita de validación.
 
 ---
 
@@ -602,7 +604,9 @@ Blocked
 
 Depende de:
 
-Gate de calidad automatizado (CI)
+Gate de calidad automatizado (CI), Compatibilidad con Ubuntu 26
+
+**Corrección administrativa (2026-07-17):** se agrega Compatibilidad con Ubuntu 26 (Hito 9) como dependencia adicional — no tiene sentido estandarizar interfaces de instaladores antes de saber cuáles ya son compatibles con Ubuntu 26 y cuáles necesitan cambios reales primero.
 
 ### Objetivo
 
