@@ -1,32 +1,23 @@
 #!/bin/bash
 # install_cursor.sh
 #
-# El AppImage oficial de Cursor solo se publica para x86_64 (arquitectura
-# hardcodeada en la URL de descarga). Antes este script instalaba el
-# binario x86_64 sin verificar la arquitectura real de la máquina,
-# quedando un binario incompatible en silencio en cualquier host arm64
-# (hallazgo de docs/UBUNTU_COMPATIBILITY.md).
+# Cursor tiene un repositorio APT oficial (downloads.cursor.com/aptrepo),
+# con el mecanismo moderno de clave GPG (signed-by + keyring en
+# /etc/apt/keyrings, nunca apt-key) y soporte para amd64 y arm64. Antes
+# este script descargaba un AppImage fijado a x86_64 sin checksum
+# (hallazgo de docs/UBUNTU_COMPATIBILITY.md); el repo oficial resuelve
+# ambos problemas de una vez (arquitectura declarada explícitamente,
+# clave y paquete verificados por apt) — ver ADR 0027 (categoría
+# "servicio/software técnico con repositorio propio -> APT oficial del
+# fabricante").
 
-VERSION_CURSOR=1.4.5
-CURSOR_PATH=/opt/cursor
-APPIMAGE_PATH="$CURSOR_PATH/Cursor-$VERSION_CURSOR.AppImage"
 TOOL_NAME="Cursor AI IDE"
-
-# Function to check architecture support
-check_architecture_supported() {
-    local machine_arch
-    machine_arch="$(uname -m)"
-    if [[ "${machine_arch}" != "x86_64" ]]; then
-        echo "Cursor solo publica un AppImage para x86_64; esta máquina es '${machine_arch}'." >&2
-        echo "No se instalará un binario incompatible." >&2
-        return 1
-    fi
-    return 0
-}
+CURSOR_KEYRING=/etc/apt/keyrings/cursor.gpg
+CURSOR_REPO_LIST=/etc/apt/sources.list.d/cursor.list
 
 # Function to check status
 check_status() {
-    if [ -f "$APPIMAGE_PATH" ] || [ -f "$HOME/.local/share/applications/cursor.desktop" ] || [ -f "/usr/share/applications/cursor.desktop" ]; then
+    if command -v cursor &> /dev/null || dpkg -s cursor &> /dev/null; then
         echo "INSTALLED"
         return 0
     else
@@ -39,94 +30,29 @@ check_status() {
 install_tool() {
     echo "Instalando $TOOL_NAME..."
 
-    if ! check_architecture_supported; then
-        return 1
-    fi
+    # Añade la clave GPG de Cursor
+    curl -fsSL https://downloads.cursor.com/keys/anysphere.asc | gpg --dearmor | sudo tee "${CURSOR_KEYRING}" > /dev/null
 
-    if [ -f "$APPIMAGE_PATH" ]; then
-        echo "Cursor AI IDE ya está instalado."
-        return 0
-    fi
+    # Añade el repositorio de Cursor
+    echo "deb [arch=amd64,arm64 signed-by=${CURSOR_KEYRING}] https://downloads.cursor.com/aptrepo stable main" | sudo tee "${CURSOR_REPO_LIST}" > /dev/null
 
-    # Prepare path
-    echo "Instalando dependencias..."
-    sudo add-apt-repository universe -y
-    sudo apt install -y libfuse2t64 wget
+    # Actualiza e instala
+    sudo apt update
+    sudo apt install -y cursor
 
-    # Prepare path
-    echo "Preparando rutas..."
-    sudo mkdir -p $CURSOR_PATH
-
-    # Download icon
-    ICON_NAME=cursor.png
-    ICON_PATH=$CURSOR_PATH/$ICON_NAME
-    ICON_URL="https://raw.githubusercontent.com/rahuljangirwork/copmany-logos/refs/heads/main/$ICON_NAME"
-    echo "Descargando icono..."
-    sudo wget $ICON_URL
-    sudo mv $ICON_NAME $ICON_PATH
-
-    # Download installer
-    INSTALLER_NAME=Cursor-$VERSION_CURSOR-x86_64.AppImage
-    INSTALLER_URL="https://downloads.cursor.com/production/af58d92614edb1f72bdd756615d131bf8dfa5299/linux/x64/$INSTALLER_NAME"
-    echo "Descargando instalador..."
-    sudo wget $INSTALLER_URL
-    sudo mv $INSTALLER_NAME $APPIMAGE_PATH
-    sudo chmod +x $APPIMAGE_PATH
-
-    # Create a .desktop entry for Cursor
-    DESKTOP_ENTRY_PATH="/usr/share/applications/cursor.desktop"
-    echo "Creando entrada .desktop para Cursor..."
-    sudo bash -c "cat > $DESKTOP_ENTRY_PATH" <<EOL
-[Desktop Entry]
-Name=Cursor AI IDE
-Exec=$APPIMAGE_PATH --no-sandbox
-Icon=$ICON_PATH
-Type=Application
-Categories=Development;
-EOL
-
-    # Create binary link
-    BINARY_LINK_PATH="/usr/local/bin/cursor"
-    echo "Creando comando 'cursor'..."
-    sudo bash -c "cat > $BINARY_LINK_PATH" <<EOL
-#!/usr/bin/env bash
-exec $APPIMAGE_PATH --no-sandbox "\$@"
-EOL
-    sudo chmod +x $BINARY_LINK_PATH
-
-    echo "Cursor AI IDE instalado correctamente. Puedes encontrarlo en el menú de aplicaciones."
+    echo "$TOOL_NAME instalado correctamente."
 }
 
 # Function to uninstall
 uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
-    
-    # Remove AppImage
-    if [ -f "$APPIMAGE_PATH" ]; then
-        sudo rm -f "$APPIMAGE_PATH"
-    fi
-    
-    # Remove icon
-    if [ -f "$CURSOR_PATH/cursor.png" ]; then
-        sudo rm -f "$CURSOR_PATH/cursor.png"
-    fi
-    
-    # Remove desktop entry
-    if [ -f "/usr/share/applications/cursor.desktop" ]; then
-        sudo rm -f "/usr/share/applications/cursor.desktop"
-    fi
-    
-    # Remove binary link
-    if [ -f "/usr/local/bin/cursor" ]; then
-        sudo rm -f "/usr/local/bin/cursor"
-    fi
-    
-    # Remove directory if empty
-    if [ -d "$CURSOR_PATH" ] && [ -z "$(ls -A $CURSOR_PATH)" ]; then
-        sudo rmdir "$CURSOR_PATH"
-    fi
-    
-    echo "Cursor AI IDE desinstalado correctamente."
+
+    sudo apt remove -y cursor
+    sudo apt autoremove -y
+    sudo rm -f "${CURSOR_REPO_LIST}"
+    sudo rm -f "${CURSOR_KEYRING}"
+
+    echo "$TOOL_NAME desinstalado correctamente."
 }
 
 # Function to reinstall

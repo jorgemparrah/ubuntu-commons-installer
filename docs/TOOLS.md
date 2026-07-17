@@ -26,7 +26,7 @@
 | Script | Propósito | Decisión |
 |---|---|---|
 | `install_vscode.sh` | Visual Studio Code | Mantener |
-| `install_cursor.sh` | Cursor | Mantener; revisar mecanismo de descarga/actualización |
+| `install_cursor.sh` | Cursor | Mantener — corregido en el Hito 9: pasó de AppImage (x86_64 hardcodeado, sin checksum) a su repo APT oficial (`downloads.cursor.com/aptrepo`, `signed-by`, amd64+arm64), ver [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md) |
 | `install_vim.sh` | Vim | Mantener como editor base; instalador de referencia del contrato de estado enriquecido (`status` soporta `INSTALLED\|NOT_INSTALLED\|OUTDATED\|BROKEN\|UNSUPPORTED`, y agrega las acciones `update`/`repair`). Ver [ADR 0012](adr/0012-modelo-de-estado-enriquecido.md) |
 
 ## Development

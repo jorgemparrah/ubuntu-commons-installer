@@ -144,6 +144,11 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
         "ULauncher agrega su PPA oficial antes de instalar (imagen base)" \
         "tests/docker/test_ulauncher_ppa.sh"
 
+    # Nivel 4 (Hito 9, Fase B): Cursor vía su repo APT oficial (signed-by).
+    run_case "C01" "${base_tag}" \
+        "Cursor vía repo APT oficial, signed-by (imagen base)" \
+        "tests/docker/test_cursor_apt_repo.sh"
+
     # Nivel 2 (docs/TEST_CASES.md, M01/M02/M05): desde cero, instalando NVM
     # en tiempo de ejecución dentro del propio contenedor.
     run_case "M01,M02,M05,M08" "${base_tag}" \
