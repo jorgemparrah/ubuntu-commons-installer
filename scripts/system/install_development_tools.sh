@@ -1,53 +1,84 @@
 #!/bin/bash
+# install_development_tools.sh
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+TOOL_NAME="Development Tools (wget, curl, git, build-essential, ...)"
+DEV_PACKAGES=("wget" "curl" "git" "build-essential" "software-properties-common" "apt-transport-https" "gnupg2")
 
 # Function to check if a package is installed
 check_package_installed() {
     local package="$1"
-    if dpkg -l | grep -q "^ii.*$package"; then
-        return 0  # Installed
-    else
-        return 1  # Not installed
-    fi
+    dpkg -s "$package" &> /dev/null
 }
 
-# Function to check if multiple packages are installed
-check_multiple_packages() {
-    local packages=("$@")
-    local all_installed=true
-    
-    for package in "${packages[@]}"; do
+# Function to check if all packages are installed
+check_all_packages_installed() {
+    local package
+    for package in "${DEV_PACKAGES[@]}"; do
         if ! check_package_installed "$package"; then
-            all_installed=false
-            break
+            return 1
         fi
     done
-    
-    return $([ "$all_installed" = true ] && echo 0 || echo 1)
+    return 0
 }
 
-installDevelopmentTools() {
-    echo "Checking Development Tools installation status..."
-    
-    # Check if development packages are already installed
-    local dev_packages=("wget" "curl" "git" "build-essential" "software-properties-common")
-    
-    if check_multiple_packages "${dev_packages[@]}"; then
-        echo -e "${GREEN}✓${NC} Development Tools are already installed."
+# Function to check status
+check_status() {
+    if check_all_packages_installed; then
+        echo "INSTALLED"
         return 0
+    else
+        echo "NOT_INSTALLED"
+        return 1
     fi
-    
-    echo -e "${YELLOW}!${NC} Development Tools are not installed. Installing..."
-    
-    # Install development packages
-    sudo apt install -y wget curl git build-essential software-properties-common
-    sudo apt install -y apt-transport-https gnupg2
-    
-    echo -e "${GREEN}✓${NC} Development Tools installation complete."
 }
 
-installDevelopmentTools
+# Function to install
+install_tool() {
+    echo "Instalando $TOOL_NAME..."
+
+    sudo apt update
+    sudo apt install -y "${DEV_PACKAGES[@]}"
+
+    echo "$TOOL_NAME instalado correctamente."
+}
+
+# Function to uninstall
+uninstall_tool() {
+    echo "Desinstalando $TOOL_NAME..."
+
+    sudo apt remove -y "${DEV_PACKAGES[@]}"
+    sudo apt autoremove -y
+
+    echo "$TOOL_NAME desinstalado correctamente."
+}
+
+# Function to reinstall
+reinstall_tool() {
+    echo "Reinstalando $TOOL_NAME..."
+    uninstall_tool
+    install_tool
+}
+
+# Main function
+main() {
+    case "$1" in
+        "status")
+            check_status
+            ;;
+        "install")
+            install_tool
+            ;;
+        "uninstall")
+            uninstall_tool
+            ;;
+        "reinstall")
+            reinstall_tool
+            ;;
+        *)
+            echo "Uso: $0 {status|install|uninstall|reinstall}"
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

@@ -70,6 +70,19 @@ Instala software real (Mise, Node, Python); solo corre en contenedores desechabl
 
 Cubierto hoy por: `tests/docker/test_runtime_status.sh` (R01-R05, imagen base), re-ejecución de `test_nvm_to_mise_apply.sh`/`test_nvm_to_mise_prebaked.sh` tras el refactor (R06), todo incluido en `tests/docker/build-and-test-all.sh`.
 
+## Nivel 4 — Instaladores: contrato de interfaz (Hito 9, Fase B)
+
+Ver `docs/UBUNTU_COMPATIBILITY.md` para la matriz completa de compatibilidad Ubuntu 24.04/26.04 de los 30 instaladores. Esta sección solo cubre los casos de prueba nuevos agregados junto con las correcciones de la Fase B. Prueba simulada (comandos `apt`/`sudo`/`dpkg` interceptados con mocks en PATH, nunca instala nada real) — corre en cualquier máquina, incluida la de desarrollo.
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I01 | `install_system_utils.sh` ya no se autoejecuta al invocarse sin argumentos | Ninguna (mocks de apt/sudo/dpkg) | Prueba simulada (mocks) | Código != 0, ningún `apt install` interceptado | ✅ pasa |
+| I02 | `install_system_utils.sh` contrato `status\|install\|uninstall\|reinstall` | Mocks con dpkg "instalado"/"no instalado" | Prueba simulada (mocks) | `status` reporta INSTALLED/NOT_INSTALLED correctamente, de solo lectura; `install` invoca `apt install`; subcomando inválido falla | ✅ pasa |
+| I03 | `install_development_tools.sh` — mismo caso que I01/I02 | Igual que I01/I02 | Prueba simulada (mocks) | Igual que I01/I02 | ✅ pasa |
+| I04 | `install_multimedia.sh` — mismo caso que I01/I02, más `DEBIAN_FRONTEND=noninteractive` para el EULA de `ubuntu-restricted-extras` | Igual que I01/I02 | Prueba simulada (mocks) | Igual que I01/I02, y el código fuente fija `DEBIAN_FRONTEND=noninteractive` antes de instalar | ✅ pasa |
+
+Cubierto hoy por: `tests/test_system_utils_contract.sh` (I01-I04), incluido en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh` y en el job `lint`/`base` del CI).
+
 ## Matriz de sistema operativo
 
 Todos los casos anteriores corren en **Ubuntu 24.04 y 26.04** (`--build-arg UBUNTU_VERSION=`).
