@@ -103,6 +103,12 @@ Cubierto hoy por: `tests/docker/test_yarn_via_mise.sh` (Y01), incluido en `tests
 
 Cubierto hoy por: `tests/docker/test_zsh_personalization.sh` (Z01), incluido en `tests/docker/build-and-test-all.sh`.
 
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| L01 | `install_ulauncher.sh` agrega el PPA oficial (`ppa:agornostal/ulauncher`) antes de instalar | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` agrega el PPA e instala el paquete real; `status` INSTALLED después, código 0; segunda corrida de `install` no falla (idempotencia); subcomando inválido falla | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_ulauncher_ppa.sh` (L01), incluido en `tests/docker/build-and-test-all.sh`.
+
 ## Matriz de sistema operativo
 
 Todos los casos anteriores corren en **Ubuntu 24.04 y 26.04** (`--build-arg UBUNTU_VERSION=`).

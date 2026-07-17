@@ -47,7 +47,7 @@
 
 | Script | Propósito | Decisión |
 |---|---|---|
-| `install_ulauncher.sh` | ULauncher | Mantener, salvo que surja una alternativa mejor |
+| `install_ulauncher.sh` | ULauncher | Mantener, salvo que surja una alternativa mejor — corregido en el Hito 9: nunca agregaba el PPA oficial (`ppa:agornostal/ulauncher`) que necesita, así que `apt install` fallaba siempre (hallazgo de `docs/UBUNTU_COMPATIBILITY.md`); fuente justificada como "comunitario de confianza" bajo [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md) |
 | `install_chrome.sh` | Google Chrome | Mantener |
 | `install_spotify.sh` | Spotify | Mantener si se usa |
 | `install_zoom.sh` | Zoom | Mantener si se usa |

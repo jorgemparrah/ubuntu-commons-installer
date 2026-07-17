@@ -1,11 +1,21 @@
 #!/bin/bash
 # install_ulauncher.sh
+#
+# ULauncher no está en los repositorios oficiales de Ubuntu ni tiene un
+# Snap/Flatpak oficial mantenido por el proyecto (ver ADR 0027, categoría
+# "solo disponible comunitario" — evaluar reputación y mantenimiento). Se
+# usa el PPA oficial del propio proyecto ULauncher
+# (ppa:agornostal/ulauncher, mantenido por su autor/maintainer principal,
+# documentado en https://ulauncher.io como método de instalación oficial
+# para Ubuntu/Debian). Antes este script nunca agregaba esa fuente y
+# `apt install ulauncher` fallaba siempre (hallazgo de
+# docs/UBUNTU_COMPATIBILITY.md, no específico de Ubuntu 26).
 
 TOOL_NAME="ULauncher"
 
 # Function to check status
 check_status() {
-    if command -v ulauncher &> /dev/null || snap list | grep -q "^ulauncher "; then
+    if command -v ulauncher &> /dev/null; then
         echo "INSTALLED"
         return 0
     else
@@ -17,22 +27,23 @@ check_status() {
 # Function to install
 install_tool() {
     echo "Instalando $TOOL_NAME..."
-    
-    # Install package
+
+    sudo add-apt-repository -y universe
+    sudo add-apt-repository -y ppa:agornostal/ulauncher
     sudo apt update
     sudo apt install -y ulauncher
-    
+
     echo "$TOOL_NAME instalado correctamente."
 }
 
 # Function to uninstall
 uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
-    
-    # Remove package
+
     sudo apt remove -y ulauncher
     sudo apt autoremove -y
-    
+    sudo add-apt-repository -y --remove ppa:agornostal/ulauncher
+
     echo "$TOOL_NAME desinstalado correctamente."
 }
 
