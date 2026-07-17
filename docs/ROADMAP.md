@@ -523,6 +523,8 @@ Gestor de runtimes
 
 **Corrección administrativa (2026-07-17):** este hito estaba marcado `Blocked` pese a que su dependencia (Gestor de runtimes, Hito 8) ya está `Done`. Pasa a `In Progress` al iniciar la Fase A (auditoría e inventario, ver `docs/UBUNTU_COMPATIBILITY.md`).
 
+**Avance de la Fase B (2026-07-17):** 9 de los 13 puntos de la prioridad de intervención ya están corregidos y probados (system_utils, development_tools, multimedia, kubectl→Mise, Yarn→Mise, Oh My Zsh/Powerlevel10k, ULauncher, system_update/final_update, Cursor, MongoDB Compass). Quedan pendientes: Snap-dependientes (8 instaladores, no verificables sin `snapd` en Docker), Docker/VS Code (esperan evidencia real contra Ubuntu 26.04), `install_kernel.sh` (bug de fallback de nombres, alto riesgo, no probar en Docker), y la decisión de alcance sobre `install_chrome.sh` (arquitectura `amd64`). Este hito permanece en `In Progress`, no se marca `Done` mientras estos puntos sigan abiertos. Ver `docs/UBUNTU_COMPATIBILITY.md` para la matriz completa y evidencia por instalador.
+
 ### Objetivo
 
 Auditar todos los instaladores y operaciones de mantenimiento existentes para determinar y asegurar su compatibilidad con Ubuntu 24.04 y Ubuntu 26.04. La modernización en volumen de las interfaces de los instaladores corresponde al Hito 11, no a este.
