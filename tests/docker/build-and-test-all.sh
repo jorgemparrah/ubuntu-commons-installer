@@ -123,6 +123,11 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
         "gestor de runtimes (Node y Python vía Mise, imagen base)" \
         "tests/docker/test_runtime_status.sh"
 
+    # Nivel 4 (Hito 9, Fase B): kubectl vía Mise, no vía Snap (ADR 0018).
+    run_case "K01" "${base_tag}" \
+        "kubectl vía Mise, no vía Snap (imagen base)" \
+        "tests/docker/test_kubectl_via_mise.sh"
+
     # Nivel 2 (docs/TEST_CASES.md, M01/M02/M05): desde cero, instalando NVM
     # en tiempo de ejecución dentro del propio contenedor.
     run_case "M01,M02,M05,M08" "${base_tag}" \

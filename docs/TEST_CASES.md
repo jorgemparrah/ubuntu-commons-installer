@@ -83,6 +83,14 @@ Ver `docs/UBUNTU_COMPATIBILITY.md` para la matriz completa de compatibilidad Ubu
 
 Cubierto hoy por: `tests/test_system_utils_contract.sh` (I01-I04), incluido en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh` y en el job `lint`/`base` del CI).
 
+Instala software real (Mise, kubectl); solo corre en contenedores desechables.
+
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| K01 | `install_kubectl.sh` instala kubectl vía Mise, nunca vía Snap | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` instala Mise+kubectl; `status` INSTALLED después, código 0; `mise which kubectl` resuelve un ejecutable; `snap list` no incluye kubectl; una segunda corrida de `install` no falla (idempotencia); subcomando inválido falla | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_kubectl_via_mise.sh` (K01), incluido en `tests/docker/build-and-test-all.sh`.
+
 ## Matriz de sistema operativo
 
 Todos los casos anteriores corren en **Ubuntu 24.04 y 26.04** (`--build-arg UBUNTU_VERSION=`).
