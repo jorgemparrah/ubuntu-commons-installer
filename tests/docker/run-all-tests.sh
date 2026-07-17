@@ -78,6 +78,7 @@ run_suite "tests/test_migrations.sh" bash tests/test_migrations.sh
 run_suite "tests/test_install_nodejs_legacy.sh" bash tests/test_install_nodejs_legacy.sh
 run_suite "tests/test_system_utils_contract.sh" bash tests/test_system_utils_contract.sh
 run_suite "tests/test_system_update_contract.sh" bash tests/test_system_update_contract.sh
+run_suite "tests/test_cursor_arch_check.sh" bash tests/test_cursor_arch_check.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

@@ -82,7 +82,9 @@ Ver `docs/UBUNTU_COMPATIBILITY.md` para la matriz completa de compatibilidad Ubu
 | I04 | `install_multimedia.sh` — mismo caso que I01/I02, más `DEBIAN_FRONTEND=noninteractive` para el EULA de `ubuntu-restricted-extras` | Igual que I01/I02 | Prueba simulada (mocks) | Igual que I01/I02, y el código fuente fija `DEBIAN_FRONTEND=noninteractive` antes de instalar | ✅ pasa |
 | I05 | `install_system_update.sh`/`install_final_update.sh`: `status` deja de ser un stub fijo en `INSTALLED` | Mocks de `apt list --upgradable`/`apt-get --simulate autoremove` con 0 o N pendientes | Prueba simulada (mocks) | Sin pendientes: INSTALLED, código 0, `status` no ejecuta upgrade/autoremove real; con pendientes (o paquetes huérfanos en Final Update): NOT_INSTALLED, código ≠0; `install` sí invoca `apt upgrade` real; subcomando inválido falla | ✅ pasa |
 
-Cubierto hoy por: `tests/test_system_utils_contract.sh` (I01-I04) y `tests/test_system_update_contract.sh` (I05), ambos incluidos en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh` y en el job `lint`/`base` del CI).
+| I06 | `install_cursor.sh` revisa la arquitectura antes de descargar el AppImage x86_64 | Ninguna (validación estática, no ejecuta el instalador) | N/A (validación estática) | Existe una función de revisión basada en `uname -m` que rechaza explícitamente cualquier arquitectura distinta de x86_64, invocada en `install_tool()` antes del primer `wget`/`mkdir`, con un mensaje de error que menciona x86_64 | ✅ pasa |
+
+Cubierto hoy por: `tests/test_system_utils_contract.sh` (I01-I04), `tests/test_system_update_contract.sh` (I05) y `tests/test_cursor_arch_check.sh` (I06 — validación estática, nunca ejecuta `install_cursor.sh`), todos incluidos en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh` y en el job `lint`/`base` del CI).
 
 Instala software real (Mise, kubectl); solo corre en contenedores desechables.
 

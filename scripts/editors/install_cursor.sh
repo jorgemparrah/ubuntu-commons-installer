@@ -1,10 +1,28 @@
 #!/bin/bash
 # install_cursor.sh
+#
+# El AppImage oficial de Cursor solo se publica para x86_64 (arquitectura
+# hardcodeada en la URL de descarga). Antes este script instalaba el
+# binario x86_64 sin verificar la arquitectura real de la máquina,
+# quedando un binario incompatible en silencio en cualquier host arm64
+# (hallazgo de docs/UBUNTU_COMPATIBILITY.md).
 
 VERSION_CURSOR=1.4.5
 CURSOR_PATH=/opt/cursor
 APPIMAGE_PATH="$CURSOR_PATH/Cursor-$VERSION_CURSOR.AppImage"
 TOOL_NAME="Cursor AI IDE"
+
+# Function to check architecture support
+check_architecture_supported() {
+    local machine_arch
+    machine_arch="$(uname -m)"
+    if [[ "${machine_arch}" != "x86_64" ]]; then
+        echo "Cursor solo publica un AppImage para x86_64; esta máquina es '${machine_arch}'." >&2
+        echo "No se instalará un binario incompatible." >&2
+        return 1
+    fi
+    return 0
+}
 
 # Function to check status
 check_status() {
@@ -20,7 +38,11 @@ check_status() {
 # Function to install
 install_tool() {
     echo "Instalando $TOOL_NAME..."
-    
+
+    if ! check_architecture_supported; then
+        return 1
+    fi
+
     if [ -f "$APPIMAGE_PATH" ]; then
         echo "Cursor AI IDE ya está instalado."
         return 0
