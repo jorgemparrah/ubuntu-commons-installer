@@ -62,7 +62,7 @@ jobs:
         include:
           - variant: base
             dockerfile: tests/docker/Dockerfile
-            ids: "U01-U08, BOOT01, M01,M02,M05,M08, M07, R01-R06, K01"
+            ids: "U01-U08, BOOT01, M01,M02,M05,M08, M07, R01-R06, K01, Y01"
             scripts: >-
               tests/docker/run-all-tests.sh
               tests/docker/test_bootstrap_mise_no_nvm.sh
@@ -70,6 +70,7 @@ jobs:
               tests/docker/test_nvm_to_mise_fault_injection.sh
               tests/docker/test_runtime_status.sh
               tests/docker/test_kubectl_via_mise.sh
+              tests/docker/test_yarn_via_mise.sh
           - variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
             ids: "M03,M05,M08"

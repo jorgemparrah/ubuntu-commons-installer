@@ -35,7 +35,7 @@
 |---|---|---|
 | `install_docker.sh` | Docker Engine | Mantener; alta prioridad de modernización |
 | `install_nodejs.sh` | Node.js vía NVM | Reemplazar por módulo de runtime Mise y migración (ver [ADR 0001](adr/0001-bootstrap-bash-sin-node.md), [ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md)). Política de versiones: última estable + últimas 2 LTS; se respetan `.nvmrc`/`.node-version`/`mise.toml` a nivel de proyecto (ver [ADR 0016](adr/0016-politica-de-versiones-node-mise.md)) |
-| `install_yarn.sh` | Yarn | Mise instala Yarn (y pnpm) directamente, no vía Corepack (ver [ADR 0017](adr/0017-mise-instala-yarn-pnpm-directo.md)) |
+| `install_yarn.sh` | Yarn | **Vía Mise** — implementado en el Hito 9 usando `scripts/lib/runtime.sh` (ver [ADR 0017](adr/0017-mise-instala-yarn-pnpm-directo.md) y [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md)); antes instalaba el paquete `yarn` de apt, que en Ubuntu es en realidad `cmdtest` (bug preexistente detectado en `docs/UBUNTU_COMPATIBILITY.md`) |
 | `install_postman.sh` | Postman | **Mantener** — confirmado, junto con Insomnia |
 | `install_dbeaver.sh` | DBeaver | Mantener |
 | `install_gitkraken.sh` | GitKraken | **Mantener** — confirmado |

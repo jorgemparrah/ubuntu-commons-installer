@@ -128,6 +128,11 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
         "kubectl vía Mise, no vía Snap (imagen base)" \
         "tests/docker/test_kubectl_via_mise.sh"
 
+    # Nivel 4 (Hito 9, Fase B): Yarn vía Mise, no vía apt (ADR 0017).
+    run_case "Y01" "${base_tag}" \
+        "Yarn vía Mise, no vía apt (imagen base)" \
+        "tests/docker/test_yarn_via_mise.sh"
+
     # Nivel 2 (docs/TEST_CASES.md, M01/M02/M05): desde cero, instalando NVM
     # en tiempo de ejecución dentro del propio contenedor.
     run_case "M01,M02,M05,M08" "${base_tag}" \

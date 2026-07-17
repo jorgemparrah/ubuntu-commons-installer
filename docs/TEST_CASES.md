@@ -91,6 +91,12 @@ Instala software real (Mise, kubectl); solo corre en contenedores desechables.
 
 Cubierto hoy por: `tests/docker/test_kubectl_via_mise.sh` (K01), incluido en `tests/docker/build-and-test-all.sh`.
 
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| Y01 | `install_yarn.sh` instala Yarn vía Mise, nunca vía apt (paquete `yarn` de Ubuntu es en realidad `cmdtest`) | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` instala Mise+Yarn; `status` INSTALLED después, código 0; `mise which yarn` resuelve un ejecutable; el paquete apt `yarn` nunca se instala; una segunda corrida de `install` no falla (idempotencia); subcomando inválido falla | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_yarn_via_mise.sh` (Y01), incluido en `tests/docker/build-and-test-all.sh`.
+
 ## Matriz de sistema operativo
 
 Todos los casos anteriores corren en **Ubuntu 24.04 y 26.04** (`--build-arg UBUNTU_VERSION=`).
