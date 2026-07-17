@@ -2,17 +2,27 @@
 # install_cursor.sh
 #
 # Cursor tiene un repositorio APT oficial (downloads.cursor.com/aptrepo),
-# con el mecanismo moderno de clave GPG (signed-by + keyring en
-# /etc/apt/keyrings, nunca apt-key) y soporte para amd64 y arm64. Antes
-# este script descargaba un AppImage fijado a x86_64 sin checksum
-# (hallazgo de docs/UBUNTU_COMPATIBILITY.md); el repo oficial resuelve
-# ambos problemas de una vez (arquitectura declarada explícitamente,
-# clave y paquete verificados por apt) — ver ADR 0027 (categoría
-# "servicio/software técnico con repositorio propio -> APT oficial del
-# fabricante").
+# con el mecanismo moderno de clave GPG (signed-by + keyring, nunca
+# apt-key) y soporte para amd64 y arm64. Antes este script descargaba un
+# AppImage fijado a x86_64 sin checksum (hallazgo de
+# docs/UBUNTU_COMPATIBILITY.md); el repo oficial resuelve ambos problemas
+# de una vez (arquitectura declarada explícitamente, clave y paquete
+# verificados por apt) — ver ADR 0027 (categoría "servicio/software
+# técnico con repositorio propio -> APT oficial del fabricante").
+#
+# El propio paquete 'cursor' gestiona, en su postinst, su propia entrada
+# de repositorio con signed-by=/usr/share/keyrings/anysphere.gpg
+# (encontrado al validar en CI: si nuestra entrada manual usa una ruta de
+# keyring distinta, apt detecta 'Conflicting values set for option
+# Signed-By' para la misma URL/suite y se niega a leer la lista de
+# fuentes en CUALQUIER operación posterior, incluido 'apt update' fuera
+# de este script). Por eso la clave se escribe directamente en esa misma
+# ruta que el paquete espera, en vez de una ruta propia — así, aunque el
+# postinst repita la misma entrada, coincide exactamente y no hay
+# conflicto.
 
 TOOL_NAME="Cursor AI IDE"
-CURSOR_KEYRING=/etc/apt/keyrings/cursor.gpg
+CURSOR_KEYRING=/usr/share/keyrings/anysphere.gpg
 CURSOR_REPO_LIST=/etc/apt/sources.list.d/cursor.list
 
 # Function to check status
@@ -41,7 +51,8 @@ install_tool() {
 
     sudo mkdir -p "$(dirname "${CURSOR_KEYRING}")"
 
-    # Añade la clave GPG de Cursor
+    # Añade la clave GPG de Cursor, en la misma ruta que usa el propio
+    # paquete (ver nota arriba).
     curl -fsSL https://downloads.cursor.com/keys/anysphere.asc | gpg --dearmor | sudo tee "${CURSOR_KEYRING}" > /dev/null
 
     # Añade el repositorio de Cursor
@@ -50,18 +61,6 @@ install_tool() {
     # Actualiza e instala
     sudo apt update
     sudo apt install -y cursor
-
-    # El propio paquete de Cursor agrega, en su postinst, su propia
-    # entrada de repositorio para el mismo repo (con
-    # signed-by=/usr/share/keyrings/anysphere.gpg) — encontrado al
-    # validar en CI: deja DOS entradas para la misma URL/suite con
-    # 'Signed-By' distinto, y apt se niega a leer la lista de fuentes en
-    # cualquier operación posterior ("Conflicting values set for option
-    # Signed-By"). Si el paquete ya tomó el control, se retira la entrada
-    # manual que agregamos para poder instalar por primera vez.
-    if [[ -f /usr/share/keyrings/anysphere.gpg ]]; then
-        sudo rm -f "${CURSOR_REPO_LIST}" "${CURSOR_KEYRING}"
-    fi
 
     echo "$TOOL_NAME instalado correctamente."
 }
@@ -75,9 +74,8 @@ uninstall_tool() {
     sudo rm -f "${CURSOR_REPO_LIST}"
     sudo rm -f "${CURSOR_KEYRING}"
 
-    # Limpia también la entrada que el propio paquete pudo haber agregado
-    # (ver nota en install_tool()), si quedó alguna.
-    sudo rm -f /usr/share/keyrings/anysphere.gpg
+    # Limpia también cualquier entrada que el propio paquete pudo haber
+    # agregado con un nombre de archivo distinto al nuestro.
     sudo rm -f /etc/apt/sources.list.d/anysphere.list
 
     echo "$TOOL_NAME desinstalado correctamente."

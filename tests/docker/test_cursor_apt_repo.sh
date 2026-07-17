@@ -89,7 +89,7 @@ echo "== 7. uninstall limpia el paquete, el repo y la clave =="
 "${INSTALL_CURSOR_SH}" uninstall
 check "el paquete 'cursor' ya no está instalado" '! dpkg -s cursor &>/dev/null'
 check "el archivo de repo se eliminó" '[[ ! -f /etc/apt/sources.list.d/cursor.list ]]'
-check "el keyring se eliminó" '[[ ! -f /etc/apt/keyrings/cursor.gpg ]]'
+check "el keyring se eliminó" '[[ ! -f /usr/share/keyrings/anysphere.gpg ]]'
 check "no queda ningún archivo de repo apuntando a Cursor" '! grep -rl "downloads.cursor.com/aptrepo" /etc/apt/sources.list.d/ 2>/dev/null | grep -q .'
 
 echo ""
