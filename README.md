@@ -30,6 +30,7 @@ Gestor del ciclo de vida de una workstation Ubuntu: aprovisiona herramientas de 
 ./setup.sh migrate --list           # lista las migraciones y su estado
 ./setup.sh migrate --dry-run         # muestra qué haría cada migración pendiente, sin aplicar nada
 ./setup.sh migrate                    # aplica las migraciones pendientes
+./setup.sh runtime status              # qué runtimes gestiona Mise (Node/Python/Java/Go/Rust)
 ```
 
 Un comando desconocido muestra un error y la ayuda, y termina con código de salida distinto de cero. `doctor` nunca modifica el sistema, solo reporta (ver `AGENT.md` sección 10 y [ADR 0001](docs/adr/0001-bootstrap-bash-sin-node.md)).
@@ -60,7 +61,9 @@ UNKNOWN       → skip
 
 ### Mise como único gestor de runtimes
 
-Este proyecto usa **Mise** para gestionar Node.js (y, a futuro, otros runtimes) — ver [ADR 0002](docs/adr/0002-mise-como-unico-gestor-runtime.md). El flujo interactivo (`./setup.sh` sin argumentos) instala Mise con confirmación explícita si falta, y Node.js a través de Mise; **no instala NVM**.
+Este proyecto usa **Mise** para gestionar runtimes (Node, Python, Java, Go, Rust) — ver [ADR 0002](docs/adr/0002-mise-como-unico-gestor-runtime.md). El flujo interactivo (`./setup.sh` sin argumentos) instala Mise con confirmación explícita si falta, y Node.js a través de Mise; **no instala NVM**.
+
+`runtime status` es de solo lectura y reporta, para cada runtime soportado, si Mise lo tiene activo y con qué versión. La instalación/activación de cualquier runtime (usada también por la migración NVM→Mise) vive en `scripts/lib/runtime.sh`, la única forma en que el proyecto debe tocar Mise.
 
 **NVM solo existe como estado histórico que puede migrarse.** Si tu máquina ya tiene NVM instalado (por ejemplo, de una instalación anterior con `/home` reutilizado), `./setup.sh migrate` lo detecta y lo reemplaza por Mise de forma segura: respalda la configuración de shell, limpia solo las líneas exactas y reconocidas que agregó el instalador de NVM (nunca un patrón amplio), reinstala cada versión de Node detectada vía Mise, y mueve `~/.nvm` a un backup — nunca lo borra directamente. Ver [ADR 0003](docs/adr/0003-migracion-nvm-sin-borrado-directo.md), [ADR 0007](docs/adr/0007-bloques-gestionados-en-archivos-de-shell.md) y [ADR 0024](docs/adr/0024-alcance-migracion-nvm-a-mise.md).
 

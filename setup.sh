@@ -39,6 +39,8 @@ source "${UCI_ROOT_DIR}/scripts/diagnostics/doctor.sh"
 source "${UCI_ROOT_DIR}/scripts/lib/backup.sh"
 # shellcheck source=scripts/lib/migrations.sh
 source "${UCI_ROOT_DIR}/scripts/lib/migrations.sh"
+# shellcheck source=scripts/lib/runtime.sh
+source "${UCI_ROOT_DIR}/scripts/lib/runtime.sh"
 
 # Bloque gestionado de activación de Mise en archivos de shell (ADR 0007).
 # Mismos marcadores que usa scripts/migrations/001_nvm_to_mise.sh.
@@ -397,6 +399,7 @@ Uso:
   ./setup.sh migrate --list     Lista las migraciones y su estado
   ./setup.sh migrate --dry-run  Muestra qué haría cada migración pendiente
   ./setup.sh migrate            Aplica las migraciones pendientes
+  ./setup.sh runtime status     Muestra qué runtimes gestiona Mise (Node/Python/Java/Go/Rust)
 
 Variables de entorno:
   UCI_DEBUG=1               Activa mensajes de depuración (log_debug)
@@ -480,6 +483,28 @@ cmd_migrate() {
     fi
 }
 
+cmd_runtime() {
+    local subcommand="${1:-status}"
+    if [[ $# -gt 0 ]]; then
+        shift
+    fi
+
+    if ! preflight_core; then
+        log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
+        exit 1
+    fi
+
+    case "${subcommand}" in
+        status)
+            runtime_status_all "${UCI_HOME_DIR}"
+            ;;
+        *)
+            log_error "Subcomando desconocido para 'runtime': '${subcommand}' (disponible: status)"
+            exit 1
+            ;;
+    esac
+}
+
 cmd_interactive() {
     if ! preflight_core; then
         log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
@@ -519,6 +544,9 @@ main() {
             ;;
         migrate)
             cmd_migrate "$@"
+            ;;
+        runtime)
+            cmd_runtime "$@"
             ;;
         *)
             log_error "Comando desconocido: '${cmd}'"

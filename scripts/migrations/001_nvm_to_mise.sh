@@ -7,6 +7,9 @@
 # docs/adr/0007-bloques-gestionados-en-archivos-de-shell.md,
 # docs/adr/0016-politica-de-versiones-node-mise.md.
 #
+# La instalación/activación de Mise usa scripts/lib/runtime.sh (Hito 8), la
+# misma librería que usa cualquier otro runtime gestionado por el proyecto.
+#
 # Esta migración instala software real (Mise) y solo se prueba dentro de
 # contenedores Docker desechables (ver docs/TESTING.md), nunca contra el
 # $HOME real de una máquina de desarrollo. Por eso usa UCI_HOME_DIR (ver
@@ -21,13 +24,15 @@ readonly UCI_MIGRATION_SCRIPT_DIR
 source "${UCI_MIGRATION_SCRIPT_DIR}/../lib/logging.sh"
 # shellcheck source=../lib/backup.sh
 source "${UCI_MIGRATION_SCRIPT_DIR}/../lib/backup.sh"
+# shellcheck source=../lib/runtime.sh
+source "${UCI_MIGRATION_SCRIPT_DIR}/../lib/runtime.sh"
 
 UCI_HOME_DIR="${UCI_HOME_DIR:-${HOME}}"
 readonly UCI_HOME_DIR
 
 UCI_NVM_DIR="${UCI_HOME_DIR}/.nvm"
 readonly UCI_NVM_DIR
-UCI_MISE_BIN="${UCI_HOME_DIR}/.local/bin/mise"
+UCI_MISE_BIN="$(runtime_mise_bin "${UCI_HOME_DIR}")"
 readonly UCI_MISE_BIN
 
 UCI_MISE_BLOCK_BEGIN="# >>> ubuntu-workstation: mise >>>"
@@ -80,7 +85,7 @@ migration_test_fail_at() {
 
 # mise_cmd <args...>
 mise_cmd() {
-    "${UCI_MISE_BIN}" "$@"
+    runtime_cmd "${UCI_HOME_DIR}" "$@"
 }
 
 nvm_installed_versions() {
@@ -467,17 +472,8 @@ migration_apply() {
 
     migration_test_fail_at "before_mise_install" || return 1
 
-    # 3) Instalar Mise si falta.
-    if [[ ! -x "${UCI_MISE_BIN}" ]]; then
-        log_info "Instalando Mise..."
-        if ! curl -fsSL https://mise.run | sh >/dev/null; then
-            log_error "No se pudo instalar Mise"
-            return 1
-        fi
-    fi
-
-    if [[ ! -x "${UCI_MISE_BIN}" ]]; then
-        log_error "Mise no quedó instalado en ${UCI_MISE_BIN} tras el intento de instalación"
+    # 3) Instalar Mise si falta (scripts/lib/runtime.sh, Hito 8).
+    if ! runtime_ensure_mise "${UCI_HOME_DIR}"; then
         return 1
     fi
 
@@ -498,7 +494,7 @@ migration_apply() {
             [[ -z "${v}" ]] && continue
             local plain_version="${v#v}"
             log_info "Instalando Node ${plain_version} vía Mise..."
-            if ! mise_cmd install "node@${plain_version}"; then
+            if ! runtime_install "${UCI_HOME_DIR}" node "${plain_version}"; then
                 log_error "No se pudo instalar Node ${plain_version} vía Mise"
                 install_failed=1
             fi
@@ -529,7 +525,7 @@ migration_apply() {
 
     if [[ -n "${default_version}" ]]; then
         log_info "Fijando Node ${default_version} como versión global de Mise..."
-        if ! mise_cmd use --global "node@${default_version}"; then
+        if ! runtime_use_global "${UCI_HOME_DIR}" node "${default_version}"; then
             log_error "No se pudo fijar la versión global de Node en Mise"
             return 1
         fi

@@ -55,6 +55,21 @@ Cubierto hoy por:
 - `tests/docker/test_nvm_to_mise_fault_injection.sh` → M07 (imagen base)
 - `tests/docker/build-and-test-all.sh` → **único punto de entrada**: arma todas las imágenes (24.04 y 26.04) y corre Nivel 1 (incluido BOOT01) + Nivel 2 (M01-M08) en cada una
 
+## Nivel 3 — Gestor de runtimes (`scripts/lib/runtime.sh`, `setup.sh runtime status`)
+
+Instala software real (Mise, Node, Python); solo corre en contenedores desechables.
+
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| R01 | `runtime status` sin Mise instalado | Home vacío | `Dockerfile` (base) | Código 0, avisa que Mise no está instalado, no falla | ✅ pasa |
+| R02 | `runtime status` con Node gestionado por Mise | Mise instalado + `node@lts` fijado como global | `Dockerfile` (base) | Node.js aparece "gestionado por Mise"; el resto de runtimes del catálogo (Python, Java, Go, Rust) aparecen como "no gestionado" | ✅ pasa |
+| R03 | `runtime status` con dos runtimes distintos gestionados (Node y Python) | Igual que R02 + `python@latest` fijado como global | `Dockerfile` (base) | Ambos aparecen como gestionados (prueba que la abstracción es genérica, no algo hecho a medida solo para Node); Java/Go/Rust siguen "no gestionado" | ✅ pasa |
+| R04 | `runtime status` no modifica nada | Igual que R03 | `Dockerfile` (base) | El contenido de `~/.config/mise` y `~/.local/share/mise` es idéntico antes/después (hash de archivos) | ✅ pasa |
+| R05 | Subcomando inválido (`runtime esto-no-existe`) | Ninguna | `Dockerfile` (base) | Código != 0 | ✅ pasa |
+| R06 | La migración NVM→Mise usa `scripts/lib/runtime.sh` en vez de duplicar la instalación de Mise | Cualquiera de M02-M04 | Las mismas de M02-M04 | Sin cambios de comportamiento tras el refactor (re-corridas de M02-M04 después del refactor, todas en verde) | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_runtime_status.sh` (R01-R05, imagen base), re-ejecución de `test_nvm_to_mise_apply.sh`/`test_nvm_to_mise_prebaked.sh` tras el refactor (R06), todo incluido en `tests/docker/build-and-test-all.sh`.
+
 ## Matriz de sistema operativo
 
 Todos los casos anteriores corren en **Ubuntu 24.04 y 26.04** (`--build-arg UBUNTU_VERSION=`).
