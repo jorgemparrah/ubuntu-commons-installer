@@ -45,7 +45,7 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0007](0007-bloques-gestionados-en-archivos-de-shell.md) | Los archivos de shell solo se editan mediante bloques marcados | Aceptada |
 | [0008](0008-bash-estricto-en-scripts-nuevos.md) | Modo estricto de Bash en scripts nuevos y migrados | Aceptada |
 | [0009](0009-postergar-arquitectura-de-plugins.md) | Postergar una arquitectura de plugins/metadata declarativa | Aceptada |
-| [0010](0010-orden-de-fuentes-de-paquetes.md) | Orden de prioridad de fuentes de paquetes | Aceptada |
+| [0010](0010-orden-de-fuentes-de-paquetes.md) | Orden de prioridad de fuentes de paquetes | Reemplazada por 0027 |
 | [0011](0011-alcance-diferido-para-el-primer-hito.md) | Alcance explícitamente diferido para los primeros hitos | Aceptada |
 | [0012](0012-modelo-de-estado-enriquecido.md) | Modelo de estado enriquecido para `status` | Aceptada |
 | [0013](0013-separar-mantenimiento-de-instaladores.md) | Separar acciones de mantenimiento de sistema de los instaladores de aplicaciones | Aceptada |
@@ -62,3 +62,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0024](0024-alcance-migracion-nvm-a-mise.md) | La migración NVM→Mise preserva lo detectado, no aplica la política de versiones por defecto | Aceptada |
 | [0025](0025-metodo-instalacion-oficial-de-mise.md) | Mise se instala con su script oficial (`https://mise.run`), verificando después | Aceptada |
 | [0026](0026-adelantar-hito-10-ci-antes-que-hito-9.md) | Adelantar el Hito 10 (CI) antes que el Hito 9, y su alcance real | Aceptada |
+| [0027](0027-orden-de-fuentes-por-categoria.md) | Orden de fuentes de paquetes por categoría de herramienta (reemplaza 0010) | Aceptada |
