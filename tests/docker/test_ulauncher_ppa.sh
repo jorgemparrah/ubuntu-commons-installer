@@ -37,8 +37,10 @@ check() {
 }
 
 echo "== 1. status antes de instalar =="
-OUTPUT="$("${INSTALL_ULAUNCHER_SH}" status 2>&1)" || true
+set +e
+OUTPUT="$("${INSTALL_ULAUNCHER_SH}" status 2>&1)"
 CODE=$?
+set -e
 check "'status' reporta NOT_INSTALLED antes de instalar" '[[ "${OUTPUT}" == *"NOT_INSTALLED"* ]]'
 check "'status' sale con código distinto de cero antes de instalar" '[[ ${CODE} -ne 0 ]]'
 

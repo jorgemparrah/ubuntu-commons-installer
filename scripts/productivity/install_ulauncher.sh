@@ -28,6 +28,13 @@ check_status() {
 install_tool() {
     echo "Instalando $TOOL_NAME..."
 
+    # add-apt-repository requiere software-properties-common; no se puede
+    # asumir presente (encontrado al validar en CI, ver docs/UBUNTU_COMPATIBILITY.md).
+    if ! command -v add-apt-repository &> /dev/null; then
+        sudo apt update
+        sudo apt install -y software-properties-common
+    fi
+
     sudo add-apt-repository -y universe
     sudo add-apt-repository -y ppa:agornostal/ulauncher
     sudo apt update
