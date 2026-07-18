@@ -72,13 +72,20 @@ RESULT_CODENAME="$(resolve_hwe_fallback_package_name "noble")"
 check_eq "un codename pasado por error se refleja literal (documenta que NO debe pasarse)" "linux-generic-hwe-noble" "${RESULT_CODENAME}"
 
 echo ""
-echo "== el código ya no usa 'lsb_release -cs' (codename) para este fallback =="
-if grep -q "lsb_release -cs" "${INSTALL_KERNEL_SH}"; then
-    fail "install_kernel.sh todavía usa 'lsb_release -cs' (codename) en algún lado"
+echo "== el código (no los comentarios) ya no usa 'lsb_release -cs' (codename) =="
+# Se ignoran los comentarios: el propio archivo documenta en prosa, en más
+# de un lugar, qué patrón tenía el bug original — eso no debe confundirse
+# con código real todavía presente (mismo criterio que
+# tests/test_install_nodejs_legacy.sh).
+install_kernel_code_only() {
+    grep -vE '^\s*#' "${INSTALL_KERNEL_SH}"
+}
+if install_kernel_code_only | grep -q "lsb_release -cs"; then
+    fail "install_kernel.sh todavía usa 'lsb_release -cs' (codename) en código real"
 else
-    pass "install_kernel.sh ya no usa 'lsb_release -cs' en ningún lado"
+    pass "install_kernel.sh ya no usa 'lsb_release -cs' en ningún código real"
 fi
-if grep -q "lsb_release -rs" "${INSTALL_KERNEL_SH}"; then
+if install_kernel_code_only | grep -q "lsb_release -rs"; then
     pass "install_kernel.sh usa 'lsb_release -rs' (versión numérica) para el fallback"
 else
     fail "install_kernel.sh no usa 'lsb_release -rs' para el fallback"
