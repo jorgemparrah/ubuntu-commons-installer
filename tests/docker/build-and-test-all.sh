@@ -149,6 +149,17 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
         "Cursor vía repo APT oficial, signed-by (imagen base)" \
         "tests/docker/test_cursor_apt_repo.sh"
 
+    # Nivel 4 (Hito 9, Fase B): VS Code vía su repo APT oficial (signed-by).
+    run_case "V01" "${base_tag}" \
+        "VS Code vía repo APT oficial, signed-by (imagen base)" \
+        "tests/docker/test_vscode_apt_repo.sh"
+
+    # Nivel 4 (Hito 9, Fase B): Docker — mecanismo de repo (arch/codename
+    # dinámicos), sin exigir que el daemon corra ni Docker-en-Docker.
+    run_case "D01" "${base_tag}" \
+        "Docker: repo oficial, arquitectura/codename dinámicos (imagen base)" \
+        "tests/docker/test_docker_apt_repo.sh"
+
     # Nivel 2 (docs/TEST_CASES.md, M01/M02/M05): desde cero, instalando NVM
     # en tiempo de ejecución dentro del propio contenedor.
     run_case "M01,M02,M05,M08" "${base_tag}" \
@@ -185,7 +196,7 @@ done
 
 echo ""
 if [[ "${FAILED}" -eq 0 ]]; then
-    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, BOOT01, M01-M08, R01-R06."
+    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, I01-I05, I07-I10, BOOT01, M01-M08, R01-R06, K01, Y01, Z01, L01, C01, V01, D01."
 else
     echo "RESULTADO: HUBO FALLOS. Revisa las líneas 'FALLÓ' arriba."
 fi

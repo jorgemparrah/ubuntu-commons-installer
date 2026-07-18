@@ -1,11 +1,26 @@
 #!/bin/bash
 # install_obs_studio.sh
+#
+# 'status' distingue snap no instalado (NOT_INSTALLED) de snapd ausente
+# (UNKNOWN, no se puede determinar) — antes reportaba NOT_INSTALLED en
+# ambos casos por igual (hallazgo de docs/UBUNTU_COMPATIBILITY.md). No
+# verificable automáticamente en Docker (snapd no corre sin systemd); ver
+# la pauta de validación manual en docs/UBUNTU_COMPATIBILITY.md.
 
 TOOL_NAME="OBS Studio"
+SNAP_PACKAGE="obs-studio"
 
 # Function to check status
 check_status() {
-    if command -v obs-studio &> /dev/null || snap list | grep -q "^obs-studio "; then
+    if command -v obs-studio &> /dev/null; then
+        echo "INSTALLED"
+        return 0
+    fi
+    if ! command -v snap &> /dev/null || ! snap list &> /dev/null; then
+        echo "UNKNOWN"
+        return 1
+    fi
+    if snap list 2>/dev/null | grep -q "^${SNAP_PACKAGE} "; then
         echo "INSTALLED"
         return 0
     else
@@ -20,7 +35,7 @@ install_tool() {
     
     # Install OBS Studio via snap
     echo "Installing OBS Studio via snap..."
-    sudo snap install obs-studio --classic
+    sudo snap install "${SNAP_PACKAGE}" --classic
     
     echo "$TOOL_NAME instalado correctamente."
 }
@@ -30,7 +45,7 @@ uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
     
     # Remove package via snap
-    sudo snap remove obs-studio
+    sudo snap remove "${SNAP_PACKAGE}"
     
     echo "$TOOL_NAME desinstalado correctamente."
 }
