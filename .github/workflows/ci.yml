@@ -81,7 +81,7 @@ jobs:
           - job: lint-suite
             variant: base
             dockerfile: tests/docker/Dockerfile
-            ids: "U01-U08"
+            ids: "U01-U08, I01-I05, I07-I10"
             scripts: tests/docker/run-all-tests.sh
           - job: bootstrap-migration
             variant: base
