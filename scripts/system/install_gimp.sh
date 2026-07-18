@@ -1,11 +1,27 @@
 #!/bin/bash
 # install_gimp.sh
+#
+# 'status' distingue snap no instalado (NOT_INSTALLED) de snapd ausente
+# (UNKNOWN, no se puede determinar) — antes solo miraba 'command -v gimp',
+# reportando NOT_INSTALLED tanto si el snap no estaba instalado como si
+# snapd no existía en absoluto (hallazgo de docs/UBUNTU_COMPATIBILITY.md).
+# No verificable automáticamente en Docker (snapd no corre sin systemd);
+# ver la pauta de validación manual en docs/UBUNTU_COMPATIBILITY.md.
 
 TOOL_NAME="GIMP"
+SNAP_PACKAGE="gimp"
 
 # Function to check status
 check_status() {
     if command -v gimp &> /dev/null; then
+        echo "INSTALLED"
+        return 0
+    fi
+    if ! command -v snap &> /dev/null || ! snap list &> /dev/null; then
+        echo "UNKNOWN"
+        return 1
+    fi
+    if snap list 2>/dev/null | grep -q "^${SNAP_PACKAGE} "; then
         echo "INSTALLED"
         return 0
     else
@@ -23,7 +39,7 @@ install_tool() {
     
     # Install GIMP via snap (as per original script)
     echo "Installing GIMP via snap..."
-    sudo snap install gimp --classic
+    sudo snap install "${SNAP_PACKAGE}" --classic
     
     echo "$TOOL_NAME instalado correctamente."
 }
@@ -33,7 +49,7 @@ uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
     
     # Remove package via snap
-    sudo snap remove gimp
+    sudo snap remove "${SNAP_PACKAGE}"
     
     echo "$TOOL_NAME desinstalado correctamente."
 }

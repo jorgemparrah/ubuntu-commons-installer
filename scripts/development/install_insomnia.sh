@@ -1,11 +1,22 @@
 #!/bin/bash
 # install_insomnia.sh
+#
+# 'status' distingue snap no instalado (NOT_INSTALLED) de snapd ausente
+# (UNKNOWN, no se puede determinar) — antes reportaba NOT_INSTALLED en
+# ambos casos por igual (hallazgo de docs/UBUNTU_COMPATIBILITY.md). No
+# verificable automáticamente en Docker (snapd no corre sin systemd); ver
+# la pauta de validación manual en docs/UBUNTU_COMPATIBILITY.md.
 
 TOOL_NAME="Insomnia"
+SNAP_PACKAGE="insomnia"
 
 # Function to check status
 check_status() {
-    if snap list | grep -q "insomnia"; then
+    if ! command -v snap &> /dev/null || ! snap list &> /dev/null; then
+        echo "UNKNOWN"
+        return 1
+    fi
+    if snap list 2>/dev/null | grep -q "^${SNAP_PACKAGE} "; then
         echo "INSTALLED"
         return 0
     else
@@ -20,7 +31,7 @@ install_tool() {
     
     # Install Insomnia via snap
     echo "Installing Insomnia via snap..."
-    sudo snap install insomnia --classic
+    sudo snap install "${SNAP_PACKAGE}" --classic
     
     echo "$TOOL_NAME instalado correctamente."
 }
@@ -30,7 +41,7 @@ uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
     
     # Remove package via snap
-    sudo snap remove insomnia
+    sudo snap remove "${SNAP_PACKAGE}"
     
     echo "$TOOL_NAME desinstalado correctamente."
 }
