@@ -63,3 +63,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0025](0025-metodo-instalacion-oficial-de-mise.md) | Mise se instala con su script oficial (`https://mise.run`), verificando después | Aceptada |
 | [0026](0026-adelantar-hito-10-ci-antes-que-hito-9.md) | Adelantar el Hito 10 (CI) antes que el Hito 9, y su alcance real | Aceptada |
 | [0027](0027-orden-de-fuentes-por-categoria.md) | Orden de fuentes de paquetes por categoría de herramienta (reemplaza 0010) | Aceptada |
+| [0028](0028-arquitectura-soportada-amd64.md) | Arquitectura oficialmente soportada: amd64 | Aceptada |
