@@ -73,6 +73,7 @@ jobs:
           - fault-injection
           - mise-tools
           - editors-extra
+          - vendor-repos
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -105,11 +106,18 @@ jobs:
           - job: editors-extra
             variant: base
             dockerfile: tests/docker/Dockerfile
-            ids: "Z01, L01, C01"
+            ids: "Z01, L01"
             scripts: >-
               tests/docker/test_zsh_personalization.sh
               tests/docker/test_ulauncher_ppa.sh
+          - job: vendor-repos
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "C01, V01, D01"
+            scripts: >-
               tests/docker/test_cursor_apt_repo.sh
+              tests/docker/test_vscode_apt_repo.sh
+              tests/docker/test_docker_apt_repo.sh
           - job: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
