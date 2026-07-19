@@ -13,10 +13,10 @@
 | `install_development_tools.sh` | Paquetes base de desarrollo | Mantener; convertir la lista de paquetes a configuración más adelante |
 | `install_system_utils.sh` | Utilidades del sistema | Mantener; inventariar paquetes explícitamente |
 | `install_multimedia.sh` | Paquetes multimedia | Mantener; verificar nombres de paquetes y códecs |
-| `install_terminator.sh` | Terminal Terminator | **Mantener** — confirmado, sigue siendo la terminal preferida |
+| `install_terminator.sh` | Terminal Terminator | **Mantener** — confirmado, sigue siendo la terminal preferida. **Migrado al contrato completo de 6 verbos en el Hito 11, Fase 2 (2026-07-19)**: usa `scripts/lib/installer_cli.sh` y `scripts/lib/apt.sh` (ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); ya no tiene fallback a Snap |
 | `install_oh_my_zsh.sh` | Oh My Zsh | **Mantener** — corregido en el Hito 9: antes solo instalaba `zsh`, nunca clonaba el framework (hallazgo de `docs/UBUNTU_COMPATIBILITY.md`); no toca `.zshrc`, respeta la personalización existente al reutilizar `/home` (ver [ADR 0021](adr/0021-reutilizar-personalizacion-shell-en-home.md)) |
 | `install_powerlevel10k.sh` | Powerlevel10k | **Mantener** — corregido en el Hito 9: antes solo instalaba `zsh`, nunca clonaba el tema; misma lógica de no tocar `.zshrc`/reutilizar personalización que Oh My Zsh (ver [ADR 0021](adr/0021-reutilizar-personalizacion-shell-en-home.md)) |
-| `install_ranger.sh` | Gestor de archivos de terminal | Mantener, salvo que surja una alternativa más amigable |
+| `install_ranger.sh` | Gestor de archivos de terminal | Mantener, salvo que surja una alternativa más amigable. **Migrado al contrato completo de 6 verbos en el Hito 11, Fase 2 (2026-07-19)**: usa `scripts/lib/installer_cli.sh` y `scripts/lib/apt.sh` (ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); ya no tiene fallback a Snap |
 | `install_cmatrix.sh` | Utilidad visual de terminal | **Mantener** — confirmado. **Migrado al contrato completo de 6 verbos en el Hito 11, Fase 1 (2026-07-19)**: instalador piloto de `scripts/lib/installer_cli.sh` y `scripts/lib/apt.sh` (ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); ya no tiene fallback a Snap (su única fuente gestionada es APT) |
 | `install_gimp.sh` | GIMP vía Snap | Revisar fuente deseada |
 | `install_obs_studio.sh` | OBS Studio vía Snap | Mantener; verificar fuente deseada |
@@ -51,7 +51,7 @@
 | `install_chrome.sh` | Google Chrome | Mantener |
 | `install_spotify.sh` | Spotify | Mantener si se usa |
 | `install_zoom.sh` | Zoom | Mantener si se usa |
-| `install_flameshot.sh` | Flameshot y configuración de atajos | **Mantener** — confirmado como la herramienta de captura; falta que el instalador configure el atajo `PrintScreen` para que lance Flameshot en vez del capturador nativo de GNOME (ver [ADR 0019](adr/0019-flameshot-atajo-printscreen.md)) |
+| `install_flameshot.sh` | Flameshot y configuración de atajos | **Mantener** — confirmado como la herramienta de captura. **Migrado al contrato completo de 6 verbos en el Hito 11, Fase 2 (2026-07-19)**: usa `scripts/lib/installer_cli.sh` y `scripts/lib/apt.sh` (ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); ya no tiene fallback a Snap. La migración cubrió únicamente la gestión del **paquete**: sigue faltando que el instalador configure el atajo `PrintScreen` para que lance Flameshot en vez del capturador nativo de GNOME (ver [ADR 0019](adr/0019-flameshot-atajo-printscreen.md)) — queda registrado explícitamente como trabajo posterior delimitado, no como parte de esta migración |
 
 ## Maintenance
 

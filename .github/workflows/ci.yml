@@ -71,7 +71,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ubuntu: ["24.04", "26.04"]
         case:
           - router
           - doctor
@@ -100,9 +99,13 @@ jobs:
           - installer-cli
           - apt-helpers
           - cmatrix-installer
+          - ranger-installer
+          - terminator-installer
+          - flameshot-installer
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
+        ubuntu: ["24.04", "26.04"]
         include:
           - case: router
             variant: base
@@ -239,6 +242,21 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I13"
             cmd: bash tests/test_cmatrix_installer.sh
+          - case: ranger-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I14"
+            cmd: bash tests/test_ranger_installer.sh
+          - case: terminator-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I15"
+            cmd: bash tests/test_terminator_installer.sh
+          - case: flameshot-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I16"
+            cmd: bash tests/test_flameshot_installer.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
