@@ -5,8 +5,18 @@ set -Eeuo pipefail
 TOOL_NAME="Docker"
 
 # Function to check status
+#
+# 'dpkg -l' SIN paquete filtra por grep sobre cientos de líneas reales: si
+# 'grep -q' encuentra la coincidencia temprano, cierra su entrada y
+# 'dpkg -l' recibe SIGPIPE mientras aún escribe — bajo 'pipefail' (modo
+# estricto agregado en este mismo hito), eso hace que el pipeline completo
+# devuelva código de salida ≠0 aunque la coincidencia sí se haya
+# encontrado (encontrado en CI: nunca aparece con el 'dpkg' mockeado de los
+# tests simulados, que solo imprime una línea). Se consulta 'dpkg -l' solo
+# para el paquete exacto (una línea de salida, sin ese riesgo), mismo
+# patrón que el resto de los instaladores del proyecto.
 check_status() {
-    if command -v docker &> /dev/null && dpkg -l | grep -q "^ii.*docker-ce"; then
+    if command -v docker &> /dev/null && dpkg -l docker-ce 2>/dev/null | grep -q "^ii"; then
         echo "INSTALLED"
         return 0
     else
