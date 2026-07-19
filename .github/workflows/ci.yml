@@ -97,6 +97,9 @@ jobs:
           - cursor-apt-repo
           - vscode-apt-repo
           - docker-apt-repo
+          - installer-cli
+          - apt-helpers
+          - cmatrix-installer
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -221,6 +224,21 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "D01"
             cmd: bash tests/docker/test_docker_apt_repo.sh
+          - case: installer-cli
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I11"
+            cmd: bash tests/test_installer_cli.sh
+          - case: apt-helpers
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I12"
+            cmd: bash tests/test_apt_helpers.sh
+          - case: cmatrix-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I13"
+            cmd: bash tests/test_cmatrix_installer.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
