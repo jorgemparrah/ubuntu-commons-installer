@@ -263,23 +263,25 @@ La migración debe ser repetible.
 
 Cada instalador debe exponer la misma interfaz siempre que sea posible.
 
-Ejemplo:
+El contrato objetivo (ver [ADR 0004](docs/adr/0004-idempotencia-instalado-igual-skip.md), [ADR 0012](docs/adr/0012-modelo-de-estado-enriquecido.md) y [ADR 0029](docs/adr/0029-contrato-completo-de-instalador-referencia.md)) tiene 6 verbos:
 
 ```
 status
 
 install
 
+uninstall
+
+reinstall
+
 update
 
 repair
-
-uninstall
 ```
 
-Evitar reinstall.
+`scripts/editors/install_vim.sh` es el instalador de referencia: implementa los 6 verbos y distingue `OUTDATED`/`BROKEN` en `status`, no solo `INSTALLED`/`NOT_INSTALLED`. Los instaladores todavía no migrados (Hito 11) implementan hoy solo `status/install/uninstall/reinstall` — eso es válido de forma transitoria, pero `update`/`repair` no se abandonan como objetivo.
 
-Reinstall solo debe existir cuando sea absolutamente necesario.
+`reinstall` es una acción avanzada, nunca el comportamiento por defecto ante una herramienta ya instalada y sana (ADR 0004): el menú interactivo la ofrece solo si la persona usuaria la pide explícitamente.
 
 ---
 

@@ -6,6 +6,8 @@
 
 **Versión:** 2.0 (Borrador)
 
+**Nota de lectura:** este documento mezcla estado actual y visión a futuro. Donde no se indique explícitamente "futura"/"a largo plazo", el contenido describe el diseño ya vigente. Las secciones 14 y 25 están marcadas como objetivo/futuro y no describen la estructura de directorios ni la arquitectura de plugins reales de hoy (ver `AGENT.md` §5 para la estructura de directorios real).
+
 ---
 
 # 1. Visión general
@@ -464,17 +466,23 @@ Los perfiles definen qué módulos se ejecutan.
 
 Cada instalador debe exponer una interfaz consistente.
 
-Comandos preferidos:
+Contrato objetivo (6 verbos, ver [ADR 0004](adr/0004-idempotencia-instalado-igual-skip.md), [ADR 0012](adr/0012-modelo-de-estado-enriquecido.md) y [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)):
 
 status
 
 install
 
+uninstall
+
+reinstall
+
 update
 
 repair
 
-uninstall
+`scripts/editors/install_vim.sh` es el instalador de referencia que ya implementa los 6 verbos, incluyendo que `status` distinga `OUTDATED`/`BROKEN` de `INSTALLED`/`NOT_INSTALLED`. El Hito 11 migra el resto de los instaladores hacia este mismo contrato; mientras tanto, implementar solo `status/install/uninstall/reinstall` es válido de forma transitoria.
+
+`reinstall` es una acción avanzada explícita, nunca el comportamiento por defecto ante una herramienta instalada y sana.
 
 Status debe ser liviano.
 
@@ -544,6 +552,10 @@ Docker
 metadata.yaml
 
 install.sh
+
+uninstall.sh
+
+reinstall.sh
 
 update.sh
 

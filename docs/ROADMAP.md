@@ -612,27 +612,32 @@ Gate de calidad automatizado (CI), Compatibilidad con Ubuntu 26
 
 **Corrección administrativa (2026-07-17):** se agrega Compatibilidad con Ubuntu 26 (Hito 9) como dependencia adicional — no tiene sentido estandarizar interfaces de instaladores antes de saber cuáles ya son compatibles con Ubuntu 26 y cuáles necesitan cambios reales primero.
 
+**Corrección administrativa (2026-07-18):** una revisión técnica integral (`docs/TECHNICAL_REVIEW.md`, hallazgo Crítico C1) encontró que este objetivo citaba una lista de verbos ambigua, sin `uninstall`/`reinstall` con la misma prioridad que `update`/`repair`, mientras que 29 de 30 instaladores reales ya convergieron a `status/install/uninstall/reinstall` y solo `install_vim.sh` implementa el contrato completo. Se resolvió con [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md): `install_vim.sh` queda designado como instalador de referencia, y el objetivo de este hito se reformula abajo para citarlo explícitamente en vez de una lista de verbos suelta.
+
 ### Objetivo
 
-Estandarizar las interfaces de los instaladores.
+Migrar los instaladores restantes (todos salvo `scripts/editors/install_vim.sh`, que ya es la referencia) hacia el contrato completo de 6 verbos que [ADR 0004](adr/0004-idempotencia-instalado-igual-skip.md), [ADR 0012](adr/0012-modelo-de-estado-enriquecido.md) y [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md) ya aprobaron:
 
-Cada instalador debe exponer:
-
-* status
+* status (distinguiendo `INSTALLED`/`NOT_INSTALLED`/`OUTDATED`/`BROKEN`/`UNSUPPORTED`/`UNKNOWN`, no solo instalado/no instalado)
 * install
-* update
-* repair
 * uninstall
+* reinstall (acción avanzada explícita, nunca comportamiento por defecto)
+* update (para el caso `OUTDATED`)
+* repair (para el caso `BROKEN`)
 
 Separar conceptualmente las acciones de mantenimiento de sistema (kernel, actualizaciones) de los instaladores de aplicaciones.
 
+Cada instalador migrado en este hito debe subir a la vez al modo estricto de Bash exigido por [ADR 0008](adr/0008-bash-estricto-en-scripts-nuevos.md) (`set -Eeuo pipefail`), ya que ambos cambios tocan el mismo archivo.
+
 ### Criterios de aceptación
 
-Comportamiento consistente entre instaladores.
+Comportamiento consistente entre instaladores, igualando el contrato de `install_vim.sh`.
 
-### Decisión relacionada
+### Decisiones relacionadas
 
 [ADR 0013](adr/0013-separar-mantenimiento-de-instaladores.md) — separar mantenimiento de sistema de instaladores de aplicaciones.
+
+[ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md) — `install_vim.sh` como instalador de referencia.
 
 ---
 
