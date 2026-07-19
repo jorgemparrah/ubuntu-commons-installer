@@ -107,13 +107,13 @@ run_installer() {
     set -e
 }
 
-# test_full_contract <script> <label> <pkg_name> <binary_name_or_none>
+# test_full_contract <script> <label> <pkg_name> <binary_name_or_none> [<skip_broken_reason>]
 # binary_name vacío ("") significa "paquete meta sin binario propio": el
 # instalador no intenta detectar BROKEN vía 'command -v' (ver ADR 0031), así
 # que los escenarios de reparación se prueban igual (repair_tool no depende
 # de un BROKEN previo, solo de que el paquete esté instalado).
 test_full_contract() {
-    local script="$1" label="$2" pkg="$3" binary="$4"
+    local script="$1" label="$2" pkg="$3" binary="$4" skip_broken_reason="${5:-}"
 
     echo ""
     echo "== ${label} (${script}) =="
@@ -202,7 +202,7 @@ test_full_contract() {
     fi
     teardown_mock_bin
 
-    if [[ -n "${binary}" ]]; then
+    if [[ -n "${binary}" && "${skip_broken_reason}" == "" ]]; then
         run_installer "${script}" "status" "${pkg}" "ii" "no" "no" ""
         if [[ "${RUN_CODE}" -ne 0 && "${RUN_OUTPUT}" == *"BROKEN"* ]]; then
             pass "${label}: dpkg 'ii' sin binario resoluble reporta BROKEN"
@@ -210,32 +210,43 @@ test_full_contract() {
             fail "${label}: no reportó BROKEN con dpkg 'ii' y binario ausente. Salida: ${RUN_OUTPUT}"
         fi
         teardown_mock_bin
+    elif [[ -n "${skip_broken_reason}" ]]; then
+        echo "  (omitido: ${label} — ${skip_broken_reason})"
     else
         echo "  (omitido: ${label} es un paquete meta sin binario propio, BROKEN no aplica — ver ADR 0031)"
     fi
 }
 
-# script|label|paquete|binario (vacío = paquete meta sin binario propio)
+# script|label|paquete|binario (vacío = paquete meta sin binario propio)|motivo para omitir el escenario BROKEN (vacío = no se omite)
+#
+# wget/curl/git se omiten explícitamente del escenario BROKEN: la propia
+# imagen base de tests/docker/Dockerfile instala esos 3 binarios para que
+# otros casos de prueba del proyecto funcionen (descargas, clonado de
+# repos), así que 'command -v' siempre los encuentra sin importar el mock
+# — no hay forma de simular su ausencia en este contenedor compartido sin
+# romper otras pruebas. La lógica de detección BROKEN en el propio script
+# (idéntica a install_ranger.sh) no está en duda, solo el escenario de
+# prueba es inviable en este entorno.
 UCI_ENTRIES=(
-    "install_wget.sh|wget|wget|wget"
-    "install_curl.sh|curl|curl|curl"
-    "install_git.sh|Git|git|git"
-    "install_build_essential.sh|build-essential|build-essential|"
-    "install_software_properties_common.sh|software-properties-common|software-properties-common|add-apt-repository"
-    "install_apt_transport_https.sh|apt-transport-https|apt-transport-https|"
-    "install_gnupg2.sh|GnuPG|gnupg2|gpg"
-    "install_cheese.sh|Cheese|cheese|cheese"
-    "install_v4l_utils.sh|v4l-utils|v4l-utils|v4l2-ctl"
-    "install_ubuntu_restricted_extras.sh|ubuntu-restricted-extras|ubuntu-restricted-extras|"
-    "install_vlc.sh|VLC|vlc|vlc"
-    "install_meld.sh|Meld|meld|meld"
-    "install_baobab.sh|Baobab|baobab|baobab"
-    "install_gparted.sh|GParted|gparted|gparted"
+    "install_wget.sh|wget|wget|wget|wget siempre está presente en la imagen base del contenedor de pruebas (lo necesitan otros casos), 'command -v' no se puede simular ausente aquí"
+    "install_curl.sh|curl|curl|curl|curl siempre está presente en la imagen base del contenedor de pruebas (lo necesitan otros casos), 'command -v' no se puede simular ausente aquí"
+    "install_git.sh|Git|git|git|git siempre está presente en la imagen base del contenedor de pruebas (lo necesitan otros casos), 'command -v' no se puede simular ausente aquí"
+    "install_build_essential.sh|build-essential|build-essential||"
+    "install_software_properties_common.sh|software-properties-common|software-properties-common|add-apt-repository|"
+    "install_apt_transport_https.sh|apt-transport-https|apt-transport-https||"
+    "install_gnupg2.sh|GnuPG|gnupg2|gpg|"
+    "install_cheese.sh|Cheese|cheese|cheese|"
+    "install_v4l_utils.sh|v4l-utils|v4l-utils|v4l2-ctl|"
+    "install_ubuntu_restricted_extras.sh|ubuntu-restricted-extras|ubuntu-restricted-extras||"
+    "install_vlc.sh|VLC|vlc|vlc|"
+    "install_meld.sh|Meld|meld|meld|"
+    "install_baobab.sh|Baobab|baobab|baobab|"
+    "install_gparted.sh|GParted|gparted|gparted|"
 )
 
 for entry in "${UCI_ENTRIES[@]}"; do
-    IFS='|' read -r script_name label pkg binary <<< "${entry}"
-    test_full_contract "${UCI_SYSTEM_DIR}/${script_name}" "${label}" "${pkg}" "${binary}"
+    IFS='|' read -r script_name label pkg binary skip_broken_reason <<< "${entry}"
+    test_full_contract "${UCI_SYSTEM_DIR}/${script_name}" "${label}" "${pkg}" "${binary}" "${skip_broken_reason}"
 done
 
 print_test_summary
