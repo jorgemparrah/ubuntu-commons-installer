@@ -257,6 +257,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I16"
             cmd: bash tests/test_flameshot_installer.sh
+          - case: tools-registry
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I17"
+            cmd: bash tests/test_tools_registry.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single

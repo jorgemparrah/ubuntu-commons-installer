@@ -88,6 +88,7 @@ run_suite "tests/test_cmatrix_installer.sh" bash tests/test_cmatrix_installer.sh
 run_suite "tests/test_ranger_installer.sh" bash tests/test_ranger_installer.sh
 run_suite "tests/test_terminator_installer.sh" bash tests/test_terminator_installer.sh
 run_suite "tests/test_flameshot_installer.sh" bash tests/test_flameshot_installer.sh
+run_suite "tests/test_tools_registry.sh" bash tests/test_tools_registry.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then
