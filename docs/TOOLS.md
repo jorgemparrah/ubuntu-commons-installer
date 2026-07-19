@@ -17,7 +17,7 @@
 | `install_oh_my_zsh.sh` | Oh My Zsh | **Mantener** — corregido en el Hito 9: antes solo instalaba `zsh`, nunca clonaba el framework (hallazgo de `docs/UBUNTU_COMPATIBILITY.md`); no toca `.zshrc`, respeta la personalización existente al reutilizar `/home` (ver [ADR 0021](adr/0021-reutilizar-personalizacion-shell-en-home.md)) |
 | `install_powerlevel10k.sh` | Powerlevel10k | **Mantener** — corregido en el Hito 9: antes solo instalaba `zsh`, nunca clonaba el tema; misma lógica de no tocar `.zshrc`/reutilizar personalización que Oh My Zsh (ver [ADR 0021](adr/0021-reutilizar-personalizacion-shell-en-home.md)) |
 | `install_ranger.sh` | Gestor de archivos de terminal | Mantener, salvo que surja una alternativa más amigable |
-| `install_cmatrix.sh` | Utilidad visual de terminal | **Mantener** — confirmado |
+| `install_cmatrix.sh` | Utilidad visual de terminal | **Mantener** — confirmado. **Migrado al contrato completo de 6 verbos en el Hito 11, Fase 1 (2026-07-19)**: instalador piloto de `scripts/lib/installer_cli.sh` y `scripts/lib/apt.sh` (ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); ya no tiene fallback a Snap (su única fuente gestionada es APT) |
 | `install_gimp.sh` | GIMP vía Snap | Revisar fuente deseada |
 | `install_obs_studio.sh` | OBS Studio vía Snap | Mantener; verificar fuente deseada |
 

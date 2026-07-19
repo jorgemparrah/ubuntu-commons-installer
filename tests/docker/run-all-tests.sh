@@ -82,6 +82,9 @@ run_suite "tests/test_mongodb_compass_download.sh" bash tests/test_mongodb_compa
 run_suite "tests/test_kernel_hwe_fallback.sh" bash tests/test_kernel_hwe_fallback.sh
 run_suite "tests/test_chrome_arch_check.sh" bash tests/test_chrome_arch_check.sh
 run_suite "tests/test_snap_installers_contract.sh" bash tests/test_snap_installers_contract.sh
+run_suite "tests/test_installer_cli.sh" bash tests/test_installer_cli.sh
+run_suite "tests/test_apt_helpers.sh" bash tests/test_apt_helpers.sh
+run_suite "tests/test_cmatrix_installer.sh" bash tests/test_cmatrix_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

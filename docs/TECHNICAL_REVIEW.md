@@ -12,6 +12,8 @@
 
 **Actualización 2026-07-19 — Medio y Bajo corregidos (rama `correcciones-medias-bajas-revision-tecnica`, creada a partir de la anterior).** Cada hallazgo Medio y Bajo queda marcado `✅ Corregido` o `⏭️ Diferido intencionalmente` abajo. Se difirió deliberadamente M6 (extracción de dispatcher compartido entre los ~30 instaladores) por ser, en esencia, trabajo de alcance del Hito 11 — hacerlo ahora habría violado "no avanzar al Hito 11". También quedaron sin acción M5 (clase de riesgo, se corrige la próxima vez que se toque ese archivo puntual) y B2/B5/B8/B9, todos ya documentados en su momento como deuda aceptada o no accionable sin información adicional. El Hito 11 sigue sin iniciarse.
 
+**Actualización 2026-07-19 (más tarde el mismo día) — Hito 9 cerrado administrativamente, Hito 11 Fase 1 iniciada.** Se confirmó que las únicas validaciones pendientes del Hito 9 eran las dos ya conocidas (Snap en Ubuntu 26.04 Desktop, kernel HWE en VM); el hito pasa a `Done` con esas dos validaciones documentadas explícitamente como pendientes antes de una primera versión estable (ver `docs/ROADMAP.md`). Esto habilitó el Hito 11, que pasa de `Blocked` a `In Progress`. Se ejecutó únicamente su Fase 1 (infraestructura compartida): M6 pasa de `Diferido intencionalmente` a `En progreso` — ver el hallazgo M6 actualizado abajo. No se migró ningún instalador adicional más allá del piloto (`install_cmatrix.sh`); no se avanzó al Hito 12.
+
 **Convención de prioridad:**
 
 - **Crítico** — bloquea o desvía trabajo futuro ya planificado; corregirlo debería preceder a ese trabajo.
@@ -223,9 +225,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** checklist de PR para tests nuevos, no requiere trabajo inmediato.
 
-#### M6. Duplicación de dispatcher y de funciones de verificación multi-paquete entre instaladores  ⏭️ **Diferido intencionalmente**
+#### M6. Duplicación de dispatcher y de funciones de verificación multi-paquete entre instaladores  🚧 **En progreso (Hito 11, Fase 1 — 2026-07-19)**
 
-> Deliberadamente NO implementado en esta pasada: es una extracción de gran escala (dispatcher + verificación multi-paquete) que toca los ~30 instaladores. El propio hallazgo ya lo identificaba como alcance del Hito 11, no de una corrección aislada — hacerlo ahora violaría 'no avanzar al Hito 11'. Sigue en el roadmap del Hito 11.
+> Se creó `scripts/lib/installer_cli.sh` (dispatcher compartido de 6 verbos, `installer_run_cli`) y `scripts/lib/apt.sh` (`apt_package_installed`/`apt_all_packages_installed`/`apt_install_packages`/`apt_purge_packages`), y se migró un único instalador piloto (`install_cmatrix.sh`) para validar la infraestructura de punta a punta. Los otros ~29 instaladores (incluidos `install_development_tools.sh`, `install_multimedia.sh` e `install_system_utils.sh`, que duplican `check_package_installed()`/`check_all_packages_installed()`) siguen sin migrar a propósito — se hará en grupos pequeños en las fases siguientes del Hito 11, no de una sola vez (ver `docs/ROADMAP.md`, Hito 11).
 
 **Dónde:** los ~30 instaladores repiten un dispatcher `main()`/`case` casi idéntico (~15-20 líneas cada uno); `install_development_tools.sh`, `install_multimedia.sh` e `install_system_utils.sh` además duplican literalmente `check_package_installed()`/`check_all_packages_installed()`.
 

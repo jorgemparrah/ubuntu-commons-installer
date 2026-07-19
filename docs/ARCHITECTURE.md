@@ -368,6 +368,12 @@ validation
 
 Evitar duplicar funciones auxiliares.
 
+**Infraestructura compartida de instaladores (Hito 11, Fase 1 — 2026-07-19):**
+
+- `scripts/lib/installer_cli.sh` — dispatcher compartido de la CLI de instaladores. Expone `installer_run_cli "$@"`, que cada instalador invoca como última línea en vez de declarar su propio bloque `main()`/`case`. Implementa el contrato de 6 verbos (`status|install|uninstall|reinstall|update|repair`, ver sección 21 y [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)), valida con `declare -F` que las funciones obligatorias (`check_status`/`install_tool`/`uninstall_tool`) estén definidas antes de invocarlas, y da un fallback mecánico solo a `reinstall` (nunca a `update`/`repair`, que se rechazan explícitamente si el instalador no los implementa).
+- `scripts/lib/apt.sh` — helpers APT compartidos (`apt_package_installed`, `apt_all_packages_installed`, `apt_install_packages`, `apt_purge_packages`). Centraliza la detección de "¿está este paquete realmente instalado?" vía `dpkg -l <paquete>` (una consulta por paquete puntual, nunca `dpkg -s` ni un `grep` sin anclar sobre la lista completa — ambos patrones dieron falsos positivos reales en este proyecto, ver `docs/TECHNICAL_REVIEW.md`).
+- `scripts/system/install_cmatrix.sh` es, por ahora, el único instalador migrado a esta infraestructura (instalador piloto de la Fase 1). El resto sigue con su propio bloque `main()`/`case`, válido de forma transitoria (ver sección 21) hasta que le toque su turno en una fase posterior del Hito 11.
+
 ---
 
 # 16. Logging
