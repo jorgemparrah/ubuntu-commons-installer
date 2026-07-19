@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_docker.sh
 
+set -Eeuo pipefail
 TOOL_NAME="Docker"
 
 # Function to check status
@@ -43,7 +44,7 @@ install_tool() {
     
     # Add user to docker group
     sudo groupadd docker 2>/dev/null || true
-    sudo usermod -aG docker $USER
+    sudo usermod -aG docker "${USER}"
     
     echo "Docker instalado correctamente. Es posible que necesites cerrar sesión y volver a iniciar para que los cambios de grupo surtan efecto."
 }
@@ -52,17 +53,22 @@ install_tool() {
 uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
     
-    # Remove Docker packages
-    sudo apt-get remove -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    # Remove Docker packages ('purge', no solo 'remove', para no dejar
+    # basura de configuración en /etc/docker/ tras desinstalar — mismo
+    # criterio que Cursor/VS Code/Chrome, ver docs/TECHNICAL_REVIEW.md,
+    # hallazgo M8).
+    sudo apt-get purge -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     sudo apt-get autoremove -y
-    
+
     # Remove Docker repository
     sudo rm -f /etc/apt/sources.list.d/docker.list
     sudo rm -f /etc/apt/keyrings/docker.asc
-    
-    # Remove Docker group (if no other users are in it)
-    if groups | grep -q docker; then
-        sudo gpasswd -d $USER docker
+
+    # Remove Docker group (if no other users are in it). Match exacto de
+    # nombre de grupo, no una coincidencia de substring (evita un falso
+    # positivo con un grupo hipotético "docker-foo").
+    if groups | grep -qw docker; then
+        sudo gpasswd -d "${USER}" docker
     fi
     
     echo "Docker desinstalado correctamente."
@@ -77,7 +83,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;
