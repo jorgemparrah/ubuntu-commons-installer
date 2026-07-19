@@ -65,7 +65,7 @@ jobs:
     # type=gha) con un scope compartido por versión de Ubuntu — así los 24
     # casos que comparten la imagen base reutilizan sus capas en vez de
     # reconstruirlas desde cero cada vez.
-    name: ${{ matrix.case }} — Ubuntu ${{ matrix.ubuntu }}
+    name: ${{ matrix.ubuntu }} - ${{ matrix.case }} 
     needs: lint
     runs-on: ubuntu-latest
     strategy:
