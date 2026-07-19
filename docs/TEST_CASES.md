@@ -110,6 +110,14 @@ Cubierto hoy por: `tests/test_installer_cli.sh` (I11), `tests/test_apt_helpers.s
 
 Cubierto hoy por: `tests/test_ranger_installer.sh` (I14), `tests/test_terminator_installer.sh` (I15), `tests/test_flameshot_installer.sh` (I16), incluidos en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh`) y, cada uno, en su propio job de CI (`ranger-installer`, `terminator-installer`, `flameshot-installer`).
 
+### Infraestructura previa a la Fase 3 — registro central de metadata (`tools_registry.sh`/`tools_catalog.sh`)
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I17 | `scripts/lib/tools_registry.sh` (mecanismo) y `scripts/lib/tools_catalog.sh` (datos de `cmatrix`/`ranger`, ver ADR 0030) | Entradas de prueba registradas en memoria, más el catálogo real sourceado | Prueba simulada (fixtures) + validación cruzada contra archivos reales | `tools_registry_has`/`tools_registry_field`/`tools_registry_ids` responden correctamente, incluida ausencia de campo/id; volver a registrar un id no lo duplica y sobrescribe sus campos; `cmatrix` y `ranger` están en el catálogo; el `script` declarado de cada uno existe en el repositorio; si `manager=apt`, el script sourcea `scripts/lib/apt.sh`; si `migration_status=migrated`, el script usa `installer_run_cli` | ✅ pasa |
+
+Cubierto hoy por: `tests/test_tools_registry.sh` (I17), incluido en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh`) y en su propio job de CI (`tools-registry`). Es infraestructura puramente aditiva (no cambia comportamiento de ningún instalador existente, ver ADR 0030); no migra más instaladores por sí sola.
+
 ### Validación manual pendiente: instaladores Snap en Ubuntu 26.04 Desktop
 
 Ninguno de los 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify, Zoom) se prueba funcionalmente en CI: `snapd` no corre sin systemd dentro de los contenedores Docker usados por este proyecto. `tests/test_snap_installers_contract.sh` (I10) solo prueba la lógica de `status` con mocks. Antes de declarar cualquiera de estos 8 "probado funcionalmente" en Ubuntu 26.04, corresponde ejecutar esta pauta en un sistema Ubuntu 26.04 Desktop real (VM o máquina física, con systemd y snapd reales):
