@@ -19,6 +19,8 @@ UCI_DOCTOR_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly UCI_DOCTOR_SCRIPT_DIR
 # shellcheck source=../lib/logging.sh
 source "${UCI_DOCTOR_SCRIPT_DIR}/../lib/logging.sh"
+# shellcheck source=../lib/runtime.sh
+source "${UCI_DOCTOR_SCRIPT_DIR}/../lib/runtime.sh"
 
 # Rutas que pueden ya existir en un /home reutilizado.
 # Ver docs/adr/0003-migracion-nvm-sin-borrado-directo.md (apéndice).
@@ -62,6 +64,30 @@ doctor_detect_arch() {
 
 doctor_detect_shell() {
     echo "${SHELL:-desconocido}"
+}
+
+# doctor_check_mise <home_dir>
+# Igual que doctor_check_command, pero resuelve el binario de Mise con
+# runtime_resolve_mise_bin (ruta canónica ~/.local/bin/mise o PATH) en vez
+# de solo 'command -v mise'. Antes de esto, doctor.sh y scripts/lib/runtime.sh
+# podían contradecirse sobre si Mise está instalado en la misma máquina
+# (ver docs/TECHNICAL_REVIEW.md, hallazgo A3).
+doctor_check_mise() {
+    local home_dir="$1"
+    local mise_bin
+    if ! mise_bin="$(runtime_resolve_mise_bin "${home_dir}")"; then
+        doctor_line "Mise:" "no instalado"
+        return 0
+    fi
+
+    local version_output=""
+    version_output="$("${mise_bin}" --version 2>&1 | head -n1 || true)"
+
+    if [[ -n "${version_output}" ]]; then
+        doctor_line "Mise:" "instalado (${version_output}, ${mise_bin})"
+    else
+        doctor_line "Mise:" "instalado (${mise_bin})"
+    fi
 }
 
 # doctor_check_command <etiqueta> <comando> [args de versión...]
@@ -219,7 +245,7 @@ doctor_run() {
     doctor_check_command "Git" git --version
     doctor_line "Docker:" "$(doctor_check_docker_daemon)"
     doctor_line "Node.js:" "$(doctor_detect_node_source "${home_dir}")"
-    doctor_check_command "Mise" mise --version
+    doctor_check_mise "${home_dir}"
     doctor_check_command "AWS CLI" aws --version
     doctor_check_command "kubectl" kubectl version --client
     doctor_check_command "Helm" helm version --short

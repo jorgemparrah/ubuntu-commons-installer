@@ -21,14 +21,41 @@ readonly UCI_RUNTIME_SCRIPT_DIR
 source "${UCI_RUNTIME_SCRIPT_DIR}/logging.sh"
 
 # runtime_mise_bin <home_dir>
+# Ruta CANÓNICA de instalación de Mise (la que usa su instalador oficial,
+# https://mise.run, y por lo tanto la ruta destino de runtime_ensure_mise).
+# No es necesariamente dónde está el binario real si Mise se instaló por
+# otro medio (paquete del sistema, symlink en /usr/local/bin, etc.) — para
+# eso usar runtime_resolve_mise_bin.
 runtime_mise_bin() {
     echo "$1/.local/bin/mise"
+}
+
+# runtime_resolve_mise_bin <home_dir>
+# Resuelve el binario de Mise que realmente está disponible, sea en la ruta
+# canónica o en PATH. Imprime la ruta y sale 0 si lo encuentra; no imprime
+# nada y sale 1 si no. Antes de esto, runtime.sh y scripts/diagnostics/
+# doctor.sh detectaban Mise de forma distinta (uno solo miraba la ruta
+# canónica, el otro solo PATH), pudiendo contradecirse sobre la misma
+# máquina (ver docs/TECHNICAL_REVIEW.md, hallazgo A3).
+runtime_resolve_mise_bin() {
+    local home_dir="$1"
+    local canonical_bin
+    canonical_bin="$(runtime_mise_bin "${home_dir}")"
+    if [[ -x "${canonical_bin}" ]]; then
+        echo "${canonical_bin}"
+        return 0
+    fi
+    if command -v mise &> /dev/null; then
+        command -v mise
+        return 0
+    fi
+    return 1
 }
 
 # runtime_mise_available <home_dir>
 runtime_mise_available() {
     local home_dir="$1"
-    [[ -x "$(runtime_mise_bin "${home_dir}")" ]]
+    runtime_resolve_mise_bin "${home_dir}" &> /dev/null
 }
 
 # runtime_ensure_mise <home_dir>

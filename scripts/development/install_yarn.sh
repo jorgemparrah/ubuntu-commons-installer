@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_yarn.sh
 #
 # Yarn se instala vía Mise, no vía apt (ver
@@ -8,6 +8,7 @@
 # docs/UBUNTU_COMPATIBILITY.md, no específico de Ubuntu 26. Usa
 # scripts/lib/runtime.sh (Hito 8), el mismo mecanismo que kubectl/Node/Python.
 
+set -Eeuo pipefail
 TOOL_NAME="Yarn"
 UCI_YARN_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../lib/runtime.sh
@@ -15,7 +16,7 @@ source "${UCI_YARN_SCRIPT_DIR}/../lib/runtime.sh"
 
 # Function to check status
 check_status() {
-    if runtime_mise_available "${HOME}" && "$(runtime_mise_bin "${HOME}")" which yarn &> /dev/null; then
+    if runtime_mise_available "${HOME}" && "$(runtime_resolve_mise_bin "${HOME}")" which yarn &> /dev/null; then
         echo "INSTALLED"
         return 0
     else
@@ -66,7 +67,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;
