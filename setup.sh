@@ -59,26 +59,6 @@ readonly UCI_MISE_BLOCK_BEGIN UCI_MISE_BLOCK_END
 # "no instalado"; con `set -e` un `read` fallido sin blindar habría cortado
 # la ejecución en seco, lo cual sería un cambio de comportamiento real.
 
-print_header() {
-    echo -e "${BLUE}=== $1 ===${NC}"
-}
-
-print_status() {
-    echo -e "${GREEN}✓ $1${NC}"
-}
-
-print_warning() {
-    echo -e "${YELLOW}! $1${NC}"
-}
-
-print_error() {
-    echo -e "${RED}✗ $1${NC}"
-}
-
-print_info() {
-    echo -e "${CYAN}ℹ $1${NC}"
-}
-
 # Function to show project introduction
 show_introduction() {
     clear || true
@@ -109,7 +89,7 @@ show_introduction() {
     echo "╚══════════════════════════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
     echo ""
-    print_info "Presiona ENTER para continuar..."
+    log_info "Presiona ENTER para continuar..."
     read -r || true
 }
 
@@ -126,6 +106,12 @@ check_basic_dependencies() {
         missing_deps+=("apt")
     fi
 
+    # snapd sigue en la lista básica pese a que ADR 0027 prioriza apt oficial
+    # sobre Snap para la mayoría de las categorías — varios instaladores lo
+    # tratan como mecanismo de último recurso. No se retira de acá sin una
+    # revisión de coherencia con ADR 0027 (ver docs/TECHNICAL_REVIEW.md,
+    # hallazgo B1); mientras tanto, sigue siendo necesario para los 8
+    # instaladores que todavía dependen exclusivamente de Snap.
     if ! command -v snap &> /dev/null; then
         missing_deps+=("snapd")
     fi
@@ -165,29 +151,29 @@ check_basic_dependencies() {
         read -p "¿Instalar dependencias automáticamente? (y/N): " install_deps || true
 
         if [[ "$install_deps" =~ ^[Yy]$ ]]; then
-            print_info "Instalando dependencias básicas..."
+            log_info "Instalando dependencias básicas..."
             if sudo apt update && sudo apt install -y "${missing_deps[@]}"; then
-                print_status "Dependencias básicas instaladas correctamente."
+                log_success "Dependencias básicas instaladas correctamente."
                 echo ""
-                print_info "Presiona ENTER para continuar..."
+                log_info "Presiona ENTER para continuar..."
                 read -r || true
                 return 0
             else
-                print_error "Error al instalar dependencias básicas. Por favor, instálalas manualmente."
+                log_error "Error al instalar dependencias básicas. Por favor, instálalas manualmente."
                 echo ""
-                print_info "Comando para instalar manualmente:"
+                log_info "Comando para instalar manualmente:"
                 echo -e "${CYAN}sudo apt update && sudo apt install ${missing_deps[*]}${NC}"
                 echo ""
-                print_info "Presiona ENTER para salir..."
+                log_info "Presiona ENTER para salir..."
                 read -r || true
                 exit 1
             fi
         else
-            print_warning "Dependencias básicas no instaladas. El script no puede continuar."
+            log_warn "Dependencias básicas no instaladas. El script no puede continuar."
             echo ""
-            print_info "Instala las dependencias manualmente y vuelve a ejecutar el script."
+            log_info "Instala las dependencias manualmente y vuelve a ejecutar el script."
             echo ""
-            print_info "Presiona ENTER para salir..."
+            log_info "Presiona ENTER para salir..."
             read -r || true
             exit 1
         fi
@@ -244,15 +230,15 @@ ensure_node_via_mise() {
         read -p "¿Instalar Mise para gestionar Node.js? (y/N): " install_mise || true
 
         if [[ ! "${install_mise}" =~ ^[Yy]$ ]]; then
-            print_warning "Mise no instalado. El script no puede continuar."
+            log_warn "Mise no instalado. El script no puede continuar."
             echo ""
-            print_info "Instala Mise manualmente (https://mise.jdx.dev/) y vuelve a ejecutar el script."
+            log_info "Instala Mise manualmente (https://mise.jdx.dev/) y vuelve a ejecutar el script."
             exit 1
         fi
 
-        print_info "Instalando Mise (https://mise.run)..."
+        log_info "Instalando Mise (https://mise.run)..."
         if ! curl -fsSL https://mise.run | sh; then
-            print_error "No se pudo instalar Mise (revisa el código de salida y la salida de curl arriba)."
+            log_error "No se pudo instalar Mise (revisa el código de salida y la salida de curl arriba)."
             exit 1
         fi
     fi
@@ -265,39 +251,39 @@ ensure_node_via_mise() {
     fi
 
     if [[ -z "${mise_cmd_bin}" ]]; then
-        print_error "Mise no quedó instalado en ${mise_bin} tras el intento de instalación."
+        log_error "Mise no quedó instalado en ${mise_bin} tras el intento de instalación."
         exit 1
     fi
 
     local mise_version
     mise_version="$("${mise_cmd_bin}" --version 2>/dev/null || echo 'versión desconocida')"
-    print_status "Mise listo: ${mise_version} (${mise_cmd_bin})"
+    log_success "Mise listo: ${mise_version} (${mise_cmd_bin})"
 
     # 3) Instalar mediante Mise la versión de Node de la política del
     # proyecto. El bootstrap solo necesita UNA versión funcional para
     # correr la interfaz; ver ADR 0016 para la política completa de
     # versiones (que aplica de forma más completa en el Gestor de runtimes).
-    print_info "Instalando Node.js (LTS) vía Mise..."
+    log_info "Instalando Node.js (LTS) vía Mise..."
     if ! "${mise_cmd_bin}" use --global node@lts; then
-        print_error "No se pudo instalar Node.js vía Mise."
+        log_error "No se pudo instalar Node.js vía Mise."
         exit 1
     fi
 
     local node_bin
     node_bin="$("${mise_cmd_bin}" which node 2>/dev/null || true)"
     if [[ -z "${node_bin}" ]]; then
-        print_error "Mise no resolvió un ejecutable de node tras instalarlo."
+        log_error "Mise no resolvió un ejecutable de node tras instalarlo."
         exit 1
     fi
     export PATH="$(dirname "${node_bin}"):${PATH}"
 
     # 4) Verificar node y npm.
     if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
-        print_error "Node.js/npm no quedaron disponibles en PATH tras instalar vía Mise."
+        log_error "Node.js/npm no quedaron disponibles en PATH tras instalar vía Mise."
         exit 1
     fi
 
-    print_status "Node.js $(node --version) y npm $(npm --version) disponibles vía Mise."
+    log_success "Node.js $(node --version) y npm $(npm --version) disponibles vía Mise."
 
     # Dejar Mise activado en los archivos de shell existentes, para que
     # futuras terminales tengan Node disponible sin repetir este bootstrap.
@@ -311,7 +297,7 @@ ensure_node_via_mise() {
     done
 
     echo ""
-    print_info "Presiona ENTER para continuar..."
+    log_info "Presiona ENTER para continuar..."
     read -r || true
 }
 
@@ -319,23 +305,23 @@ ensure_node_via_mise() {
 setup_nodejs_dependencies() {
     # Check if package.json exists
     if [[ ! -f "package.json" ]]; then
-        print_error "package.json no encontrado. Asegúrate de que esté en el directorio del proyecto."
+        log_error "package.json no encontrado. Asegúrate de que esté en el directorio del proyecto."
         exit 1
     fi
 
     # Check if setup.js exists
     if [[ ! -f "setup.js" ]]; then
-        print_error "setup.js no encontrado. Asegúrate de que esté en el directorio del proyecto."
+        log_error "setup.js no encontrado. Asegúrate de que esté en el directorio del proyecto."
         exit 1
     fi
 
     # Install Node.js dependencies
     if [[ ! -d "node_modules" ]]; then
-        print_info "Instalando dependencias de Node.js..."
+        log_info "Instalando dependencias de Node.js..."
         if npm install; then
-            print_status "Dependencias de Node.js instaladas correctamente."
+            log_success "Dependencias de Node.js instaladas correctamente."
         else
-            print_error "Error al instalar dependencias de Node.js."
+            log_error "Error al instalar dependencias de Node.js."
             exit 1
         fi
     fi
@@ -363,7 +349,7 @@ main_setup() {
     chmod +x scripts/*/*.sh 2>/dev/null || true
 
     # Launch Node.js interface
-    print_info "Iniciando interfaz interactiva..."
+    log_info "Iniciando interfaz interactiva..."
     echo ""
     sleep 2
     clear || true
