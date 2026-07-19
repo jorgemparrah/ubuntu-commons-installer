@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_insomnia.sh
 #
 # 'status' distingue snap no instalado (NOT_INSTALLED) de snapd ausente
@@ -7,6 +7,7 @@
 # verificable automáticamente en Docker (snapd no corre sin systemd); ver
 # la pauta de validación manual en docs/UBUNTU_COMPATIBILITY.md.
 
+set -Eeuo pipefail
 TOOL_NAME="Insomnia"
 SNAP_PACKAGE="insomnia"
 
@@ -55,7 +56,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;

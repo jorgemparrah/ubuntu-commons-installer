@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_gimp.sh
 #
 # 'status' distingue snap no instalado (NOT_INSTALLED) de snapd ausente
@@ -8,6 +8,7 @@
 # No verificable automáticamente en Docker (snapd no corre sin systemd);
 # ver la pauta de validación manual en docs/UBUNTU_COMPATIBILITY.md.
 
+set -Eeuo pipefail
 TOOL_NAME="GIMP"
 SNAP_PACKAGE="gimp"
 
@@ -63,7 +64,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;
