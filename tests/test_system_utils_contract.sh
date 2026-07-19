@@ -33,10 +33,13 @@ fail() {
 }
 
 # setup_mock_bin <estado_dpkg: installed|not_installed>
-# Arma un directorio con dpkg/apt/sudo falsos y lo antepone al PATH. dpkg -s
-# "sale con éxito" (simula ya instalado) o falla (simula no instalado),
-# según el estado pedido. apt/sudo solo registran su invocación en
-# UCI_MOCK_LOG, nunca hacen nada real.
+# Arma un directorio con dpkg/apt/sudo falsos y lo antepone al PATH. dpkg -l
+# imprime una línea "ii  <paquete> ..." (simula ya instalado) o nada/código
+# distinto de cero (simula no instalado), según el estado pedido — el mismo
+# patrón 'dpkg -l | grep ^ii' que usa el código real (ver
+# docs/UBUNTU_COMPATIBILITY.md: dpkg -s da falso positivo tras 'apt remove'
+# sin purgar). apt/sudo solo registran su invocación en UCI_MOCK_LOG, nunca
+# hacen nada real.
 UCI_MOCK_BIN=""
 UCI_MOCK_LOG=""
 
@@ -48,8 +51,9 @@ setup_mock_bin() {
     cat > "${UCI_MOCK_BIN}/dpkg" <<EOF
 #!/usr/bin/env bash
 echo "dpkg \$*" >> "${UCI_MOCK_LOG}"
-if [[ "\$1" == "-s" ]]; then
+if [[ "\$1" == "-l" ]]; then
     if [[ "${dpkg_state}" == "installed" ]]; then
+        echo "ii  \$2  1.0  amd64  paquete de prueba"
         exit 0
     else
         exit 1
