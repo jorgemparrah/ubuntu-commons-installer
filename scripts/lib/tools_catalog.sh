@@ -7,11 +7,19 @@
 # este archivo solo declara entradas, para poder probar el mecanismo y
 # los datos por separado.
 #
-# Registra ÚNICAMENTE 2 de los 5 instaladores ya migrados a
-# scripts/lib/installer_cli.sh + scripts/lib/apt.sh, como validación del
-# diseño — no es una migración completa del catálogo. Agregar el resto
-# (terminator, flameshot, vim) y los instaladores de fases futuras del
-# Hito 11 es trabajo posterior, no de esta fase.
+# Registra cmatrix/ranger (validación mínima del diseño, Hito 11 Fase 4) y,
+# desde la separación de los instaladores multi-paquete (ver ADR 0031,
+# docs/adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md),
+# los 14 instaladores individuales resultantes más sus 3 agrupadores
+# delgados. Un agrupador se distingue con el campo no-esquemático
+# `kind=group` y `members=<ids separados por coma>` (tools_registry.sh no
+# fuerza ningún esquema, ver ADR 0030) — sin esto, un agrupador se vería
+# igual que una herramienta real con `packages` de varios elementos, una
+# ficción que ADR 0031 decidió evitar.
+#
+# Agregar el resto de instaladores ya migrados (terminator, flameshot,
+# vim) y los de fases futuras del Hito 11 es trabajo posterior, no de esta
+# fase.
 #
 # Pensado para cargarse con `source`; no declara su propio modo estricto
 # (ver docs/adr/0022-modo-estricto-en-bibliotecas-sourceadas.md).
@@ -49,3 +57,111 @@ tools_registry_register "ranger" \
     "requires_gui=no" \
     "requires_manual_validation=no" \
     "migration_status=migrated"
+
+# Instaladores individuales de "Development Tools" (ver ADR 0031)
+tools_registry_register "wget" \
+    "name=wget" "category=system" "manager=apt" "packages=wget" \
+    "script=scripts/system/install_wget.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "curl" \
+    "name=curl" "category=system" "manager=apt" "packages=curl" \
+    "script=scripts/system/install_curl.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "git" \
+    "name=Git" "category=system" "manager=apt" "packages=git" \
+    "script=scripts/system/install_git.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "build_essential" \
+    "name=build-essential" "category=system" "manager=apt" "packages=build-essential" \
+    "script=scripts/system/install_build_essential.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "software_properties_common" \
+    "name=software-properties-common" "category=system" "manager=apt" "packages=software-properties-common" \
+    "script=scripts/system/install_software_properties_common.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "apt_transport_https" \
+    "name=apt-transport-https" "category=system" "manager=apt" "packages=apt-transport-https" \
+    "script=scripts/system/install_apt_transport_https.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "gnupg2" \
+    "name=GnuPG" "category=system" "manager=apt" "packages=gnupg2" \
+    "script=scripts/system/install_gnupg2.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "development_tools_group" \
+    "name=Development Tools (agrupador)" "category=system" "manager=apt" \
+    "script=scripts/system/install_development_tools.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated" \
+    "kind=group" "members=wget,curl,git,build_essential,software_properties_common,apt_transport_https,gnupg2"
+
+# Instaladores individuales de "Multimedia Tools" (ver ADR 0031)
+tools_registry_register "cheese" \
+    "name=Cheese" "category=multimedia" "manager=apt" "packages=cheese" \
+    "script=scripts/system/install_cheese.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "v4l_utils" \
+    "name=v4l-utils" "category=multimedia" "manager=apt" "packages=v4l-utils" \
+    "script=scripts/system/install_v4l_utils.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "ubuntu_restricted_extras" \
+    "name=ubuntu-restricted-extras" "category=multimedia" "manager=apt" "packages=ubuntu-restricted-extras" \
+    "script=scripts/system/install_ubuntu_restricted_extras.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "vlc" \
+    "name=VLC" "category=multimedia" "manager=apt" "packages=vlc" \
+    "script=scripts/system/install_vlc.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "multimedia_group" \
+    "name=Multimedia Tools (agrupador)" "category=multimedia" "manager=apt" \
+    "script=scripts/system/install_multimedia.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated" \
+    "kind=group" "members=cheese,v4l_utils,ubuntu_restricted_extras,vlc"
+
+# Instaladores individuales de "System Utilities" (ver ADR 0031)
+tools_registry_register "meld" \
+    "name=Meld" "category=system" "manager=apt" "packages=meld" \
+    "script=scripts/system/install_meld.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "baobab" \
+    "name=Baobab" "category=system" "manager=apt" "packages=baobab" \
+    "script=scripts/system/install_baobab.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "gparted" \
+    "name=GParted" "category=system" "manager=apt" "packages=gparted" \
+    "script=scripts/system/install_gparted.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "system_utils_group" \
+    "name=System Utilities (agrupador)" "category=system" "manager=apt" \
+    "script=scripts/system/install_system_utils.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated" \
+    "kind=group" "members=meld,baobab,gparted"

@@ -2,9 +2,12 @@
 # tests/test_tools_registry.sh
 #
 # Pruebas no destructivas de scripts/lib/tools_registry.sh (el mecanismo)
-# y scripts/lib/tools_catalog.sh (los datos registrados, Hito 11 Fase 4
-# — ver docs/adr/0030-registro-central-de-metadata-de-instaladores.md).
-# No instala nada real ni modifica ningún archivo.
+# y scripts/lib/tools_catalog.sh (los datos registrados, ver
+# docs/adr/0030-registro-central-de-metadata-de-instaladores.md y
+# docs/adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md).
+# La validación cruzada recorre TODAS las entradas registradas (incluidos
+# los 14 instaladores individuales y 3 agrupadores de ADR 0031), no una
+# lista fija. No instala nada real ni modifica ningún archivo.
 #
 # Uso:
 #   bash tests/test_tools_registry.sh
@@ -87,8 +90,13 @@ for id in cmatrix ranger; do
 done
 
 echo ""
-echo "== Validación cruzada: cada entrada del catálogo coincide con el archivo real =="
-for id in cmatrix ranger; do
+echo "== Validación cruzada: TODA entrada del catálogo coincide con el archivo real =="
+# Recorre tools_registry_ids() en vez de una lista fija: cualquier entrada
+# que se agregue a tools_catalog.sh a futuro queda validada automáticamente
+# sin tocar este test (ver ADR 0030/0031).
+while IFS= read -r id; do
+    [[ -z "${id}" || "${id}" == "demo-tool" ]] && continue
+
     script_field="$(tools_registry_field "${id}" "script")"
     script_path="${UCI_REPO_ROOT}/${script_field}"
 
@@ -98,8 +106,9 @@ for id in cmatrix ranger; do
         fail "'${id}': el script declarado ('${script_field}') no existe"
     fi
 
+    kind_field="$(tools_registry_field "${id}" "kind")"
     manager_field="$(tools_registry_field "${id}" "manager")"
-    if [[ "${manager_field}" == "apt" ]]; then
+    if [[ "${manager_field}" == "apt" && "${kind_field}" != "group" ]]; then
         if grep -q "lib/apt\.sh" "${script_path}" 2>/dev/null; then
             pass "'${id}': declara manager=apt y el script sourcea scripts/lib/apt.sh"
         else
@@ -115,7 +124,25 @@ for id in cmatrix ranger; do
             fail "'${id}': declara migration_status=migrated pero el script no usa installer_run_cli"
         fi
     fi
-done
+
+    if [[ "${kind_field}" == "group" ]]; then
+        members_field="$(tools_registry_field "${id}" "members")"
+        if [[ -z "${members_field}" ]]; then
+            fail "'${id}': es kind=group pero no declara 'members'"
+        else
+            IFS=',' read -ra members_arr <<< "${members_field}"
+            all_members_exist=1
+            for member_id in "${members_arr[@]}"; do
+                tools_registry_has "${member_id}" || all_members_exist=0
+            done
+            if [[ "${all_members_exist}" -eq 1 ]]; then
+                pass "'${id}': todos sus 'members' (${members_field}) están registrados en el catálogo"
+            else
+                fail "'${id}': al menos un id en 'members' (${members_field}) no está registrado"
+            fi
+        fi
+    fi
+done < <(tools_registry_ids)
 
 print_test_summary
 exit_with_test_summary
