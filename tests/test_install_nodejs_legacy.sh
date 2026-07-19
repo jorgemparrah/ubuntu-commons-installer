@@ -22,20 +22,8 @@ readonly UCI_REPO_ROOT
 INSTALL_NODEJS_SH="${UCI_REPO_ROOT}/scripts/development/install_nodejs.sh"
 readonly INSTALL_NODEJS_SH
 
-UCI_TESTS_RUN=0
-UCI_TESTS_FAILED=0
-
-pass() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    echo "  OK  - $1"
-}
-
-fail() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    UCI_TESTS_FAILED=$((UCI_TESTS_FAILED + 1))
-    echo "FALLO - $1"
-}
-
+# shellcheck source=lib/assertions.sh
+source "${UCI_TEST_DIR}/lib/assertions.sh"
 # fake_home_hash <dir>
 # Hash del contenido completo de un directorio (rutas + contenido), para
 # detectar cualquier modificación, no solo la cantidad de archivos.
@@ -159,13 +147,6 @@ else
 fi
 rm -rf "${tmp_home_status}"
 
-echo ""
-echo "== Resumen =="
-echo "Pruebas ejecutadas: ${UCI_TESTS_RUN}"
-echo "Fallos: ${UCI_TESTS_FAILED}"
+print_test_summary
 
-if [[ "${UCI_TESTS_FAILED}" -gt 0 ]]; then
-    exit 1
-fi
-
-exit 0
+exit_with_test_summary

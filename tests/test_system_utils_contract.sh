@@ -18,20 +18,8 @@ readonly UCI_TEST_DIR
 UCI_REPO_ROOT="$(cd "${UCI_TEST_DIR}/.." && pwd)"
 readonly UCI_REPO_ROOT
 
-UCI_TESTS_RUN=0
-UCI_TESTS_FAILED=0
-
-pass() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    echo "  OK  - $1"
-}
-
-fail() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    UCI_TESTS_FAILED=$((UCI_TESTS_FAILED + 1))
-    echo "FALLO - $1"
-}
-
+# shellcheck source=lib/assertions.sh
+source "${UCI_TEST_DIR}/lib/assertions.sh"
 # setup_mock_bin <estado_dpkg: installed|not_installed>
 # Arma un directorio con dpkg/apt/sudo falsos y lo antepone al PATH. dpkg -l
 # imprime una línea "ii  <paquete> ..." (simula ya instalado) o nada/código
@@ -198,13 +186,6 @@ else
     fail "install_multimedia.sh no fija DEBIAN_FRONTEND=noninteractive"
 fi
 
-echo ""
-echo "== Resumen =="
-echo "Pruebas ejecutadas: ${UCI_TESTS_RUN}"
-echo "Fallos: ${UCI_TESTS_FAILED}"
+print_test_summary
 
-if [[ "${UCI_TESTS_FAILED}" -gt 0 ]]; then
-    exit 1
-fi
-
-exit 0
+exit_with_test_summary

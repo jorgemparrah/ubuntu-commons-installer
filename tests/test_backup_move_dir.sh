@@ -19,20 +19,8 @@ source "${UCI_REPO_ROOT}/scripts/lib/logging.sh"
 # shellcheck source=../scripts/lib/backup.sh
 source "${UCI_REPO_ROOT}/scripts/lib/backup.sh"
 
-UCI_TESTS_RUN=0
-UCI_TESTS_FAILED=0
-
-pass() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    echo "  OK  - $1"
-}
-
-fail() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    UCI_TESTS_FAILED=$((UCI_TESTS_FAILED + 1))
-    echo "FALLO - $1"
-}
-
+# shellcheck source=lib/assertions.sh
+source "${UCI_TEST_DIR}/lib/assertions.sh"
 check() {
     local description="$1" condition="$2"
     if eval "${condition}"; then
@@ -179,13 +167,6 @@ check "'backup_move_dir' sale con código distinto de cero si el destino ya exis
 check "el origen NO se elimina cuando se rechaza la copia" '[[ -e "${HOME_REFUSE}/origen" ]]'
 rm -f /tmp/refuse_output.log
 
-echo ""
-echo "== Resumen =="
-echo "Pruebas ejecutadas: ${UCI_TESTS_RUN}"
-echo "Fallos: ${UCI_TESTS_FAILED}"
+print_test_summary
 
-if [[ "${UCI_TESTS_FAILED}" -gt 0 ]]; then
-    exit 1
-fi
-
-exit 0
+exit_with_test_summary

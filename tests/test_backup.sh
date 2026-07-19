@@ -28,20 +28,8 @@ fixture_hash() {
 FIXTURE_HASH_BEFORE="$(fixture_hash)"
 readonly FIXTURE_HASH_BEFORE
 
-UCI_TESTS_RUN=0
-UCI_TESTS_FAILED=0
-
-pass() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    echo "  OK  - $1"
-}
-
-fail() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    UCI_TESTS_FAILED=$((UCI_TESTS_FAILED + 1))
-    echo "FALLO - $1"
-}
-
+# shellcheck source=lib/assertions.sh
+source "${UCI_TEST_DIR}/lib/assertions.sh"
 assert_success() {
     local description="$1" output="$2" exit_code="$3" expected_substring="${4:-}"
 
@@ -181,13 +169,6 @@ else
     fail "tests/fixtures/sample_home fue modificado por las pruebas"
 fi
 
-echo ""
-echo "== Resumen =="
-echo "Pruebas ejecutadas: ${UCI_TESTS_RUN}"
-echo "Fallos: ${UCI_TESTS_FAILED}"
+print_test_summary
 
-if [[ "${UCI_TESTS_FAILED}" -gt 0 ]]; then
-    exit 1
-fi
-
-exit 0
+exit_with_test_summary
