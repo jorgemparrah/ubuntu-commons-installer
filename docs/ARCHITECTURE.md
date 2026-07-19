@@ -221,6 +221,8 @@ Ejemplo:
 
 Los backups deben ser inmutables.
 
+**Retención:** no existe todavía un mecanismo automático de limpieza de sesiones de backup antiguas — cada corrida de `setup.sh backup` o de una migración crea una sesión nueva que nunca se borra sola (correcto según la política de seguridad: "nunca eliminar backups silenciosamente"). Hasta que se implemente un comando de limpieza (`setup.sh backup --prune` o similar, sin fecha comprometida en `docs/ROADMAP.md`), la limpieza de sesiones antiguas es responsabilidad manual de quien administra la workstation.
+
 ---
 
 # 9. Capa de Migración

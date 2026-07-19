@@ -161,6 +161,10 @@ Para cada checkpoint, el script reinicia el entorno (NVM real recién instalado,
 
 **Modelo de recuperación: reanudación idempotente, no rollback automático.** Cada intento de `apply` fallido deja su propia sesión de backup con lo que llegó a respaldar antes de fallar — nunca se sobreescribe ni se borra. Un reintento posterior repite las operaciones que ya son idempotentes por diseño (instalar Mise/Node vía Mise se omite si ya están hechos; `backup_move_dir` no falla si el origen ya no existe). Para el caso en que `apply` ya movió `.nvm` con éxito pero la validación final falla (checkpoint `before_done_marker`), la migración usa un sentinel propio (`.001_nvm_to_mise.apply-completado`, distinto de la marca oficial `.done`) para que `migrate` sepa que todavía falta completar la validación, en vez de omitir la migración para siempre. Quien prefiera revertir en vez de reintentar sigue teniendo `rollback-notes` disponible (`scripts/migrations/001_nvm_to_mise.sh rollback-notes`).
 
+## Convención: `eval` en los tests funcionales de `tests/docker/`
+
+Varios tests funcionales (`test_docker_apt_repo.sh`, `test_vscode_apt_repo.sh`, `test_cursor_apt_repo.sh`, y otros) usan un helper `check "descripción" 'condición'` que construye la condición vía `eval`. Es seguro **solo** porque la condición siempre es un literal hardcodeado en el propio archivo de test, nunca una variable con datos externos o interpolados. Si al escribir un test nuevo la condición necesita incluir una variable, no la interpoles dentro de la cadena que se le pasa a `eval` — evalúa la condición directamente en un `if` normal en su lugar.
+
 ## Qué no reemplaza esto
 
 Los contenedores Docker no tienen systemd por defecto, así que servicios como el demonio de Docker-dentro-de-Docker, algunos paquetes que dependen de systemd, o el comportamiento real de GNOME/atajos de teclado (Flameshot, `xdg-desktop-portal`, etc.) no se pueden validar ahí. Para eso sigue haciendo falta una VM o máquina real con escritorio, como se documenta en `docs/ROADMAP.md` y `docs/adr/0003-migracion-nvm-sin-borrado-directo.md`.
