@@ -85,6 +85,9 @@ run_suite "tests/test_snap_installers_contract.sh" bash tests/test_snap_installe
 run_suite "tests/test_installer_cli.sh" bash tests/test_installer_cli.sh
 run_suite "tests/test_apt_helpers.sh" bash tests/test_apt_helpers.sh
 run_suite "tests/test_cmatrix_installer.sh" bash tests/test_cmatrix_installer.sh
+run_suite "tests/test_ranger_installer.sh" bash tests/test_ranger_installer.sh
+run_suite "tests/test_terminator_installer.sh" bash tests/test_terminator_installer.sh
+run_suite "tests/test_flameshot_installer.sh" bash tests/test_flameshot_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then
