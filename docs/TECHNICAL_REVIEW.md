@@ -225,9 +225,11 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** checklist de PR para tests nuevos, no requiere trabajo inmediato.
 
-#### M6. Duplicación de dispatcher y de funciones de verificación multi-paquete entre instaladores  🚧 **En progreso (Hito 11, Fase 1 — 2026-07-19)**
+#### M6. Duplicación de dispatcher y de funciones de verificación multi-paquete entre instaladores  🚧 **En progreso (Hito 11, Fase 2 — 2026-07-19)**
 
-> Se creó `scripts/lib/installer_cli.sh` (dispatcher compartido de 6 verbos, `installer_run_cli`) y `scripts/lib/apt.sh` (`apt_package_installed`/`apt_all_packages_installed`/`apt_install_packages`/`apt_purge_packages`), y se migró un único instalador piloto (`install_cmatrix.sh`) para validar la infraestructura de punta a punta. Los otros ~29 instaladores (incluidos `install_development_tools.sh`, `install_multimedia.sh` e `install_system_utils.sh`, que duplican `check_package_installed()`/`check_all_packages_installed()`) siguen sin migrar a propósito — se hará en grupos pequeños en las fases siguientes del Hito 11, no de una sola vez (ver `docs/ROADMAP.md`, Hito 11).
+> Fase 1: se creó `scripts/lib/installer_cli.sh` (dispatcher compartido de 6 verbos, `installer_run_cli`) y `scripts/lib/apt.sh` (`apt_package_installed`/`apt_all_packages_installed`/`apt_install_packages`/`apt_purge_packages`), y se migró un único instalador piloto (`install_cmatrix.sh`) para validar la infraestructura de punta a punta.
+>
+> Fase 2: migrados `install_ranger.sh`, `install_terminator.sh` e `install_flameshot.sh` a la misma infraestructura, sin extenderla (validó que alcanza para instaladores apt-simples adicionales sin modificaciones). Los otros ~26 instaladores (incluidos `install_development_tools.sh`, `install_multimedia.sh` e `install_system_utils.sh`, que duplican `check_package_installed()`/`check_all_packages_installed()`) siguen sin migrar a propósito — se hará en grupos pequeños en las fases siguientes del Hito 11, no de una sola vez (ver `docs/ROADMAP.md`, Hito 11).
 
 **Dónde:** los ~30 instaladores repiten un dispatcher `main()`/`case` casi idéntico (~15-20 líneas cada uno); `install_development_tools.sh`, `install_multimedia.sh` e `install_system_utils.sh` además duplican literalmente `check_package_installed()`/`check_all_packages_installed()`.
 

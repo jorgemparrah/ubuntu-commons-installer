@@ -108,7 +108,9 @@ El proyecto asume que `/home` puede venir de una instalación anterior (runtimes
 
 ## Instaladores por categoría
 
-Cada instalador es un script Bash independiente bajo `scripts/CATEGORY/`, con una interfaz común (`status`, `install`, `uninstall`, `reinstall`, y de forma incremental `update`/`repair` — ver [ADR 0012](docs/adr/0012-modelo-de-estado-enriquecido.md)). Ver el detalle y la clasificación de cada herramienta en [`docs/TOOLS.md`](docs/TOOLS.md).
+Cada instalador es un script Bash independiente bajo `scripts/CATEGORY/`. El contrato final, ya aprobado, es de **6 verbos**: `status`, `install`, `uninstall`, `reinstall`, `update`, `repair` (ver [ADR 0004](docs/adr/0004-idempotencia-instalado-igual-skip.md), [ADR 0012](docs/adr/0012-modelo-de-estado-enriquecido.md) y [ADR 0029](docs/adr/0029-contrato-completo-de-instalador-referencia.md)). `scripts/editors/install_vim.sh` es el instalador de referencia que ya lo implementa completo.
+
+La migración de los instaladores heredados hacia este contrato es **incremental** (Hito 11, ver `docs/ROADMAP.md`): se hace en fases pequeñas, sobre la infraestructura compartida `scripts/lib/installer_cli.sh` (dispatcher) y `scripts/lib/apt.sh` (helpers APT), no de una sola vez. Migrados hasta ahora: `install_vim.sh` (siempre fue la referencia), `install_cmatrix.sh` (Fase 1, piloto), `install_ranger.sh`, `install_terminator.sh` e `install_flameshot.sh` (Fase 2). El resto todavía implementa solo `status`/`install`/`uninstall`/`reinstall` — válido de forma transitoria mientras espera su turno. Ver el detalle y la clasificación de cada herramienta en [`docs/TOOLS.md`](docs/TOOLS.md).
 
 #### **📝 `scripts/editors/`**
 - `install_vscode.sh` — Visual Studio Code
