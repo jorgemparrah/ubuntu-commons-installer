@@ -1,11 +1,18 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_flameshot.sh
 
+set -Eeuo pipefail
 TOOL_NAME="Flameshot"
 
 # Function to check status
+#
+# El fallback a Snap es solo por si alguien instaló flameshot manualmente
+# por ese medio (este instalador nunca lo hace vía install_tool()); se
+# guarda con 'command -v snap' antes de invocarlo para no imprimir "snap:
+# command not found" cuando snapd no está presente (ver
+# docs/TECHNICAL_REVIEW.md, hallazgo M7).
 check_status() {
-    if command -v flameshot &> /dev/null || snap list | grep -q "^flameshot "; then
+    if command -v flameshot &> /dev/null || { command -v snap &> /dev/null && snap list 2>/dev/null | grep -q "^flameshot "; }; then
         echo "INSTALLED"
         return 0
     else
@@ -45,7 +52,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;
