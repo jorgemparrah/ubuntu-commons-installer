@@ -100,6 +100,16 @@ Ver `docs/adr/0029-contrato-completo-de-instalador-referencia.md` y `docs/ARCHIT
 
 Cubierto hoy por: `tests/test_installer_cli.sh` (I11), `tests/test_apt_helpers.sh` (I12), `tests/test_cmatrix_installer.sh` (I13), incluidos en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh`) y, cada uno, en su propio job de CI (`installer-cli`, `apt-helpers`, `cmatrix-installer`).
 
+### Fase 2 — instaladores apt-simples migrados (ranger, terminator, flameshot)
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I14 | `install_ranger.sh`: ciclo de vida completo de los 6 verbos | Mocks de `dpkg`/`apt`/`apt-get`/`sudo` | Prueba simulada (mocks) | Comando desconocido falla; estado inicial NOT_INSTALLED; `install` instala e idempotente en segunda corrida; estado INSTALLED; `update` con y sin candidato disponible; `repair` sobre estado BROKEN (dpkg dice instalado, binario ausente) y rechazo explícito de `repair` sobre NOT_INSTALLED; `reinstall` usa `apt-get install --reinstall` (nunca pasa por `purge`); `uninstall` purga e idempotente en segunda corrida; propagación de un fallo real de `apt-get`; estado residual `rc` de dpkg nunca se confunde con instalado | ✅ pasa |
+| I15 | `install_terminator.sh` — mismos escenarios que I14 | Igual que I14 | Prueba simulada (mocks) | Igual que I14 | ✅ pasa |
+| I16 | `install_flameshot.sh` — mismos escenarios que I14, más: `install` documenta explícitamente que el atajo `PrintScreen` (ADR 0019) todavía no se configura | Igual que I14 | Prueba simulada (mocks) | Igual que I14, y la salida de `install` menciona "PrintScreen" | ✅ pasa |
+
+Cubierto hoy por: `tests/test_ranger_installer.sh` (I14), `tests/test_terminator_installer.sh` (I15), `tests/test_flameshot_installer.sh` (I16), incluidos en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh`) y, cada uno, en su propio job de CI (`ranger-installer`, `terminator-installer`, `flameshot-installer`).
+
 ### Validación manual pendiente: instaladores Snap en Ubuntu 26.04 Desktop
 
 Ninguno de los 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify, Zoom) se prueba funcionalmente en CI: `snapd` no corre sin systemd dentro de los contenedores Docker usados por este proyecto. `tests/test_snap_installers_contract.sh` (I10) solo prueba la lógica de `status` con mocks. Antes de declarar cualquiera de estos 8 "probado funcionalmente" en Ubuntu 26.04, corresponde ejecutar esta pauta en un sistema Ubuntu 26.04 Desktop real (VM o máquina física, con systemd y snapd reales):

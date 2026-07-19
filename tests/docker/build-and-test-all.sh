@@ -196,7 +196,7 @@ done
 
 echo ""
 if [[ "${FAILED}" -eq 0 ]]; then
-    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, I01-I05, I07-I10, I11-I13, BOOT01, M01-M08, R01-R06, K01, Y01, Z01, L01, C01, V01, D01."
+    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, I01-I05, I07-I10, I11-I16, BOOT01, M01-M08, R01-R06, K01, Y01, Z01, L01, C01, V01, D01."
 else
     echo "RESULTADO: HUBO FALLOS. Revisa las líneas 'FALLÓ' arriba."
 fi
