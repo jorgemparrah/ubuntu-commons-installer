@@ -1,93 +1,69 @@
 #!/usr/bin/env bash
 # install_multimedia.sh
+#
+# Agrupador delgado (ver ADR 0031,
+# docs/adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md):
+# instala/desinstala/consulta el estado de los 4 instaladores individuales
+# de "Multimedia Tools" en secuencia. Existe para no romper setup.js, que
+# sigue ofreciendo "Multimedia Tools" como una sola opción de menú — cada
+# paquete ya tiene su propio instalador migrado al contrato completo
+# (install_cheese.sh, install_v4l_utils.sh,
+# install_ubuntu_restricted_extras.sh, install_vlc.sh; este último es el
+# único de los 4 que pide DEBIAN_FRONTEND=noninteractive, por su EULA de
+# fuentes de Microsoft).
+#
+# No implementa update_tool/repair_tool a propósito: el dispatcher
+# (scripts/lib/installer_cli.sh) rechaza esos verbos con código 3 —
+# "actualizar/reparar el grupo" no tiene una semántica clara si solo un
+# paquete del grupo lo necesita; usa el instalador individual del paquete
+# afectado.
 
 set -Eeuo pipefail
+
+UCI_MULTIMEDIA_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../lib/installer_cli.sh
+source "${UCI_MULTIMEDIA_SCRIPT_DIR}/../lib/installer_cli.sh"
+
 TOOL_NAME="Multimedia Tools (cheese, v4l-utils, ubuntu-restricted-extras, vlc)"
-MULTIMEDIA_PACKAGES=("cheese" "v4l-utils" "ubuntu-restricted-extras" "vlc")
 
-# Function to check if a package is installed
-#
-# dpkg -s devuelve éxito incluso para un paquete en estado remanente
-# "config-files" tras un 'apt remove' sin purgar — falso positivo real
-# encontrado en Cursor/VS Code/Chrome (ver docs/UBUNTU_COMPATIBILITY.md).
-# 'dpkg -l | grep ^ii' solo es verdad para un paquete realmente instalado.
-check_package_installed() {
-    local package="$1"
-    dpkg -l "$package" 2>/dev/null | grep -q '^ii'
-}
-
-# Function to check if all packages are installed
-check_all_packages_installed() {
-    local package
-    for package in "${MULTIMEDIA_PACKAGES[@]}"; do
-        if ! check_package_installed "$package"; then
-            return 1
-        fi
-    done
-    return 0
-}
+UCI_MULTIMEDIA_MEMBERS=(
+    "${UCI_MULTIMEDIA_SCRIPT_DIR}/install_cheese.sh"
+    "${UCI_MULTIMEDIA_SCRIPT_DIR}/install_v4l_utils.sh"
+    "${UCI_MULTIMEDIA_SCRIPT_DIR}/install_ubuntu_restricted_extras.sh"
+    "${UCI_MULTIMEDIA_SCRIPT_DIR}/install_vlc.sh"
+)
 
 # Function to check status
 check_status() {
-    if check_all_packages_installed; then
-        echo "INSTALLED"
-        return 0
-    else
-        echo "NOT_INSTALLED"
-        return 1
-    fi
+    local member
+    for member in "${UCI_MULTIMEDIA_MEMBERS[@]}"; do
+        if ! bash "${member}" status > /dev/null 2>&1; then
+            echo "NOT_INSTALLED"
+            return 1
+        fi
+    done
+    echo "INSTALLED"
+    return 0
 }
 
 # Function to install
 install_tool() {
-    echo "Instalando $TOOL_NAME..."
-
-    # ubuntu-restricted-extras pide aceptar el EULA de fuentes de Microsoft
-    # vía debconf; sin DEBIAN_FRONTEND=noninteractive, apt se queda esperando
-    # una respuesta interactiva que nunca llega en un flujo automatizado.
-    sudo apt update
-    sudo DEBIAN_FRONTEND=noninteractive apt install -y "${MULTIMEDIA_PACKAGES[@]}"
-
-    echo "$TOOL_NAME instalado correctamente."
+    local member
+    echo "Instalando ${TOOL_NAME}..."
+    for member in "${UCI_MULTIMEDIA_MEMBERS[@]}"; do
+        bash "${member}" install
+    done
+    echo "${TOOL_NAME} instalado correctamente."
 }
 
 # Function to uninstall
 uninstall_tool() {
-    echo "Desinstalando $TOOL_NAME..."
-
-    sudo apt purge -y "${MULTIMEDIA_PACKAGES[@]}"
-    sudo apt autoremove -y
-
-    echo "$TOOL_NAME desinstalado correctamente."
+    local member
+    echo "Desinstalando ${TOOL_NAME}..."
+    for member in "${UCI_MULTIMEDIA_MEMBERS[@]}"; do
+        bash "${member}" uninstall
+    done
+    echo "${TOOL_NAME} desinstalado correctamente."
 }
 
-# Function to reinstall
-reinstall_tool() {
-    echo "Reinstalando $TOOL_NAME..."
-    uninstall_tool
-    install_tool
-}
-
-# Main function
-main() {
-    case "${1:-}" in
-        "status")
-            check_status
-            ;;
-        "install")
-            install_tool
-            ;;
-        "uninstall")
-            uninstall_tool
-            ;;
-        "reinstall")
-            reinstall_tool
-            ;;
-        *)
-            echo "Uso: $0 {status|install|uninstall|reinstall}"
-            exit 1
-            ;;
-    esac
-}
-
-main "$@"
+installer_run_cli "$@"
