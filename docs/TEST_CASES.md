@@ -76,10 +76,10 @@ Ver `docs/UBUNTU_COMPATIBILITY.md` para la matriz completa de compatibilidad Ubu
 
 | ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
 |---|---|---|---|---|---|
-| I01 | `install_system_utils.sh` ya no se autoejecuta al invocarse sin argumentos | Ninguna (mocks de apt/sudo/dpkg) | Prueba simulada (mocks) | Código != 0, ningún `apt install` interceptado | ✅ pasa |
-| I02 | `install_system_utils.sh` contrato `status\|install\|uninstall\|reinstall` | Mocks con dpkg "instalado"/"no instalado" | Prueba simulada (mocks) | `status` reporta INSTALLED/NOT_INSTALLED correctamente, de solo lectura; `install` invoca `apt install`; subcomando inválido falla | ✅ pasa |
-| I03 | `install_development_tools.sh` — mismo caso que I01/I02 | Igual que I01/I02 | Prueba simulada (mocks) | Igual que I01/I02 | ✅ pasa |
-| I04 | `install_multimedia.sh` — mismo caso que I01/I02, más `DEBIAN_FRONTEND=noninteractive` para el EULA de `ubuntu-restricted-extras` | Igual que I01/I02 | Prueba simulada (mocks) | Igual que I01/I02, y el código fuente fija `DEBIAN_FRONTEND=noninteractive` antes de instalar | ✅ pasa |
+| I01 | `install_system_utils.sh` ya no se autoejecuta al invocarse sin argumentos | Ninguna (mocks de apt-get/apt/sudo/dpkg) | Prueba simulada (mocks) | Código != 0, ningún `apt-get install` interceptado | ✅ pasa |
+| I02 | `install_system_utils.sh` (agrupador delgado, ver [ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md)): delega `status\|install\|uninstall` en sus 3 instaladores individuales (`install_meld.sh`, `install_baobab.sh`, `install_gparted.sh`); `update`/`repair` se rechazan a propósito | Mocks con dpkg "instalado"/"no instalado" para cualquier paquete consultado | Prueba simulada (mocks) | `status` reporta INSTALLED solo si los 3 miembros lo están, NOT_INSTALLED si falta cualquiera, de solo lectura; `install`/`uninstall` invocan `apt-get install`/`apt-get purge` (delegado en los miembros); subcomando inválido falla; `update`/`repair` a nivel de grupo salen con código ≠0 | ✅ pasa |
+| I03 | `install_development_tools.sh` (agrupador delgado de 7 instaladores individuales: `wget`, `curl`, `git`, `build-essential`, `software-properties-common`, `apt-transport-https`, `gnupg2`) — mismo caso que I01/I02 | Igual que I01/I02 | Prueba simulada (mocks) | Igual que I01/I02 | ✅ pasa |
+| I04 | `install_multimedia.sh` (agrupador delgado de 4 instaladores individuales: `cheese`, `v4l-utils`, `ubuntu-restricted-extras`, `vlc`) — mismo caso que I01/I02, más `DEBIAN_FRONTEND=noninteractive` para el EULA de `ubuntu-restricted-extras` (ahora fijado en `install_ubuntu_restricted_extras.sh`, no en el agrupador) | Igual que I01/I02 | Prueba simulada (mocks) | Igual que I01/I02, y `install_ubuntu_restricted_extras.sh` fija `DEBIAN_FRONTEND=noninteractive` antes de instalar | ✅ pasa |
 | I05 | `install_system_update.sh`/`install_final_update.sh`: `status` deja de ser un stub fijo en `INSTALLED` | Mocks de `apt list --upgradable`/`apt-get --simulate autoremove` con 0 o N pendientes | Prueba simulada (mocks) | Sin pendientes: INSTALLED, código 0, `status` no ejecuta upgrade/autoremove real; con pendientes (o paquetes huérfanos en Final Update): NOT_INSTALLED, código ≠0; `install` sí invoca `apt upgrade` real; subcomando inválido falla | ✅ pasa |
 | I07 | `install_mongodb_compass.sh` falla con mensaje claro y limpia el `.deb` parcial si la descarga o la instalación fallan | Mocks de `wget`/`apt` devolviendo error | Prueba simulada (mocks) | Código ≠0 si `wget` falla, mensaje claro, sin `.deb` residual; código ≠0 si `apt install` del `.deb` falla, igual sin `.deb` residual | ✅ pasa |
 | I08 | `install_kernel.sh`: `resolve_hwe_fallback_package_name()` usa la versión numérica de Ubuntu, no el codename | Ninguna (función pura, sin I/O; el archivo se sourcea con guarda para no disparar `main()`) | Prueba unitaria | `resolve_hwe_fallback_package_name "24.04"` → `linux-generic-hwe-24.04`; el código ya no usa `lsb_release -cs`, usa `lsb_release -rs`; ninguna referencia a `update-grub`/`grub-mkconfig`/`reboot`/`shutdown` | ✅ pasa |
@@ -115,6 +115,24 @@ Cubierto hoy por: `tests/test_ranger_installer.sh` (I14), `tests/test_terminator
 | ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
 |---|---|---|---|---|---|
 | I17 | `scripts/lib/tools_registry.sh` (mecanismo) y `scripts/lib/tools_catalog.sh` (datos de `cmatrix`/`ranger`, ver ADR 0030) | Entradas de prueba registradas en memoria, más el catálogo real sourceado | Prueba simulada (fixtures) + validación cruzada contra archivos reales | `tools_registry_has`/`tools_registry_field`/`tools_registry_ids` responden correctamente, incluida ausencia de campo/id; volver a registrar un id no lo duplica y sobrescribe sus campos; `cmatrix` y `ranger` están en el catálogo; el `script` declarado de cada uno existe en el repositorio; si `manager=apt`, el script sourcea `scripts/lib/apt.sh`; si `migration_status=migrated`, el script usa `installer_run_cli` | ✅ pasa |
+
+Cubierto hoy por: `tests/test_tools_registry.sh` (I17), incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`tools-registry`).
+
+### Separación de instaladores multi-paquete (ver ADR 0031)
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I18 | Los 14 instaladores individuales creados al separar `install_development_tools.sh`/`install_multimedia.sh`/`install_system_utils.sh` (`wget`, `curl`, `git`, `build-essential`, `software-properties-common`, `apt-transport-https`, `gnupg2`, `cheese`, `v4l-utils`, `ubuntu-restricted-extras`, `vlc`, `meld`, `baobab`, `gparted`): ciclo de vida completo de los 6 verbos, mismo patrón que `install_ranger.sh` | Mocks de `dpkg`/`apt`/`apt-get`/`sudo` | Prueba simulada (mocks) | Igual que I14, para cada uno de los 14; para los 3 paquetes meta sin binario propio (`build-essential`, `apt-transport-https`, `ubuntu-restricted-extras`) se omite el escenario de detección `BROKEN` vía `command -v` (limitación honesta documentada en ADR 0031) | ✅ pasa |
+
+Cubierto hoy por: `tests/test_split_installers_contract.sh` (I18), incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`split-installers-contract`).
+
+### Primer consumidor real del registro central (ver ADR 0030, "trabajo futuro")
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I19 | `docs/TOOLS.md` no diverge de `scripts/lib/tools_catalog.sh`: cada instalador registrado en el catálogo (herramienta o agrupador) tiene su script mencionado en el inventario de documentación | El catálogo real sourceado, `docs/TOOLS.md` real leído del repositorio | Prueba simulada (validación cruzada, sin mocks) | Para cada id registrado, el nombre base de su `script` aparece en `docs/TOOLS.md`; si algún instalador nuevo se registra en el catálogo sin actualizar `docs/TOOLS.md`, esta prueba falla | ✅ pasa |
+
+Cubierto hoy por: `tests/test_tools_catalog_docs_consistency.sh` (I19), incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`tools-catalog-docs-consistency`).
 
 Cubierto hoy por: `tests/test_tools_registry.sh` (I17), incluido en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh`) y en su propio job de CI (`tools-registry`). Es infraestructura puramente aditiva (no cambia comportamiento de ningún instalador existente, ver ADR 0030); no migra más instaladores por sí sola.
 
