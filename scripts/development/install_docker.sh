@@ -42,9 +42,12 @@ install_tool() {
     # Install Docker
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     
-    # Add user to docker group
+    # Add user to docker group. Se usa 'id -un' en vez de "${USER}": esa
+    # variable de entorno no está garantizada (encontrado en CI: ausente en
+    # el contenedor Docker de prueba), y bajo 'set -u' referenciarla sin
+    # estar definida aborta el script ("USER: unbound variable").
     sudo groupadd docker 2>/dev/null || true
-    sudo usermod -aG docker "${USER}"
+    sudo usermod -aG docker "$(id -un)"
     
     echo "Docker instalado correctamente. Es posible que necesites cerrar sesión y volver a iniciar para que los cambios de grupo surtan efecto."
 }
@@ -68,7 +71,7 @@ uninstall_tool() {
     # nombre de grupo, no una coincidencia de substring (evita un falso
     # positivo con un grupo hipotético "docker-foo").
     if groups | grep -qw docker; then
-        sudo gpasswd -d "${USER}" docker
+        sudo gpasswd -d "$(id -un)" docker
     fi
     
     echo "Docker desinstalado correctamente."
