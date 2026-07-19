@@ -14,7 +14,7 @@ Ver `docs/TEST_CASES.md` para la lista completa de casos de prueba funcionales (
 
 ## CI (GitHub Actions)
 
-`.github/workflows/ci.yml` (Hito 10, ver [ADR 0026](adr/0026-adelantar-hito-10-ci-antes-que-hito-9.md)) corre automáticamente en cada push a `main` y en cada pull request: un job `lint` (Nivel 1, directo en el runner) y un job `docker-matrix` (Nivel 2, 8 combinaciones en paralelo — 4 variantes de imagen × Ubuntu 24.04/26.04, reflejando `docs/TEST_CASES.md`). Es el reemplazo recomendado a correr `tests/docker/build-and-test-all.sh` completo en una máquina de desarrollo local, que es lento y consume bastantes recursos. `build-and-test-all.sh` se mantiene para depurar un caso puntual en local sin depender de CI.
+`.github/workflows/ci.yml` (Hito 10, ver [ADR 0026](adr/0026-adelantar-hito-10-ci-antes-que-hito-9.md)) corre automáticamente en cada push a `main` y en cada pull request (salvo cambios que solo tocan Markdown/`docs/`, ver `paths-ignore`): un job `lint` (Nivel 1, directo en el runner) y un job `docker-matrix` (Nivel 2, 18 combinaciones en paralelo — 9 `job`-types × Ubuntu 24.04/26.04: `lint-suite`, `bootstrap-migration`, `fault-injection`, `mise-tools`, `editors-extra`, `vendor-repos`, `nvm-single`, `nvm-multi`, `nvm-mise-preexisting`, reflejando `docs/TEST_CASES.md`). Las capas de las imágenes Docker se cachean vía GitHub Actions cache (`docker/build-push-action` con `cache-from`/`cache-to: type=gha`), para no reconstruir cada imagen desde cero en cada uno de los 18 jobs. Es el reemplazo recomendado a correr `tests/docker/build-and-test-all.sh` completo en una máquina de desarrollo local, que es lento y consume bastantes recursos. `build-and-test-all.sh` se mantiene para depurar un caso puntual en local sin depender de CI.
 
 ## Nivel 1 — Sintaxis y pruebas unitarias
 
@@ -36,8 +36,16 @@ bash tests/test_backup.sh
 bash tests/test_backup_move_dir.sh
 bash tests/test_migrations.sh
 bash tests/test_install_nodejs_legacy.sh
+bash tests/test_system_utils_contract.sh
+bash tests/test_system_update_contract.sh
+bash tests/test_mongodb_compass_download.sh
+bash tests/test_kernel_hwe_fallback.sh
+bash tests/test_chrome_arch_check.sh
+bash tests/test_snap_installers_contract.sh
 node tests/test_status_mapping.js
 ```
+
+Esta lista puede quedar desactualizada si se agrega un caso nuevo y no se recuerda actualizarla acá también. `tests/docker/run-all-tests.sh` es la fuente de verdad real de qué se corre en CI (job `lint-suite`) — ante cualquier duda, ese script manda sobre esta lista.
 
 ## Nivel 2 — Contenedor Docker desechable
 
@@ -52,8 +60,6 @@ docker build --build-arg UBUNTU_VERSION=24.04 -t ubuntu-workstation-test:24.04 -
 # Ubuntu 26.04
 docker build --build-arg UBUNTU_VERSION=26.04 -t ubuntu-workstation-test:26.04 -f tests/docker/Dockerfile .
 ```
-
-Si la etiqueta `ubuntu:26.04` todavía no existe en Docker Hub al momento de correr esto, el build de 26.04 fallará al descargar la imagen base — no es un problema del Dockerfile, hay que esperar a que Canonical/Docker publiquen esa etiqueta o usar una imagen equivalente mientras tanto.
 
 ### Correr toda la batería de pruebas dentro del contenedor
 
