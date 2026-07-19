@@ -142,6 +142,8 @@ La estructura actual puede evolucionar gradualmente.
 
 Nunca se realiza una reescritura completa.
 
+`CLAUDE.md`, en la raíz, es un symlink intencional a este archivo (`AGENT.md`) — no un duplicado a mantener sincronizado ni un archivo para "corregir" apuntándolo a otro lado. Existe para que Claude Code lea exactamente los mismos lineamientos que el resto del equipo.
+
 ## Documentación de referencia (`docs/`)
 
 ```
@@ -168,6 +170,7 @@ Cada archivo se mantiene vivo a medida que se implementa, no solo al inicio del 
 - **MIGRATIONS.md** — se actualiza cada vez que una migración versionada (`scripts/migrations/NNN_*.sh`) se da por completada en el proyecto, documentando qué cambió y para quién aplica.
 - **RELEASES.md** — se actualiza en cada versión o hito entregado del proyecto.
 - **TOOLS.md** — normalmente se crearía recién después de los hitos fundacionales (bootstrap, doctor, backups, migraciones); en este proyecto se creó antes, como excepción, para no perder el inventario ya relevado en el diagnóstico inicial. Se actualiza cada vez que se agrega, retira o reclasifica una herramienta gestionada (`required | optional | retired | candidate`).
+- **`ACCEPTANCE_<rango>.md`** (ej. `docs/ACCEPTANCE_2_7.md`) — convención opcional para registrar la evidencia de los criterios de aceptación de un rango de hitos ya cerrado, cuando ese registro no cabe naturalmente en `TEST_CASES.md` ni en `ROADMAP.md`. No se crea para cada hito por defecto; solo cuando un cierre de rango lo amerita.
 
 El diagnóstico inicial del repositorio (2026-07-13) ya no vive como archivo aparte: sus decisiones se registraron en `docs/adr/`, su inventario de herramientas pasó a `docs/TOOLS.md`, y sus preguntas abiertas pasaron a `docs/ROADMAP.md`.
 

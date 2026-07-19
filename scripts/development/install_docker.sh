@@ -1,11 +1,22 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_docker.sh
 
+set -Eeuo pipefail
 TOOL_NAME="Docker"
 
 # Function to check status
+#
+# 'dpkg -l' SIN paquete filtra por grep sobre cientos de líneas reales: si
+# 'grep -q' encuentra la coincidencia temprano, cierra su entrada y
+# 'dpkg -l' recibe SIGPIPE mientras aún escribe — bajo 'pipefail' (modo
+# estricto agregado en este mismo hito), eso hace que el pipeline completo
+# devuelva código de salida ≠0 aunque la coincidencia sí se haya
+# encontrado (encontrado en CI: nunca aparece con el 'dpkg' mockeado de los
+# tests simulados, que solo imprime una línea). Se consulta 'dpkg -l' solo
+# para el paquete exacto (una línea de salida, sin ese riesgo), mismo
+# patrón que el resto de los instaladores del proyecto.
 check_status() {
-    if command -v docker &> /dev/null && dpkg -l | grep -q "^ii.*docker-ce"; then
+    if command -v docker &> /dev/null && dpkg -l docker-ce 2>/dev/null | grep -q "^ii"; then
         echo "INSTALLED"
         return 0
     else
@@ -41,9 +52,12 @@ install_tool() {
     # Install Docker
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     
-    # Add user to docker group
+    # Add user to docker group. Se usa 'id -un' en vez de "${USER}": esa
+    # variable de entorno no está garantizada (encontrado en CI: ausente en
+    # el contenedor Docker de prueba), y bajo 'set -u' referenciarla sin
+    # estar definida aborta el script ("USER: unbound variable").
     sudo groupadd docker 2>/dev/null || true
-    sudo usermod -aG docker $USER
+    sudo usermod -aG docker "$(id -un)"
     
     echo "Docker instalado correctamente. Es posible que necesites cerrar sesión y volver a iniciar para que los cambios de grupo surtan efecto."
 }
@@ -52,17 +66,22 @@ install_tool() {
 uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
     
-    # Remove Docker packages
-    sudo apt-get remove -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    # Remove Docker packages ('purge', no solo 'remove', para no dejar
+    # basura de configuración en /etc/docker/ tras desinstalar — mismo
+    # criterio que Cursor/VS Code/Chrome, ver docs/TECHNICAL_REVIEW.md,
+    # hallazgo M8).
+    sudo apt-get purge -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     sudo apt-get autoremove -y
-    
+
     # Remove Docker repository
     sudo rm -f /etc/apt/sources.list.d/docker.list
     sudo rm -f /etc/apt/keyrings/docker.asc
-    
-    # Remove Docker group (if no other users are in it)
-    if groups | grep -q docker; then
-        sudo gpasswd -d $USER docker
+
+    # Remove Docker group (if no other users are in it). Match exacto de
+    # nombre de grupo, no una coincidencia de substring (evita un falso
+    # positivo con un grupo hipotético "docker-foo").
+    if groups | grep -qw docker; then
+        sudo gpasswd -d "$(id -un)" docker
     fi
     
     echo "Docker desinstalado correctamente."
@@ -77,7 +96,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;

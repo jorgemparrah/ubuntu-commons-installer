@@ -19,20 +19,8 @@ readonly UCI_TEST_DIR
 UCI_REPO_ROOT="$(cd "${UCI_TEST_DIR}/.." && pwd)"
 readonly UCI_REPO_ROOT
 
-UCI_TESTS_RUN=0
-UCI_TESTS_FAILED=0
-
-pass() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    echo "  OK  - $1"
-}
-
-fail() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    UCI_TESTS_FAILED=$((UCI_TESTS_FAILED + 1))
-    echo "FALLO - $1"
-}
-
+# shellcheck source=lib/assertions.sh
+source "${UCI_TEST_DIR}/lib/assertions.sh"
 UCI_MOCK_BIN=""
 
 # setup_mock_bin_installed <snap_package>
@@ -135,16 +123,9 @@ test_installer "scripts/system/install_obs_studio.sh" "OBS Studio" "obs-studio"
 test_installer "scripts/productivity/install_spotify.sh" "Spotify" "spotify"
 test_installer "scripts/productivity/install_zoom.sh" "Zoom" "zoom-client"
 
-echo ""
-echo "== Resumen =="
-echo "Pruebas ejecutadas: ${UCI_TESTS_RUN}"
-echo "Fallos: ${UCI_TESTS_FAILED}"
+print_test_summary
 echo "Nota: ninguno de estos 8 instaladores se prueba funcionalmente (requiere"
 echo "snapd/systemd real) — ver la pauta de validación manual para Ubuntu"
 echo "26.04 Desktop en docs/UBUNTU_COMPATIBILITY.md."
 
-if [[ "${UCI_TESTS_FAILED}" -gt 0 ]]; then
-    exit 1
-fi
-
-exit 0
+exit_with_test_summary

@@ -53,89 +53,189 @@ jobs:
           node --check scripts/lib/status_contract.js
 
   docker-matrix:
-    # El job "base" agrupaba 11 scripts en serie (~15-18 min). Se separa en
-    # varios grupos más chicos (1-3 scripts cada uno) que corren en paralelo
-    # sobre la misma imagen base, en vez de uno detrás de otro en un solo
-    # job. Cada grupo sigue construyendo su propia copia de la imagen, pero
-    # desde el cierre técnico de 2026-07-18 (docs/TECHNICAL_REVIEW.md,
-    # hallazgo A5) las capas se cachean vía GitHub Actions cache
-    # (docker/build-push-action con cache-from/cache-to: type=gha), con un
-    # scope por variante de imagen — así los 9 job-types que comparten la
-    # misma imagen "base" reutilizan sus capas en vez de reconstruirlas
-    # desde cero cada vez.
-    name: ${{ matrix.job }} — Ubuntu ${{ matrix.ubuntu }}
+    # Un caso de prueba por job (docs/TECHNICAL_REVIEW.md, pedido explícito
+    # del dueño del proyecto el 2026-07-19): antes varios scripts corrían
+    # agrupados dentro de un mismo job, lo que obligaba a leer el log
+    # completo del job para saber cuál de los 2-3 casos agrupados había
+    # fallado. Ahora cada entrada de la matriz ejecuta un único caso, con
+    # su propio Dockerfile asignado en `include`. La imagen "base" se
+    # reconstruye en cada job (son ~24 de los 27 casos), pero desde el
+    # cierre técnico de 2026-07-18 (hallazgo A5) sus capas se cachean vía
+    # GitHub Actions cache (docker/build-push-action, cache-from/cache-to:
+    # type=gha) con un scope compartido por versión de Ubuntu — así los 24
+    # casos que comparten la imagen base reutilizan sus capas en vez de
+    # reconstruirlas desde cero cada vez.
+    name: ${{ matrix.ubuntu }} - ${{ matrix.case }} 
     needs: lint
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         ubuntu: ["24.04", "26.04"]
-        job:
-          - lint-suite
-          - bootstrap-migration
-          - fault-injection
-          - mise-tools
-          - editors-extra
-          - vendor-repos
+        case:
+          - router
+          - doctor
+          - backup
+          - backup-move-dir
+          - migrations
+          - install-nodejs-legacy
+          - system-utils-contract
+          - system-update-contract
+          - mongodb-compass-download
+          - kernel-hwe-fallback
+          - chrome-arch-check
+          - snap-installers-contract
+          - status-mapping
+          - bootstrap-mise-no-nvm
+          - nvm-to-mise-apply
+          - nvm-to-mise-fault-injection
+          - runtime-status
+          - kubectl-via-mise
+          - yarn-via-mise
+          - zsh-personalization
+          - ulauncher-ppa
+          - cursor-apt-repo
+          - vscode-apt-repo
+          - docker-apt-repo
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
         include:
-          - job: lint-suite
+          - case: router
             variant: base
             dockerfile: tests/docker/Dockerfile
-            ids: "U01-U08, I01-I05, I07-I10"
-            scripts: tests/docker/run-all-tests.sh
-          - job: bootstrap-migration
+            ids: "Nivel 1"
+            cmd: bash tests/test_router.sh
+          - case: doctor
             variant: base
             dockerfile: tests/docker/Dockerfile
-            ids: "BOOT01, M01,M02,M05,M08"
-            scripts: >-
-              tests/docker/test_bootstrap_mise_no_nvm.sh
-              tests/docker/test_nvm_to_mise_apply.sh
-          - job: fault-injection
+            ids: "Nivel 1"
+            cmd: bash tests/test_doctor.sh
+          - case: backup
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "Nivel 1"
+            cmd: bash tests/test_backup.sh
+          - case: backup-move-dir
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "Nivel 1"
+            cmd: bash tests/test_backup_move_dir.sh
+          - case: migrations
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "Nivel 1"
+            cmd: bash tests/test_migrations.sh
+          - case: install-nodejs-legacy
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "Nivel 1"
+            cmd: bash tests/test_install_nodejs_legacy.sh
+          - case: system-utils-contract
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I01-I04"
+            cmd: bash tests/test_system_utils_contract.sh
+          - case: system-update-contract
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I05"
+            cmd: bash tests/test_system_update_contract.sh
+          - case: mongodb-compass-download
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I07"
+            cmd: bash tests/test_mongodb_compass_download.sh
+          - case: kernel-hwe-fallback
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I08"
+            cmd: bash tests/test_kernel_hwe_fallback.sh
+          - case: chrome-arch-check
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I09"
+            cmd: bash tests/test_chrome_arch_check.sh
+          - case: snap-installers-contract
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I10"
+            cmd: bash tests/test_snap_installers_contract.sh
+          - case: status-mapping
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "Nivel 1"
+            cmd: node tests/test_status_mapping.js
+          - case: bootstrap-mise-no-nvm
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "BOOT01"
+            cmd: bash tests/docker/test_bootstrap_mise_no_nvm.sh
+          - case: nvm-to-mise-apply
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "M01,M02,M05,M08"
+            cmd: bash tests/docker/test_nvm_to_mise_apply.sh
+          - case: nvm-to-mise-fault-injection
             variant: base
             dockerfile: tests/docker/Dockerfile
             ids: "M07"
-            scripts: tests/docker/test_nvm_to_mise_fault_injection.sh
-          - job: mise-tools
+            cmd: bash tests/docker/test_nvm_to_mise_fault_injection.sh
+          - case: runtime-status
             variant: base
             dockerfile: tests/docker/Dockerfile
-            ids: "R01-R06, K01, Y01"
-            scripts: >-
-              tests/docker/test_runtime_status.sh
-              tests/docker/test_kubectl_via_mise.sh
-              tests/docker/test_yarn_via_mise.sh
-          - job: editors-extra
+            ids: "R01-R06"
+            cmd: bash tests/docker/test_runtime_status.sh
+          - case: kubectl-via-mise
             variant: base
             dockerfile: tests/docker/Dockerfile
-            ids: "Z01, L01"
-            scripts: >-
-              tests/docker/test_zsh_personalization.sh
-              tests/docker/test_ulauncher_ppa.sh
-          - job: vendor-repos
+            ids: "K01"
+            cmd: bash tests/docker/test_kubectl_via_mise.sh
+          - case: yarn-via-mise
             variant: base
             dockerfile: tests/docker/Dockerfile
-            ids: "C01, V01, D01"
-            scripts: >-
-              tests/docker/test_cursor_apt_repo.sh
-              tests/docker/test_vscode_apt_repo.sh
-              tests/docker/test_docker_apt_repo.sh
-          - job: nvm-single
+            ids: "Y01"
+            cmd: bash tests/docker/test_yarn_via_mise.sh
+          - case: zsh-personalization
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "Z01"
+            cmd: bash tests/docker/test_zsh_personalization.sh
+          - case: ulauncher-ppa
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "L01"
+            cmd: bash tests/docker/test_ulauncher_ppa.sh
+          - case: cursor-apt-repo
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "C01"
+            cmd: bash tests/docker/test_cursor_apt_repo.sh
+          - case: vscode-apt-repo
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "V01"
+            cmd: bash tests/docker/test_vscode_apt_repo.sh
+          - case: docker-apt-repo
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "D01"
+            cmd: bash tests/docker/test_docker_apt_repo.sh
+          - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
             ids: "M03,M05,M08"
-            scripts: tests/docker/test_nvm_to_mise_prebaked.sh
-          - job: nvm-multi
+            cmd: bash tests/docker/test_nvm_to_mise_prebaked.sh
+          - case: nvm-multi
             variant: nvm-multi
             dockerfile: tests/docker/Dockerfile.nvm-multi
             ids: "M04,M05,M08"
-            scripts: tests/docker/test_nvm_to_mise_prebaked.sh
-          - job: nvm-mise-preexisting
+            cmd: bash tests/docker/test_nvm_to_mise_prebaked.sh
+          - case: nvm-mise-preexisting
             variant: nvm-mise-preexisting
             dockerfile: tests/docker/Dockerfile.nvm-mise-preexisting
             ids: "M06"
-            scripts: tests/docker/test_nvm_to_mise_mise_preexisting.sh
+            cmd: bash tests/docker/test_nvm_to_mise_mise_preexisting.sh
     steps:
       - uses: actions/checkout@v4
 
@@ -161,7 +261,8 @@ jobs:
       # imagen — intenta resolverla contra Docker Hub y falla. El build de
       # la variante es liviano (solo agrega NVM sobre la base) y específico
       # de cada job, así que no pierde el beneficio real del cache de GHA,
-      # que sigue aplicando a la imagen base (compartida por los 9 job-types).
+      # que sigue aplicando a la imagen base (compartida por los 24 casos
+      # que la usan).
       - name: Construir variante ${{ matrix.variant }}
         if: matrix.variant != 'base'
         run: |
@@ -169,19 +270,11 @@ jobs:
             -t ubuntu-workstation-test-${{ matrix.variant }}:${{ matrix.ubuntu }} \
             -f ${{ matrix.dockerfile }} .
 
-      - name: Correr casos ${{ matrix.ids }}
+      - name: Correr caso ${{ matrix.ids }} (${{ matrix.case }})
         run: |
           if [ "${{ matrix.variant }}" = "base" ]; then
             TAG="ubuntu-workstation-test:${{ matrix.ubuntu }}"
           else
             TAG="ubuntu-workstation-test-${{ matrix.variant }}:${{ matrix.ubuntu }}"
           fi
-          FAILED=0
-          for script in ${{ matrix.scripts }}; do
-            echo "::group::${script}"
-            if ! docker run --rm "${TAG}" bash "${script}"; then
-              FAILED=1
-            fi
-            echo "::endgroup::"
-          done
-          exit "${FAILED}"
+          docker run --rm "${TAG}" ${{ matrix.cmd }}

@@ -98,9 +98,9 @@ preflight_check_node() {
 
 # Requisitos necesarios únicamente para el modo interactivo (setup.js).
 # Deliberadamente NO es una compuerta dura: el flujo histórico
-# (check_and_install_nodejs en setup.sh) ya le ofrece a la persona usuaria
-# instalar Node.js si falta, así que esto es diagnóstico/informativo, no un
-# `exit` automático. Quien llama decide qué hacer con el resultado.
+# (ensure_node_via_mise en setup.sh) ya le ofrece a la persona usuaria
+# instalar Node.js vía Mise si falta, así que esto es diagnóstico/informativo,
+# no un `exit` automático. Quien llama decide qué hacer con el resultado.
 preflight_interactive() {
     local repo_root="$1"
     local failed=0

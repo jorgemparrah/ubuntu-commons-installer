@@ -1,11 +1,18 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_ranger.sh
 
+set -Eeuo pipefail
 TOOL_NAME="Ranger"
 
 # Function to check status
+#
+# El fallback a Snap es solo por si alguien instaló ranger manualmente por
+# ese medio (este instalador nunca lo hace vía install_tool()); se guarda
+# con 'command -v snap' antes de invocarlo para no imprimir "snap: command
+# not found" cuando snapd no está presente (ver docs/TECHNICAL_REVIEW.md,
+# hallazgo M7).
 check_status() {
-    if command -v ranger &> /dev/null || snap list | grep -q "^ranger "; then
+    if command -v ranger &> /dev/null || { command -v snap &> /dev/null && snap list 2>/dev/null | grep -q "^ranger "; }; then
         echo "INSTALLED"
         return 0
     else
@@ -45,7 +52,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;

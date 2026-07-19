@@ -72,3 +72,5 @@ Node.js tiene un script instalador, pero está intencionalmente ausente de la li
 ## Pendiente: clasificación `required | optional | retired | candidate`
 
 El dueño del proyecto prefiere revisar esta clasificación caso por caso en una sesión posterior, en vez de asumirla ahora. Herramientas ya confirmadas como "mantener" pero aún sin clasificar formalmente: Postman, Insomnia, GitKraken, MongoDB Compass, ULauncher, cmatrix, ranger.
+
+Sin fecha propia todavía (`docs/TECHNICAL_REVIEW.md`, hallazgo M10): la revisión natural de esta clasificación es junto con el Hito 11 (Modernización de instaladores) o el Hito 12 (Framework de validación), cuando de todas formas se revisa instalador por instalador — no antes.

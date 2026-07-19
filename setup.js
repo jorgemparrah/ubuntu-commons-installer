@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 const chalk = require('chalk');
 const {
     DEFAULT_ACTION_BY_STATUS,
@@ -53,10 +53,10 @@ const tools = [
 
 // Get tool status. La distinción entre "no instalado" y "falla real de
 // ejecución" vive en scripts/lib/status_contract.js (resolveStatusFromExec*),
-// para poder probarla sin depender de execSync/inquirer/chalk.
+// para poder probarla sin depender de execFileSync/inquirer/chalk.
 async function getToolStatus(tool) {
     try {
-        const rawStatus = execSync(`./${tool.script} status`, { encoding: 'utf8' });
+        const rawStatus = execFileSync(`./${tool.script}`, ['status'], { encoding: 'utf8' });
         return resolveStatusFromExecResult(rawStatus);
     } catch (error) {
         return resolveStatusFromExecError(error);
@@ -149,7 +149,7 @@ async function executeActions(selectedTools) {
         console.log(chalk.yellow(`📦 ${actionText} ${tool.name}...`));
 
         try {
-            execSync(`./${tool.script} ${tool.action}`, { stdio: 'inherit' });
+            execFileSync(`./${tool.script}`, [tool.action], { stdio: 'inherit' });
             console.log(chalk.green(`✅ ${tool.name} completado`));
         } catch (error) {
             console.log(chalk.red(`❌ Error con ${tool.name} (acción '${tool.action}' no disponible o falló; ver salida arriba)`));

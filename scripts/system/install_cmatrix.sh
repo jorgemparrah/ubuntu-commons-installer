@@ -1,11 +1,18 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_cmatrix.sh
 
+set -Eeuo pipefail
 TOOL_NAME="cmatrix"
 
 # Function to check status
+#
+# El fallback a Snap es solo por si alguien instaló cmatrix manualmente por
+# ese medio (este instalador nunca lo hace vía install_tool()); se guarda
+# con 'command -v snap' antes de invocarlo para no imprimir "snap: command
+# not found" cuando snapd no está presente (ver docs/TECHNICAL_REVIEW.md,
+# hallazgo M7).
 check_status() {
-    if command -v cmatrix &> /dev/null || snap list | grep -q "^cmatrix "; then
+    if command -v cmatrix &> /dev/null || { command -v snap &> /dev/null && snap list 2>/dev/null | grep -q "^cmatrix "; }; then
         echo "INSTALLED"
         return 0
     else
@@ -45,7 +52,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;

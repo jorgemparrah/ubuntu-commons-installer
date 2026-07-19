@@ -10,6 +10,8 @@
 
 **Actualización 2026-07-18 — Crítico y Alto corregidos.** Tras revisar este documento, se pidió corregir todos los hallazgos Crítico y Alto (rama `correcciones-criticas-altas-revision-tecnica`). Cada hallazgo de esas dos severidades queda marcado `✅ Corregido` abajo, con una nota de qué cambió. Los hallazgos Medio y Bajo siguen sin tocar — quedan como backlog documentado, tal como se entregaron originalmente. El Hito 11 sigue sin iniciarse.
 
+**Actualización 2026-07-19 — Medio y Bajo corregidos (rama `correcciones-medias-bajas-revision-tecnica`, creada a partir de la anterior).** Cada hallazgo Medio y Bajo queda marcado `✅ Corregido` o `⏭️ Diferido intencionalmente` abajo. Se difirió deliberadamente M6 (extracción de dispatcher compartido entre los ~30 instaladores) por ser, en esencia, trabajo de alcance del Hito 11 — hacerlo ahora habría violado "no avanzar al Hito 11". También quedaron sin acción M5 (clase de riesgo, se corrige la próxima vez que se toque ese archivo puntual) y B2/B5/B8/B9, todos ya documentados en su momento como deuda aceptada o no accionable sin información adicional. El Hito 11 sigue sin iniciarse.
+
 **Convención de prioridad:**
 
 - **Crítico** — bloquea o desvía trabajo futuro ya planificado; corregirlo debería preceder a ese trabajo.
@@ -165,7 +167,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 ### Medio
 
-#### M1. Duplicación de logging: `setup.sh` mantiene su propio `print_*` en paralelo a `scripts/lib/logging.sh`
+#### M1. Duplicación de logging: `setup.sh` mantiene su propio `print_*` en paralelo a `scripts/lib/logging.sh`  ✅ **Corregido (2026-07-19)**
+
+> setup.sh: print_header (código muerto) eliminado; print_status/warning/error/info reemplazados por log_success/warn/error/info de scripts/lib/logging.sh.
 
 **Dónde:** `setup.sh:62-80` (`print_header`/`print_status`/`print_warning`/`print_error`/`print_info`) vs. `scripts/lib/logging.sh:29-43` (`log_info`/`log_warn`/`log_error`/`log_success`) — `setup.sh` ya sourcea `logging.sh` en la línea 33, pero conserva su propio set de funciones de presentación.
 
@@ -175,7 +179,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** limpieza de bajo riesgo, candidata para el Hito 11 o para hacerse de forma aislada antes.
 
-#### M2. Comentario desactualizado en `scripts/bootstrap/preflight.sh`
+#### M2. Comentario desactualizado en `scripts/bootstrap/preflight.sh`  ✅ **Corregido (2026-07-19)**
+
+> Comentario corregido: referencia a check_and_install_nodejs cambiada a ensure_node_via_mise.
 
 **Dónde:** `scripts/bootstrap/preflight.sh:100-103` (comentario de `preflight_interactive`) referencia una función `check_and_install_nodejs` que ya no existe — fue renombrada a `ensure_node_via_mise` en la migración a Mise (ADR 0002).
 
@@ -183,7 +189,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** trivial, sin hito asociado.
 
-#### M3. Sin política de retención de sesiones de backup
+#### M3. Sin política de retención de sesiones de backup  ✅ **Corregido (2026-07-19)**
+
+> Nota agregada en docs/ARCHITECTURE.md §8: retención de backups es responsabilidad manual hasta que exista un comando de limpieza.
 
 **Dónde:** `scripts/lib/backup.sh` — cada corrida de `setup.sh backup` (y cada migración que use `backup_copy_dir`) crea una sesión nueva en `~/.local/state/ubuntu-workstation/backups/<timestamp>/` que nunca se limpia.
 
@@ -193,7 +201,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** posible tarea nueva pequeña dentro de un futuro hito de mantenimiento/backups; no amerita un hito propio.
 
-#### M4. Sin harness de aserciones compartido entre tests — 12 archivos duplican `pass()`/`fail()` idénticos
+#### M4. Sin harness de aserciones compartido entre tests — 12 archivos duplican `pass()`/`fail()` idénticos  ✅ **Corregido (2026-07-19)**
+
+> Extraído tests/lib/assertions.sh (pass/fail/print_test_summary/exit_with_test_summary); los 12 archivos de test lo sourcean en vez de duplicar el bloque.
 
 **Dónde:** `tests/test_router.sh`, `test_doctor.sh`, `test_backup.sh`, `test_backup_move_dir.sh`, `test_migrations.sh`, `test_install_nodejs_legacy.sh`, `test_system_utils_contract.sh`, `test_system_update_contract.sh`, `test_mongodb_compass_download.sh`, `test_kernel_hwe_fallback.sh`, `test_chrome_arch_check.sh`, `test_snap_installers_contract.sh` — los 12 copian el mismo bloque de ~15 líneas (`UCI_TESTS_RUN`, `UCI_TESTS_FAILED`, `pass()`, `fail()`). Los tests de `tests/docker/` usan además un patrón distinto (`check()` con `eval`) — dos convenciones de aserción coexistiendo sin centralizar ninguna.
 
@@ -203,7 +213,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** tarea chica dentro del Hito 10 (gate de calidad, ya `Done`, mejora incremental). No requiere hito nuevo.
 
-#### M5. Clase de riesgo recurrente: greps de regresión frágiles ante los propios comentarios del código
+#### M5. Clase de riesgo recurrente: greps de regresión frágiles ante los propios comentarios del código  ⏭️ **Diferido intencionalmente**
+
+> No se tocó ningún archivo nuevo que exhiba este patrón; se deja para corregir la próxima vez que se edite ese test puntual, tal como recomendaba el hallazgo original.
 
 **Dónde:** patrón usado en varios tests (ya corregido dos veces en este proyecto: `test_install_nodejs_legacy.sh`, `test_kernel_hwe_fallback.sh`). Revisado puntualmente `tests/docker/test_docker_apt_repo.sh` (`! grep -qE "focal|jammy|bionic|xenial" ...`): hoy no produce falso positivo, pero el patrón sigue siendo frágil — cualquier futuro comentario explicativo que mencione esos codenames rompería la prueba en falso.
 
@@ -211,7 +223,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** checklist de PR para tests nuevos, no requiere trabajo inmediato.
 
-#### M6. Duplicación de dispatcher y de funciones de verificación multi-paquete entre instaladores
+#### M6. Duplicación de dispatcher y de funciones de verificación multi-paquete entre instaladores  ⏭️ **Diferido intencionalmente**
+
+> Deliberadamente NO implementado en esta pasada: es una extracción de gran escala (dispatcher + verificación multi-paquete) que toca los ~30 instaladores. El propio hallazgo ya lo identificaba como alcance del Hito 11, no de una corrección aislada — hacerlo ahora violaría 'no avanzar al Hito 11'. Sigue en el roadmap del Hito 11.
 
 **Dónde:** los ~30 instaladores repiten un dispatcher `main()`/`case` casi idéntico (~15-20 líneas cada uno); `install_development_tools.sh`, `install_multimedia.sh` e `install_system_utils.sh` además duplican literalmente `check_package_installed()`/`check_all_packages_installed()`.
 
@@ -221,7 +235,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** este es, en esencia, el trabajo que ya cubre el Hito 11 (modernización de instaladores) — no requiere hito nuevo, refuerza su alcance ya planificado.
 
-#### M7. Inconsistencia del fallback a Snap en instaladores apt-simples
+#### M7. Inconsistencia del fallback a Snap en instaladores apt-simples  ✅ **Corregido (2026-07-19)**
+
+> Los 4 instaladores (cmatrix, ranger, terminator, flameshot) guardan el fallback a Snap con 'command -v snap' antes de invocarlo; suben a modo estricto de paso.
 
 **Dónde:** `install_cmatrix.sh`, `install_ranger.sh`, `install_terminator.sh`, `install_flameshot.sh` — todos hacen `command -v X || snap list | grep -q "^X "` sin comprobar antes `command -v snap`, ni redirigir `stderr` de `snap list`.
 
@@ -231,7 +247,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** limpieza menor, candidata al Hito 11.
 
-#### M8. `install_docker.sh` usa `apt-get remove` en vez de `purge`, inconsistente con el resto de instaladores de repo propio ya migrados este hito
+#### M8. `install_docker.sh` usa `apt-get remove` en vez de `purge`, inconsistente con el resto de instaladores de repo propio ya migrados este hito  ✅ **Corregido (2026-07-19)**
+
+> install_docker.sh migrado a 'apt-get purge' (antes 'remove'); mismo commit que B7.
 
 **Dónde:** `scripts/development/install_docker.sh` (función `uninstall_tool()`).
 
@@ -241,7 +259,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** limpieza menor, sin urgencia.
 
-#### M9. ADR 0009 (postergar arquitectura de plugins) tiene su propio disparador de revisión ya cumplido, sin revisitar
+#### M9. ADR 0009 (postergar arquitectura de plugins) tiene su propio disparador de revisión ya cumplido, sin revisitar  ✅ **Corregido (2026-07-19)**
+
+> Apéndice "Revisión (2026-07-19)" agregado a la ADR 0009 confirmando que el disparador se cumplió y la postergación sigue vigente por prioridad de roadmap.
 
 **Dónde:** `docs/adr/0009-postergar-arquitectura-de-plugins.md` — el disparador declarado ("una vez completados Hito 2, Hito 5, Hito 6 y Hito 8") ya se cumplió; los cuatro están `Done`.
 
@@ -251,7 +271,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** mantenimiento de documentación, sin hito asociado.
 
-#### M10. `docs/TOOLS.md` con clasificación `required | optional | retired | candidate` pendiente sin fecha de retoma
+#### M10. `docs/TOOLS.md` con clasificación `required | optional | retired | candidate` pendiente sin fecha de retoma  ✅ **Corregido (2026-07-19)**
+
+> docs/TOOLS.md ahora asocia la clasificación pendiente a los Hitos 11/12, en vez de quedar sin fecha.
 
 **Dónde:** `docs/TOOLS.md` — diferido explícitamente por el dueño del proyecto desde 2026-07-15, sin dueño ni fecha en el roadmap.
 
@@ -259,7 +281,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** decisión pendiente del dueño del proyecto; sugerido asociarla a un hito existente cuando se retome.
 
-#### M11. `docs/ACCEPTANCE_2_7.md` fuera del inventario de documentación declarado en `AGENT.md` §5
+#### M11. `docs/ACCEPTANCE_2_7.md` fuera del inventario de documentación declarado en `AGENT.md` §5  ✅ **Corregido (2026-07-19)**
+
+> AGENT.md §5 formaliza la convención 'ACCEPTANCE_<rango>.md' como patrón opcional documentado.
 
 **Dónde:** `docs/ACCEPTANCE_2_7.md` (191 líneas, patrón propio de evidencia por criterio de aceptación) no aparece en la lista de `AGENT.md` §5.
 
@@ -273,39 +297,57 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 ### Bajo
 
-#### B1. `setup.sh` instala `snapd` como dependencia básica sin revisar a la luz de ADR 0027
+#### B1. `setup.sh` instala `snapd` como dependencia básica sin revisar a la luz de ADR 0027  ✅ **Corregido (2026-07-19)**
+
+> Comentario agregado en setup.sh documentando la tensión con ADR 0027, sin retirar snapd (8 instaladores todavía dependen de él).
 
 `setup.sh` (`check_basic_dependencies`) incluye `snapd` como dependencia recomendada, pese a que ADR 0027 ya prioriza apt oficial sobre Snap y varios instaladores tratan Snap como mecanismo de último recurso. No es un bug, pero vale una pasada de coherencia cuando se aborde el Hito 11.
 
-#### B2. `scripts/migrations/001_nvm_to_mise.sh` (629 líneas) es el script más largo y complejo del repo
+#### B2. `scripts/migrations/001_nvm_to_mise.sh` (629 líneas) es el script más largo y complejo del repo  ⏭️ **Diferido intencionalmente**
+
+> Sin acción: ya documentado como deuda aceptada en la revisión original, dividir 001_nvm_to_mise.sh no es una corrección aislada de bajo riesgo.
 
 Mezcla resolución de specs de versión NVM, migración de bloques de shell, inyección de fallos para pruebas, y el ciclo completo describe/check/dry-run/apply/validate/rollback. Ya tiene buena cobertura (incluida fault-injection, M07), así que no es urgente, pero es candidato natural a dividirse en funciones más pequeñas testeables si se vuelve a tocar (viola suavemente "Evitar scripts enormes" de AGENT.md §12).
 
-#### B3. `setup.js` usa `execSync` con interpolación de string en vez de `execFileSync`
+#### B3. `setup.js` usa `execSync` con interpolación de string en vez de `execFileSync`  ✅ **Corregido (2026-07-19)**
+
+> setup.js migrado de execSync a execFileSync en ambos usos.
 
 El riesgo real es mínimo hoy (`tool.script` viene de un array interno fijo, no de entrada de usuario), pero si a futuro se implementa el "sistema de plugins" (prioridad menor en `docs/ROADMAP.md`) permitiendo registrar herramientas de terceros, este patrón se volvería una inyección de comandos trivial. Migrar a `execFileSync` con array de argumentos si esa funcionalidad avanza.
 
-#### B4. `eval` en el helper `check()` de los tests funcionales Docker
+#### B4. `eval` en el helper `check()` de los tests funcionales Docker  ✅ **Corregido (2026-07-19)**
+
+> Convención documentada en docs/TESTING.md: eval solo es seguro con literales hardcodeados, nunca con datos interpolados.
 
 Usado en `test_docker_apt_repo.sh`, `test_vscode_apt_repo.sh`, `test_cursor_apt_repo.sh`, y otros — construye condiciones vía `eval "${condition}"`. No es explotable hoy (condiciones literales hardcodeadas, no input externo), pero es un code smell: cualquier interpolación futura de una variable no controlada sería una inyección de comando trivial. Sin acción urgente; documentar la convención como "seguro solo con literales hardcodeados".
 
-#### B5. Advertencia de Node.js 20 deprecado en `actions/checkout@v4`
+#### B5. Advertencia de Node.js 20 deprecado en `actions/checkout@v4`  ⏭️ **Diferido intencionalmente**
+
+> Sin acción: no hay una versión más nueva de actions/checkout verificable para adoptar; es un aviso de GitHub sobre el runner, no del proyecto.
 
 Visible en las anotaciones de las últimas corridas de CI (19 jobs). No es un bug del proyecto sino de la versión fijada de la action. Sin apuro, pero GitHub eventualmente forzará la actualización.
 
-#### B6. `CLAUDE.md` en la raíz es un symlink intencional a `AGENT.md`, sin documentarlo como tal
+#### B6. `CLAUDE.md` en la raíz es un symlink intencional a `AGENT.md`, sin documentarlo como tal  ✅ **Corregido (2026-07-19)**
+
+> AGENT.md §5 documenta que CLAUDE.md es un symlink intencional a AGENT.md.
 
 Funciona correctamente (permite que Claude Code lea las mismas instrucciones que el resto del equipo), pero un colaborador nuevo podría "corregirlo" sin saber que es deliberado. Agregar una línea en `AGENT.md` o el README aclarándolo.
 
-#### B7. `install_docker.sh` sin comillas en `$USER` y con `groups | grep -q docker` como coincidencia de substring débil
+#### B7. `install_docker.sh` sin comillas en `$USER` y con `groups | grep -q docker` como coincidencia de substring débil  ✅ **Corregido (2026-07-19)**
+
+> install_docker.sh: $USER citado, 'groups | grep -qw docker' (match exacto, no substring). Mismo commit que M8.
 
 `sudo usermod -aG docker $USER` y `groups | grep -q docker` funcionan en la práctica (los nombres de usuario Unix no llevan espacios), pero son inconsistentes con el resto del archivo, que sí cita casi todo. El segundo además matchearía en falso un grupo hipotético `docker-foo`. Cosmético, sin impacto real hoy.
 
-#### B8. `install_ulauncher.sh` ejecuta `add-apt-repository -y universe` en cada `install`
+#### B8. `install_ulauncher.sh` ejecuta `add-apt-repository -y universe` en cada `install`  ⏭️ **Diferido intencionalmente**
+
+> Sin acción: el costo de la operación redundante es marginal frente al riesgo de tocar install_ulauncher.sh sin necesidad real.
 
 `universe` casi siempre ya está habilitado en Ubuntu estándar — operación idempotente y de bajo costo, no es un bug, solo trabajo redundante menor.
 
-#### B9. `docker build` en CI sin `--pull` explícito
+#### B9. `docker build` en CI sin `--pull` explícito  ⏭️ **Diferido intencionalmente**
+
+> Sin acción: ya se documentó como no-issue en runners efímeros de GitHub Actions.
 
 Sin garantía teórica de que la imagen base `ubuntu:${UBUNTU_VERSION}` esté actualizada si el runner tuviera una copia cacheada obsoleta — en la práctica, irrelevante en runners efímeros de GitHub Actions. Documentado como no-issue.
 

@@ -28,20 +28,8 @@ readonly UCI_REPO_ROOT
 INSTALL_KERNEL_SH="${UCI_REPO_ROOT}/scripts/system/install_kernel.sh"
 readonly INSTALL_KERNEL_SH
 
-UCI_TESTS_RUN=0
-UCI_TESTS_FAILED=0
-
-pass() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    echo "  OK  - $1"
-}
-
-fail() {
-    UCI_TESTS_RUN=$((UCI_TESTS_RUN + 1))
-    UCI_TESTS_FAILED=$((UCI_TESTS_FAILED + 1))
-    echo "FALLO - $1"
-}
-
+# shellcheck source=lib/assertions.sh
+source "${UCI_TEST_DIR}/lib/assertions.sh"
 echo "== sourcear install_kernel.sh no dispara main() ni ninguna acción real =="
 # shellcheck source=/dev/null
 source "${INSTALL_KERNEL_SH}"
@@ -101,15 +89,8 @@ for forbidden in "update-grub" "grub-mkconfig" "reboot" "shutdown"; do
     fi
 done
 
-echo ""
-echo "== Resumen =="
-echo "Pruebas ejecutadas: ${UCI_TESTS_RUN}"
-echo "Fallos: ${UCI_TESTS_FAILED}"
+print_test_summary
 echo "Nota: la instalación real de un kernel HWE requiere validación manual"
 echo "en una VM o máquina de prueba dedicada (ver docs/UBUNTU_COMPATIBILITY.md)."
 
-if [[ "${UCI_TESTS_FAILED}" -gt 0 ]]; then
-    exit 1
-fi
-
-exit 0
+exit_with_test_summary
