@@ -103,6 +103,8 @@ jobs:
           - terminator-installer
           - flameshot-installer
           - tools-registry
+          - split-installers-contract
+          - tools-catalog-docs-consistency
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -263,6 +265,16 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I17"
             cmd: bash tests/test_tools_registry.sh
+          - case: split-installers-contract
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I18"
+            cmd: bash tests/test_split_installers_contract.sh
+          - case: tools-catalog-docs-consistency
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I19"
+            cmd: bash tests/test_tools_catalog_docs_consistency.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
