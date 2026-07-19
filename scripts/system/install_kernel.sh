@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_kernel.sh
 #
 # ALTO RIESGO: modifica el kernel de arranque del host. Nunca se prueba
@@ -8,6 +8,7 @@
 # validación manual en una VM o máquina de prueba dedicada, nunca en la
 # máquina de desarrollo ni en un contenedor compartido.
 
+set -Eeuo pipefail
 TOOL_NAME="Kernel & Headers"
 
 # Function to check status
@@ -89,7 +90,12 @@ install_tool() {
     echo "HWE Kernel no encontrado. Instalando última versión..."
     
     # Get the latest available HWE kernel
-    local latest_kernel=$(get_latest_hwe_kernel)
+    #
+    # 'local var=$(cmd)' enmascara el código de salida de cmd bajo el
+    # nuevo modo estricto (set -e no vería un fallo de get_latest_hwe_kernel,
+    # porque el propio 'local' siempre sale 0) — se separa en dos líneas.
+    local latest_kernel
+    latest_kernel="$(get_latest_hwe_kernel)"
     echo "Instalando: $latest_kernel"
     
     # Install kernel packages
@@ -122,7 +128,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;

@@ -1,13 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_system_utils.sh
 
+set -Eeuo pipefail
 TOOL_NAME="System Utilities (meld, baobab, gparted)"
 UTILS_PACKAGES=("meld" "baobab" "gparted")
 
 # Function to check if a package is installed
+#
+# dpkg -s devuelve éxito incluso para un paquete en estado remanente
+# "config-files" tras un 'apt remove' sin purgar — falso positivo real
+# encontrado en Cursor/VS Code/Chrome (ver docs/UBUNTU_COMPATIBILITY.md).
+# 'dpkg -l | grep ^ii' solo es verdad para un paquete realmente instalado.
 check_package_installed() {
     local package="$1"
-    dpkg -s "$package" &> /dev/null
+    dpkg -l "$package" 2>/dev/null | grep -q '^ii'
 }
 
 # Function to check if all packages are installed
@@ -46,7 +52,7 @@ install_tool() {
 uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
 
-    sudo apt remove -y "${UTILS_PACKAGES[@]}"
+    sudo apt purge -y "${UTILS_PACKAGES[@]}"
     sudo apt autoremove -y
 
     echo "$TOOL_NAME desinstalado correctamente."
@@ -61,7 +67,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;

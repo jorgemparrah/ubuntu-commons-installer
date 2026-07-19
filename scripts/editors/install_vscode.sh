@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_vscode.sh
 #
 # Repo APT oficial de Microsoft, con signed-by + keyring (nunca apt-key).
@@ -11,6 +11,7 @@
 #   3) 'dpkg -s'/'command -v' no distinguen el estado "config-files"
 #      remanente que deja 'apt remove' (sin purgar) de instalado de verdad.
 
+set -Eeuo pipefail
 TOOL_NAME="Visual Studio Code"
 VSCODE_KEYRING=/etc/apt/keyrings/packages.microsoft.gpg
 VSCODE_REPO_LIST=/etc/apt/sources.list.d/vscode.list
@@ -96,7 +97,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;

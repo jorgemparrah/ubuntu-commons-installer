@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_chrome.sh
 #
 # El `.deb` oficial de Chrome descargado aquí está fijado a amd64 (ver
@@ -9,6 +9,7 @@
 # arm64 — no se inventa esa descarga; en arquitecturas no soportadas se
 # rechaza con un error claro (UNSUPPORTED), nunca en silencio.
 
+set -Eeuo pipefail
 TOOL_NAME="Google Chrome"
 CHROME_SUPPORTED_ARCH="amd64"
 
@@ -82,7 +83,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;

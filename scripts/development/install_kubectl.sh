@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_kubectl.sh
 #
 # kubectl se gestiona vía Mise, no vía Snap (ver
 # docs/adr/0018-kubectl-via-mise.md). Usa scripts/lib/runtime.sh, el mismo
 # mecanismo del Hito 8 (Gestor de runtimes) que ya gestiona Node y Python.
 
+set -Eeuo pipefail
 TOOL_NAME="kubectl"
 UCI_KUBECTL_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../lib/runtime.sh
@@ -12,7 +13,7 @@ source "${UCI_KUBECTL_SCRIPT_DIR}/../lib/runtime.sh"
 
 # Function to check status
 check_status() {
-    if runtime_mise_available "${HOME}" && "$(runtime_mise_bin "${HOME}")" which kubectl &> /dev/null; then
+    if runtime_mise_available "${HOME}" && "$(runtime_resolve_mise_bin "${HOME}")" which kubectl &> /dev/null; then
         echo "INSTALLED"
         return 0
     else
@@ -63,7 +64,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;

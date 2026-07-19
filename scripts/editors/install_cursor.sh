@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_cursor.sh
 #
 # Cursor tiene un repositorio APT oficial (downloads.cursor.com/aptrepo),
@@ -21,6 +21,7 @@
 # postinst repita la misma entrada, coincide exactamente y no hay
 # conflicto.
 
+set -Eeuo pipefail
 TOOL_NAME="Cursor AI IDE"
 CURSOR_KEYRING=/usr/share/keyrings/anysphere.gpg
 CURSOR_REPO_LIST=/etc/apt/sources.list.d/cursor.list
@@ -57,9 +58,25 @@ install_tool() {
 
     sudo mkdir -p "$(dirname "${CURSOR_KEYRING}")"
 
-    # Añade la clave GPG de Cursor, en la misma ruta que usa el propio
-    # paquete (ver nota arriba).
-    curl -fsSL https://downloads.cursor.com/keys/anysphere.asc | gpg --dearmor | sudo tee "${CURSOR_KEYRING}" > /dev/null
+    # Descarga y convierte la clave GPG de Cursor, en la misma ruta que usa
+    # el propio paquete (ver nota arriba). Se verifica explícitamente que
+    # el keyring no quede vacío (un curl o gpg fallido en silencio dejaría
+    # un archivo vacío, y el error real -NO_PUBKEY- solo aparecería más
+    # tarde, en 'apt update' — mismo hallazgo aplicado a install_vscode.sh).
+    local tmp_keyring
+    tmp_keyring="$(mktemp)"
+    if ! curl -fsSL https://downloads.cursor.com/keys/anysphere.asc | gpg --dearmor > "${tmp_keyring}"; then
+        echo "No se pudo descargar/convertir la clave GPG de Cursor" >&2
+        rm -f "${tmp_keyring}"
+        return 1
+    fi
+    if [[ ! -s "${tmp_keyring}" ]]; then
+        echo "El keyring de Cursor quedó vacío tras la descarga; abortando" >&2
+        rm -f "${tmp_keyring}"
+        return 1
+    fi
+    sudo install -D -o root -g root -m 644 "${tmp_keyring}" "${CURSOR_KEYRING}"
+    rm -f "${tmp_keyring}"
 
     # Añade el repositorio de Cursor
     echo "deb [arch=amd64,arm64 signed-by=${CURSOR_KEYRING}] https://downloads.cursor.com/aptrepo stable main" | sudo tee "${CURSOR_REPO_LIST}" > /dev/null
@@ -98,7 +115,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;

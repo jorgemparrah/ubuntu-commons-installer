@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_mongodb_compass.sh
 #
 # Riesgo conocido y aceptado (ver docs/UBUNTU_COMPATIBILITY.md): la URL de
@@ -11,11 +11,18 @@
 # de apt confuso más adelante), y el `.deb` parcial se limpia también si
 # la descarga falla.
 
+set -Eeuo pipefail
 TOOL_NAME="MongoDB Compass"
 
 # Function to check status
+#
+# 'dpkg -l | grep' sin anclar podía dar falso positivo: coincide con
+# cualquier línea que mencione "mongodb-compass" sin importar el estado
+# real del paquete (incluye "config-files" tras un remove sin purgar). Se
+# ancla a '^ii <paquete exacto>' (mismo patrón que el resto del proyecto,
+# ver docs/UBUNTU_COMPATIBILITY.md).
 check_status() {
-    if command -v mongodb-compass &> /dev/null || dpkg -l | grep -q "mongodb-compass"; then
+    if command -v mongodb-compass &> /dev/null || dpkg -l mongodb-compass 2>/dev/null | grep -q '^ii'; then
         echo "INSTALLED"
         return 0
     else
@@ -55,7 +62,7 @@ uninstall_tool() {
     echo "Desinstalando $TOOL_NAME..."
     
     # Remove package
-    sudo apt remove -y mongodb-compass
+    sudo apt purge -y mongodb-compass
     sudo apt autoremove -y
     
     echo "$TOOL_NAME desinstalado correctamente."
@@ -70,7 +77,7 @@ reinstall_tool() {
 
 # Main function
 main() {
-    case "$1" in
+    case "${1:-}" in
         "status")
             check_status
             ;;
