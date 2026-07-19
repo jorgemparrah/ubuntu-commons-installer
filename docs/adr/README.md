@@ -65,3 +65,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0027](0027-orden-de-fuentes-por-categoria.md) | Orden de fuentes de paquetes por categoría de herramienta (reemplaza 0010) | Aceptada |
 | [0028](0028-arquitectura-soportada-amd64.md) | Arquitectura oficialmente soportada: amd64 | Aceptada |
 | [0029](0029-contrato-completo-de-instalador-referencia.md) | `install_vim.sh` es el contrato de referencia; el Hito 11 migra el resto hacia él | Aceptada |
+| [0030](0030-registro-central-de-metadata-de-instaladores.md) | Registro central de metadata de instaladores (catálogo Bash, sin YAML/JSON) | Aceptada |

@@ -374,6 +374,12 @@ Evitar duplicar funciones auxiliares.
 - `scripts/lib/apt.sh` — helpers APT compartidos (`apt_package_installed`, `apt_all_packages_installed`, `apt_install_packages`, `apt_purge_packages`). Centraliza la detección de "¿está este paquete realmente instalado?" vía `dpkg -l <paquete>` (una consulta por paquete puntual, nunca `dpkg -s` ni un `grep` sin anclar sobre la lista completa — ambos patrones dieron falsos positivos reales en este proyecto, ver `docs/TECHNICAL_REVIEW.md`).
 - `scripts/system/install_cmatrix.sh` es, por ahora, el único instalador migrado a esta infraestructura (instalador piloto de la Fase 1). El resto sigue con su propio bloque `main()`/`case`, válido de forma transitoria (ver sección 21) hasta que le toque su turno en una fase posterior del Hito 11.
 
+**Registro central de metadata de instaladores (infraestructura previa a la Fase 3 del Hito 11 — 2026-07-19, ver [ADR 0030](adr/0030-registro-central-de-metadata-de-instaladores.md)):**
+
+- `scripts/lib/tools_registry.sh` — catálogo de metadata en Bash puro (sin YAML/JSON ni parser externo), con el mismo patrón ya usado por `UCI_RUNTIME_CATALOG` en `scripts/lib/runtime.sh` (Hito 8). Expone `tools_registry_register <id> campo=valor...`, `tools_registry_has <id>`, `tools_registry_ids` y `tools_registry_field <id> <campo>`. No fuerza un esquema de campos a nivel de biblioteca; el esquema mínimo recomendado (`name`, `category`, `manager`, `packages`, `script`, `supported_os`, `supported_arch`, `requires_gui`, `requires_manual_validation`, `migration_status`) vive en la ADR.
+- `scripts/lib/tools_catalog.sh` — datos del registro, separados del mecanismo a propósito. Por ahora registra únicamente `cmatrix` y `ranger` (dos instaladores ya migrados a `installer_cli.sh`/`apt.sh`), como validación mínima del diseño, no como migración completa del catálogo.
+- Puramente aditivo: ningún script existente sourcea todavía este catálogo (`setup.sh`/`setup.js` no lo consultan), no cambia el comportamiento de ningún instalador ni del dispatcher/helpers compartidos. Consumirlo para generar o validar documentación es trabajo futuro fuera de esta fase.
+
 ---
 
 # 16. Logging
