@@ -73,6 +73,14 @@ EOF
     cat > "${UCI_MOCK_BIN}/sudo" <<EOF
 #!/usr/bin/env bash
 echo "sudo \$*" >> "${UCI_MOCK_LOG}"
+# sudo real soporta 'sudo VAR=val comando' (asignaciones de entorno antes
+# del comando, ver install_multimedia.sh: DEBIAN_FRONTEND=noninteractive) —
+# se emula despojando esos pares NAME=value y exportándolos antes de
+# ejecutar el resto, en vez de tratarlos como el nombre de un comando.
+while [[ "\$#" -gt 0 && "\$1" == *=* && "\$1" != -* ]]; do
+    export "\$1"
+    shift
+done
 "\$@"
 EOF
     chmod +x "${UCI_MOCK_BIN}/sudo"

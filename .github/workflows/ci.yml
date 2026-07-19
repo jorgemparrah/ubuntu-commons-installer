@@ -153,17 +153,21 @@ jobs:
           cache-from: type=gha,scope=base-${{ matrix.ubuntu }}
           cache-to: type=gha,mode=max,scope=base-${{ matrix.ubuntu }}
 
+      # 'docker build' clásico, NO docker/build-push-action: esta imagen usa
+      # 'FROM ubuntu-workstation-test:${UBUNTU_VERSION}', la imagen base que
+      # el paso anterior acaba de cargar en el daemon local (load: true). El
+      # driver 'docker-container' de buildx (necesario para cache-from/
+      # cache-to: type=gha) está aislado del daemon local y no ve esa
+      # imagen — intenta resolverla contra Docker Hub y falla. El build de
+      # la variante es liviano (solo agrega NVM sobre la base) y específico
+      # de cada job, así que no pierde el beneficio real del cache de GHA,
+      # que sigue aplicando a la imagen base (compartida por los 9 job-types).
       - name: Construir variante ${{ matrix.variant }}
         if: matrix.variant != 'base'
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ${{ matrix.dockerfile }}
-          build-args: UBUNTU_VERSION=${{ matrix.ubuntu }}
-          tags: ubuntu-workstation-test-${{ matrix.variant }}:${{ matrix.ubuntu }}
-          load: true
-          cache-from: type=gha,scope=${{ matrix.variant }}-${{ matrix.ubuntu }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.variant }}-${{ matrix.ubuntu }}
+        run: |
+          docker build --build-arg UBUNTU_VERSION=${{ matrix.ubuntu }} \
+            -t ubuntu-workstation-test-${{ matrix.variant }}:${{ matrix.ubuntu }} \
+            -f ${{ matrix.dockerfile }} .
 
       - name: Correr casos ${{ matrix.ids }}
         run: |
