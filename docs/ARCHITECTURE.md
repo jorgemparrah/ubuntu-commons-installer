@@ -388,6 +388,11 @@ Evitar duplicar funciones auxiliares.
 - Paquetes meta sin binario propio en `PATH` (`build-essential`, `apt-transport-https`, `ubuntu-restricted-extras`) no intentan detectar `BROKEN` vía `command -v` — limitación honesta y documentada, no una detección inventada.
 - `setup.js` no cambió: sigue ofreciendo las mismas 3 opciones de menú, que ahora delegan internamente en los instaladores individuales sin cambiar el resultado neto para quien las usa.
 
+**Registro de instaladores ya migrados sin código nuevo, y siguiente grupo apt-simple (Hito 11 — 2026-07-19):**
+
+- `vim`, `terminator` y `flameshot` se registraron en `tools_catalog.sh` sin tocar su código: ya implementaban el contrato objetivo, solo faltaba declararlos. `vim` queda con `migration_status=legacy` (implementa los 6 verbos desde el Hito 3, pero con su propia lógica de `dpkg`, nunca sourceó `installer_cli.sh`/`apt.sh` — un eje distinto de "usa la infraestructura compartida", ver ADR 0030).
+- `install_ulauncher.sh` se migró al contrato completo (`installer_cli.sh`/`apt.sh`), el único de los apt-simples migrados que agrega/quita un PPA propio (`ppa:agornostal/ulauncher`, ver ADR 0027) en `install`/`uninstall` — registrado con `manager=apt-vendor-repo` para distinguirlo de un paquete de repositorio oficial simple. La prueba funcional real (`tests/docker/test_ulauncher_ppa.sh`, caso L01) sigue existiendo sin cambios; se agregó `tests/test_ulauncher_installer.sh` (I20) para cubrir el contrato de 6 verbos con mocks, sin tocar la red.
+
 ---
 
 # 16. Logging
