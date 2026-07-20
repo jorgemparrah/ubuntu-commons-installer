@@ -51,8 +51,18 @@ RUN_CODE=0
 UCI_TMP_HOME=""
 
 run_doctor() {
+    run_doctor_in_home "${UCI_TMP_HOME}" "$@"
+}
+
+# run_doctor_in_home <home_dir> <args...>
+# Igual que run_doctor, pero contra un home distinto de UCI_TMP_HOME (que
+# es readonly) — usado para probar el chequeo de symlinks rotos con un
+# $HOME temporal propio, sin reasignar la variable readonly.
+run_doctor_in_home() {
+    local home_dir="$1"
+    shift
     set +e
-    RUN_OUTPUT="$(UCI_HOME_DIR="${UCI_TMP_HOME}" bash "${SETUP_SH}" doctor "$@" 2>&1)"
+    RUN_OUTPUT="$(UCI_HOME_DIR="${home_dir}" bash "${SETUP_SH}" doctor "$@" 2>&1)"
     RUN_CODE=$?
     set -e
 }
@@ -84,6 +94,41 @@ if [[ "${RUN_OUTPUT}" == *"${UCI_TMP_HOME}/.nvm"* ]]; then
 else
     fail "'doctor --verbose' no mostró el detalle de rutas de home retenido"
 fi
+
+echo ""
+echo "== doctor: Framework de validación (Hito 12) =="
+
+run_doctor
+assert_success "'doctor' reporta el chequeo de PATH" "${RUN_OUTPUT}" "${RUN_CODE}" "PATH:"
+assert_success "'doctor' reporta el chequeo de ejecutables del catálogo" "${RUN_OUTPUT}" "${RUN_CODE}" "Ejecutables (catálogo):"
+assert_success "'doctor' reporta el chequeo de dependencias compartidas" "${RUN_OUTPUT}" "${RUN_CODE}" "Dependencias compartidas:"
+assert_success "'doctor' reporta el chequeo de symlinks rotos" "${RUN_OUTPUT}" "${RUN_CODE}" "Symlinks rotos en \$HOME:"
+assert_success "'doctor' reporta versiones de runtime vía Mise" "${RUN_OUTPUT}" "${RUN_CODE}" "Versiones de runtime (Mise):"
+
+if [[ "${RUN_OUTPUT}" =~ Ejecutables\ \(catálogo\):[[:space:]]+([0-9]+)/([0-9]+)\ scripts ]]; then
+    if [[ "${BASH_REMATCH[1]}" == "${BASH_REMATCH[2]}" ]]; then
+        pass "todos los scripts registrados en tools_catalog.sh existen y son ejecutables (${BASH_REMATCH[1]}/${BASH_REMATCH[2]})"
+    else
+        fail "hay scripts registrados en tools_catalog.sh sin +x o inexistentes (${BASH_REMATCH[1]}/${BASH_REMATCH[2]})"
+    fi
+else
+    fail "no se pudo parsear el resultado del chequeo de ejecutables"
+fi
+
+echo ""
+echo "== doctor --verbose detalla symlinks rotos si los hay =="
+
+UCI_SYMLINK_HOME="$(mktemp -d)"
+ln -s "${UCI_SYMLINK_HOME}/no-existe" "${UCI_SYMLINK_HOME}/roto"
+run_doctor_in_home "${UCI_SYMLINK_HOME}" --verbose
+rm -rf "${UCI_SYMLINK_HOME}"
+
+if [[ "${RUN_OUTPUT}" =~ Symlinks\ rotos\ en\ \$HOME:[[:space:]]+([0-9]+)\ detectado ]] && [[ "${BASH_REMATCH[1]}" -ge 1 ]]; then
+    pass "'doctor --verbose' detecta al menos 1 symlink roto en un \$HOME con uno (${BASH_REMATCH[1]})"
+else
+    fail "'doctor --verbose' no detectó el symlink roto esperado"
+fi
+assert_success "'doctor --verbose' detalla la ruta del symlink roto" "${RUN_OUTPUT}" "${RUN_CODE}" "✗"
 
 echo ""
 echo "== doctor con opción inválida =="

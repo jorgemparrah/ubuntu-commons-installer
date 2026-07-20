@@ -731,9 +731,19 @@ Validar:
 * symlinks
 * versiones de runtime
 
+**Implementación (2026-07-20):** confirmado con el dueño del proyecto que este framework es una **extensión de `doctor`** (`scripts/diagnostics/doctor.sh`), no un comando nuevo — los 5 chequeos se agregan a la salida estándar de `setup.sh doctor`, siempre visibles (sin flag propia), bajo un encabezado `-- Framework de validación (Hito 12) --`:
+
+* **PATH** (`doctor_check_path`): cuenta entradas vacías/duplicadas y confirma si `~/.local/bin` (bin de Mise) está en el PATH.
+* **Ejecutables** (`doctor_check_executables`): recorre `tools_catalog.sh` (`tools_registry_ids`/`tools_registry_field`) y confirma que cada script registrado exista y tenga el bit `+x` — el mismo tipo de bug real detectado durante la migración de terminales nuevas (5 instaladores quedaron sin `+x`, rompiendo `setup.js` porque invoca los scripts directamente sin `bash`). `--verbose` detalla cuáles fallan.
+* **Dependencias compartidas** (`doctor_check_shared_dependencies`): confirma presencia de `curl`/`gpg`/`add-apt-repository`, que varios `scripts/lib/*.sh` (vendor-repo, deb-direct) dan por sentadas sin chequearlas ellos mismos.
+* **Symlinks rotos** (`doctor_check_broken_symlinks`): detecta symlinks colgantes (`find -xtype l`) en `$HOME`, relevante al reutilizar un `/home` existente (ADR 0021). Limitado a profundidad 4 y excluye `.cache`/`.npm`/`node_modules` para seguir siendo liviano en un `$HOME` real. `--verbose` detalla las rutas.
+* **Versiones de runtime**: reutiliza `runtime_status_all` (`scripts/lib/runtime.sh`, ya existente desde el Hito 8) sin duplicar lógica — no se escribió un chequeo nuevo para esto.
+
+No se agregó ninguna flag nueva ni comando nuevo: `doctor` sigue siendo un único reporte completo, solo lectura, nunca modifica el sistema (mismo criterio que el resto de `doctor.sh`).
+
 ### Entregables
 
-Módulo de validación.
+Módulo de validación — implementado como 5 chequeos nuevos dentro de `scripts/diagnostics/doctor.sh`, sin comando nuevo. Prueba extendida: `tests/test_doctor.sh` (U05, ver `docs/TEST_CASES.md`).
 
 ---
 
