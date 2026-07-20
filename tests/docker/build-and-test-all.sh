@@ -160,6 +160,11 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
         "Docker: repo oficial, arquitectura/codename dinámicos (imagen base)" \
         "tests/docker/test_docker_apt_repo.sh"
 
+    # WezTerm: repo APT propio en Fury.io, "flat" (sin codename).
+    run_case "W01" "${base_tag}" \
+        "WezTerm: repo APT propio en Fury.io, signed-by (imagen base)" \
+        "tests/docker/test_wezterm_apt_repo.sh"
+
     # Nivel 2 (docs/TEST_CASES.md, M01/M02/M05): desde cero, instalando NVM
     # en tiempo de ejecución dentro del propio contenedor.
     run_case "M01,M02,M05,M08" "${base_tag}" \

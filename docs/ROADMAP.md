@@ -686,6 +686,19 @@ Comportamiento consistente entre instaladores, igualando el contrato de `install
 
 ---
 
+## Ampliación del catálogo: terminales y gestores de archivos nuevos (2026-07-20)
+
+Fuera del alcance de este hito (no es una migración, son 5 herramientas nuevas pedidas explícitamente por el dueño del proyecto): `nnn`, `lf`, Yazi, WezTerm y Ghostty, todas terminales/gestores de archivos de terminal. Se investigó el mecanismo oficial de cada una antes de escribir código (ver `docs/adr/0032-mecanismo-condicional-por-version-de-ubuntu.md`).
+
+- `nnn`/`lf`: apt-simple directo, ya están en los repositorios oficiales de Ubuntu (universe).
+- Yazi: snap oficial del proyecto (`--classic`); se agregó a los tests existentes del grupo Snap (I10/I22, que pasaron de 8 a 9 instaladores) en vez de duplicar un test nuevo.
+- WezTerm: repositorio APT propio en Fury.io (`apt.fury.io/wez`, signed-by), un repo "flat" sin codename — primera vez que este proyecto usa esa variante de repo de proveedor. Prueba funcional real nueva (`tests/docker/test_wezterm_apt_repo.sh`, W01), mismo criterio que Docker/VS Code/Cursor.
+- Ghostty: su mecanismo depende de la versión de Ubuntu (repositorio oficial en 26.04+, PPA `mkasberg/ghostty-ubuntu` en 24.04) — primer instalador de este proyecto que decide su mecanismo según la versión detectada en tiempo de ejecución, documentado en [ADR 0032](adr/0032-mecanismo-condicional-por-version-de-ubuntu.md). No se generalizó un helper compartido para esto: es un caso aislado, esperar un segundo caso real antes de abstraerlo.
+
+Los 5 se registraron en `tools_catalog.sh` desde el primer commit (no hubo un "instalador legacy" previo que migrar). No se avanzó al Hito 12.
+
+---
+
 # Hito 12
 
 ## Framework de validación

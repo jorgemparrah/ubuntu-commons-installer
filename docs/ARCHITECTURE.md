@@ -443,6 +443,14 @@ Evitar duplicar funciones auxiliares.
 
 **Tercer consumidor real del catálogo** (2026-07-20): `tests/test_tools_catalog_ubuntu_compatibility_consistency.sh` (I24) valida `docs/UBUNTU_COMPATIBILITY.md` contra el campo `requires_manual_validation` del catálogo — si el catálogo dice `no` (evidencia automatizada suficiente) pero la matriz todavía marca la herramienta `no verificable automáticamente`, o si el catálogo dice `yes` pero la matriz ya la marca `compatible` a secas, la prueba falla. No exige que toda entrada del catálogo tenga fila propia todavía (varios instaladores individuales de ADR 0031 no la tienen — expandir esa matriz fila por fila es trabajo de documentación separado): las entradas sin fila se cuentan como cobertura pendiente, registrada en la salida de la prueba, no como fallo.
 
+**Terminales y gestores de archivos de terminal nuevos (2026-07-20):**
+
+- `install_nnn.sh`/`install_lf.sh` — apt-simple directo (ambos ya están en los repositorios oficiales de Ubuntu, universe), mismo patrón que `install_ranger.sh`.
+- `install_yazi.sh` — snap oficial del proyecto (`--classic`), mismo patrón que el grupo Snap del Hito 11; se agregó también a `tests/test_snap_installers_contract.sh` (I10) y `tests/test_snap_installers_full_contract.sh` (I22), que pasaron de cubrir 8 a 9 instaladores Snap.
+- `install_wezterm.sh` — repositorio APT propio en Fury.io (`apt.fury.io/wez`, signed-by), vía `scripts/lib/apt_vendor_repo.sh`. A diferencia de Docker/VS Code/Cursor, es un repo "flat" (usa `* *` en vez del codename de Ubuntu como distribución) — la misma línea de repo sirve para 24.04 y 26.04 sin detectar versión. Tiene prueba funcional real (`tests/docker/test_wezterm_apt_repo.sh`, W01), mismo criterio que los otros vendor-repo.
+- `install_ghostty.sh` — primer instalador cuyo mecanismo depende de la versión de Ubuntu en tiempo de ejecución (ver [ADR 0032](adr/0032-mecanismo-condicional-por-version-de-ubuntu.md)): repositorio oficial directo en 26.04+, PPA `ppa:mkasberg/ghostty-ubuntu` en 24.04. La detección usa `lsb_release -rs` (versión numérica, mismo criterio que `install_kernel.sh`); `status`/`update`/`repair` no dependen del mecanismo usado para instalar.
+- Los 5 se registraron en `tools_catalog.sh`. Pruebas nuevas: `tests/test_terminal_apps_apt_simple_contract.sh` (I25, nnn/lf) y `tests/test_ghostty_installer.sh` (I26, valida ambas ramas del mecanismo condicional con mocks).
+
 ---
 
 # 16. Logging
