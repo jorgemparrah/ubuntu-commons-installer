@@ -58,6 +58,39 @@ tools_registry_register "ranger" \
     "requires_manual_validation=no" \
     "migration_status=migrated"
 
+# install_vim.sh es el instalador de referencia del contrato completo de 6
+# verbos (ADR 0029) desde el Hito 3 (ADR 0012), pero nunca sourceó
+# scripts/lib/installer_cli.sh/apt.sh (son posteriores, Hito 11 Fase 1):
+# migration_status=legacy documenta esa distinción — "implementa los 6
+# verbos" y "usa la infraestructura compartida" son ejes distintos (ver
+# docs/ARCHITECTURE.md §15).
+tools_registry_register "vim" \
+    "name=Vim" "category=editors" "manager=apt" "packages=vim" \
+    "script=scripts/editors/install_vim.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=legacy"
+
+tools_registry_register "terminator" \
+    "name=Terminator" "category=system" "manager=apt" "packages=terminator" \
+    "script=scripts/system/install_terminator.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "flameshot" \
+    "name=Flameshot" "category=productivity" "manager=apt" "packages=flameshot" \
+    "script=scripts/productivity/install_flameshot.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+# ULauncher: manager=apt-vendor-repo (PPA propio, no repositorio oficial de
+# Ubuntu — ver ADR 0027) en vez de manager=apt como el resto de los
+# instaladores apt-simple migrados hasta ahora.
+tools_registry_register "ulauncher" \
+    "name=ULauncher" "category=productivity" "manager=apt-vendor-repo" "packages=ulauncher" \
+    "script=scripts/productivity/install_ulauncher.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
 # Instaladores individuales de "Development Tools" (ver ADR 0031)
 tools_registry_register "wget" \
     "name=wget" "category=system" "manager=apt" "packages=wget" \

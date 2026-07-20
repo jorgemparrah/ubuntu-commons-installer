@@ -134,6 +134,22 @@ Cubierto hoy por: `tests/test_split_installers_contract.sh` (I18), incluido en `
 
 Cubierto hoy por: `tests/test_tools_catalog_docs_consistency.sh` (I19), incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`tools-catalog-docs-consistency`).
 
+### Siguiente grupo apt-simple tras la Fase 2: ULauncher
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I20 | `install_ulauncher.sh` migrado al contrato completo de 6 verbos (`scripts/lib/installer_cli.sh`/`scripts/lib/apt.sh`); a diferencia de los demás apt-simples, `install`/`uninstall` agregan/quitan el PPA oficial (`ppa:agornostal/ulauncher`) | Mocks de `dpkg`/`apt`/`apt-get`/`sudo`/`add-apt-repository` | Prueba simulada (mocks) | Igual que I14 (ranger), más: `install` agrega `universe` y el PPA antes de instalar; si `add-apt-repository` no existe todavía, instala `software-properties-common` primero; `uninstall` purga (no remove) y quita el PPA; `reinstall` no vuelve a tocar el PPA | ✅ pasa |
+
+Cubierto hoy por: `tests/test_ulauncher_installer.sh` (I20, mocks — no toca la red), que complementa a `tests/docker/test_ulauncher_ppa.sh` (L01, prueba funcional real ya existente desde el Hito 9). Incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`ulauncher-installer`).
+
+### Segundo consumidor real del registro central (setup.js vs. catálogo)
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I21 | El menú interactivo de `setup.js` no diverge de `scripts/lib/tools_catalog.sh`: cada herramienta registrada que el menú debería ofrecer (agrupadores y herramientas independientes, excluyendo los ids que son solo miembros internos de un agrupador) tiene una entrada real en el array `tools` | El catálogo real sourceado, `setup.js` real leído del repositorio | Prueba simulada (validación cruzada, sin mocks) | Para cada id registrado que no es miembro de un agrupador, el nombre base de su `script` aparece en `setup.js`; los miembros internos de un agrupador (ej. `wget` dentro de `development_tools_group`) se excluyen a propósito, ya que no tienen entrada propia en el menú | ✅ pasa |
+
+Cubierto hoy por: `tests/test_tools_catalog_setup_js_consistency.sh` (I21), incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`tools-catalog-setup-js-consistency`).
+
 Cubierto hoy por: `tests/test_tools_registry.sh` (I17), incluido en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh`) y en su propio job de CI (`tools-registry`). Es infraestructura puramente aditiva (no cambia comportamiento de ningún instalador existente, ver ADR 0030); no migra más instaladores por sí sola.
 
 ### Validación manual pendiente: instaladores Snap en Ubuntu 26.04 Desktop

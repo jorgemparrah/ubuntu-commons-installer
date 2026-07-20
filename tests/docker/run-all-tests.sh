@@ -91,6 +91,8 @@ run_suite "tests/test_flameshot_installer.sh" bash tests/test_flameshot_installe
 run_suite "tests/test_tools_registry.sh" bash tests/test_tools_registry.sh
 run_suite "tests/test_split_installers_contract.sh" bash tests/test_split_installers_contract.sh
 run_suite "tests/test_tools_catalog_docs_consistency.sh" bash tests/test_tools_catalog_docs_consistency.sh
+run_suite "tests/test_ulauncher_installer.sh" bash tests/test_ulauncher_installer.sh
+run_suite "tests/test_tools_catalog_setup_js_consistency.sh" bash tests/test_tools_catalog_setup_js_consistency.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

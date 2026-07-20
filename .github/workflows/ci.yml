@@ -105,6 +105,8 @@ jobs:
           - tools-registry
           - split-installers-contract
           - tools-catalog-docs-consistency
+          - ulauncher-installer
+          - tools-catalog-setup-js-consistency
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -275,6 +277,16 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I19"
             cmd: bash tests/test_tools_catalog_docs_consistency.sh
+          - case: ulauncher-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I20"
+            cmd: bash tests/test_ulauncher_installer.sh
+          - case: tools-catalog-setup-js-consistency
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I21"
+            cmd: bash tests/test_tools_catalog_setup_js_consistency.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
