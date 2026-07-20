@@ -17,10 +17,14 @@ UCI_DOCTOR_SH_LOADED=1
 
 UCI_DOCTOR_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly UCI_DOCTOR_SCRIPT_DIR
+UCI_DOCTOR_REPO_ROOT="$(cd "${UCI_DOCTOR_SCRIPT_DIR}/../.." && pwd)"
+readonly UCI_DOCTOR_REPO_ROOT
 # shellcheck source=../lib/logging.sh
 source "${UCI_DOCTOR_SCRIPT_DIR}/../lib/logging.sh"
 # shellcheck source=../lib/runtime.sh
 source "${UCI_DOCTOR_SCRIPT_DIR}/../lib/runtime.sh"
+# shellcheck source=../lib/tools_catalog.sh
+source "${UCI_DOCTOR_SCRIPT_DIR}/../lib/tools_catalog.sh"
 
 # Rutas que pueden ya existir en un /home reutilizado.
 # Ver docs/adr/0003-migracion-nvm-sin-borrado-directo.md (apéndice).
@@ -212,6 +216,134 @@ doctor_check_home_reuse_indicators() {
     return 0
 }
 
+# doctor_check_path
+# Hito 12 (Framework de validación, ver docs/ROADMAP.md): detecta entradas
+# vacías/duplicadas en PATH y confirma que el bin de Mise (~/.local/bin)
+# esté presente — sin eso, ningún runtime/CLI instalado vía Mise se resuelve
+# aunque runtime.sh lo detecte por su ruta canónica.
+# doctor_check_path <home_dir>
+doctor_check_path() {
+    local home_dir="$1"
+    local -a parts
+    IFS=':' read -ra parts <<< "${PATH:-}"
+
+    local empty=0 dup=0
+    local -A seen=()
+    local part
+    for part in "${parts[@]}"; do
+        if [[ -z "${part}" ]]; then
+            empty=$((empty + 1))
+            continue
+        fi
+        if [[ -n "${seen[${part}]:-}" ]]; then
+            dup=$((dup + 1))
+        else
+            seen["${part}"]=1
+        fi
+    done
+
+    local mise_bin_dir="${home_dir}/.local/bin"
+    local mise_in_path="no"
+    if [[ ":${PATH:-}:" == *":${mise_bin_dir}:"* ]]; then
+        mise_in_path="sí"
+    fi
+
+    doctor_line "PATH:" "${#parts[@]} entrada(s), ${empty} vacía(s), ${dup} duplicada(s), Mise (${mise_bin_dir}) en PATH: ${mise_in_path}"
+    return 0
+}
+
+# doctor_check_executables
+# Hito 12: recorre tools_catalog.sh y confirma que cada script registrado
+# exista Y tenga el bit +x — el mismo tipo de bug real detectado en la
+# migración de terminales nuevas (5 instaladores quedaron sin +x, lo que
+# rompe setup.js porque invoca los scripts directamente sin `bash`, ver
+# docs/ARCHITECTURE.md). No instala ni modifica nada, solo `-f`/`-x`.
+# doctor_check_executables <repo_root> <verbose:0|1>
+doctor_check_executables() {
+    local repo_root="$1" verbose="$2"
+    local total=0 ok=0
+    local -a broken=()
+
+    local id script_field script_path
+    while IFS= read -r id; do
+        [[ -z "${id}" ]] && continue
+        total=$((total + 1))
+        script_field="$(tools_registry_field "${id}" "script")"
+        script_path="${repo_root}/${script_field}"
+
+        if [[ -f "${script_path}" && -x "${script_path}" ]]; then
+            ok=$((ok + 1))
+        else
+            broken+=("${id} (${script_field})")
+        fi
+    done < <(tools_registry_ids)
+
+    doctor_line "Ejecutables (catálogo):" "${ok}/${total} scripts existen y son ejecutables"
+
+    if [[ "${verbose}" == "1" && ${#broken[@]} -gt 0 ]]; then
+        local entry
+        for entry in "${broken[@]}"; do
+            echo "  ✗ ${entry}"
+        done
+    fi
+    return 0
+}
+
+# doctor_check_shared_dependencies
+# Hito 12: confirma la presencia de dependencias que varios
+# scripts/lib/*.sh dan por sentadas sin chequear ellos mismos (curl para
+# descargar claves/paquetes/.deb, gpg para dearmorar claves de
+# repositorios de proveedor, add-apt-repository para PPAs). No instala
+# nada; si falta alguna, solo se reporta — instalarlas es responsabilidad
+# de los instaladores que las necesiten (ver AGENT.md sección 15).
+doctor_check_shared_dependencies() {
+    local -a missing=()
+    local bin
+    for bin in curl gpg add-apt-repository; do
+        if ! command -v "${bin}" >/dev/null 2>&1; then
+            missing+=("${bin}")
+        fi
+    done
+
+    if [[ ${#missing[@]} -eq 0 ]]; then
+        doctor_line "Dependencias compartidas:" "curl/gpg/add-apt-repository presentes"
+    else
+        doctor_line "Dependencias compartidas:" "faltan: ${missing[*]}"
+    fi
+    return 0
+}
+
+# doctor_check_broken_symlinks <home_dir> <verbose:0|1>
+# Hito 12: detecta symlinks rotos (dangling) en $HOME, relevante al
+# reutilizar un /home existente (ADR 0021: dotfiles/config previa puede
+# apuntar a rutas que ya no existen). Limitado a profundidad 4 y excluye
+# directorios pesados/no relevantes (.cache, .npm, node_modules) para que
+# 'doctor' siga siendo liviano en un $HOME real, no solo en el vacío de
+# pruebas.
+doctor_check_broken_symlinks() {
+    local home_dir="$1" verbose="$2"
+    local broken_list=""
+    broken_list="$(find "${home_dir}" -maxdepth 4 \
+        \( -path "${home_dir}/.cache" -o -path "${home_dir}/.npm" -o -name node_modules \) -prune -o \
+        -xtype l -print 2>/dev/null || true)"
+
+    local count=0
+    if [[ -n "${broken_list}" ]]; then
+        count="$(printf '%s\n' "${broken_list}" | grep -c .)"
+    fi
+
+    doctor_line "Symlinks rotos en \$HOME:" "${count} detectado(s) (profundidad ≤4, sin .cache/.npm/node_modules)"
+
+    if [[ "${verbose}" == "1" && "${count}" -gt 0 ]]; then
+        local link_path
+        while IFS= read -r link_path; do
+            [[ -z "${link_path}" ]] && continue
+            echo "  ✗ ${link_path}"
+        done <<< "${broken_list}"
+    fi
+    return 0
+}
+
 # doctor_run <home_dir> [--verbose|-v]
 # Nunca modifica el sistema. Retorna != 0 solo por una opción inválida
 # (error de invocación), nunca porque falte alguna herramienta.
@@ -258,6 +390,16 @@ doctor_run() {
         echo "Versiones de Node instaladas vía NVM:"
         find "${home_dir}/.nvm/versions/node" -maxdepth 1 -mindepth 1 -type d -printf '  %f\n' 2>/dev/null || true
     fi
+
+    echo ""
+    echo "-- Framework de validación (Hito 12) --"
+    doctor_check_path "${home_dir}"
+    doctor_check_executables "${UCI_DOCTOR_REPO_ROOT}" "${verbose}"
+    doctor_check_shared_dependencies
+    doctor_check_broken_symlinks "${home_dir}" "${verbose}"
+    echo ""
+    echo "Versiones de runtime (Mise):"
+    runtime_status_all "${home_dir}"
 
     return 0
 }

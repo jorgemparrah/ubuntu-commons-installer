@@ -314,6 +314,16 @@ Los chequeos incluyen:
 
 La validación debe reportar problemas, pero evitar corregirlos automáticamente salvo que se solicite explícitamente.
 
+**Implementación (Hito 12, 2026-07-20):** confirmado con el dueño del proyecto que esta capa **no es un comando nuevo**, sino una extensión de `doctor` (`scripts/diagnostics/doctor.sh`, sección 7): los 5 chequeos viven en la salida estándar de `setup.sh doctor`, siempre visibles.
+
+* `doctor_check_path` — entradas de PATH vacías/duplicadas, y si `~/.local/bin` (bin de Mise) está presente.
+* `doctor_check_executables` — recorre `tools_catalog.sh` y confirma que cada script registrado exista y tenga `+x` (mismo bug real que rompió los 5 instaladores de terminal sin `chmod +x` durante su migración).
+* `doctor_check_shared_dependencies` — presencia de `curl`/`gpg`/`add-apt-repository`, asumidas sin chequear por varios `scripts/lib/*.sh` (vendor-repo, deb-direct).
+* `doctor_check_broken_symlinks` — `find -xtype l` en `$HOME` (profundidad ≤4, excluye `.cache`/`.npm`/`node_modules` por rendimiento), relevante al reutilizar un `/home` existente (ADR 0021, sección 19).
+* Versiones de runtime: reutiliza `runtime_status_all` (`scripts/lib/runtime.sh`, Hito 8, sección 10) sin duplicar lógica.
+
+Sigue el mismo criterio que el resto de `doctor.sh`: solo lectura, nunca corrige nada, nunca modifica el sistema.
+
 ---
 
 # 14. Módulos
