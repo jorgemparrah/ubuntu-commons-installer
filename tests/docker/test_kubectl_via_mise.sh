@@ -78,6 +78,22 @@ SECOND_INSTALL_CODE=$?
 check "una segunda corrida de 'install' sigue saliendo con código 0" '[[ ${SECOND_INSTALL_CODE} -eq 0 ]]'
 
 echo ""
+echo "== 7. update/reinstall (Hito 11, grupo Mise: migrado al dispatcher compartido) =="
+"${INSTALL_KUBECTL_SH}" update
+UPDATE_CODE=$?
+check "'update' sale con código 0" '[[ ${UPDATE_CODE} -eq 0 ]]'
+"${INSTALL_KUBECTL_SH}" reinstall
+REINSTALL_CODE=$?
+check "'reinstall' (fallback mecánico del dispatcher) sale con código 0" '[[ ${REINSTALL_CODE} -eq 0 ]]'
+OUTPUT="$("${INSTALL_KUBECTL_SH}" status 2>&1)"
+check "'status' reporta INSTALLED después de 'reinstall'" '[[ "${OUTPUT}" == *"INSTALLED"* ]]'
+set +e
+"${INSTALL_KUBECTL_SH}" repair >/dev/null 2>&1
+REPAIR_CODE=$?
+set -e
+check "'repair' se rechaza explícitamente (no implementado a propósito)" '[[ ${REPAIR_CODE} -ne 0 ]]'
+
+echo ""
 if [[ "${FAILED}" -eq 0 ]]; then
     echo "TODO OK: kubectl se instala vía Mise, nunca vía Snap."
 else
