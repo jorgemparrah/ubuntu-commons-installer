@@ -7,19 +7,54 @@
 # (ver tests/test_kernel_hwe_fallback.sh). La instalación real requiere
 # validación manual en una VM o máquina de prueba dedicada, nunca en la
 # máquina de desarrollo ni en un contenedor compartido.
+#
+# Instalador migrado en el Hito 11 (grupo mantenimiento) al dispatcher
+# compartido (scripts/lib/installer_cli.sh, ver docs/ROADMAP.md y
+# docs/adr/0029-contrato-completo-de-instalador-referencia.md). A
+# diferencia de install_system_update.sh/install_final_update.sh, este sí
+# tiene un `install`/`uninstall` con sentido real (instalar/quitar
+# paquetes de kernel HWE), así que conserva los 6 verbos.
+#
+# Aprovechando la migración, se separó una responsabilidad que antes vivía
+# mezclada dentro de `install_tool`: si el kernel ya estaba instalado,
+# `install` upgradeaba automáticamente sobre él — contradiciendo el
+# mapeo por defecto del proyecto (ADR 0004: INSTALLED/OUTDATED → skip/
+# update, nunca 'install' de nuevo). Ahora `install_tool` rechaza
+# explícitamente si el kernel HWE ya está presente (sugiere `update`), y
+# la lógica de actualización quedó en `update_tool`.
+#
+# `status` no distingue BROKEN: a diferencia de un paquete simple, no hay
+# una forma barata de detectar una instalación de kernel "parcial" sin
+# arriesgo (por ejemplo, sin invocar update-grub) — limitación honesta, no
+# una detección inventada. `repair` no se implementa por el mismo motivo;
+# el dispatcher lo rechaza explícitamente (código 3).
 
 set -Eeuo pipefail
 TOOL_NAME="Kernel & Headers"
+UCI_KERNEL_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../lib/installer_cli.sh
+source "${UCI_KERNEL_SCRIPT_DIR}/../lib/installer_cli.sh"
 
 # Function to check status
+#
+# OUTDATED se basa en el cache LOCAL de apt ('apt list --upgradable', sin
+# forzar un 'apt update' desde acá — 'status' debe ser liviano, ver
+# docs/ARCHITECTURE.md §21). Si nadie corrió 'apt update' recientemente,
+# un OUTDATED real puede no detectarse (falso negativo) — nunca se reporta
+# un OUTDATED falso.
 check_status() {
-    if dpkg -l | grep -q "linux-generic-hwe"; then
-        echo "INSTALLED"
-        return 0
-    else
+    if ! dpkg -l | grep -q "linux-generic-hwe"; then
         echo "NOT_INSTALLED"
         return 1
     fi
+
+    if apt list --upgradable 2>/dev/null | grep -q "linux-generic-hwe"; then
+        echo "OUTDATED"
+        return 0
+    fi
+
+    echo "INSTALLED"
+    return 0
 }
 
 # resolve_hwe_fallback_package_name <ubuntu_release_version>
@@ -55,103 +90,67 @@ get_latest_hwe_kernel() {
     fi
 }
 
-# Function to check if kernel update is available
-check_kernel_update_available() {
-    sudo apt update
-    if apt list --upgradable 2>/dev/null | grep -q "linux-generic-hwe"; then
-        return 0  # Update available
-    else
-        return 1  # No update available
-    fi
-}
-
 # Function to install
 install_tool() {
-    echo "Instalando $TOOL_NAME..."
-    
-    # Check if any HWE kernel is installed
-    if check_status > /dev/null; then
-        echo "HWE Kernel ya está instalado."
-        
-        # Check if kernel update is available
-        if check_kernel_update_available; then
-            echo "Actualización de kernel disponible. Actualizando..."
-            
-            # Update kernel packages
-            sudo apt upgrade -y linux-generic-hwe* linux-headers-generic linux-firmware
-            
-            echo "Kernel actualizado exitosamente."
-        else
-            echo "Kernel está actualizado."
-        fi
-        return 0
+    local current_status
+    current_status="$(check_status 2>/dev/null)" || true
+    if [[ "${current_status}" == "INSTALLED" || "${current_status}" == "OUTDATED" ]]; then
+        echo "${TOOL_NAME} ya está instalado; usa 'update' en vez de 'install' para actualizarlo." >&2
+        return 1
     fi
-    
+
+    echo "Instalando ${TOOL_NAME}..."
     echo "HWE Kernel no encontrado. Instalando última versión..."
-    
-    # Get the latest available HWE kernel
-    #
-    # 'local var=$(cmd)' enmascara el código de salida de cmd bajo el
-    # nuevo modo estricto (set -e no vería un fallo de get_latest_hwe_kernel,
-    # porque el propio 'local' siempre sale 0) — se separa en dos líneas.
+
+    # 'local var=$(cmd)' enmascara el código de salida de cmd bajo el modo
+    # estricto (set -e no vería un fallo de get_latest_hwe_kernel, porque
+    # el propio 'local' siempre sale 0) — se separa en dos líneas.
     local latest_kernel
     latest_kernel="$(get_latest_hwe_kernel)"
     echo "Instalando: $latest_kernel"
-    
-    # Install kernel packages
+
     sudo apt install -y --install-recommends "$latest_kernel"
     sudo apt install -y linux-firmware linux-headers-generic
-    
-    echo "Kernel & Headers instalado correctamente."
+
+    echo "${TOOL_NAME} instalado correctamente."
     echo "Es posible que necesites reiniciar para que el nuevo kernel surta efecto."
 }
 
 # Function to uninstall
 uninstall_tool() {
-    echo "Desinstalando $TOOL_NAME..."
+    echo "Desinstalando ${TOOL_NAME}..."
     echo "ADVERTENCIA: Desinstalar el kernel puede hacer que el sistema no arranque."
     echo "Este comando solo eliminará kernels HWE específicos, manteniendo el kernel base."
-    
-    # Remove HWE kernel packages
+
     sudo apt remove -y linux-generic-hwe* linux-headers-generic-hwe*
     sudo apt autoremove -y
-    
+
     echo "Kernels HWE desinstalados correctamente."
 }
 
-# Function to reinstall
-reinstall_tool() {
-    echo "Reinstalando $TOOL_NAME..."
-    uninstall_tool
-    install_tool
-}
+# Function to update (para el estado OUTDATED)
+update_tool() {
+    if ! dpkg -l | grep -q "linux-generic-hwe"; then
+        echo "${TOOL_NAME} no está instalado; usa 'install' en vez de 'update'." >&2
+        return 1
+    fi
 
-# Main function
-main() {
-    case "${1:-}" in
-        "status")
-            check_status
-            ;;
-        "install")
-            install_tool
-            ;;
-        "uninstall")
-            uninstall_tool
-            ;;
-        "reinstall")
-            reinstall_tool
-            ;;
-        *)
-            echo "Uso: $0 {status|install|uninstall|reinstall}"
-            exit 1
-            ;;
-    esac
+    echo "Actualizando ${TOOL_NAME}..."
+    sudo apt update
+
+    if apt list --upgradable 2>/dev/null | grep -q "linux-generic-hwe"; then
+        sudo apt upgrade -y linux-generic-hwe* linux-headers-generic linux-firmware
+        echo "${TOOL_NAME} actualizado correctamente."
+        echo "Es posible que necesites reiniciar para que el nuevo kernel surta efecto."
+    else
+        echo "${TOOL_NAME} ya está actualizado."
+    fi
 }
 
 # Permite sourcear este archivo desde una prueba (para llamar directamente
-# a resolve_hwe_fallback_package_name) sin disparar main(), que de otro
-# modo terminaría el proceso que lo sourcea con 'exit 1' si no recibe un
-# subcomando válido.
+# a resolve_hwe_fallback_package_name) sin disparar installer_run_cli, que
+# de otro modo terminaría el proceso que lo sourcea con 'exit 1' si no
+# recibe un subcomando válido.
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
+    installer_run_cli "$@"
 fi
