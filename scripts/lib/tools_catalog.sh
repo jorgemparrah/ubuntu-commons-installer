@@ -184,9 +184,12 @@ tools_registry_register "gparted" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
 # Grupo Snap (Hito 11): manager=snap en vez de apt, ver scripts/lib/snap.sh.
-# requires_manual_validation=yes en los 8: snapd no corre sin systemd
-# dentro de los contenedores Docker usados por este proyecto, así que
-# ninguno se prueba funcionalmente en CI (ver docs/UBUNTU_COMPATIBILITY.md).
+# requires_manual_validation=yes: snapd no corre sin systemd dentro de los
+# contenedores Docker usados por este proyecto, así que ninguno se prueba
+# funcionalmente en CI (ver docs/UBUNTU_COMPATIBILITY.md). OBS Studio
+# salió de este grupo el 2026-07-20 (migró a su PPA oficial, ver ADR
+# 0038); Yazi se sumó en el Hito 16 (terminales nuevas) — 8 miembros hoy:
+# DBeaver, GitKraken, Insomnia, Postman, GIMP, Spotify, Zoom, Yazi.
 tools_registry_register "dbeaver" \
     "name=DBeaver" "category=development" "manager=snap" "packages=dbeaver-ce" \
     "script=scripts/development/install_dbeaver.sh" \
@@ -217,11 +220,14 @@ tools_registry_register "gimp" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# OBS Studio: manager=apt-vendor-repo (PPA oficial, ver ADR 0038) — migró
+# de Snap (etiquetado "unofficial" por el propio OBS Project). Ya no
+# depende de snapd, requires_manual_validation=no.
 tools_registry_register "obs_studio" \
-    "name=OBS Studio" "category=system" "subcategory=gui-utils" "manager=snap" "packages=obs-studio" \
+    "name=OBS Studio" "category=system" "subcategory=gui-utils" "manager=apt-vendor-repo" "packages=obs-studio" \
     "script=scripts/system/install_obs_studio.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
-    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "spotify" \
     "name=Spotify" "category=productivity" "manager=snap" "packages=spotify" \
