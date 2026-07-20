@@ -392,3 +392,35 @@ jobs:
             TAG="ubuntu-workstation-test-${{ matrix.variant }}:${{ matrix.ubuntu }}"
           fi
           docker run --rm "${TAG}" ${{ matrix.cmd }}
+
+  # Job EXPERIMENTAL, separado de docker-matrix (ver ADR 0039): prueba los
+  # 8 instaladores Snap contra snapd real dentro de un contenedor con
+  # systemd, algo que docker-matrix no puede hacer (sus contenedores no
+  # corren systemd, ver docs/UBUNTU_COMPATIBILITY.md). `continue-on-error:
+  # true` a propósito: es un mecanismo nuevo, sin historial de estabilidad,
+  # basado en un patrón de la comunidad (no soportado oficialmente por
+  # Canonical/Snapcraft) — si falla, no debe bloquear el resto de CI ni el
+  # merge de PRs no relacionados con Snap mientras se demuestra su
+  # estabilidad. No reemplaza la pauta de validación manual en Ubuntu
+  # 26.04 Desktop hasta entonces.
+  snap-functional-experimental:
+    name: ${{ matrix.ubuntu }} - snap-functional (experimental)
+    needs: lint
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu: ["24.04", "26.04"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Construir imagen con systemd+snapd (Ubuntu ${{ matrix.ubuntu }})
+        run: |
+          docker build --build-arg UBUNTU_VERSION=${{ matrix.ubuntu }} \
+            -t ubuntu-workstation-test-snapd:${{ matrix.ubuntu }} \
+            -f tests/docker/Dockerfile.snapd .
+
+      - name: Correr instaladores Snap contra snapd real (I29)
+        run: |
+          bash tests/docker/run_snap_functional.sh "ubuntu-workstation-test-snapd:${{ matrix.ubuntu }}"

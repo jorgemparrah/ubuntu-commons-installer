@@ -168,7 +168,7 @@ Cubierto hoy por: `tests/test_snap_installers_full_contract.sh` (I22), que compl
 
 ### Validación manual pendiente: instaladores Snap en Ubuntu 26.04 Desktop
 
-Ninguno de los 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify, Zoom) se prueba funcionalmente en CI: `snapd` no corre sin systemd dentro de los contenedores Docker usados por este proyecto. `tests/test_snap_installers_contract.sh` (I10) solo prueba la lógica de `status` con mocks. Antes de declarar cualquiera de estos 8 "probado funcionalmente" en Ubuntu 26.04, corresponde ejecutar esta pauta en un sistema Ubuntu 26.04 Desktop real (VM o máquina física, con systemd y snapd reales):
+Ninguno de los 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, Spotify, Zoom, Yazi — OBS Studio migró a su PPA oficial en [ADR 0038](adr/0038-obs-studio-migra-de-snap-a-ppa-oficial.md)) se prueba funcionalmente en CI de forma estable todavía: `snapd` no corre sin systemd dentro de los contenedores Docker normales de este proyecto. `tests/test_snap_installers_contract.sh` (I10) solo prueba la lógica de `status` con mocks. Antes de declarar cualquiera de estos 8 "probado funcionalmente" en Ubuntu 26.04, corresponde ejecutar esta pauta en un sistema Ubuntu 26.04 Desktop real (VM o máquina física, con systemd y snapd reales):
 
 1. `./scripts/<categoría>/install_<herramienta>.sh status` → confirmar `NOT_INSTALLED` (estado inicial limpio).
 2. `./scripts/<categoría>/install_<herramienta>.sh install` → confirmar que termina sin error.
@@ -179,6 +179,8 @@ Ninguno de los 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP,
 7. `./scripts/<categoría>/install_<herramienta>.sh status` → confirmar `NOT_INSTALLED` otra vez.
 
 Repetir por cada uno de los 8. Ningún instalador Snap se marca como `compatible`/probado en `docs/UBUNTU_COMPATIBILITY.md` hasta que esta pauta se haya corrido al menos una vez en Ubuntu 26.04 Desktop real.
+
+**I29 — cobertura experimental nueva (2026-07-20, ver [ADR 0039](adr/0039-snapd-en-docker-para-ci-experimental.md)):** `tests/docker/test_snap_installers_functional.sh`, corrido vía `tests/docker/run_snap_functional.sh` dentro de un contenedor con systemd+snapd reales (`tests/docker/Dockerfile.snapd`), instala/desinstala de verdad cada uno de los 8 snaps contra el Snap Store real, en su propio job de CI (`snap-functional-experimental`, `continue-on-error: true`). **No reemplaza** la pauta manual de arriba: es un mecanismo nuevo, no soportado oficialmente por Canonical/Snapcraft, sin historial de estabilidad — la pauta manual sigue siendo la única fuente de verdad para marcar estos 8 como `compatible` hasta que este job demuestre correr en verde de forma sostenida.
 
 ### Grupo deb-directo (Hito 11)
 

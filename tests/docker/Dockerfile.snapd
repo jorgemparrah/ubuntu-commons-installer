@@ -1,0 +1,61 @@
+# tests/docker/Dockerfile.snapd
+#
+# Variante EXPERIMENTAL de tests/docker/Dockerfile con systemd + snapd
+# reales, para poder probar automáticamente los 8 instaladores Snap del
+# catálogo (ver docs/adr/0039-snapd-en-docker-para-ci-experimental.md).
+# A diferencia de la imagen base, este contenedor corre systemd como PID 1
+# (no `bash`/un comando suelto) — requiere `docker run --privileged
+# --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw`, y los comandos se
+# ejecutan después con `docker exec`, no como el `docker run --rm <img>
+# <cmd>` que usa el resto de la matriz de CI. Ver
+# tests/docker/run_snap_functional.sh para el ciclo de vida completo
+# (arrancar, esperar a snapd, exec, parar).
+#
+# Patrón basado en proyectos de la comunidad (no soportado oficialmente
+# por Canonical/Snapcraft), ver el contexto de ADR 0039. Mecanismo nuevo
+# y no probado en producción todavía — se espera que necesite iteración.
+#
+# Uso (no correr en esta workstation, solo dentro de CI o un entorno
+# descartable que acepte contenedores privilegiados):
+#   docker build --build-arg UBUNTU_VERSION=24.04 -t ubuntu-workstation-test-snapd:24.04 -f tests/docker/Dockerfile.snapd .
+#   bash tests/docker/run_snap_functional.sh ubuntu-workstation-test-snapd:24.04
+
+ARG UBUNTU_VERSION=24.04
+FROM ubuntu:${UBUNTU_VERSION}
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        sudo \
+        bash \
+        curl \
+        wget \
+        ca-certificates \
+        git \
+        nodejs \
+        npm \
+        findutils \
+        procps \
+        systemd \
+        systemd-sysv \
+        snapd \
+        squashfuse \
+    && rm -rf /var/lib/apt/lists/* \
+    && systemctl set-default multi-user.target \
+    && systemctl enable snapd.socket snapd.service
+
+# systemd necesita señalizarse con SIGRTMIN+3 para apagarse de forma
+# ordenada (docker stop lo respeta si se declara acá).
+STOPSIGNAL SIGRTMIN+3
+
+ARG TEST_USER=workstation
+RUN useradd -m -s /bin/bash "${TEST_USER}" \
+    && echo "${TEST_USER} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/90-${TEST_USER}" \
+    && chmod 0440 "/etc/sudoers.d/90-${TEST_USER}"
+
+WORKDIR /home/${TEST_USER}/ubuntu-commons-installer
+COPY --chown=${TEST_USER}:${TEST_USER} . /home/${TEST_USER}/ubuntu-commons-installer
+
+# CMD corre como root (systemd lo requiere); los comandos de prueba se
+# ejecutan después vía 'docker exec --user' contra este PID 1.
+CMD ["/sbin/init"]
