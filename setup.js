@@ -24,7 +24,12 @@ const tools = [
     { name: 'cmatrix', script: 'scripts/system/install_cmatrix.sh', category: 'SYSTEM' },
     { name: 'GIMP', script: 'scripts/system/install_gimp.sh', category: 'SYSTEM' },
     { name: 'OBS Studio', script: 'scripts/system/install_obs_studio.sh', category: 'SYSTEM' },
-    
+    { name: 'nnn', script: 'scripts/system/install_nnn.sh', category: 'SYSTEM' },
+    { name: 'lf', script: 'scripts/system/install_lf.sh', category: 'SYSTEM' },
+    { name: 'Yazi', script: 'scripts/system/install_yazi.sh', category: 'SYSTEM' },
+    { name: 'Ghostty', script: 'scripts/system/install_ghostty.sh', category: 'SYSTEM' },
+    { name: 'WezTerm', script: 'scripts/system/install_wezterm.sh', category: 'SYSTEM' },
+
     // EDITORS
     { name: 'Visual Studio Code', script: 'scripts/editors/install_vscode.sh', category: 'EDITORS' },
     { name: 'Cursor AI IDE', script: 'scripts/editors/install_cursor.sh', category: 'EDITORS' },

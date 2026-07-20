@@ -347,3 +347,37 @@ tools_registry_register "kernel" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated" \
     "kind=maintenance"
+
+# Terminales y gestores de archivos de terminal nuevos (2026-07-20).
+tools_registry_register "nnn" \
+    "name=nnn" "category=system" "manager=apt" "packages=nnn" \
+    "script=scripts/system/install_nnn.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "lf" \
+    "name=lf" "category=system" "manager=apt" "packages=lf" \
+    "script=scripts/system/install_lf.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "yazi" \
+    "name=Yazi" "category=system" "manager=snap" "packages=yazi" \
+    "script=scripts/system/install_yazi.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+# manager=apt (mecanismo de fondo): la rama condicional PPA/repo oficial
+# según versión de Ubuntu vive en el propio script, ver ADR 0032 — no se
+# modela como un campo separado del catálogo.
+tools_registry_register "ghostty" \
+    "name=Ghostty" "category=system" "manager=apt" "packages=ghostty" \
+    "script=scripts/system/install_ghostty.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "wezterm" \
+    "name=WezTerm" "category=system" "manager=apt-vendor-repo" "packages=wezterm" \
+    "script=scripts/system/install_wezterm.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
