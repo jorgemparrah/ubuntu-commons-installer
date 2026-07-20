@@ -288,3 +288,20 @@ tools_registry_register "yarn" \
     "script=scripts/development/install_yarn.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+# Grupo deb-directo (Hito 11): manager=deb-direct, ver
+# scripts/lib/deb_direct.sh. Chrome es supported_arch=amd64 (ver ADR
+# 0028); MongoDB Compass no publica un .deb multi-arch tampoco pero su
+# instalador nunca implementó un chequeo de arquitectura propio (fuera de
+# alcance de esta migración, ver docs/UBUNTU_COMPATIBILITY.md).
+tools_registry_register "chrome" \
+    "name=Google Chrome" "category=productivity" "manager=deb-direct" "packages=google-chrome-stable" \
+    "script=scripts/productivity/install_chrome.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "mongodb_compass" \
+    "name=MongoDB Compass" "category=development" "manager=deb-direct" "packages=mongodb-compass" \
+    "script=scripts/development/install_mongodb_compass.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"

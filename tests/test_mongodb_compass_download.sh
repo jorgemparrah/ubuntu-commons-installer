@@ -50,6 +50,12 @@ exit ${apt_code}
 EOF
     chmod +x "${UCI_MOCK_BIN}/apt"
 
+    cat > "${UCI_MOCK_BIN}/apt-get" <<EOF
+#!/usr/bin/env bash
+exit ${apt_code}
+EOF
+    chmod +x "${UCI_MOCK_BIN}/apt-get"
+
     cat > "${UCI_MOCK_BIN}/sudo" <<'EOF'
 #!/usr/bin/env bash
 "$@"

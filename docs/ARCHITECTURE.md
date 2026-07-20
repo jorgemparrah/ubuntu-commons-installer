@@ -418,6 +418,13 @@ Evitar duplicar funciones auxiliares.
 - Se registraron en `tools_catalog.sh` con `manager=mise`. Las pruebas funcionales reales ya existentes (`tests/docker/test_kubectl_via_mise.sh`/`test_yarn_via_mise.sh`, casos K01/Y01) se extendieron con escenarios de `update`/`reinstall`/`repair`.
 - Con este grupo se completan los 3 acordados (Snap → vendor-repo → Mise) para esta ronda de migraciones del Hito 11.
 
+**Grupo deb-directo migrado al contrato completo (Hito 11 — 2026-07-20):**
+
+- `scripts/lib/deb_direct.sh` — helper compartido (`deb_direct_download`) para instaladores que descargan un `.deb` directo en vez de agregar un repositorio APT (Google Chrome, MongoDB Compass), hermano de `apt.sh`/`snap.sh`/`apt_vendor_repo.sh` para este mecanismo. Centraliza la verificación explícita de que la descarga no quedó vacía/parcial. La instalación del `.deb` ya descargado reutiliza `apt_install_packages "./archivo.deb"` de `apt.sh` (acepta una ruta local igual que un nombre de paquete), sin necesitar un helper de instalación propio.
+- Ambos instaladores migraron vía `installer_cli.sh` + `apt.sh` + `deb_direct.sh`, agregando `update`/`repair` (antes solo `status/install/uninstall/reinstall`); `status` ahora distingue `BROKEN`/`OUTDATED` igual que el resto de instaladores APT migrados. `reinstall` no define función propia: el fallback mecánico del dispatcher (descargar de nuevo el `.deb`) ya era exactamente lo que ambos scripts hacían a mano.
+- Chrome conserva su verificación de arquitectura (`UNSUPPORTED` fuera de amd64, ver ADR 0028), sin cambios de comportamiento.
+- Se registraron en `tools_catalog.sh` con `manager=deb-direct`. Prueba nueva: `tests/test_deb_direct_full_contract.sh` (I23, ciclo de vida completo con mocks), que complementa sin reemplazar a `tests/test_chrome_arch_check.sh` (I09) y `tests/test_mongodb_compass_download.sh` (I07) — ambos ajustados para mockear `apt-get` (antes solo mockeaban `apt`), ya que `apt.sh` usa `apt-get` internamente.
+
 ---
 
 # 16. Logging

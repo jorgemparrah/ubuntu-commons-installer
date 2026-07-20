@@ -108,6 +108,7 @@ jobs:
           - ulauncher-installer
           - tools-catalog-setup-js-consistency
           - snap-installers-full-contract
+          - deb-direct-full-contract
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -293,6 +294,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I22"
             cmd: bash tests/test_snap_installers_full_contract.sh
+          - case: deb-direct-full-contract
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I23"
+            cmd: bash tests/test_deb_direct_full_contract.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
