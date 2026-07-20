@@ -65,14 +65,25 @@ const tools = [
     { name: 'Insomnia', script: 'scripts/development/install_insomnia.sh', category: 'DEVELOPMENT' },
     { name: 'MongoDB Compass', script: 'scripts/development/install_mongodb_compass.sh', category: 'DEVELOPMENT' },
     { name: 'kubectl', script: 'scripts/development/install_kubectl.sh', category: 'DEVELOPMENT' },
-    
+
+    // DEVELOPMENT — CLIs de IA (Hito 16, ver ADR 0036/0037)
+    { name: 'Claude Code', script: 'scripts/development/install_claude_code.sh', category: 'DEVELOPMENT' },
+    { name: 'Codex CLI', script: 'scripts/development/install_codex_cli.sh', category: 'DEVELOPMENT' },
+    { name: 'OpenCode', script: 'scripts/development/install_opencode.sh', category: 'DEVELOPMENT' },
+    { name: 'Antigravity CLI', script: 'scripts/development/install_antigravity.sh', category: 'DEVELOPMENT' },
+
     // PRODUCTIVITY
     { name: 'ULauncher', script: 'scripts/productivity/install_ulauncher.sh', category: 'PRODUCTIVITY' },
     { name: 'Google Chrome', script: 'scripts/productivity/install_chrome.sh', category: 'PRODUCTIVITY' },
     { name: 'Spotify', script: 'scripts/productivity/install_spotify.sh', category: 'PRODUCTIVITY' },
     { name: 'Zoom', script: 'scripts/productivity/install_zoom.sh', category: 'PRODUCTIVITY' },
     { name: 'Flameshot', script: 'scripts/productivity/install_flameshot.sh', category: 'PRODUCTIVITY' },
-    
+
+    // PRODUCTIVITY — agentes de IA de propósito general (Hito 16, ver ADR 0036/0037)
+    { name: 'Claude Desktop', script: 'scripts/productivity/install_claude_desktop.sh', category: 'PRODUCTIVITY' },
+    { name: 'OpenClaw', script: 'scripts/productivity/install_openclaw.sh', category: 'PRODUCTIVITY' },
+    { name: 'Hermes Agent', script: 'scripts/productivity/install_hermes_agent.sh', category: 'PRODUCTIVITY' },
+
     // MAINTENANCE (System Updates/Kernel & Headers movidos aquí desde
     // SYSTEM, ver ADR 0035 — consistente con category=maintenance en
     // tools_catalog.sh)

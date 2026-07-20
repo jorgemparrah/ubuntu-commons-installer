@@ -376,3 +376,60 @@ tools_registry_register "wezterm" \
     "script=scripts/system/install_wezterm.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+# Grupo curl-script (Hito 16): manager=curl-script, ver
+# scripts/lib/curl_script.sh (ADR 0037). Categorías por función real, no
+# por ser "de IA" en sí (ver ADR 0036): CLIs de desarrollo en
+# category=development/subcategory=ai-cli, agentes de propósito general
+# en category=productivity/subcategory=ai-agent. requires_manual_validation=yes
+# en los 6: no hay prueba funcional real contra los dominios oficiales de
+# estos proveedores en esta ronda (servicios externos nuevos, sin
+# historial de estabilidad verificado en CI, ver ADR 0037).
+tools_registry_register "claude_code" \
+    "name=Claude Code" "category=development" "subcategory=ai-cli" "manager=curl-script" \
+    "script=scripts/development/install_claude_code.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "codex_cli" \
+    "name=Codex CLI" "category=development" "subcategory=ai-cli" "manager=curl-script" \
+    "script=scripts/development/install_codex_cli.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "opencode" \
+    "name=OpenCode" "category=development" "subcategory=ai-cli" "manager=curl-script" \
+    "script=scripts/development/install_opencode.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Antigravity: solo el CLI 'agy' (category=development/ai-cli). El
+# IDE/Desktop queda diferido a propósito — sin apt/snap oficial, solo
+# tarball manual sin checksum/firma descripta (ver ADR 0037).
+tools_registry_register "antigravity" \
+    "name=Antigravity CLI" "category=development" "subcategory=ai-cli" "manager=curl-script" \
+    "script=scripts/development/install_antigravity.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "openclaw" \
+    "name=OpenClaw" "category=productivity" "subcategory=ai-agent" "manager=curl-script" \
+    "script=scripts/productivity/install_openclaw.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "hermes_agent" \
+    "name=Hermes Agent" "category=productivity" "subcategory=ai-agent" "manager=curl-script" \
+    "script=scripts/productivity/install_hermes_agent.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Claude Desktop: manager=apt-vendor-repo (reutiliza la infraestructura
+# existente, mismo patrón que Docker/VS Code/Cursor), no curl-script — sí
+# tiene repo APT oficial propio. Cowork (KVM/disco/RAM) no se valida en
+# el instalador, ver el propio script.
+tools_registry_register "claude_desktop" \
+    "name=Claude Desktop" "category=productivity" "subcategory=ai-agent" "manager=apt-vendor-repo" "packages=claude-desktop" \
+    "script=scripts/productivity/install_claude_desktop.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"

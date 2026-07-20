@@ -113,6 +113,7 @@ jobs:
           - ghostty-installer
           - wezterm-apt-repo
           - gh-via-mise
+          - curl-script-contract
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -323,6 +324,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "G01"
             cmd: bash tests/docker/test_gh_via_mise.sh
+          - case: curl-script-contract
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I27"
+            cmd: bash tests/test_curl_script_contract.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
