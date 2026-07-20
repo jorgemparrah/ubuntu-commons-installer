@@ -305,3 +305,18 @@ tools_registry_register "mongodb_compass" \
     "script=scripts/development/install_mongodb_compass.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+# Grupo git-clone (Hito 11): manager=git-clone, ver scripts/lib/git_clone.sh.
+# 'packages' se omite: no instalan un paquete propio con ese nombre, solo
+# 'zsh' como dependencia compartida entre ambos.
+tools_registry_register "oh_my_zsh" \
+    "name=Oh My Zsh" "category=system" "manager=git-clone" \
+    "script=scripts/system/install_oh_my_zsh.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "powerlevel10k" \
+    "name=Powerlevel10k" "category=system" "manager=git-clone" \
+    "script=scripts/system/install_powerlevel10k.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
