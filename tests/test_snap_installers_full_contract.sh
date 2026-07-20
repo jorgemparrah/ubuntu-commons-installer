@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # tests/test_snap_installers_full_contract.sh
 #
-# Prueba simulada (mocks) del ciclo de vida completo de los 8 instaladores
+# Prueba simulada (mocks) del ciclo de vida completo de los instaladores
 # Snap migrados en el Hito 11 (DBeaver, GitKraken, Insomnia, Postman,
-# GIMP, OBS Studio, Spotify, Zoom): install/uninstall/update/reinstall/
-# repair sobre scripts/lib/snap.sh + scripts/lib/installer_cli.sh.
+# GIMP, OBS Studio, Spotify, Zoom) más Yazi (agregado después):
+# install/uninstall/update/reinstall/repair sobre scripts/lib/snap.sh +
+# scripts/lib/installer_cli.sh.
 # Complementa, sin reemplazar, tests/test_snap_installers_contract.sh
 # (I10, que ya cubría los 3 casos de 'status': instalado/no
 # instalado/snapd ausente). No instala nada real ni requiere
@@ -135,6 +136,7 @@ test_snap_full_contract "scripts/system/install_gimp.sh" "GIMP" "gimp" "yes"
 test_snap_full_contract "scripts/system/install_obs_studio.sh" "OBS Studio" "obs-studio" "yes"
 test_snap_full_contract "scripts/productivity/install_spotify.sh" "Spotify" "spotify" "yes"
 test_snap_full_contract "scripts/productivity/install_zoom.sh" "Zoom" "zoom-client" "no"
+test_snap_full_contract "scripts/system/install_yazi.sh" "Yazi" "yazi" "yes"
 
 print_test_summary
 exit_with_test_summary

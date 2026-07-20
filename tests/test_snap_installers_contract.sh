@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # tests/test_snap_installers_contract.sh
 #
-# Prueba simulada (Hito 9, Fase B) de los 8 instaladores basados en Snap
-# (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify,
-# Zoom): confirma que 'status' distingue correctamente tres casos —
+# Prueba simulada (Hito 9, Fase B; Yazi agregado después) de los 9
+# instaladores basados en Snap (DBeaver, GitKraken, Insomnia, Postman,
+# GIMP, OBS Studio, Spotify, Zoom, Yazi): confirma que 'status' distingue
+# correctamente tres casos —
 # snap instalado, snap no instalado, snapd ausente (UNKNOWN) — donde
 # antes los dos últimos se reportaban igual como NOT_INSTALLED (hallazgo
 # de docs/UBUNTU_COMPATIBILITY.md). No instala nada real: el comando
@@ -122,9 +123,10 @@ test_installer "scripts/system/install_gimp.sh" "GIMP" "gimp"
 test_installer "scripts/system/install_obs_studio.sh" "OBS Studio" "obs-studio"
 test_installer "scripts/productivity/install_spotify.sh" "Spotify" "spotify"
 test_installer "scripts/productivity/install_zoom.sh" "Zoom" "zoom-client"
+test_installer "scripts/system/install_yazi.sh" "Yazi" "yazi"
 
 print_test_summary
-echo "Nota: ninguno de estos 8 instaladores se prueba funcionalmente (requiere"
+echo "Nota: ninguno de estos 9 instaladores se prueba funcionalmente (requiere"
 echo "snapd/systemd real) — ver la pauta de validación manual para Ubuntu"
 echo "26.04 Desktop en docs/UBUNTU_COMPATIBILITY.md."
 
