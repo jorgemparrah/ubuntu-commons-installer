@@ -393,6 +393,8 @@ Evitar duplicar funciones auxiliares.
 - `vim`, `terminator` y `flameshot` se registraron en `tools_catalog.sh` sin tocar su código: ya implementaban el contrato objetivo, solo faltaba declararlos. `vim` queda con `migration_status=legacy` (implementa los 6 verbos desde el Hito 3, pero con su propia lógica de `dpkg`, nunca sourceó `installer_cli.sh`/`apt.sh` — un eje distinto de "usa la infraestructura compartida", ver ADR 0030).
 - `install_ulauncher.sh` se migró al contrato completo (`installer_cli.sh`/`apt.sh`), el único de los apt-simples migrados que agrega/quita un PPA propio (`ppa:agornostal/ulauncher`, ver ADR 0027) en `install`/`uninstall` — registrado con `manager=apt-vendor-repo` para distinguirlo de un paquete de repositorio oficial simple. La prueba funcional real (`tests/docker/test_ulauncher_ppa.sh`, caso L01) sigue existiendo sin cambios; se agregó `tests/test_ulauncher_installer.sh` (I20) para cubrir el contrato de 6 verbos con mocks, sin tocar la red.
 
+**Segundo consumidor real del catálogo** (2026-07-19): `tests/test_tools_catalog_setup_js_consistency.sh` (I21) valida el menú interactivo de `setup.js` contra el catálogo — complementa al primer consumidor (I19, que valida `docs/TOOLS.md`), esta vez sobre el código que arma el menú. Excluye a propósito los ids que son solo miembros internos de un agrupador (por ejemplo `wget` dentro de `development_tools_group`): esos nunca tuvieron ni deben tener una entrada propia en el menú, solo su agrupador la tiene.
+
 ---
 
 # 16. Logging
