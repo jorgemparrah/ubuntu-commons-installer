@@ -107,6 +107,7 @@ jobs:
           - tools-catalog-docs-consistency
           - ulauncher-installer
           - tools-catalog-setup-js-consistency
+          - tools-catalog-ubuntu-compatibility-consistency
           - snap-installers-full-contract
           - deb-direct-full-contract
           - nvm-single
@@ -289,6 +290,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I21"
             cmd: bash tests/test_tools_catalog_setup_js_consistency.sh
+          - case: tools-catalog-ubuntu-compatibility-consistency
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I24"
+            cmd: bash tests/test_tools_catalog_ubuntu_compatibility_consistency.sh
           - case: snap-installers-full-contract
             variant: base
             dockerfile: tests/docker/Dockerfile
