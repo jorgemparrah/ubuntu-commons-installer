@@ -70,4 +70,5 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0032](0032-mecanismo-condicional-por-version-de-ubuntu.md) | Mecanismo de instalación condicional por versión de Ubuntu (Ghostty) | Aceptada |
 | [0033](0033-mise-amplia-su-rol-a-clis-via-registry.md) | Mise amplía su rol: de "solo runtimes" a también gestionar CLIs vía su registry (extiende 0002) | Reemplazada parcialmente por 0034 |
 | [0034](0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) | `gh` usa `manager=mise`, igual que kubectl y Yarn (corrige 0033) | Aceptada |
-| [0035](0035-eliminar-agrupadores-delgados-y-recategorizar-catalogo.md) | Eliminar los agrupadores delgados de ADR 0031 y recategorizar el catálogo | Aceptada |
+| [0035](0035-eliminar-agrupadores-delgados-y-recategorizar-catalogo.md) | Eliminar los agrupadores delgados de ADR 0031 y recategorizar el catálogo | Reemplazada parcialmente por 0036 |
+| [0036](0036-candidatas-de-ia-en-categorias-existentes.md) | Distribuir las candidatas de IA del Hito 16 en categorías existentes, no una `ai-tools` nueva | Aceptada |

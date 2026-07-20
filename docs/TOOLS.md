@@ -100,17 +100,17 @@ Ex miembros del agrupador "Multimedia Tools" (ver [ADR 0031](adr/0031-separar-in
 
 ## Candidatas de IA (Hito 16 — clasificadas, sin instalador todavía)
 
-Mecanismo oficial de instalación investigado para cada una; ninguna tiene script en `scripts/` todavía. Clasificación `required/optional/retired/candidate` confirmada con el dueño del proyecto el 2026-07-20. Ver el detalle completo en `docs/ROADMAP.md`, Hito 16.
+Mecanismo oficial de instalación investigado para cada una; ninguna tiene script en `scripts/` todavía. Clasificación `required/optional/retired/candidate` confirmada con el dueño del proyecto el 2026-07-20. Categoría/subcategoría futura confirmada el mismo día (ver [ADR 0036](adr/0036-candidatas-de-ia-en-categorias-existentes.md)): se distribuyen entre categorías existentes según su función real, no una categoría `ai-tools` nueva. Ver el detalle completo en `docs/ROADMAP.md`, Hito 16.
 
-| Herramienta | Mecanismo oficial | Decisión |
-|---|---|---|
-| Claude Desktop (incluye Cowork) | Repo APT propio de Anthropic (`downloads.claude.ai/claude-desktop/apt/stable`, `signed-by`), paquete `claude-desktop` | `optional` — mecanismo de mayor "oficialidad" del grupo (mismo patrón que Docker/VS Code/Cursor); Cowork requiere KVM, ~25 GB disco, 8 GB RAM |
-| Claude Code | Script oficial (`claude.ai/install.sh`), npm (`@anthropic-ai/claude-code`), o repos apt/dnf/apk propios de Anthropic | `required` |
-| Codex CLI (OpenAI) | Script oficial (`chatgpt.com/codex/install.sh`), o npm con scope (`@openai/codex`) | `required` |
-| Antigravity (Google) | CLI (`agy`): script oficial a `~/.local/bin`. IDE/Desktop: sin apt/snap oficial, tarball manual | `optional` |
-| OpenCode | Script oficial (`opencode.ai/install`), o npm (`opencode-ai`) | `required` |
-| OpenClaw | Script oficial (`openclaw.ai/install.sh`), o npm (`openclaw`); requiere Node.js | `optional` |
-| Hermes Agent (NousResearch) | Script oficial (`hermes-agent.nousresearch.com/install.sh`, también en el repo de GitHub `NousResearch/hermes-agent`); bundlea uv/Python 3.11/Node.js/ripgrep/ffmpeg/Git portable | `optional` — repo verificado directamente (MIT, ~218k stars, 22 releases), se evitaron sitios de terceros de aspecto genérico encontrados en la búsqueda inicial |
+| Herramienta | Mecanismo oficial | Decisión | Categoría/subcategoría futura |
+|---|---|---|---|
+| Claude Desktop (incluye Cowork) | Repo APT propio de Anthropic (`downloads.claude.ai/claude-desktop/apt/stable`, `signed-by`), paquete `claude-desktop` | `optional` — mecanismo de mayor "oficialidad" del grupo (mismo patrón que Docker/VS Code/Cursor); Cowork requiere KVM, ~25 GB disco, 8 GB RAM | `productivity`/`ai-agent` |
+| Claude Code | Script oficial (`claude.ai/install.sh`), npm (`@anthropic-ai/claude-code`), o repos apt/dnf/apk propios de Anthropic | `required` | `development`/`ai-cli` |
+| Codex CLI (OpenAI) | Script oficial (`chatgpt.com/codex/install.sh`), o npm con scope (`@openai/codex`) | `required` | `development`/`ai-cli` |
+| Antigravity (Google) | CLI (`agy`): script oficial a `~/.local/bin`. IDE/Desktop: sin apt/snap oficial, tarball manual | `optional` | `editors` (su IDE); el CLI `agy`, si se separa, va a `development`/`ai-cli` |
+| OpenCode | Script oficial (`opencode.ai/install`), o npm (`opencode-ai`) | `required` | `development`/`ai-cli` |
+| OpenClaw | Script oficial (`openclaw.ai/install.sh`), o npm (`openclaw`); requiere Node.js | `optional` | `productivity`/`ai-agent` |
+| Hermes Agent (NousResearch) | Script oficial (`hermes-agent.nousresearch.com/install.sh`, también en el repo de GitHub `NousResearch/hermes-agent`); bundlea uv/Python 3.11/Node.js/ripgrep/ffmpeg/Git portable | `optional` — repo verificado directamente (MIT, ~218k stars, 22 releases), se evitaron sitios de terceros de aspecto genérico encontrados en la búsqueda inicial | `productivity`/`ai-agent` |
 
 **Descartado explícitamente:** Codex Desktop (app Electron de OpenAI) — sin ninguna opción oficial de Linux; los únicos paquetes existentes son repaquetados de terceros sin firma real (`[trusted=yes]`), lo que no cumple el estándar de seguridad del proyecto (`AGENT.md` §16).
 
