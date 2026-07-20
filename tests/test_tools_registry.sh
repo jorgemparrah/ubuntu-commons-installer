@@ -108,15 +108,19 @@ while IFS= read -r id; do
 
     kind_field="$(tools_registry_field "${id}" "kind")"
     manager_field="$(tools_registry_field "${id}" "manager")"
-    if [[ "${manager_field}" == "apt" && "${kind_field}" != "group" ]]; then
+    migration_field="$(tools_registry_field "${id}" "migration_status")"
+    # 'usa scripts/lib/apt.sh' es un rasgo de migration_status=migrated, no
+    # de manager=apt en sí: install_vim.sh es manager=apt pero
+    # migration_status=legacy (implementa los 6 verbos desde antes del
+    # Hito 11, con su propia lógica de dpkg — ver docs/ARCHITECTURE.md §15)
+    # y nunca sourceó apt.sh a propósito.
+    if [[ "${manager_field}" == "apt" && "${kind_field}" != "group" && "${migration_field}" == "migrated" ]]; then
         if grep -q "lib/apt\.sh" "${script_path}" 2>/dev/null; then
-            pass "'${id}': declara manager=apt y el script sourcea scripts/lib/apt.sh"
+            pass "'${id}': declara manager=apt+migrated y el script sourcea scripts/lib/apt.sh"
         else
-            fail "'${id}': declara manager=apt pero el script no sourcea scripts/lib/apt.sh"
+            fail "'${id}': declara manager=apt+migrated pero el script no sourcea scripts/lib/apt.sh"
         fi
     fi
-
-    migration_field="$(tools_registry_field "${id}" "migration_status")"
     if [[ "${migration_field}" == "migrated" ]]; then
         if grep -q "installer_run_cli" "${script_path}" 2>/dev/null; then
             pass "'${id}': declara migration_status=migrated y el script usa installer_run_cli"
