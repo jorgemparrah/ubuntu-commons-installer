@@ -196,7 +196,7 @@ Cubierto hoy por: `tests/docker/test_yarn_via_mise.sh` (Y01), incluido en `tests
 
 | ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
 |---|---|---|---|---|---|
-| Z01 | `install_oh_my_zsh.sh`/`install_powerlevel10k.sh` instalan el framework/tema real, no solo el paquete `zsh` | Home vacío | `Dockerfile` (base) | `~/.oh-my-zsh` y el tema `powerlevel10k` quedan clonados con su archivo principal; `status` INSTALLED después; segunda corrida de `install` no reclona (mismo commit git); ninguno crea/modifica `~/.zshrc`; subcomando inválido falla | ✅ pasa |
+| Z01 | `install_oh_my_zsh.sh`/`install_powerlevel10k.sh` instalan el framework/tema real, no solo el paquete `zsh`. **Migrados al contrato completo de 6 verbos en el Hito 11 (grupo git-clone, 2026-07-20)**: usan `scripts/lib/installer_cli.sh`/`scripts/lib/apt.sh`/`scripts/lib/git_clone.sh` (nuevo) — ninguno de los dos usa el script `curl \| sh` oficial de Oh My Zsh, ambos clonan el repo directamente vía `git clone` | Home vacío | `Dockerfile` (base) | `~/.oh-my-zsh` y el tema `powerlevel10k` quedan clonados con su archivo principal; `status` INSTALLED después; segunda corrida de `install` no reclona (mismo commit git); `update` (nuevo) hace `git pull --ff-only`; `reinstall` usa el fallback mecánico del dispatcher; `repair` (nuevo) reclona sobre un directorio corrupto (sin `.git`), detectado como `BROKEN`; ninguno crea/modifica `~/.zshrc`; subcomando inválido falla | ✅ pasa |
 
 Cubierto hoy por: `tests/docker/test_zsh_personalization.sh` (Z01), incluido en `tests/docker/build-and-test-all.sh`.
 
