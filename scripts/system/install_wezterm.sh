@@ -59,6 +59,7 @@ install_tool() {
 
     echo "Instalando ${TOOL_NAME}..."
 
+    apt_vendor_repo_ensure_gnupg
     apt_vendor_repo_fetch_key_dearmored "https://apt.fury.io/wez/gpg.key" "${WEZTERM_KEYRING}"
     apt_vendor_repo_write_list "${WEZTERM_REPO_LIST}" \
         "deb [signed-by=${WEZTERM_KEYRING}] https://apt.fury.io/wez/ * *"
