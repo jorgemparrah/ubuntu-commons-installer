@@ -113,8 +113,11 @@ while IFS= read -r id; do
     # de manager=apt en sí: install_vim.sh es manager=apt pero
     # migration_status=legacy (implementa los 6 verbos desde antes del
     # Hito 11, con su propia lógica de dpkg — ver docs/ARCHITECTURE.md §15)
-    # y nunca sourceó apt.sh a propósito.
-    if [[ "${manager_field}" == "apt" && "${kind_field}" != "group" && "${migration_field}" == "migrated" ]]; then
+    # y nunca sourceó apt.sh a propósito. Las acciones de mantenimiento
+    # (kind=maintenance, ver ADR 0013) tampoco: no gestionan un paquete
+    # puntual con apt_package_installed/apt_install_packages, actúan sobre
+    # todo el sistema (apt update/upgrade/autoremove directo).
+    if [[ "${manager_field}" == "apt" && "${kind_field}" != "group" && "${kind_field}" != "maintenance" && "${migration_field}" == "migrated" ]]; then
         if grep -q "lib/apt\.sh" "${script_path}" 2>/dev/null; then
             pass "'${id}': declara manager=apt+migrated y el script sourcea scripts/lib/apt.sh"
         else

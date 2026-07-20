@@ -320,3 +320,30 @@ tools_registry_register "powerlevel10k" \
     "script=scripts/system/install_powerlevel10k.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+# Grupo mantenimiento (Hito 11, ver ADR 0013): acciones de sistema, no
+# instaladores de apps. 'kind=maintenance' las distingue de una
+# herramienta o de un agrupador (ver ADR 0031) — no tienen 'packages' (no
+# instalan un paquete propio con ese nombre) y system_update/final_update
+# solo implementan status/install a propósito (uninstall/reinstall/
+# update/repair se rechazan explícitamente, ver el propio script).
+tools_registry_register "system_update" \
+    "name=System Updates" "category=system" "manager=apt" \
+    "script=scripts/system/install_system_update.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated" \
+    "kind=maintenance"
+
+tools_registry_register "final_update" \
+    "name=Final System Update" "category=maintenance" "manager=apt" \
+    "script=scripts/maintenance/install_final_update.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated" \
+    "kind=maintenance"
+
+tools_registry_register "kernel" \
+    "name=Kernel & Headers" "category=system" "manager=apt" \
+    "script=scripts/system/install_kernel.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated" \
+    "kind=maintenance"
