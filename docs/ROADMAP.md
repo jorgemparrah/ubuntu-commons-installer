@@ -554,6 +554,8 @@ Revisar:
 
 Todos los instaladores soportados funcionan correctamente en Ubuntu 26, con evidencia individual por instalador (ver `docs/UBUNTU_COMPATIBILITY.md`). Cumplido con evidencia automatizada para 30/30 instaladores clasificados; las dos validaciones manuales pendientes (Snap en Ubuntu 26.04 Desktop, kernel HWE en VM) quedan documentadas explícitamente como condición previa a una primera versión estable (ver "Cierre administrativo" arriba), no como trabajo de este hito sin terminar.
 
+**Cobertura experimental nueva para Snap (2026-07-20, [ADR 0039](adr/0039-snapd-en-docker-para-ci-experimental.md)):** se agregó un mecanismo experimental para correr `snapd` real dentro de Docker (`tests/docker/Dockerfile.snapd` + `tests/docker/run_snap_functional.sh`, systemd como PID 1 vía `--privileged --cgroupns=host`), con un job de CI separado (`snap-functional-experimental`, `continue-on-error: true`, I29). Es un patrón de la comunidad, no soportado oficialmente por Canonical/Snapcraft — **no reemplaza** la pauta de validación manual en Ubuntu 26.04 Desktop real de este hito, que sigue siendo la única fuente de verdad para marcar los 8 instaladores Snap como `compatible` hasta que ese job demuestre estabilidad sostenida en CI.
+
 ---
 
 # Hito 10

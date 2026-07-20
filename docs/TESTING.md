@@ -165,6 +165,14 @@ Para cada checkpoint, el script reinicia el entorno (NVM real recién instalado,
 
 Varios tests funcionales (`test_docker_apt_repo.sh`, `test_vscode_apt_repo.sh`, `test_cursor_apt_repo.sh`, y otros) usan un helper `check "descripción" 'condición'` que construye la condición vía `eval`. Es seguro **solo** porque la condición siempre es un literal hardcodeado en el propio archivo de test, nunca una variable con datos externos o interpolados. Si al escribir un test nuevo la condición necesita incluir una variable, no la interpoles dentro de la cadena que se le pasa a `eval` — evalúa la condición directamente en un `if` normal en su lugar.
 
+## systemd + snapd en Docker (experimental, ver [ADR 0039](adr/0039-snapd-en-docker-para-ci-experimental.md))
+
+Los contenedores de `tests/docker/Dockerfile` (la imagen base y sus variantes) **no** tienen systemd — corren un proceso suelto como PID 1, no un init real. Para los 8 instaladores Snap del catálogo se agregó una variante separada, `tests/docker/Dockerfile.snapd`, que sí corre `systemd`/`snapd` reales (`CMD ["/sbin/init"]`), usando el patrón de la comunidad `--privileged --cgroupns=host` (no soportado oficialmente por Canonical/Snapcraft — ver la ADR para el análisis completo de costo/riesgo).
+
+No se usa `docker run --rm <img> <cmd>` como el resto de la matriz: hace falta `tests/docker/run_snap_functional.sh <imagen>`, que arranca el contenedor en segundo plano, espera a que `systemd`/`snapd` terminen de inicializar, corre la prueba real vía `docker exec`, y para/limpia el contenedor siempre. La prueba (`tests/docker/test_snap_installers_functional.sh`) instala/desinstala de verdad, contra el Snap Store real, cada uno de los 8 snaps — es lento y consume ancho de banda real, a diferencia del resto de la batería.
+
+Corre en su propio job de CI, `snap-functional-experimental`, con `continue-on-error: true` a propósito: no bloquea el resto de CI ni reemplaza todavía la pauta de validación manual en Ubuntu 26.04 Desktop de abajo, mientras no demuestre estabilidad sostenida.
+
 ## Qué no reemplaza esto
 
-Los contenedores Docker no tienen systemd por defecto, así que servicios como el demonio de Docker-dentro-de-Docker, algunos paquetes que dependen de systemd, o el comportamiento real de GNOME/atajos de teclado (Flameshot, `xdg-desktop-portal`, etc.) no se pueden validar ahí. Para eso sigue haciendo falta una VM o máquina real con escritorio, como se documenta en `docs/ROADMAP.md` y `docs/adr/0003-migracion-nvm-sin-borrado-directo.md`.
+Los contenedores Docker no tienen systemd por defecto (salvo la variante experimental de arriba, limitada a probar snapd), así que servicios como el demonio de Docker-dentro-de-Docker, algunos paquetes que dependen de systemd, o el comportamiento real de GNOME/atajos de teclado (Flameshot, `xdg-desktop-portal`, etc.) no se pueden validar ahí. Para eso sigue haciendo falta una VM o máquina real con escritorio, como se documenta en `docs/ROADMAP.md` y `docs/adr/0003-migracion-nvm-sin-borrado-directo.md`.
