@@ -38,6 +38,7 @@ const tools = [
     // DEVELOPMENT
     { name: 'Docker', script: 'scripts/development/install_docker.sh', category: 'DEVELOPMENT' },
     { name: 'Yarn', script: 'scripts/development/install_yarn.sh', category: 'DEVELOPMENT' },
+    { name: 'GitHub CLI', script: 'scripts/development/install_gh.sh', category: 'DEVELOPMENT' },
     { name: 'Postman', script: 'scripts/development/install_postman.sh', category: 'DEVELOPMENT' },
     { name: 'DBeaver', script: 'scripts/development/install_dbeaver.sh', category: 'DEVELOPMENT' },
     { name: 'GitKraken', script: 'scripts/development/install_gitkraken.sh', category: 'DEVELOPMENT' },

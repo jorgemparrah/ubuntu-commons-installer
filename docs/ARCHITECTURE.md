@@ -453,6 +453,13 @@ Evitar duplicar funciones auxiliares.
 - `install_ghostty.sh` — primer instalador cuyo mecanismo depende de la versión de Ubuntu en tiempo de ejecución (ver [ADR 0032](adr/0032-mecanismo-condicional-por-version-de-ubuntu.md)): repositorio oficial directo en 26.04+, PPA `ppa:mkasberg/ghostty-ubuntu` en 24.04. La detección usa `lsb_release -rs` (versión numérica, mismo criterio que `install_kernel.sh`); `status`/`update`/`repair` no dependen del mecanismo usado para instalar.
 - Los 5 se registraron en `tools_catalog.sh`. Pruebas nuevas: `tests/test_terminal_apps_apt_simple_contract.sh` (I25, nnn/lf) y `tests/test_ghostty_installer.sh` (I26, valida ambas ramas del mecanismo condicional con mocks).
 
+**`install_gh.sh` — GitHub CLI vía Mise (Hito 16, 2026-07-20):**
+
+- Mismo patrón exacto que `install_kubectl.sh`/`install_yarn.sh`: usa `scripts/lib/runtime.sh` (Hito 8) sin cambiarlo, se registra en `tools_catalog.sh` con `manager=mise`. `gh` también está en el repositorio oficial de Ubuntu (universe, 24.04 y 26.04), pero se instala vía Mise por decisión explícita del dueño del proyecto que amplía el rol de Mise más allá de runtimes (ver [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md)).
+- [ADR 0034](adr/0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) corrige el `manager=mise-tool` propuesto originalmente en ADR 0033: al implementar se confirmó que `kubectl`/Yarn ya resuelven el mismo caso (CLI sin política de versiones propia, instala `latest`) con `manager=mise`, sin necesidad de un valor de campo distinto.
+- `reinstall` no define función propia (mismo fallback mecánico del dispatcher); `update` vuelve a pedir `latest` vía Mise; `repair` no se implementa (misma limitación honesta que kubectl/Yarn).
+- Prueba funcional real nueva: `tests/docker/test_gh_via_mise.sh` (G01), mismo criterio que K01/Y01.
+
 ---
 
 # 16. Logging

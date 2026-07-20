@@ -858,10 +858,10 @@ Agregar al catálogo el CLI oficial de GitHub, y dejar registrado un inventario 
 
 ### Tareas
 
-**`gh` (GitHub CLI):**
+**`gh` (GitHub CLI) — implementado:**
 
-* Decisión: se instala vía **Mise** (`manager=mise-tool`), no vía apt, aunque también está en el repositorio oficial de Ubuntu (`universe`, confirmado en 24.04 y 26.04) — decisión explícita del dueño del proyecto que amplía el rol de Mise más allá de runtimes. Ver [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md).
-* Pendiente de implementación: `install_gh.sh` (o extensión de `scripts/lib/runtime.sh`/biblioteca nueva `scripts/lib/mise_tool.sh`, a decidir en la implementación) — no se avanzó en este movimiento, queda para cuando el flujo principal lo tome.
+* Decisión: se instala vía **Mise** (`manager=mise`, igual que `kubectl` y Yarn), no vía apt, aunque también está en el repositorio oficial de Ubuntu (`universe`, confirmado en 24.04 y 26.04) — decisión explícita del dueño del proyecto que amplía el rol de Mise más allá de runtimes. Ver [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md) y [ADR 0034](adr/0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) (corrige el valor de `manager` propuesto originalmente).
+* `install_gh.sh` reutiliza `scripts/lib/runtime.sh` sin cambiarlo — mismo patrón exacto que `install_kubectl.sh`/`install_yarn.sh`, no hizo falta una biblioteca nueva.
 
 **Candidatas de IA — investigación del mecanismo oficial completa, sin instalador todavía:**
 
@@ -878,13 +878,13 @@ Explícitamente descartado de este inventario: **Codex Desktop** (app Electron d
 
 ### Entregables
 
-* [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md) (Mise amplía su rol a CLIs vía registry, extiende [ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md)).
+* `install_gh.sh`, registrado en `tools_catalog.sh` (`manager=mise`) y `docs/TOOLS.md`, con prueba funcional real (`tests/docker/test_gh_via_mise.sh`, G01), mismo criterio que K01/Y01.
+* [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md) (Mise amplía su rol a CLIs vía registry, extiende [ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md)) y [ADR 0034](adr/0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) (corrige el valor de `manager` de 0033 tras confirmar el precedente de `kubectl`/Yarn).
 * Tabla de candidatas de IA arriba, como insumo para la clasificación `required/optional/candidate` pendiente con el dueño del proyecto — ninguna se implementa todavía en este movimiento.
 
 ### Pendiente
 
 * Clasificación `required/optional/retired/candidate` de las 6 candidatas de IA (pendiente de confirmar con el dueño del proyecto, igual que se hizo para el resto del catálogo el 2026-07-20).
-* Implementación de `install_gh.sh` vía Mise.
 * Implementación de instaladores para las candidatas de IA que se confirmen (ninguna todavía).
 
 ---

@@ -133,6 +133,12 @@ for ubuntu_version in "${UBUNTU_VERSIONS[@]}"; do
         "Yarn vía Mise, no vía apt (imagen base)" \
         "tests/docker/test_yarn_via_mise.sh"
 
+    # Hito 16: gh vía Mise, no vía apt (ADR 0033/0034), mismo criterio que
+    # kubectl/Yarn.
+    run_case "G01" "${base_tag}" \
+        "gh vía Mise, no vía apt (imagen base)" \
+        "tests/docker/test_gh_via_mise.sh"
+
     # Nivel 4 (Hito 9, Fase B): Oh My Zsh y Powerlevel10k instalan de
     # verdad el framework/tema, no solo el paquete zsh.
     run_case "Z01" "${base_tag}" \
@@ -201,7 +207,7 @@ done
 
 echo ""
 if [[ "${FAILED}" -eq 0 ]]; then
-    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, I01-I05, I07-I10, I11-I16, BOOT01, M01-M08, R01-R06, K01, Y01, Z01, L01, C01, V01, D01."
+    echo "RESULTADO: TODO PASÓ. Casos cubiertos (ver docs/TEST_CASES.md): U01-U08, I01-I05, I07-I10, I11-I16, BOOT01, M01-M08, R01-R06, K01, Y01, G01, Z01, L01, C01, V01, D01."
 else
     echo "RESULTADO: HUBO FALLOS. Revisa las líneas 'FALLÓ' arriba."
 fi
