@@ -134,6 +134,20 @@ SECOND_INSTALL_CODE=$?
 check "una segunda corrida de 'install' sigue saliendo con código 0" '[[ ${SECOND_INSTALL_CODE} -eq 0 ]]'
 
 echo ""
+echo "== 9. update/reinstall/repair (Hito 11: contrato completo de 6 verbos) =="
+"${INSTALL_DOCKER_SH}" update
+UPDATE_CODE=$?
+check "'update' sale con código 0" '[[ ${UPDATE_CODE} -eq 0 ]]'
+"${INSTALL_DOCKER_SH}" reinstall
+REINSTALL_CODE=$?
+check "'reinstall' sale con código 0" '[[ ${REINSTALL_CODE} -eq 0 ]]'
+check "el paquete 'docker-ce' sigue instalado después de 'reinstall'" 'dpkg -l docker-ce 2>/dev/null | grep -q "^ii"'
+"${INSTALL_DOCKER_SH}" repair
+REPAIR_CODE=$?
+check "'repair' sale con código 0" '[[ ${REPAIR_CODE} -eq 0 ]]'
+check "el cliente 'docker' sigue resolviendo después de 'repair'" 'command -v docker &>/dev/null'
+
+echo ""
 if [[ "${FAILED}" -eq 0 ]]; then
     echo "TODO OK: Docker se instala vía su repo APT oficial, paquete disponible para este codename."
 else

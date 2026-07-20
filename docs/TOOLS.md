@@ -28,15 +28,15 @@
 
 | Script | Propósito | Decisión |
 |---|---|---|
-| `install_vscode.sh` | Visual Studio Code | Mantener |
-| `install_cursor.sh` | Cursor | Mantener — corregido en el Hito 9: pasó de AppImage (x86_64 hardcodeado, sin checksum) a su repo APT oficial (`downloads.cursor.com/aptrepo`, `signed-by`, amd64+arm64), ver [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md) |
+| `install_vscode.sh` | Visual Studio Code | Mantener. **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh`, `scripts/lib/apt.sh` y `scripts/lib/apt_vendor_repo.sh` (nuevo, grupo vendor-repo); `status` distingue `OUTDATED`/`BROKEN` igual que el resto de los instaladores APT migrados |
+| `install_cursor.sh` | Cursor | Mantener — corregido en el Hito 9: pasó de AppImage (x86_64 hardcodeado, sin checksum) a su repo APT oficial (`downloads.cursor.com/aptrepo`, `signed-by`, amd64+arm64), ver [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md). **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh`, `scripts/lib/apt.sh` y `scripts/lib/apt_vendor_repo.sh` (nuevo, grupo vendor-repo); `status` distingue `OUTDATED`/`BROKEN` igual que el resto de los instaladores APT migrados |
 | `install_vim.sh` | Vim | Mantener como editor base; instalador de referencia del contrato de estado enriquecido (`status` soporta `INSTALLED\|NOT_INSTALLED\|OUTDATED\|BROKEN\|UNSUPPORTED`, y agrega las acciones `update`/`repair`). Ver [ADR 0012](adr/0012-modelo-de-estado-enriquecido.md) |
 
 ## Development
 
 | Script | Propósito | Decisión |
 |---|---|---|
-| `install_docker.sh` | Docker Engine | Mantener; alta prioridad de modernización |
+| `install_docker.sh` | Docker Engine | Mantener; alta prioridad de modernización. **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh`, `scripts/lib/apt.sh` y `scripts/lib/apt_vendor_repo.sh` (nuevo, grupo vendor-repo); `status` distingue `OUTDATED`/`BROKEN` igual que el resto de los instaladores APT migrados |
 | `install_nodejs.sh` | Node.js vía NVM | Reemplazar por módulo de runtime Mise y migración (ver [ADR 0001](adr/0001-bootstrap-bash-sin-node.md), [ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md)). Política de versiones: última estable + últimas 2 LTS; se respetan `.nvmrc`/`.node-version`/`mise.toml` a nivel de proyecto (ver [ADR 0016](adr/0016-politica-de-versiones-node-mise.md)) |
 | `install_yarn.sh` | Yarn | **Vía Mise** — implementado en el Hito 9 usando `scripts/lib/runtime.sh` (ver [ADR 0017](adr/0017-mise-instala-yarn-pnpm-directo.md) y [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md)); antes instalaba el paquete `yarn` de apt, que en Ubuntu es en realidad `cmdtest` (bug preexistente detectado en `docs/UBUNTU_COMPATIBILITY.md`) |
 | `install_postman.sh` | Postman | **Mantener** — confirmado, junto con Insomnia. **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh` y `scripts/lib/snap.sh` (helpers Snap compartidos, hermano de `apt.sh`, ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); `status` sigue sin distinguir `OUTDATED` (requeriría consultar la store de Snap por red) pero `update` existe como verbo explícito; `repair` se rechaza a propósito (código 3) |

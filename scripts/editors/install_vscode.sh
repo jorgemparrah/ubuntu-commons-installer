@@ -1,120 +1,114 @@
 #!/usr/bin/env bash
 # install_vscode.sh
 #
+# Instalador migrado en el Hito 11 (grupo vendor-repo) al contrato
+# completo de 6 verbos (ver docs/ROADMAP.md y
+# docs/adr/0029-contrato-completo-de-instalador-referencia.md). Usa el
+# dispatcher compartido (scripts/lib/installer_cli.sh), los helpers APT
+# (scripts/lib/apt.sh) y los helpers de repositorio de proveedor
+# (scripts/lib/apt_vendor_repo.sh, nuevos en esta migración).
+#
 # Repo APT oficial de Microsoft, con signed-by + keyring (nunca apt-key).
-# Corregido en el Hito 9 con los mismos hallazgos reales encontrados al
-# validar install_cursor.sh (mismo patrón gpg --dearmor) en CI, ver
-# docs/UBUNTU_COMPATIBILITY.md:
+# Hallazgos ya corregidos en el Hito 9, preservados por esta migración:
 #   1) gpg --dearmor requiere el paquete gnupg, no se puede asumir presente;
-#   2) sin comprobar el resultado, un wget/gpg fallido deja un keyring
+#   2) sin comprobar el resultado, un curl/gpg fallido deja un keyring
 #      vacío en silencio (NO_PUBKEY recién en 'apt update');
-#   3) 'dpkg -s'/'command -v' no distinguen el estado "config-files"
-#      remanente que deja 'apt remove' (sin purgar) de instalado de verdad.
+#   3) 'dpkg -l' con 'ii' distingue el estado "config-files" remanente que
+#      deja 'apt purge' de instalado de verdad.
 
 set -Eeuo pipefail
+
+UCI_VSCODE_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../lib/apt.sh
+source "${UCI_VSCODE_SCRIPT_DIR}/../lib/apt.sh"
+# shellcheck source=../lib/apt_vendor_repo.sh
+source "${UCI_VSCODE_SCRIPT_DIR}/../lib/apt_vendor_repo.sh"
+# shellcheck source=../lib/installer_cli.sh
+source "${UCI_VSCODE_SCRIPT_DIR}/../lib/installer_cli.sh"
+
 TOOL_NAME="Visual Studio Code"
+PACKAGE_NAME="code"
 VSCODE_KEYRING=/etc/apt/keyrings/packages.microsoft.gpg
 VSCODE_REPO_LIST=/etc/apt/sources.list.d/vscode.list
 
 # Function to check status
 check_status() {
-    if command -v code &> /dev/null || dpkg -l code 2>/dev/null | grep -q '^ii'; then
-        echo "INSTALLED"
-        return 0
-    else
+    if ! apt_package_installed "${PACKAGE_NAME}"; then
         echo "NOT_INSTALLED"
         return 1
     fi
+
+    if ! command -v code &> /dev/null; then
+        echo "BROKEN"
+        return 1
+    fi
+
+    if apt list --upgradable 2>/dev/null | grep -q "^${PACKAGE_NAME}/"; then
+        echo "OUTDATED"
+        return 0
+    fi
+
+    echo "INSTALLED"
+    return 0
 }
 
 # Function to install
 install_tool() {
-    echo "Instalando $TOOL_NAME..."
+    local current_status
+    current_status="$(check_status 2>/dev/null)" || true
+    if [[ "${current_status}" == "BROKEN" ]]; then
+        echo "${TOOL_NAME} está en estado BROKEN; usa 'repair' en vez de 'install'." >&2
+        return 1
+    fi
 
-    # Configure debconf
+    echo "Instalando ${TOOL_NAME}..."
+
     echo "code code/add-microsoft-repo boolean true" | sudo debconf-set-selections
 
-    # gpg --dearmor requiere el paquete gnupg; no se puede asumir presente.
-    if ! command -v gpg &> /dev/null; then
-        sudo apt update
-        sudo apt install -y gnupg
-    fi
+    apt_vendor_repo_ensure_gnupg
+    apt_vendor_repo_fetch_key_dearmored "https://packages.microsoft.com/keys/microsoft.asc" "${VSCODE_KEYRING}"
+    apt_vendor_repo_write_list "${VSCODE_REPO_LIST}" \
+        "deb [arch=amd64,arm64,armhf signed-by=${VSCODE_KEYRING}] https://packages.microsoft.com/repos/code stable main"
+    apt_install_packages "${PACKAGE_NAME}"
 
-    sudo mkdir -p "$(dirname "${VSCODE_KEYRING}")"
-
-    # Descarga y convierte la clave GPG de Microsoft. Se verifica
-    # explícitamente que el keyring no quede vacío (wget o gpg fallidos en
-    # silencio dejarían un archivo vacío, y el error real -NO_PUBKEY- solo
-    # aparecería más tarde, en 'apt update').
-    local tmp_keyring
-    tmp_keyring="$(mktemp)"
-    if ! wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > "${tmp_keyring}"; then
-        echo "No se pudo descargar/convertir la clave GPG de Microsoft" >&2
-        rm -f "${tmp_keyring}"
-        return 1
-    fi
-    if [[ ! -s "${tmp_keyring}" ]]; then
-        echo "El keyring de Microsoft quedó vacío tras la descarga; abortando" >&2
-        rm -f "${tmp_keyring}"
-        return 1
-    fi
-    sudo install -D -o root -g root -m 644 "${tmp_keyring}" "${VSCODE_KEYRING}"
-    rm -f "${tmp_keyring}"
-
-    # Add VS Code repository
-    echo "deb [arch=amd64,arm64,armhf signed-by=${VSCODE_KEYRING}] https://packages.microsoft.com/repos/code stable main" | sudo tee "${VSCODE_REPO_LIST}" > /dev/null
-
-    # Install VS Code
-    sudo apt update
-    sudo apt install -y code
-
-    echo "Visual Studio Code instalado correctamente."
+    echo "${TOOL_NAME} instalado correctamente."
 }
 
 # Function to uninstall
 uninstall_tool() {
-    echo "Desinstalando $TOOL_NAME..."
-
-    # 'apt purge' (no solo 'remove') para que dpkg no deje el paquete en
-    # estado "config-files" remanente, que 'dpkg -l | grep ii' interpreta
-    # correctamente como no instalado pero 'dpkg -s' seguiría reportando
-    # éxito (hallazgo real encontrado en install_cursor.sh).
-    sudo apt purge -y code
-    sudo apt autoremove -y
-
-    sudo rm -f "${VSCODE_REPO_LIST}"
-    sudo rm -f "${VSCODE_KEYRING}"
-
-    echo "Visual Studio Code desinstalado correctamente."
+    echo "Desinstalando ${TOOL_NAME}..."
+    apt_purge_packages "${PACKAGE_NAME}"
+    sudo rm -f "${VSCODE_REPO_LIST}" "${VSCODE_KEYRING}"
+    echo "${TOOL_NAME} desinstalado correctamente."
 }
 
 # Function to reinstall
 reinstall_tool() {
-    echo "Reinstalando $TOOL_NAME..."
-    uninstall_tool
-    install_tool
+    echo "Reinstalando ${TOOL_NAME}..."
+    sudo apt-get install --reinstall -y "${PACKAGE_NAME}"
+    echo "${TOOL_NAME} reinstalado correctamente."
 }
 
-# Main function
-main() {
-    case "${1:-}" in
-        "status")
-            check_status
-            ;;
-        "install")
-            install_tool
-            ;;
-        "uninstall")
-            uninstall_tool
-            ;;
-        "reinstall")
-            reinstall_tool
-            ;;
-        *)
-            echo "Uso: $0 {status|install|uninstall|reinstall}"
-            exit 1
-            ;;
-    esac
+# Function to update (para el estado OUTDATED)
+update_tool() {
+    echo "Actualizando ${TOOL_NAME}..."
+    sudo apt-get update
+    sudo apt-get install --only-upgrade -y "${PACKAGE_NAME}"
+    echo "${TOOL_NAME} actualizado correctamente."
 }
 
-main "$@"
+# Function to repair (para el estado BROKEN)
+repair_tool() {
+    if ! apt_package_installed "${PACKAGE_NAME}"; then
+        echo "${TOOL_NAME} no está instalado; usa 'install' en vez de 'repair'." >&2
+        return 1
+    fi
+
+    echo "Reparando ${TOOL_NAME}..."
+    sudo dpkg --configure -a
+    sudo apt-get install -f -y
+    sudo apt-get install --reinstall -y "${PACKAGE_NAME}"
+    echo "${TOOL_NAME} reparado."
+}
+
+installer_run_cli "$@"

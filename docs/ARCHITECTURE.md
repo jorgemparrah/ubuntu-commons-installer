@@ -403,6 +403,12 @@ Evitar duplicar funciones auxiliares.
 - `repair` no se implementa en ninguno de los 8: un snap es una imagen squashfs autocontenida, sin el concepto de "instalación parcial" que justifica `repair` en un paquete APT — el dispatcher lo rechaza explícitamente (código 3) si se pide, en vez de inventar una semántica.
 - Prueba nueva: `tests/test_snap_installers_full_contract.sh` (I22, ciclo de vida completo con mocks), que complementa sin reemplazar a `tests/test_snap_installers_contract.sh` (I10, ya cubría los 3 casos de `status`).
 
+**Grupo vendor-repo migrado al contrato completo (Hito 11 — 2026-07-19):**
+
+- `scripts/lib/apt_vendor_repo.sh` — helpers compartidos para instaladores que agregan su propio repositorio APT oficial de proveedor (signed-by + keyring, nunca `apt-key`), hermano de `apt.sh`/`snap.sh` para este mecanismo: `apt_vendor_repo_ensure_gnupg`, `apt_vendor_repo_fetch_key_dearmored` (VS Code/Cursor: la clave viene en texto y hay que convertirla con `gpg --dearmor`), `apt_vendor_repo_fetch_key_plain` (Docker: la clave ya viene lista para `signed-by`, sin dearmor), `apt_vendor_repo_write_list`. No decide dónde va cada keyring/list ni qué paquetes instalar — por ejemplo, Cursor necesita escribir su clave en la ruta exacta que su propio postinst espera (`/usr/share/keyrings/anysphere.gpg`), y esta biblioteca no le impone ninguna ruta.
+- Docker, VS Code y Cursor se migraron vía `installer_cli.sh` + `apt.sh` + `apt_vendor_repo.sh`, agregando `update`/`repair` (antes solo tenían `status/install/uninstall/reinstall`) sin cambiar ningún paquete, flag, URL de clave ni ruta de keyring/repo respecto a la versión previa a esta migración — cero cambio de comportamiento funcional.
+- Se registraron en `tools_catalog.sh` con `manager=apt-vendor-repo` y `requires_manual_validation=no`: a diferencia del grupo Snap, los 3 ya tenían (y conservan) prueba funcional real en CI (`tests/docker/test_docker_apt_repo.sh`/`test_vscode_apt_repo.sh`/`test_cursor_apt_repo.sh`, casos D01/V01/C01), extendida en esta migración para cubrir también `update`/`reinstall`/`repair`.
+
 ---
 
 # 16. Logging

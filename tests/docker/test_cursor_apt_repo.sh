@@ -87,6 +87,20 @@ SECOND_INSTALL_CODE=$?
 check "una segunda corrida de 'install' sigue saliendo con código 0" '[[ ${SECOND_INSTALL_CODE} -eq 0 ]]'
 
 echo ""
+echo "== 6.5. update/reinstall/repair (Hito 11: contrato completo de 6 verbos) =="
+"${INSTALL_CURSOR_SH}" update
+UPDATE_CODE=$?
+check "'update' sale con código 0" '[[ ${UPDATE_CODE} -eq 0 ]]'
+"${INSTALL_CURSOR_SH}" reinstall
+REINSTALL_CODE=$?
+check "'reinstall' sale con código 0" '[[ ${REINSTALL_CODE} -eq 0 ]]'
+check "el paquete 'cursor' sigue instalado después de 'reinstall'" 'dpkg -s cursor &>/dev/null'
+"${INSTALL_CURSOR_SH}" repair
+REPAIR_CODE=$?
+check "'repair' sale con código 0" '[[ ${REPAIR_CODE} -eq 0 ]]'
+check "el binario 'cursor' sigue resolviendo después de 'repair'" 'command -v cursor &>/dev/null'
+
+echo ""
 echo "== 7. uninstall limpia el paquete, el repo y la clave =="
 "${INSTALL_CURSOR_SH}" uninstall
 check "el paquete 'cursor' ya no está instalado" '! dpkg -l cursor 2>/dev/null | grep -q "^ii"'
