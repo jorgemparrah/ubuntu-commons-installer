@@ -150,6 +150,14 @@ Cubierto hoy por: `tests/test_ulauncher_installer.sh` (I20, mocks — no toca la
 
 Cubierto hoy por: `tests/test_tools_catalog_setup_js_consistency.sh` (I21), incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`tools-catalog-setup-js-consistency`).
 
+### Grupo Snap (Hito 11)
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I22 | Los 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify, Zoom) migrados al contrato completo de 6 verbos vía `scripts/lib/snap.sh` (nuevo, hermano de `apt.sh`) + `scripts/lib/installer_cli.sh` | Mocks de `snap`/`sudo` | Prueba simulada (mocks) | Comando desconocido falla; `install` invoca `snap install <pkg> [--classic]`; `uninstall` invoca `snap remove <pkg>`; `update` invoca `snap refresh <pkg>`; `reinstall` usa el fallback mecánico del dispatcher (remove + install, sin función propia); `repair` se rechaza explícitamente (código 3) — no implementado a propósito, un snap es una imagen autocontenida sin el concepto de "instalación parcial" de un paquete APT | ✅ pasa |
+
+Cubierto hoy por: `tests/test_snap_installers_full_contract.sh` (I22), que complementa (sin reemplazar) a `tests/test_snap_installers_contract.sh` (I10, ya cubre los 3 casos de `status`: instalado/no instalado/snapd ausente). Incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`snap-installers-full-contract`). Ninguno de los 8 se prueba funcionalmente en CI (snapd no corre sin systemd en los contenedores Docker usados por este proyecto, ver `docs/UBUNTU_COMPATIBILITY.md`).
+
 Cubierto hoy por: `tests/test_tools_registry.sh` (I17), incluido en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh`) y en su propio job de CI (`tools-registry`). Es infraestructura puramente aditiva (no cambia comportamiento de ningún instalador existente, ver ADR 0030); no migra más instaladores por sí sola.
 
 ### Validación manual pendiente: instaladores Snap en Ubuntu 26.04 Desktop

@@ -1,79 +1,72 @@
 #!/usr/bin/env bash
 # install_postman.sh
 #
-# 'status' distingue snap no instalado (NOT_INSTALLED) de snapd ausente
-# (UNKNOWN, no se puede determinar) — antes reportaba NOT_INSTALLED en
-# ambos casos por igual (hallazgo de docs/UBUNTU_COMPATIBILITY.md). No
-# verificable automáticamente en Docker (snapd no corre sin systemd); ver
-# la pauta de validación manual en docs/UBUNTU_COMPATIBILITY.md.
+# Instalador migrado en el Hito 11 (grupo Snap) al contrato completo de 6
+# verbos (ver docs/ROADMAP.md y
+# docs/adr/0029-contrato-completo-de-instalador-referencia.md). Usa el
+# dispatcher compartido (scripts/lib/installer_cli.sh) y los helpers Snap
+# compartidos (scripts/lib/snap.sh, hermano de scripts/lib/apt.sh para
+# este mecanismo).
+#
+# 'status' distingue snapd ausente/no disponible (UNKNOWN) de "no
+# instalado" (NOT_INSTALLED) — ver docs/UBUNTU_COMPATIBILITY.md. No
+# verificable automáticamente en Docker (snapd no corre sin systemd).
+#
+# 'status' no distingue OUTDATED: eso requeriría 'snap refresh --list',
+# que consulta la store de Snap por red — 'status' debe seguir siendo
+# liviano y de solo lectura local (ver docs/ARCHITECTURE.md §21, mismo
+# criterio que ADR 0031 para los paquetes meta de APT). 'update' sigue
+# existiendo como verbo explícito. 'repair' no se implementa: un snap es
+# una imagen squashfs autocontenida, sin el concepto de "instalación
+# parcial" que justifica 'repair' en paquetes APT — el dispatcher lo
+# rechaza explícitamente (código 3) si se pide.
 
 set -Eeuo pipefail
+
+UCI_POSTMAN_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../lib/snap.sh
+source "${UCI_POSTMAN_SCRIPT_DIR}/../lib/snap.sh"
+# shellcheck source=../lib/installer_cli.sh
+source "${UCI_POSTMAN_SCRIPT_DIR}/../lib/installer_cli.sh"
+
 TOOL_NAME="Postman"
 SNAP_PACKAGE="postman"
 
 # Function to check status
 check_status() {
-    if ! command -v snap &> /dev/null || ! snap list &> /dev/null; then
+    if ! snap_available; then
         echo "UNKNOWN"
         return 1
     fi
-    if snap list 2>/dev/null | grep -q "^${SNAP_PACKAGE} "; then
+
+    if snap_package_installed "${SNAP_PACKAGE}"; then
         echo "INSTALLED"
         return 0
-    else
-        echo "NOT_INSTALLED"
-        return 1
     fi
+
+    echo "NOT_INSTALLED"
+    return 1
 }
 
 # Function to install
 install_tool() {
-    echo "Instalando $TOOL_NAME..."
-    
-    # Install Postman via snap
-    echo "Installing Postman via snap..."
-    sudo snap install "${SNAP_PACKAGE}" --classic
-    
-    echo "$TOOL_NAME instalado correctamente."
+    echo "Instalando ${TOOL_NAME}..."
+    snap_install_package "${SNAP_PACKAGE}" --classic
+    echo "${TOOL_NAME} instalado correctamente."
 }
 
 # Function to uninstall
 uninstall_tool() {
-    echo "Desinstalando $TOOL_NAME..."
-    
-    # Remove package via snap
-    sudo snap remove "${SNAP_PACKAGE}"
-    
-    echo "$TOOL_NAME desinstalado correctamente."
+    echo "Desinstalando ${TOOL_NAME}..."
+    snap_remove_package "${SNAP_PACKAGE}"
+    echo "${TOOL_NAME} desinstalado correctamente."
 }
 
-# Function to reinstall
-reinstall_tool() {
-    echo "Reinstalando $TOOL_NAME..."
-    uninstall_tool
-    install_tool
+# Function to update
+update_tool() {
+    echo "Actualizando ${TOOL_NAME}..."
+    sudo snap refresh "${SNAP_PACKAGE}"
+    echo "${TOOL_NAME} actualizado correctamente."
 }
 
-# Main function
-main() {
-    case "${1:-}" in
-        "status")
-            check_status
-            ;;
-        "install")
-            install_tool
-            ;;
-        "uninstall")
-            uninstall_tool
-            ;;
-        "reinstall")
-            reinstall_tool
-            ;;
-        *)
-            echo "Uso: $0 {status|install|uninstall|reinstall}"
-            exit 1
-            ;;
-    esac
-}
-
-main "$@"
+installer_run_cli "$@"
