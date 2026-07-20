@@ -409,6 +409,15 @@ Evitar duplicar funciones auxiliares.
 - Docker, VS Code y Cursor se migraron vía `installer_cli.sh` + `apt.sh` + `apt_vendor_repo.sh`, agregando `update`/`repair` (antes solo tenían `status/install/uninstall/reinstall`) sin cambiar ningún paquete, flag, URL de clave ni ruta de keyring/repo respecto a la versión previa a esta migración — cero cambio de comportamiento funcional.
 - Se registraron en `tools_catalog.sh` con `manager=apt-vendor-repo` y `requires_manual_validation=no`: a diferencia del grupo Snap, los 3 ya tenían (y conservan) prueba funcional real en CI (`tests/docker/test_docker_apt_repo.sh`/`test_vscode_apt_repo.sh`/`test_cursor_apt_repo.sh`, casos D01/V01/C01), extendida en esta migración para cubrir también `update`/`reinstall`/`repair`.
 
+**Grupo Mise migrado al dispatcher compartido (Hito 11 — 2026-07-20):**
+
+- `install_kubectl.sh` e `install_yarn.sh` ya usaban `scripts/lib/runtime.sh` (Hito 8) para instalar/desinstalar vía Mise; esta migración es únicamente de dispatcher — adoptan `installer_cli.sh` en vez de su propio bloque `main()`/`case`, sin tocar `runtime.sh` en absoluto.
+- `reinstall` dejó de tener función propia en ambos: el fallback mecánico del dispatcher (`uninstall_tool` + `install_tool`) ya era exactamente lo que ambos scripts hacían a mano.
+- Se agregó `update_tool` en los dos (vuelve a pedir la versión `latest` vía Mise, que resuelve a la más nueva disponible). `repair` no se implementa: Mise no tiene el concepto de "instalación parcial" que justifica `repair` en un paquete APT — el dispatcher lo rechaza explícitamente.
+- `status` sigue sin distinguir `OUTDATED`/`BROKEN` (mismo criterio honesto que Snap/paquetes meta de APT).
+- Se registraron en `tools_catalog.sh` con `manager=mise`. Las pruebas funcionales reales ya existentes (`tests/docker/test_kubectl_via_mise.sh`/`test_yarn_via_mise.sh`, casos K01/Y01) se extendieron con escenarios de `update`/`reinstall`/`repair`.
+- Con este grupo se completan los 3 acordados (Snap → vendor-repo → Mise) para esta ronda de migraciones del Hito 11.
+
 ---
 
 # 16. Logging

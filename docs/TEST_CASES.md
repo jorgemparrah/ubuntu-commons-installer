@@ -178,13 +178,13 @@ Instala software real (Mise, kubectl); solo corre en contenedores desechables.
 
 | ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
 |---|---|---|---|---|---|
-| K01 | `install_kubectl.sh` instala kubectl vía Mise, nunca vía Snap | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` instala Mise+kubectl; `status` INSTALLED después, código 0; `mise which kubectl` resuelve un ejecutable; `snap list` no incluye kubectl; una segunda corrida de `install` no falla (idempotencia); subcomando inválido falla | ✅ pasa |
+| K01 | `install_kubectl.sh` instala kubectl vía Mise, nunca vía Snap. **Migrado en el Hito 11 (grupo Mise)**: adopta `scripts/lib/installer_cli.sh` (solo el dispatcher, sin tocar `scripts/lib/runtime.sh`) | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` instala Mise+kubectl; `status` INSTALLED después, código 0; `mise which kubectl` resuelve un ejecutable; `snap list` no incluye kubectl; una segunda corrida de `install` no falla (idempotencia); `update` (nuevo) sale con código 0; `reinstall` usa el fallback mecánico del dispatcher; `repair` se rechaza explícitamente (no implementado a propósito); subcomando inválido falla | ✅ pasa |
 
 Cubierto hoy por: `tests/docker/test_kubectl_via_mise.sh` (K01), incluido en `tests/docker/build-and-test-all.sh`.
 
 | ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
 |---|---|---|---|---|---|
-| Y01 | `install_yarn.sh` instala Yarn vía Mise, nunca vía apt (paquete `yarn` de Ubuntu es en realidad `cmdtest`) | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` instala Mise+Yarn; `status` INSTALLED después, código 0; `mise which yarn` resuelve un ejecutable; el paquete apt `yarn` nunca se instala; una segunda corrida de `install` no falla (idempotencia); subcomando inválido falla | ✅ pasa |
+| Y01 | `install_yarn.sh` instala Yarn vía Mise, nunca vía apt (paquete `yarn` de Ubuntu es en realidad `cmdtest`). **Migrado en el Hito 11 (grupo Mise)**: adopta `scripts/lib/installer_cli.sh` (solo el dispatcher, sin tocar `scripts/lib/runtime.sh`) | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` instala Mise+Yarn; `status` INSTALLED después, código 0; `mise which yarn` resuelve un ejecutable; el paquete apt `yarn` nunca se instala; una segunda corrida de `install` no falla (idempotencia); `update` (nuevo) sale con código 0; `reinstall` usa el fallback mecánico del dispatcher; `repair` se rechaza explícitamente (no implementado a propósito); subcomando inválido falla | ✅ pasa |
 
 Cubierto hoy por: `tests/docker/test_yarn_via_mise.sh` (Y01), incluido en `tests/docker/build-and-test-all.sh`.
 
