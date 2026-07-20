@@ -1,101 +1,90 @@
 #!/usr/bin/env bash
 # install_cursor.sh
 #
+# Instalador migrado en el Hito 11 (grupo vendor-repo) al contrato
+# completo de 6 verbos (ver docs/ROADMAP.md y
+# docs/adr/0029-contrato-completo-de-instalador-referencia.md). Usa el
+# dispatcher compartido (scripts/lib/installer_cli.sh), los helpers APT
+# (scripts/lib/apt.sh) y los helpers de repositorio de proveedor
+# (scripts/lib/apt_vendor_repo.sh, nuevos en esta migración).
+#
 # Cursor tiene un repositorio APT oficial (downloads.cursor.com/aptrepo),
 # con el mecanismo moderno de clave GPG (signed-by + keyring, nunca
-# apt-key) y soporte para amd64 y arm64. Antes este script descargaba un
-# AppImage fijado a x86_64 sin checksum (hallazgo de
-# docs/UBUNTU_COMPATIBILITY.md); el repo oficial resuelve ambos problemas
-# de una vez (arquitectura declarada explícitamente, clave y paquete
-# verificados por apt) — ver ADR 0027 (categoría "servicio/software
-# técnico con repositorio propio -> APT oficial del fabricante").
+# apt-key) y soporte para amd64 y arm64 (ver ADR 0027).
 #
 # El propio paquete 'cursor' gestiona, en su postinst, su propia entrada
 # de repositorio con signed-by=/usr/share/keyrings/anysphere.gpg
 # (encontrado al validar en CI: si nuestra entrada manual usa una ruta de
 # keyring distinta, apt detecta 'Conflicting values set for option
 # Signed-By' para la misma URL/suite y se niega a leer la lista de
-# fuentes en CUALQUIER operación posterior, incluido 'apt update' fuera
-# de este script). Por eso la clave se escribe directamente en esa misma
+# fuentes en CUALQUIER operación posterior, incluido 'apt update' fuera de
+# este script). Por eso la clave se escribe directamente en esa misma
 # ruta que el paquete espera, en vez de una ruta propia — así, aunque el
 # postinst repita la misma entrada, coincide exactamente y no hay
 # conflicto.
 
 set -Eeuo pipefail
+
+UCI_CURSOR_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../lib/apt.sh
+source "${UCI_CURSOR_SCRIPT_DIR}/../lib/apt.sh"
+# shellcheck source=../lib/apt_vendor_repo.sh
+source "${UCI_CURSOR_SCRIPT_DIR}/../lib/apt_vendor_repo.sh"
+# shellcheck source=../lib/installer_cli.sh
+source "${UCI_CURSOR_SCRIPT_DIR}/../lib/installer_cli.sh"
+
 TOOL_NAME="Cursor AI IDE"
+PACKAGE_NAME="cursor"
 CURSOR_KEYRING=/usr/share/keyrings/anysphere.gpg
 CURSOR_REPO_LIST=/etc/apt/sources.list.d/cursor.list
 
 # Function to check status
 check_status() {
-    # 'dpkg -s' sigue devolviendo éxito (código 0) para un paquete recién
-    # removido con 'apt remove' (queda en estado "config-files"
-    # remanente) — encontrado al validar en CI, reportaba INSTALLED
-    # incluso después de desinstalar. 'dpkg -l' con el flag "ii" (install
-    # ok installed) sí distingue ese caso, igual que el resto de los
-    # instaladores del proyecto.
-    if command -v cursor &> /dev/null || dpkg -l cursor 2>/dev/null | grep -q '^ii'; then
-        echo "INSTALLED"
-        return 0
-    else
+    if ! apt_package_installed "${PACKAGE_NAME}"; then
         echo "NOT_INSTALLED"
         return 1
     fi
+
+    if ! command -v cursor &> /dev/null; then
+        echo "BROKEN"
+        return 1
+    fi
+
+    if apt list --upgradable 2>/dev/null | grep -q "^${PACKAGE_NAME}/"; then
+        echo "OUTDATED"
+        return 0
+    fi
+
+    echo "INSTALLED"
+    return 0
 }
 
 # Function to install
 install_tool() {
-    echo "Instalando $TOOL_NAME..."
-
-    # gpg --dearmor requiere el paquete gnupg; no se puede asumir presente
-    # (encontrado al validar en CI: sin gnupg, el pipe no falla de forma
-    # visible y deja un keyring vacío en silencio, causando un error de
-    # firma NO_PUBKEY recién al hacer 'apt update' — ver docs/UBUNTU_COMPATIBILITY.md).
-    if ! command -v gpg &> /dev/null; then
-        sudo apt update
-        sudo apt install -y gnupg
-    fi
-
-    sudo mkdir -p "$(dirname "${CURSOR_KEYRING}")"
-
-    # Descarga y convierte la clave GPG de Cursor, en la misma ruta que usa
-    # el propio paquete (ver nota arriba). Se verifica explícitamente que
-    # el keyring no quede vacío (un curl o gpg fallido en silencio dejaría
-    # un archivo vacío, y el error real -NO_PUBKEY- solo aparecería más
-    # tarde, en 'apt update' — mismo hallazgo aplicado a install_vscode.sh).
-    local tmp_keyring
-    tmp_keyring="$(mktemp)"
-    if ! curl -fsSL https://downloads.cursor.com/keys/anysphere.asc | gpg --dearmor > "${tmp_keyring}"; then
-        echo "No se pudo descargar/convertir la clave GPG de Cursor" >&2
-        rm -f "${tmp_keyring}"
+    local current_status
+    current_status="$(check_status 2>/dev/null)" || true
+    if [[ "${current_status}" == "BROKEN" ]]; then
+        echo "${TOOL_NAME} está en estado BROKEN; usa 'repair' en vez de 'install'." >&2
         return 1
     fi
-    if [[ ! -s "${tmp_keyring}" ]]; then
-        echo "El keyring de Cursor quedó vacío tras la descarga; abortando" >&2
-        rm -f "${tmp_keyring}"
-        return 1
-    fi
-    sudo install -D -o root -g root -m 644 "${tmp_keyring}" "${CURSOR_KEYRING}"
-    rm -f "${tmp_keyring}"
 
-    # Añade el repositorio de Cursor
-    echo "deb [arch=amd64,arm64 signed-by=${CURSOR_KEYRING}] https://downloads.cursor.com/aptrepo stable main" | sudo tee "${CURSOR_REPO_LIST}" > /dev/null
+    echo "Instalando ${TOOL_NAME}..."
 
-    # Actualiza e instala
-    sudo apt update
-    sudo apt install -y cursor
+    apt_vendor_repo_ensure_gnupg
+    apt_vendor_repo_fetch_key_dearmored "https://downloads.cursor.com/keys/anysphere.asc" "${CURSOR_KEYRING}"
+    apt_vendor_repo_write_list "${CURSOR_REPO_LIST}" \
+        "deb [arch=amd64,arm64 signed-by=${CURSOR_KEYRING}] https://downloads.cursor.com/aptrepo stable main"
+    apt_install_packages "${PACKAGE_NAME}"
 
-    echo "$TOOL_NAME instalado correctamente."
+    echo "${TOOL_NAME} instalado correctamente."
 }
 
 # Function to uninstall
 uninstall_tool() {
-    echo "Desinstalando $TOOL_NAME..."
+    echo "Desinstalando ${TOOL_NAME}..."
 
-    sudo apt purge -y cursor
-    sudo apt autoremove -y
-    sudo rm -f "${CURSOR_REPO_LIST}"
-    sudo rm -f "${CURSOR_KEYRING}"
+    apt_purge_packages "${PACKAGE_NAME}"
+    sudo rm -f "${CURSOR_REPO_LIST}" "${CURSOR_KEYRING}"
 
     # Limpia también cualquier entrada que el propio paquete pudo haber
     # agregado con un nombre de archivo distinto al nuestro (se confirmó en
@@ -103,36 +92,36 @@ uninstall_tool() {
     sudo rm -f /etc/apt/sources.list.d/anysphere.list
     sudo rm -f /etc/apt/sources.list.d/cursor.sources
 
-    echo "$TOOL_NAME desinstalado correctamente."
+    echo "${TOOL_NAME} desinstalado correctamente."
 }
 
 # Function to reinstall
 reinstall_tool() {
-    echo "Reinstalando $TOOL_NAME..."
-    uninstall_tool
-    install_tool
+    echo "Reinstalando ${TOOL_NAME}..."
+    sudo apt-get install --reinstall -y "${PACKAGE_NAME}"
+    echo "${TOOL_NAME} reinstalado correctamente."
 }
 
-# Main function
-main() {
-    case "${1:-}" in
-        "status")
-            check_status
-            ;;
-        "install")
-            install_tool
-            ;;
-        "uninstall")
-            uninstall_tool
-            ;;
-        "reinstall")
-            reinstall_tool
-            ;;
-        *)
-            echo "Uso: $0 {status|install|uninstall|reinstall}"
-            exit 1
-            ;;
-    esac
+# Function to update (para el estado OUTDATED)
+update_tool() {
+    echo "Actualizando ${TOOL_NAME}..."
+    sudo apt-get update
+    sudo apt-get install --only-upgrade -y "${PACKAGE_NAME}"
+    echo "${TOOL_NAME} actualizado correctamente."
 }
 
-main "$@"
+# Function to repair (para el estado BROKEN)
+repair_tool() {
+    if ! apt_package_installed "${PACKAGE_NAME}"; then
+        echo "${TOOL_NAME} no está instalado; usa 'install' en vez de 'repair'." >&2
+        return 1
+    fi
+
+    echo "Reparando ${TOOL_NAME}..."
+    sudo dpkg --configure -a
+    sudo apt-get install -f -y
+    sudo apt-get install --reinstall -y "${PACKAGE_NAME}"
+    echo "${TOOL_NAME} reparado."
+}
+
+installer_run_cli "$@"
