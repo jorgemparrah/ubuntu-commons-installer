@@ -84,7 +84,7 @@ Ver `docs/UBUNTU_COMPATIBILITY.md` para la matriz completa de compatibilidad Ubu
 | I07 | `install_mongodb_compass.sh` falla con mensaje claro y limpia el `.deb` parcial si la descarga o la instalación fallan | Mocks de `wget`/`apt` devolviendo error | Prueba simulada (mocks) | Código ≠0 si `wget` falla, mensaje claro, sin `.deb` residual; código ≠0 si `apt install` del `.deb` falla, igual sin `.deb` residual | ✅ pasa |
 | I08 | `install_kernel.sh`: `resolve_hwe_fallback_package_name()` usa la versión numérica de Ubuntu, no el codename | Ninguna (función pura, sin I/O; el archivo se sourcea con guarda para no disparar `main()`) | Prueba unitaria | `resolve_hwe_fallback_package_name "24.04"` → `linux-generic-hwe-24.04`; el código ya no usa `lsb_release -cs`, usa `lsb_release -rs`; ninguna referencia a `update-grub`/`grub-mkconfig`/`reboot`/`shutdown` | ✅ pasa |
 | I09 | `install_chrome.sh` revisa la arquitectura antes de descargar el `.deb` amd64 (ver [ADR 0028](adr/0028-arquitectura-soportada-amd64.md)) | Mocks de `dpkg --print-architecture` devolviendo `amd64` y `arm64` | Prueba simulada (mocks) | amd64: `status` NOT_INSTALLED, `install` intenta descargar; arm64: `status` UNSUPPORTED, `install` rechaza sin descargar nada, mensaje claro | ✅ pasa |
-| I10 | 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify, Zoom): `status` distingue snap instalado / no instalado / snapd ausente | Mocks de `snap list` con 3 variantes (instalado, vacío, comando `snap` inexistente) | Prueba simulada (mocks) | Instalado → INSTALLED/código 0; no instalado → NOT_INSTALLED/código≠0; snapd ausente → UNKNOWN/código≠0 (antes se confundía con NOT_INSTALLED) | ✅ pasa |
+| I10 | 9 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify, Zoom, Yazi): `status` distingue snap instalado / no instalado / snapd ausente | Mocks de `snap list` con 3 variantes (instalado, vacío, comando `snap` inexistente) | Prueba simulada (mocks) | Instalado → INSTALLED/código 0; no instalado → NOT_INSTALLED/código≠0; snapd ausente → UNKNOWN/código≠0 (antes se confundía con NOT_INSTALLED) | ✅ pasa |
 
 Cubierto hoy por: `tests/test_system_utils_contract.sh` (I01-I04), `tests/test_system_update_contract.sh` (I05), `tests/test_mongodb_compass_download.sh` (I07), `tests/test_kernel_hwe_fallback.sh` (I08), `tests/test_chrome_arch_check.sh` (I09) y `tests/test_snap_installers_contract.sh` (I10), todos incluidos en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh`) y, desde el cierre técnico de 2026-07-19, cada uno en su propio job de CI (`system-utils-contract`, `system-update-contract`, `mongodb-compass-download`, `kernel-hwe-fallback`, `chrome-arch-check`, `snap-installers-contract`). El caso de Cursor (antes I06, validación estática del AppImage) se retiró y reemplazó por C01 (prueba funcional Docker), ver más abajo — Cursor pasó a instalarse vía su repo APT oficial, no AppImage.
 
@@ -162,7 +162,7 @@ Cubierto hoy por: `tests/test_tools_catalog_ubuntu_compatibility_consistency.sh`
 
 | ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
 |---|---|---|---|---|---|
-| I22 | Los 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify, Zoom) migrados al contrato completo de 6 verbos vía `scripts/lib/snap.sh` (nuevo, hermano de `apt.sh`) + `scripts/lib/installer_cli.sh` | Mocks de `snap`/`sudo` | Prueba simulada (mocks) | Comando desconocido falla; `install` invoca `snap install <pkg> [--classic]`; `uninstall` invoca `snap remove <pkg>`; `update` invoca `snap refresh <pkg>`; `reinstall` usa el fallback mecánico del dispatcher (remove + install, sin función propia); `repair` se rechaza explícitamente (código 3) — no implementado a propósito, un snap es una imagen autocontenida sin el concepto de "instalación parcial" de un paquete APT | ✅ pasa |
+| I22 | Los 9 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify, Zoom, Yazi) migrados/creados con el contrato completo de 6 verbos vía `scripts/lib/snap.sh` (nuevo, hermano de `apt.sh`) + `scripts/lib/installer_cli.sh` | Mocks de `snap`/`sudo` | Prueba simulada (mocks) | Comando desconocido falla; `install` invoca `snap install <pkg> [--classic]`; `uninstall` invoca `snap remove <pkg>`; `update` invoca `snap refresh <pkg>`; `reinstall` usa el fallback mecánico del dispatcher (remove + install, sin función propia); `repair` se rechaza explícitamente (código 3) — no implementado a propósito, un snap es una imagen autocontenida sin el concepto de "instalación parcial" de un paquete APT | ✅ pasa |
 
 Cubierto hoy por: `tests/test_snap_installers_full_contract.sh` (I22), que complementa (sin reemplazar) a `tests/test_snap_installers_contract.sh` (I10, ya cubre los 3 casos de `status`: instalado/no instalado/snapd ausente). Incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`snap-installers-full-contract`). Ninguno de los 8 se prueba funcionalmente en CI (snapd no corre sin systemd en los contenedores Docker usados por este proyecto, ver `docs/UBUNTU_COMPATIBILITY.md`).
 
@@ -188,6 +188,15 @@ Repetir por cada uno de los 8. Ningún instalador Snap se marca como `compatible
 
 Cubierto hoy por: `tests/test_deb_direct_full_contract.sh` (I23), que complementa (sin reemplazar) a `tests/test_chrome_arch_check.sh` (I09, ya cubre la verificación de arquitectura) y `tests/test_mongodb_compass_download.sh` (I07, ya cubre los fallos de descarga/instalación). Incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`deb-direct-full-contract`).
 
+### Terminales y gestores de archivos nuevos (nnn, lf, Ghostty)
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I25 | `install_nnn.sh`/`install_lf.sh` (ambos ya en los repositorios oficiales de Ubuntu, apt-simple) con el contrato completo de 6 verbos, mismo patrón que `install_ranger.sh` | Mocks de `dpkg`/`apt`/`apt-get`/`sudo` | Prueba simulada (mocks) | Igual que I14 (ranger), para cada uno de los 2 | ✅ pasa |
+| I26 | `install_ghostty.sh` decide su mecanismo según la versión de Ubuntu (ver [ADR 0032](adr/0032-mecanismo-condicional-por-version-de-ubuntu.md)): PPA `mkasberg/ghostty-ubuntu` en 24.04, repositorio oficial directo en 26.04+ | Mocks de `lsb_release`/`dpkg`/`apt`/`apt-get`/`add-apt-repository`/`sudo` | Prueba simulada (mocks) | En 24.04: `install` agrega el PPA antes de instalar, `uninstall` lo quita; en 26.04: ninguno de los dos toca el PPA; `status`/`update`/`repair` se comportan igual en ambas versiones | ✅ pasa |
+
+Cubierto hoy por: `tests/test_terminal_apps_apt_simple_contract.sh` (I25) y `tests/test_ghostty_installer.sh` (I26), incluidos en `tests/docker/run-all-tests.sh` y cada uno en su propio job de CI (`terminal-apps-apt-simple-contract`, `ghostty-installer`).
+
 Instala software real (Mise, kubectl); solo corre en contenedores desechables.
 
 | ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
@@ -207,6 +216,12 @@ Cubierto hoy por: `tests/docker/test_yarn_via_mise.sh` (Y01), incluido en `tests
 | Z01 | `install_oh_my_zsh.sh`/`install_powerlevel10k.sh` instalan el framework/tema real, no solo el paquete `zsh`. **Migrados al contrato completo de 6 verbos en el Hito 11 (grupo git-clone, 2026-07-20)**: usan `scripts/lib/installer_cli.sh`/`scripts/lib/apt.sh`/`scripts/lib/git_clone.sh` (nuevo) — ninguno de los dos usa el script `curl \| sh` oficial de Oh My Zsh, ambos clonan el repo directamente vía `git clone` | Home vacío | `Dockerfile` (base) | `~/.oh-my-zsh` y el tema `powerlevel10k` quedan clonados con su archivo principal; `status` INSTALLED después; segunda corrida de `install` no reclona (mismo commit git); `update` (nuevo) hace `git pull --ff-only`; `reinstall` usa el fallback mecánico del dispatcher; `repair` (nuevo) reclona sobre un directorio corrupto (sin `.git`), detectado como `BROKEN`; ninguno crea/modifica `~/.zshrc`; subcomando inválido falla | ✅ pasa |
 
 Cubierto hoy por: `tests/docker/test_zsh_personalization.sh` (Z01), incluido en `tests/docker/build-and-test-all.sh`.
+
+| ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| W01 | `install_wezterm.sh` instala vía su repositorio APT propio en Fury.io (signed-by, keyring, nunca apt-key) — repo "flat" sin codename, mismo mecanismo en 24.04 y 26.04 | Home vacío | `Dockerfile` (base) | `status` NOT_INSTALLED antes, código ≠0; `install` agrega la clave GPG y el repo con `signed-by`; `status` INSTALLED después; segunda corrida de `install` no falla; `update`/`reinstall`/`repair` salen con código 0; `uninstall` limpia paquete+repo+keyring; subcomando inválido falla | ✅ pasa |
+
+Cubierto hoy por: `tests/docker/test_wezterm_apt_repo.sh` (W01), incluido en `tests/docker/build-and-test-all.sh` y en su propio job de CI (`wezterm-apt-repo`).
 
 | ID | Escenario | Condición inicial | Imagen | Resultado esperado | Estado |
 |---|---|---|---|---|---|
