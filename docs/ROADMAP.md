@@ -863,29 +863,31 @@ Agregar al catálogo el CLI oficial de GitHub, y dejar registrado un inventario 
 * Decisión: se instala vía **Mise** (`manager=mise`, igual que `kubectl` y Yarn), no vía apt, aunque también está en el repositorio oficial de Ubuntu (`universe`, confirmado en 24.04 y 26.04) — decisión explícita del dueño del proyecto que amplía el rol de Mise más allá de runtimes. Ver [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md) y [ADR 0034](adr/0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) (corrige el valor de `manager` propuesto originalmente).
 * `install_gh.sh` reutiliza `scripts/lib/runtime.sh` sin cambiarlo — mismo patrón exacto que `install_kubectl.sh`/`install_yarn.sh`, no hizo falta una biblioteca nueva.
 
-**Candidatas de IA — investigación del mecanismo oficial completa, sin instalador todavía:**
+**Candidatas de IA — mecanismo oficial investigado, clasificación confirmada con el dueño del proyecto (2026-07-20), sin instalador todavía:**
 
-| Herramienta | Mecanismo oficial investigado | Nivel de oficialidad |
-|---|---|---|
-| Claude Desktop (incluye Cowork) | Repo APT propio de Anthropic (`downloads.claude.ai/claude-desktop/apt/stable`, `signed-by`), paquete `claude-desktop`. Ubuntu 22.04+/Debian 12+, amd64/arm64. Cowork requiere KVM, ~25 GB disco, 8 GB RAM | Alto — mismo patrón que Docker/VS Code/Cursor |
-| Claude Code | Script oficial (`curl -fsSL https://claude.ai/install.sh \| bash`, sin Node), o npm (`@anthropic-ai/claude-code`, Node 22+), o repos apt/dnf/apk propios de Anthropic para sistemas gestionados | Alto — múltiples canales oficiales, incluye apt |
-| Antigravity (Google) | CLI (`agy`): script oficial (`curl -fsSL https://antigravity.google/cli/install.sh \| bash`) a `~/.local/bin`, o npm/`brew`. IDE/Desktop: sin apt/snap oficial, tarball descargado manualmente | Medio — oficial, sin paquete de sistema |
-| OpenCode | Script oficial (`curl -fsSL https://opencode.ai/install \| bash`), o npm (`opencode-ai`) | Medio — oficial, sin paquete de sistema |
-| OpenClaw | Script oficial (`curl -fsSL https://openclaw.ai/install.sh \| bash`), o npm (`openclaw`); requiere Node.js 22.22.3+/24.15+/25.9+ | Medio — oficial, sin paquete de sistema |
-| Codex CLI (OpenAI) | Script oficial (`curl -fsSL https://chatgpt.com/codex/install.sh \| sh`), o npm con scope (`@openai/codex` — el paquete `codex` sin scope es de otro proyecto) | Alto — oficial, terminal, soportado en Linux |
+| Herramienta | Mecanismo oficial investigado | Nivel de oficialidad | Clasificación |
+|---|---|---|---|
+| Claude Desktop (incluye Cowork) | Repo APT propio de Anthropic (`downloads.claude.ai/claude-desktop/apt/stable`, `signed-by`), paquete `claude-desktop`. Ubuntu 22.04+/Debian 12+, amd64/arm64. Cowork requiere KVM, ~25 GB disco, 8 GB RAM | Alto — mismo patrón que Docker/VS Code/Cursor | `optional` |
+| Claude Code | Script oficial (`curl -fsSL https://claude.ai/install.sh \| bash`, sin Node), o npm (`@anthropic-ai/claude-code`, Node 22+), o repos apt/dnf/apk propios de Anthropic para sistemas gestionados | Alto — múltiples canales oficiales, incluye apt | `required` |
+| Antigravity (Google) | CLI (`agy`): script oficial (`curl -fsSL https://antigravity.google/cli/install.sh \| bash`) a `~/.local/bin`, o npm/`brew`. IDE/Desktop: sin apt/snap oficial, tarball descargado manualmente | Medio — oficial, sin paquete de sistema | `optional` |
+| OpenCode | Script oficial (`curl -fsSL https://opencode.ai/install \| bash`), o npm (`opencode-ai`) | Medio — oficial, sin paquete de sistema | `required` |
+| OpenClaw | Script oficial (`curl -fsSL https://openclaw.ai/install.sh \| bash`), o npm (`openclaw`); requiere Node.js 22.22.3+/24.15+/25.9+ | Medio — oficial, sin paquete de sistema | `optional` |
+| Codex CLI (OpenAI) | Script oficial (`curl -fsSL https://chatgpt.com/codex/install.sh \| sh`), o npm con scope (`@openai/codex` — el paquete `codex` sin scope es de otro proyecto) | Alto — oficial, terminal, soportado en Linux | `required` |
+| Hermes Agent (NousResearch) | Script oficial (`curl -fsSL https://hermes-agent.nousresearch.com/install.sh \| bash`, también disponible en el propio repo de GitHub), o PowerShell en Windows (fuera de alcance). El instalador de terceros bundlea `uv`, Python 3.11, Node.js, ripgrep, ffmpeg y Git portable — no son dependencias que este proyecto gestione por separado, quedan dentro del script oficial. Repo real en GitHub (`NousResearch/hermes-agent`, MIT, ~218k stars, 22 releases; confirmado, no solo sitios de terceros) | Alto — repo oficial verificado, script propio | `optional` |
 
 Explícitamente descartado de este inventario: **Codex Desktop** (app Electron de OpenAI) — sin ninguna opción oficial de Linux; los únicos paquetes existentes son repaquetados de terceros sin firma real (`[trusted=yes]` en vez de `signed-by`), lo que no cumple el estándar de seguridad del proyecto (`AGENT.md` §16).
+
+Nota de investigación (Hermes Agent): los primeros resultados de búsqueda incluyeron varios sitios de terceros con contenido tipo "guía 2026" de aspecto genérico (posible SEO/content farm) — se evitó tomarlos como fuente y se verificó directamente el repositorio oficial en GitHub (licencia, releases, script de instalación citado en el propio README) antes de confirmar el mecanismo.
 
 ### Entregables
 
 * `install_gh.sh`, registrado en `tools_catalog.sh` (`manager=mise`) y `docs/TOOLS.md`, con prueba funcional real (`tests/docker/test_gh_via_mise.sh`, G01), mismo criterio que K01/Y01.
 * [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md) (Mise amplía su rol a CLIs vía registry, extiende [ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md)) y [ADR 0034](adr/0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) (corrige el valor de `manager` de 0033 tras confirmar el precedente de `kubectl`/Yarn).
-* Tabla de candidatas de IA arriba, como insumo para la clasificación `required/optional/candidate` pendiente con el dueño del proyecto — ninguna se implementa todavía en este movimiento.
+* Tabla de candidatas de IA arriba, con clasificación `required`/`optional` ya confirmada con el dueño del proyecto — ninguna se implementa todavía en este movimiento.
 
 ### Pendiente
 
-* Clasificación `required/optional/retired/candidate` de las 6 candidatas de IA (pendiente de confirmar con el dueño del proyecto, igual que se hizo para el resto del catálogo el 2026-07-20).
-* Implementación de instaladores para las candidatas de IA que se confirmen (ninguna todavía).
+* Implementación de instaladores para las 7 candidatas de IA ya clasificadas: `required` (Claude Code, Codex CLI, OpenCode) y `optional` (Claude Desktop/Cowork, Antigravity, OpenClaw, Hermes Agent). Ninguna implementada todavía.
 
 ---
 
