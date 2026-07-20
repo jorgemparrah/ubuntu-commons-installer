@@ -54,7 +54,7 @@ EOF
     cat > "${UCI_MOCK_BIN}/wget" <<EOF
 #!/usr/bin/env bash
 echo "wget \$*" >> "${UCI_MOCK_LOG}"
-touch "google-chrome-stable_current_amd64.deb"
+echo "contenido falso de .deb" > "google-chrome-stable_current_amd64.deb"
 exit 0
 EOF
     chmod +x "${UCI_MOCK_BIN}/wget"
@@ -65,6 +65,13 @@ echo "apt \$*" >> "${UCI_MOCK_LOG}"
 exit 0
 EOF
     chmod +x "${UCI_MOCK_BIN}/apt"
+
+    cat > "${UCI_MOCK_BIN}/apt-get" <<EOF
+#!/usr/bin/env bash
+echo "apt-get \$*" >> "${UCI_MOCK_LOG}"
+exit 0
+EOF
+    chmod +x "${UCI_MOCK_BIN}/apt-get"
 
     cat > "${UCI_MOCK_BIN}/sudo" <<'EOF'
 #!/usr/bin/env bash
