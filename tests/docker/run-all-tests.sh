@@ -94,6 +94,7 @@ run_suite "tests/test_tools_catalog_docs_consistency.sh" bash tests/test_tools_c
 run_suite "tests/test_ulauncher_installer.sh" bash tests/test_ulauncher_installer.sh
 run_suite "tests/test_tools_catalog_setup_js_consistency.sh" bash tests/test_tools_catalog_setup_js_consistency.sh
 run_suite "tests/test_snap_installers_full_contract.sh" bash tests/test_snap_installers_full_contract.sh
+run_suite "tests/test_deb_direct_full_contract.sh" bash tests/test_deb_direct_full_contract.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then
