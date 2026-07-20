@@ -557,21 +557,15 @@ Nada debe eliminarse sin backup.
 
 Las versiones futuras deben soportar perfiles de instalación.
 
-Ejemplo:
+Los perfiles definen qué herramientas se instalan.
 
-```
-minimal
+**Implementación (Hito 13, 2026-07-20):** un perfil es un conjunto de herramientas del catálogo, no un módulo del pipeline de bootstrap — instalar un perfil no reemplaza `setup.sh`/`main_setup`, solo automatiza la selección de qué instalar. Mecanismo:
 
-developer
-
-desktop
-
-workstation
-
-full
-```
-
-Los perfiles definen qué módulos se ejecutan.
+- Campo nuevo `profiles=<lista separada por coma>` en cada entrada de `scripts/lib/tools_catalog.sh` (mismo mecanismo sin esquema forzado que `kind`/`subcategory`/`classification`, ver [ADR 0030](adr/0030-registro-central-de-metadata-de-instaladores.md)). El contenido de cada perfil se calculó una vez por regla (a partir de `classification`/`category`/`subcategory`) y se guardó como dato — no se recalcula en tiempo de ejecución.
+- Requirió agregar un campo nuevo, `classification=required|optional`, ya que la regla de `minimal` depende de esa clasificación y solo 7 de las 53 herramientas la tenían explícita hasta ahora (ver `docs/TOOLS.md`, sección "Clasificación").
+- 11 perfiles: `minimal` (las 10 `required`), `cli` (todo el catálogo con `requires_gui=no`, más amplio que `minimal`), `desktop`/`developer` (minimal + categorías de uso general/desarrollo), `workstation` (unión de los dos anteriores), `full` (las 53), `creator`/`productivity`/`coding`/`editor` (minimal + una categoría puntual cada uno), y `ai-cli` (solo `subcategory=ai-cli`, sin los agentes de escritorio `ai-agent`).
+- Comando nuevo, Bash puro (consistente con [ADR 0001](adr/0001-bootstrap-bash-sin-node.md)): `setup.sh install --profile <nombre>`. Recorre `tools_registry_ids()`, filtra por el campo `profiles`, y corre `install` solo si `status` no reporta ya instalado (idempotencia de [ADR 0004](adr/0004-idempotencia-instalado-igual-skip.md)).
+- `--profile custom` (o sin `--profile`) delega en el flujo interactivo existente (`setup.js`) — el checklist herramienta por herramienta ya cubre ese caso, no se construyó un modo nuevo para "elegir a mano".
 
 ---
 

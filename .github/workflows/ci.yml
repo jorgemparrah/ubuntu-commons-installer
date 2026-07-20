@@ -115,6 +115,7 @@ jobs:
           - wezterm-apt-repo
           - gh-via-mise
           - curl-script-contract
+          - install-profile
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -335,6 +336,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I27"
             cmd: bash tests/test_curl_script_contract.sh
+          - case: install-profile
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I30"
+            cmd: bash tests/test_install_profile.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single

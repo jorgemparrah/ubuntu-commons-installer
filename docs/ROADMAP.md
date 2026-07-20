@@ -763,23 +763,48 @@ Media
 
 **Estado**
 
-Blocked
+In Progress
 
 Depende de:
 
-Framework de validación
+Framework de validación (Hito 12)
+
+**Corrección administrativa (2026-07-20):** el Hito 12 sigue formalmente en `In Progress` (no se propuso su cierre como `Done`), pero la dependencia real (framework de validación funcionando) ya está cumplida en la práctica — los 5 chequeos ya están implementados en `doctor`. El dueño del proyecto confirmó reinterpretar la dependencia como cumplida y pasar este hito de `Blocked` a `In Progress`, mismo criterio ya usado entre los Hitos 11→12.
 
 ### Objetivo
 
 Soportar perfiles de instalación.
 
-Ejemplos:
+### Clasificación `required`/`optional` completada (2026-07-20)
 
-* minimal
-* desktop
-* developer
-* workstation
-* full
+Antes de definir `minimal` (que depende de qué es indispensable), se completó la clasificación `required`/`optional` de las 53 herramientas del catálogo — solo 7 tenían una etiqueta explícita hasta ahora. Confirmado con el dueño del proyecto:
+
+* **`required` (10):** wget, curl, Git, build-essential, software-properties-common, apt-transport-https, Google Chrome, System Updates, Kernel & Headers, Final System Update.
+* **`optional` (43):** el resto del catálogo — incluye una reclasificación explícita: GitKraken, ULauncher, cmatrix y Ranger habían quedado `required` en una clasificación anterior (2026-07-20, sesión previa); el dueño del proyecto confirmó pasarlos a `optional` en esta revisión completa. GnuPG queda `optional` a propósito (no forma parte del grupo `required` pese a compartir subcategoría `cli-utils` con el resto).
+* Campo nuevo en el catálogo: `classification=required|optional` (`scripts/lib/tools_catalog.sh`), mismo mecanismo sin esquema forzado que `kind`/`subcategory` (ADR 0030).
+
+### Implementación (2026-07-20)
+
+* Campo nuevo `profiles=<lista separada por coma>` en `tools_catalog.sh`: cada herramienta declara a qué perfiles pertenece. **No** se calcula en tiempo de ejecución — se computó una vez por regla y se guardó como dato, igual que el resto de los campos del catálogo.
+* **11 perfiles**, iterados con el dueño del proyecto hasta esta versión final:
+  * **minimal** — las 10 `classification=required` (sin filtrar por `requires_gui`: Chrome es `required` y tiene GUI, así que "sin GUI" no podía ser parte de la regla de `minimal`).
+  * **cli** — todo el catálogo con `requires_gui=no` (más amplio que `minimal`: incluye `optional` también). Pedido explícito del dueño del proyecto ("un perfil para solo línea de comandos").
+  * **desktop** — minimal + `category` productivity/multimedia/editors.
+  * **developer** — minimal + `category` development/editors.
+  * **workstation** — unión de desktop y developer.
+  * **full** — las 53 herramientas.
+  * **creator** — minimal + `category=multimedia`.
+  * **productivity** — minimal + `category=productivity`.
+  * **coding** — minimal + `category=development` (sin editores, a diferencia de `developer`).
+  * **editor** — minimal + `category=editors`.
+  * **ai-cli** — solo `subcategory=ai-cli` (Claude Code, Codex CLI, OpenCode, Antigravity CLI) — **sin** los agentes de escritorio (`ai-agent`), pedido explícito del dueño del proyecto para distinguir asistentes de terminal de agentes de propósito general.
+* Comando nuevo, Bash puro (consistente con [ADR 0001](adr/0001-bootstrap-bash-sin-node.md)): `setup.sh install --profile <nombre>`. Recorre el catálogo, instala cada herramienta cuyo campo `profiles` incluya el perfil pedido, respetando la idempotencia de [ADR 0004](adr/0004-idempotencia-instalado-igual-skip.md) (corre `status` antes de cada `install`, omite lo ya instalado).
+* **`--profile custom`** (o sin `--profile`): delega en el flujo interactivo existente (`main_setup`/`setup.js`), que ya permite elegir herramienta por herramienta con checkboxes — no hizo falta un modo nuevo, el checklist ya existía.
+* Prueba nueva: `tests/test_install_profile.sh` (I30), mocks de `curl` sobre el perfil `ai-cli` (las 4 únicas herramientas que comparten el mismo mecanismo `curl-script`, ver ADR 0037) — perfil desconocido, instalación de las 4, e idempotencia en una segunda corrida.
+
+### Pendiente
+
+* Ninguno funcional. Posible trabajo futuro: perfiles adicionales si surge la necesidad (por ejemplo, uno específico para utilidades GUI de sistema o para terminales/shell, descartados en esta ronda a favor de combinaciones con `minimal`).
 
 ---
 

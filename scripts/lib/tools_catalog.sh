@@ -36,7 +36,7 @@ source "${UCI_TOOLS_CATALOG_SCRIPT_DIR}/tools_registry.sh"
 
 tools_registry_register "cmatrix" \
     "name=cmatrix" \
-    "category=system" \
+    "category=system" "classification=optional" "profiles=cli,full" \
     "subcategory=misc" \
     "manager=apt" \
     "packages=cmatrix" \
@@ -49,7 +49,7 @@ tools_registry_register "cmatrix" \
 
 tools_registry_register "ranger" \
     "name=Ranger" \
-    "category=system" \
+    "category=system" "classification=optional" "profiles=cli,full" \
     "subcategory=terminals" \
     "manager=apt" \
     "packages=ranger" \
@@ -67,19 +67,19 @@ tools_registry_register "ranger" \
 # verbos" y "usa la infraestructura compartida" son ejes distintos (ver
 # docs/ARCHITECTURE.md §15).
 tools_registry_register "vim" \
-    "name=Vim" "category=editors" "manager=apt" "packages=vim" \
+    "name=Vim" "category=editors" "classification=optional" "profiles=cli,desktop,developer,workstation,full,editor" "manager=apt" "packages=vim" \
     "script=scripts/editors/install_vim.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=legacy"
 
 tools_registry_register "terminator" \
-    "name=Terminator" "category=system" "subcategory=terminals" "manager=apt" "packages=terminator" \
+    "name=Terminator" "category=system" "classification=optional" "profiles=full" "subcategory=terminals" "manager=apt" "packages=terminator" \
     "script=scripts/system/install_terminator.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "flameshot" \
-    "name=Flameshot" "category=productivity" "manager=apt" "packages=flameshot" \
+    "name=Flameshot" "category=productivity" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt" "packages=flameshot" \
     "script=scripts/productivity/install_flameshot.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
@@ -88,7 +88,7 @@ tools_registry_register "flameshot" \
 # Ubuntu — ver ADR 0027) en vez de manager=apt como el resto de los
 # instaladores apt-simple migrados hasta ahora.
 tools_registry_register "ulauncher" \
-    "name=ULauncher" "category=productivity" "manager=apt-vendor-repo" "packages=ulauncher" \
+    "name=ULauncher" "category=productivity" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=ulauncher" \
     "script=scripts/productivity/install_ulauncher.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
@@ -96,43 +96,43 @@ tools_registry_register "ulauncher" \
 # Instaladores individuales ex "Development Tools" (ver ADR 0031/0035) —
 # subcategory=cli-utils, ya no tienen agrupador (eliminado en ADR 0035)
 tools_registry_register "wget" \
-    "name=wget" "category=system" "subcategory=cli-utils" "manager=apt" "packages=wget" \
+    "name=wget" "category=system" "classification=required" "profiles=minimal,cli,desktop,developer,workstation,full,creator,productivity,coding,editor" "subcategory=cli-utils" "manager=apt" "packages=wget" \
     "script=scripts/system/install_wget.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "curl" \
-    "name=curl" "category=system" "subcategory=cli-utils" "manager=apt" "packages=curl" \
+    "name=curl" "category=system" "classification=required" "profiles=minimal,cli,desktop,developer,workstation,full,creator,productivity,coding,editor" "subcategory=cli-utils" "manager=apt" "packages=curl" \
     "script=scripts/system/install_curl.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "git" \
-    "name=Git" "category=system" "subcategory=cli-utils" "manager=apt" "packages=git" \
+    "name=Git" "category=system" "classification=required" "profiles=minimal,cli,desktop,developer,workstation,full,creator,productivity,coding,editor" "subcategory=cli-utils" "manager=apt" "packages=git" \
     "script=scripts/system/install_git.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "build_essential" \
-    "name=build-essential" "category=system" "subcategory=cli-utils" "manager=apt" "packages=build-essential" \
+    "name=build-essential" "category=system" "classification=required" "profiles=minimal,cli,desktop,developer,workstation,full,creator,productivity,coding,editor" "subcategory=cli-utils" "manager=apt" "packages=build-essential" \
     "script=scripts/system/install_build_essential.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "software_properties_common" \
-    "name=software-properties-common" "category=system" "subcategory=cli-utils" "manager=apt" "packages=software-properties-common" \
+    "name=software-properties-common" "category=system" "classification=required" "profiles=minimal,cli,desktop,developer,workstation,full,creator,productivity,coding,editor" "subcategory=cli-utils" "manager=apt" "packages=software-properties-common" \
     "script=scripts/system/install_software_properties_common.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "apt_transport_https" \
-    "name=apt-transport-https" "category=system" "subcategory=cli-utils" "manager=apt" "packages=apt-transport-https" \
+    "name=apt-transport-https" "category=system" "classification=required" "profiles=minimal,cli,desktop,developer,workstation,full,creator,productivity,coding,editor" "subcategory=cli-utils" "manager=apt" "packages=apt-transport-https" \
     "script=scripts/system/install_apt_transport_https.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "gnupg2" \
-    "name=GnuPG" "category=system" "subcategory=cli-utils" "manager=apt" "packages=gnupg2" \
+    "name=GnuPG" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=gnupg2" \
     "script=scripts/system/install_gnupg2.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
@@ -140,25 +140,25 @@ tools_registry_register "gnupg2" \
 # Instaladores individuales ex "Multimedia Tools" (ver ADR 0031/0035) — ya
 # vivían en category=multimedia, no necesitan subcategoría
 tools_registry_register "cheese" \
-    "name=Cheese" "category=multimedia" "manager=apt" "packages=cheese" \
+    "name=Cheese" "category=multimedia" "classification=optional" "profiles=desktop,workstation,full,creator" "manager=apt" "packages=cheese" \
     "script=scripts/system/install_cheese.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "v4l_utils" \
-    "name=v4l-utils" "category=multimedia" "manager=apt" "packages=v4l-utils" \
+    "name=v4l-utils" "category=multimedia" "classification=optional" "profiles=cli,desktop,workstation,full,creator" "manager=apt" "packages=v4l-utils" \
     "script=scripts/system/install_v4l_utils.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "ubuntu_restricted_extras" \
-    "name=ubuntu-restricted-extras" "category=multimedia" "manager=apt" "packages=ubuntu-restricted-extras" \
+    "name=ubuntu-restricted-extras" "category=multimedia" "classification=optional" "profiles=cli,desktop,workstation,full,creator" "manager=apt" "packages=ubuntu-restricted-extras" \
     "script=scripts/system/install_ubuntu_restricted_extras.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "vlc" \
-    "name=VLC" "category=multimedia" "manager=apt" "packages=vlc" \
+    "name=VLC" "category=multimedia" "classification=optional" "profiles=desktop,workstation,full,creator" "manager=apt" "packages=vlc" \
     "script=scripts/system/install_vlc.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
@@ -166,19 +166,19 @@ tools_registry_register "vlc" \
 # Instaladores individuales ex "System Utilities" (ver ADR 0031/0035) —
 # subcategory=gui-utils, ya no tienen agrupador (eliminado en ADR 0035)
 tools_registry_register "meld" \
-    "name=Meld" "category=system" "subcategory=gui-utils" "manager=apt" "packages=meld" \
+    "name=Meld" "category=system" "classification=optional" "profiles=full" "subcategory=gui-utils" "manager=apt" "packages=meld" \
     "script=scripts/system/install_meld.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "baobab" \
-    "name=Baobab" "category=system" "subcategory=gui-utils" "manager=apt" "packages=baobab" \
+    "name=Baobab" "category=system" "classification=optional" "profiles=full" "subcategory=gui-utils" "manager=apt" "packages=baobab" \
     "script=scripts/system/install_baobab.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "gparted" \
-    "name=GParted" "category=system" "subcategory=gui-utils" "manager=apt" "packages=gparted" \
+    "name=GParted" "category=system" "classification=optional" "profiles=full" "subcategory=gui-utils" "manager=apt" "packages=gparted" \
     "script=scripts/system/install_gparted.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
@@ -191,31 +191,31 @@ tools_registry_register "gparted" \
 # 0038); Yazi se sumó en el Hito 16 (terminales nuevas) — 8 miembros hoy:
 # DBeaver, GitKraken, Insomnia, Postman, GIMP, Spotify, Zoom, Yazi.
 tools_registry_register "dbeaver" \
-    "name=DBeaver" "category=development" "manager=snap" "packages=dbeaver-ce" \
+    "name=DBeaver" "category=development" "classification=optional" "profiles=developer,workstation,full,coding" "manager=snap" "packages=dbeaver-ce" \
     "script=scripts/development/install_dbeaver.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
 tools_registry_register "gitkraken" \
-    "name=GitKraken" "category=development" "manager=snap" "packages=gitkraken" \
+    "name=GitKraken" "category=development" "classification=optional" "profiles=developer,workstation,full,coding" "manager=snap" "packages=gitkraken" \
     "script=scripts/development/install_gitkraken.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
 tools_registry_register "insomnia" \
-    "name=Insomnia" "category=development" "manager=snap" "packages=insomnia" \
+    "name=Insomnia" "category=development" "classification=optional" "profiles=developer,workstation,full,coding" "manager=snap" "packages=insomnia" \
     "script=scripts/development/install_insomnia.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
 tools_registry_register "postman" \
-    "name=Postman" "category=development" "manager=snap" "packages=postman" \
+    "name=Postman" "category=development" "classification=optional" "profiles=developer,workstation,full,coding" "manager=snap" "packages=postman" \
     "script=scripts/development/install_postman.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
 tools_registry_register "gimp" \
-    "name=GIMP" "category=system" "subcategory=gui-utils" "manager=snap" "packages=gimp" \
+    "name=GIMP" "category=system" "classification=optional" "profiles=full" "subcategory=gui-utils" "manager=snap" "packages=gimp" \
     "script=scripts/system/install_gimp.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
@@ -224,19 +224,19 @@ tools_registry_register "gimp" \
 # de Snap (etiquetado "unofficial" por el propio OBS Project). Ya no
 # depende de snapd, requires_manual_validation=no.
 tools_registry_register "obs_studio" \
-    "name=OBS Studio" "category=system" "subcategory=gui-utils" "manager=apt-vendor-repo" "packages=obs-studio" \
+    "name=OBS Studio" "category=system" "classification=optional" "profiles=full" "subcategory=gui-utils" "manager=apt-vendor-repo" "packages=obs-studio" \
     "script=scripts/system/install_obs_studio.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "spotify" \
-    "name=Spotify" "category=productivity" "manager=snap" "packages=spotify" \
+    "name=Spotify" "category=productivity" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=snap" "packages=spotify" \
     "script=scripts/productivity/install_spotify.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
 tools_registry_register "zoom" \
-    "name=Zoom" "category=productivity" "manager=snap" "packages=zoom-client" \
+    "name=Zoom" "category=productivity" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=snap" "packages=zoom-client" \
     "script=scripts/productivity/install_zoom.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
@@ -246,19 +246,19 @@ tools_registry_register "zoom" \
 # tienen prueba funcional real en CI (tests/docker/test_*_apt_repo.sh:
 # C01/V01/D01), a diferencia del grupo Snap.
 tools_registry_register "docker" \
-    "name=Docker" "category=development" "manager=apt-vendor-repo" "packages=docker-ce,docker-ce-cli,containerd.io,docker-buildx-plugin,docker-compose-plugin" \
+    "name=Docker" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=docker-ce,docker-ce-cli,containerd.io,docker-buildx-plugin,docker-compose-plugin" \
     "script=scripts/development/install_docker.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "vscode" \
-    "name=Visual Studio Code" "category=editors" "manager=apt-vendor-repo" "packages=code" \
+    "name=Visual Studio Code" "category=editors" "classification=optional" "profiles=desktop,developer,workstation,full,editor" "manager=apt-vendor-repo" "packages=code" \
     "script=scripts/editors/install_vscode.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "cursor" \
-    "name=Cursor AI IDE" "category=editors" "manager=apt-vendor-repo" "packages=cursor" \
+    "name=Cursor AI IDE" "category=editors" "classification=optional" "profiles=desktop,developer,workstation,full,editor" "manager=apt-vendor-repo" "packages=cursor" \
     "script=scripts/editors/install_cursor.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
@@ -268,13 +268,13 @@ tools_registry_register "cursor" \
 # — la lógica de instalación en sí (scripts/lib/runtime.sh) no cambió,
 # solo el dispatcher.
 tools_registry_register "kubectl" \
-    "name=kubectl" "category=development" "manager=mise" "packages=kubectl" \
+    "name=kubectl" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=mise" "packages=kubectl" \
     "script=scripts/development/install_kubectl.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "yarn" \
-    "name=Yarn" "category=development" "manager=mise" "packages=yarn" \
+    "name=Yarn" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=mise" "packages=yarn" \
     "script=scripts/development/install_yarn.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
@@ -285,7 +285,7 @@ tools_registry_register "yarn" \
 # manager=mise-tool propuesto originalmente en 0033 tras confirmar que
 # kubectl/Yarn ya resuelven este mismo caso con manager=mise).
 tools_registry_register "gh" \
-    "name=GitHub CLI" "category=development" "manager=mise" "packages=gh" \
+    "name=GitHub CLI" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=mise" "packages=gh" \
     "script=scripts/development/install_gh.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
@@ -296,13 +296,13 @@ tools_registry_register "gh" \
 # instalador nunca implementó un chequeo de arquitectura propio (fuera de
 # alcance de esta migración, ver docs/UBUNTU_COMPATIBILITY.md).
 tools_registry_register "chrome" \
-    "name=Google Chrome" "category=productivity" "manager=deb-direct" "packages=google-chrome-stable" \
+    "name=Google Chrome" "category=productivity" "classification=required" "profiles=minimal,desktop,developer,workstation,full,creator,productivity,coding,editor" "manager=deb-direct" "packages=google-chrome-stable" \
     "script=scripts/productivity/install_chrome.sh" \
     "supported_os=24.04,26.04" "supported_arch=amd64" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "mongodb_compass" \
-    "name=MongoDB Compass" "category=development" "manager=deb-direct" "packages=mongodb-compass" \
+    "name=MongoDB Compass" "category=development" "classification=optional" "profiles=developer,workstation,full,coding" "manager=deb-direct" "packages=mongodb-compass" \
     "script=scripts/development/install_mongodb_compass.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
@@ -311,13 +311,13 @@ tools_registry_register "mongodb_compass" \
 # 'packages' se omite: no instalan un paquete propio con ese nombre, solo
 # 'zsh' como dependencia compartida entre ambos.
 tools_registry_register "oh_my_zsh" \
-    "name=Oh My Zsh" "category=system" "subcategory=shell-personalization" "manager=git-clone" \
+    "name=Oh My Zsh" "category=system" "classification=optional" "profiles=cli,full" "subcategory=shell-personalization" "manager=git-clone" \
     "script=scripts/system/install_oh_my_zsh.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "powerlevel10k" \
-    "name=Powerlevel10k" "category=system" "subcategory=shell-personalization" "manager=git-clone" \
+    "name=Powerlevel10k" "category=system" "classification=optional" "profiles=cli,full" "subcategory=shell-personalization" "manager=git-clone" \
     "script=scripts/system/install_powerlevel10k.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
@@ -329,21 +329,21 @@ tools_registry_register "powerlevel10k" \
 # solo implementan status/install a propósito (uninstall/reinstall/
 # update/repair se rechazan explícitamente, ver el propio script).
 tools_registry_register "system_update" \
-    "name=System Updates" "category=maintenance" "manager=apt" \
+    "name=System Updates" "category=maintenance" "classification=required" "profiles=minimal,cli,desktop,developer,workstation,full,creator,productivity,coding,editor" "manager=apt" \
     "script=scripts/system/install_system_update.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated" \
     "kind=maintenance"
 
 tools_registry_register "final_update" \
-    "name=Final System Update" "category=maintenance" "manager=apt" \
+    "name=Final System Update" "category=maintenance" "classification=required" "profiles=minimal,cli,desktop,developer,workstation,full,creator,productivity,coding,editor" "manager=apt" \
     "script=scripts/maintenance/install_final_update.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated" \
     "kind=maintenance"
 
 tools_registry_register "kernel" \
-    "name=Kernel & Headers" "category=maintenance" "manager=apt" \
+    "name=Kernel & Headers" "category=maintenance" "classification=required" "profiles=minimal,cli,desktop,developer,workstation,full,creator,productivity,coding,editor" "manager=apt" \
     "script=scripts/system/install_kernel.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated" \
@@ -351,19 +351,19 @@ tools_registry_register "kernel" \
 
 # Terminales y gestores de archivos de terminal nuevos (2026-07-20).
 tools_registry_register "nnn" \
-    "name=nnn" "category=system" "subcategory=terminals" "manager=apt" "packages=nnn" \
+    "name=nnn" "category=system" "classification=optional" "profiles=cli,full" "subcategory=terminals" "manager=apt" "packages=nnn" \
     "script=scripts/system/install_nnn.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "lf" \
-    "name=lf" "category=system" "subcategory=terminals" "manager=apt" "packages=lf" \
+    "name=lf" "category=system" "classification=optional" "profiles=cli,full" "subcategory=terminals" "manager=apt" "packages=lf" \
     "script=scripts/system/install_lf.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "yazi" \
-    "name=Yazi" "category=system" "subcategory=terminals" "manager=snap" "packages=yazi" \
+    "name=Yazi" "category=system" "classification=optional" "profiles=cli,full" "subcategory=terminals" "manager=snap" "packages=yazi" \
     "script=scripts/system/install_yazi.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
@@ -372,13 +372,13 @@ tools_registry_register "yazi" \
 # según versión de Ubuntu vive en el propio script, ver ADR 0032 — no se
 # modela como un campo separado del catálogo.
 tools_registry_register "ghostty" \
-    "name=Ghostty" "category=system" "subcategory=terminals" "manager=apt" "packages=ghostty" \
+    "name=Ghostty" "category=system" "classification=optional" "profiles=cli,full" "subcategory=terminals" "manager=apt" "packages=ghostty" \
     "script=scripts/system/install_ghostty.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "wezterm" \
-    "name=WezTerm" "category=system" "subcategory=terminals" "manager=apt-vendor-repo" "packages=wezterm" \
+    "name=WezTerm" "category=system" "classification=optional" "profiles=cli,full" "subcategory=terminals" "manager=apt-vendor-repo" "packages=wezterm" \
     "script=scripts/system/install_wezterm.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
@@ -392,19 +392,19 @@ tools_registry_register "wezterm" \
 # estos proveedores en esta ronda (servicios externos nuevos, sin
 # historial de estabilidad verificado en CI, ver ADR 0037).
 tools_registry_register "claude_code" \
-    "name=Claude Code" "category=development" "subcategory=ai-cli" "manager=curl-script" \
+    "name=Claude Code" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding,ai-cli" "subcategory=ai-cli" "manager=curl-script" \
     "script=scripts/development/install_claude_code.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
 
 tools_registry_register "codex_cli" \
-    "name=Codex CLI" "category=development" "subcategory=ai-cli" "manager=curl-script" \
+    "name=Codex CLI" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding,ai-cli" "subcategory=ai-cli" "manager=curl-script" \
     "script=scripts/development/install_codex_cli.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
 
 tools_registry_register "opencode" \
-    "name=OpenCode" "category=development" "subcategory=ai-cli" "manager=curl-script" \
+    "name=OpenCode" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding,ai-cli" "subcategory=ai-cli" "manager=curl-script" \
     "script=scripts/development/install_opencode.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
@@ -413,19 +413,19 @@ tools_registry_register "opencode" \
 # IDE/Desktop queda diferido a propósito — sin apt/snap oficial, solo
 # tarball manual sin checksum/firma descripta (ver ADR 0037).
 tools_registry_register "antigravity" \
-    "name=Antigravity CLI" "category=development" "subcategory=ai-cli" "manager=curl-script" \
+    "name=Antigravity CLI" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding,ai-cli" "subcategory=ai-cli" "manager=curl-script" \
     "script=scripts/development/install_antigravity.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
 
 tools_registry_register "openclaw" \
-    "name=OpenClaw" "category=productivity" "subcategory=ai-agent" "manager=curl-script" \
+    "name=OpenClaw" "category=productivity" "classification=optional" "profiles=cli,desktop,workstation,full,productivity" "subcategory=ai-agent" "manager=curl-script" \
     "script=scripts/productivity/install_openclaw.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
 
 tools_registry_register "hermes_agent" \
-    "name=Hermes Agent" "category=productivity" "subcategory=ai-agent" "manager=curl-script" \
+    "name=Hermes Agent" "category=productivity" "classification=optional" "profiles=cli,desktop,workstation,full,productivity" "subcategory=ai-agent" "manager=curl-script" \
     "script=scripts/productivity/install_hermes_agent.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
@@ -435,7 +435,7 @@ tools_registry_register "hermes_agent" \
 # tiene repo APT oficial propio. Cowork (KVM/disco/RAM) no se valida en
 # el instalador, ver el propio script.
 tools_registry_register "claude_desktop" \
-    "name=Claude Desktop" "category=productivity" "subcategory=ai-agent" "manager=apt-vendor-repo" "packages=claude-desktop" \
+    "name=Claude Desktop" "category=productivity" "classification=optional" "profiles=desktop,workstation,full,productivity" "subcategory=ai-agent" "manager=apt-vendor-repo" "packages=claude-desktop" \
     "script=scripts/productivity/install_claude_desktop.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
