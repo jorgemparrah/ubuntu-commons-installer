@@ -68,18 +68,19 @@
 |---|---|---|
 | `install_final_update.sh` | Actualización final y limpieza | Mantener, pero renombrar conceptualmente como una acción de mantenimiento; `status` corregido en el Hito 9 para considerar actualizaciones y paquetes huérfanos pendientes (ver [ADR 0013](adr/0013-separar-mantenimiento-de-instaladores.md)). **Migrado al dispatcher compartido en el Hito 11 (grupo mantenimiento, 2026-07-20)**: mismo criterio que `install_system_update.sh` — solo `status`/`install`, el resto se rechaza explícitamente |
 
-## Candidatas de IA (Hito 16 — investigadas, sin instalador todavía)
+## Candidatas de IA (Hito 16 — clasificadas, sin instalador todavía)
 
-Mecanismo oficial de instalación investigado para cada una; ninguna tiene script en `scripts/` todavía. Pendiente de clasificación `required/optional/retired/candidate` con el dueño del proyecto antes de implementar. Ver el detalle completo en `docs/ROADMAP.md`, Hito 16.
+Mecanismo oficial de instalación investigado para cada una; ninguna tiene script en `scripts/` todavía. Clasificación `required/optional/retired/candidate` confirmada con el dueño del proyecto el 2026-07-20. Ver el detalle completo en `docs/ROADMAP.md`, Hito 16.
 
 | Herramienta | Mecanismo oficial | Decisión |
 |---|---|---|
-| Claude Desktop (incluye Cowork) | Repo APT propio de Anthropic (`downloads.claude.ai/claude-desktop/apt/stable`, `signed-by`), paquete `claude-desktop` | `candidate` — mecanismo de mayor "oficialidad" del grupo (mismo patrón que Docker/VS Code/Cursor); Cowork requiere KVM, ~25 GB disco, 8 GB RAM |
-| Claude Code | Script oficial (`claude.ai/install.sh`), npm (`@anthropic-ai/claude-code`), o repos apt/dnf/apk propios de Anthropic | `candidate` |
-| Codex CLI (OpenAI) | Script oficial (`chatgpt.com/codex/install.sh`), o npm con scope (`@openai/codex`) | `candidate` |
-| Antigravity (Google) | CLI (`agy`): script oficial a `~/.local/bin`. IDE/Desktop: sin apt/snap oficial, tarball manual | `candidate` |
-| OpenCode | Script oficial (`opencode.ai/install`), o npm (`opencode-ai`) | `candidate` |
-| OpenClaw | Script oficial (`openclaw.ai/install.sh`), o npm (`openclaw`); requiere Node.js | `candidate` |
+| Claude Desktop (incluye Cowork) | Repo APT propio de Anthropic (`downloads.claude.ai/claude-desktop/apt/stable`, `signed-by`), paquete `claude-desktop` | `optional` — mecanismo de mayor "oficialidad" del grupo (mismo patrón que Docker/VS Code/Cursor); Cowork requiere KVM, ~25 GB disco, 8 GB RAM |
+| Claude Code | Script oficial (`claude.ai/install.sh`), npm (`@anthropic-ai/claude-code`), o repos apt/dnf/apk propios de Anthropic | `required` |
+| Codex CLI (OpenAI) | Script oficial (`chatgpt.com/codex/install.sh`), o npm con scope (`@openai/codex`) | `required` |
+| Antigravity (Google) | CLI (`agy`): script oficial a `~/.local/bin`. IDE/Desktop: sin apt/snap oficial, tarball manual | `optional` |
+| OpenCode | Script oficial (`opencode.ai/install`), o npm (`opencode-ai`) | `required` |
+| OpenClaw | Script oficial (`openclaw.ai/install.sh`), o npm (`openclaw`); requiere Node.js | `optional` |
+| Hermes Agent (NousResearch) | Script oficial (`hermes-agent.nousresearch.com/install.sh`, también en el repo de GitHub `NousResearch/hermes-agent`); bundlea uv/Python 3.11/Node.js/ripgrep/ffmpeg/Git portable | `optional` — repo verificado directamente (MIT, ~218k stars, 22 releases), se evitaron sitios de terceros de aspecto genérico encontrados en la búsqueda inicial |
 
 **Descartado explícitamente:** Codex Desktop (app Electron de OpenAI) — sin ninguna opción oficial de Linux; los únicos paquetes existentes son repaquetados de terceros sin firma real (`[trusted=yes]`), lo que no cumple el estándar de seguridad del proyecto (`AGENT.md` §16).
 
