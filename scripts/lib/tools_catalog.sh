@@ -250,3 +250,25 @@ tools_registry_register "zoom" \
     "script=scripts/productivity/install_zoom.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Grupo vendor-repo (Hito 11): manager=apt-vendor-repo, ver
+# scripts/lib/apt_vendor_repo.sh. requires_manual_validation=no: los 3
+# tienen prueba funcional real en CI (tests/docker/test_*_apt_repo.sh:
+# C01/V01/D01), a diferencia del grupo Snap.
+tools_registry_register "docker" \
+    "name=Docker" "category=development" "manager=apt-vendor-repo" "packages=docker-ce,docker-ce-cli,containerd.io,docker-buildx-plugin,docker-compose-plugin" \
+    "script=scripts/development/install_docker.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "vscode" \
+    "name=Visual Studio Code" "category=editors" "manager=apt-vendor-repo" "packages=code" \
+    "script=scripts/editors/install_vscode.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "cursor" \
+    "name=Cursor AI IDE" "category=editors" "manager=apt-vendor-repo" "packages=cursor" \
+    "script=scripts/editors/install_cursor.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
