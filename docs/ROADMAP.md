@@ -709,11 +709,13 @@ Media
 
 **Estado**
 
-Blocked
+In Progress
 
 Depende de:
 
-Modernización de instaladores
+Modernización de instaladores (Hito 11)
+
+**Corrección administrativa (2026-07-20):** el Hito 11 sigue formalmente en `In Progress` (decisión explícita del dueño del proyecto: no se propuso su cierre como `Done`, ver su propia sección), pero la dependencia real de este hito — que los instaladores estén modernizados — ya está cumplida en la práctica: 28 de 30 están migrados al contrato de 6 verbos, y los 2 restantes quedan fuera a propósito (`install_vim.sh` es el instalador de referencia del contrato, `install_nodejs.sh` es legado congelado sin acciones activas), no por trabajo pendiente. El dueño del proyecto confirmó reinterpretar la dependencia como cumplida y pasar este hito de `Blocked` a `In Progress`.
 
 ### Objetivo
 
