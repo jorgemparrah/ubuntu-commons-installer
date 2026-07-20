@@ -877,7 +877,16 @@ Agregar al catálogo el CLI oficial de GitHub, y dejar registrado un inventario 
 * Decisión: se instala vía **Mise** (`manager=mise`, igual que `kubectl` y Yarn), no vía apt, aunque también está en el repositorio oficial de Ubuntu (`universe`, confirmado en 24.04 y 26.04) — decisión explícita del dueño del proyecto que amplía el rol de Mise más allá de runtimes. Ver [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md) y [ADR 0034](adr/0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) (corrige el valor de `manager` propuesto originalmente).
 * `install_gh.sh` reutiliza `scripts/lib/runtime.sh` sin cambiarlo — mismo patrón exacto que `install_kubectl.sh`/`install_yarn.sh`, no hizo falta una biblioteca nueva.
 
-**Candidatas de IA — mecanismo oficial investigado, clasificación confirmada con el dueño del proyecto (2026-07-20), sin instalador todavía:**
+**Candidatas de IA — implementadas (2026-07-20):**
+
+* Mecanismo nuevo `manager=curl-script` (`scripts/lib/curl_script.sh`, ver [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md)): descarga el script oficial a un archivo temporal y lo ejecuta con `bash`/`sh` (equivalente a `curl \| bash`, pero mockeable en pruebas). `check_status` vía `command -v`; `uninstall` remueve el binario de `~/.local/bin` (única ruta documentada, estos proveedores no publican un `uninstall` oficial); `update`/`repair` se rechazan a propósito; `reinstall` usa el fallback mecánico del dispatcher.
+* `install_claude_code.sh`, `install_codex_cli.sh`, `install_opencode.sh` — CLIs de desarrollo `required`, `manager=curl-script`, `category=development`/`subcategory=ai-cli` (ver [ADR 0036](adr/0036-candidatas-de-ia-en-categorias-existentes.md)).
+* `install_antigravity.sh` — solo el CLI `agy` (`optional`, `development`/`ai-cli`); su IDE/Desktop queda diferido a propósito, sin mecanismo verificable (ver ADR 0037).
+* `install_openclaw.sh`, `install_hermes_agent.sh` — agentes de propósito general `optional`, mismo mecanismo `curl-script`, `category=productivity`/`subcategory=ai-agent`.
+* `install_claude_desktop.sh` — `optional`, `manager=apt-vendor-repo` (reutiliza `scripts/lib/apt_vendor_repo.sh` existente, mismo patrón que Docker/VS Code/Cursor), `category=productivity`/`subcategory=ai-agent`.
+* Las 7 se registraron en `tools_catalog.sh` y se exponen directamente en el menú de `setup.js`. Prueba nueva: `tests/test_curl_script_contract.sh` (I27, mocks de `curl` para los 6 instaladores `curl-script`); `install_claude_desktop.sh` no tiene prueba automatizada propia en esta ronda (`requires_manual_validation=yes`, mismo criterio que los 6 anteriores: son dominios externos nuevos sin historial de estabilidad verificado en CI).
+
+**Investigación previa a la implementación (mecanismo oficial, clasificación confirmada con el dueño del proyecto el 2026-07-20):**
 
 | Herramienta | Mecanismo oficial investigado | Nivel de oficialidad | Clasificación | Categoría/subcategoría futura |
 |---|---|---|---|---|
@@ -899,11 +908,11 @@ Nota de investigación (Hermes Agent): los primeros resultados de búsqueda incl
 
 * `install_gh.sh`, registrado en `tools_catalog.sh` (`manager=mise`) y `docs/TOOLS.md`, con prueba funcional real (`tests/docker/test_gh_via_mise.sh`, G01), mismo criterio que K01/Y01.
 * [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md) (Mise amplía su rol a CLIs vía registry, extiende [ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md)) y [ADR 0034](adr/0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) (corrige el valor de `manager` de 0033 tras confirmar el precedente de `kubectl`/Yarn).
-* Tabla de candidatas de IA arriba, con clasificación `required`/`optional` ya confirmada con el dueño del proyecto — ninguna se implementa todavía en este movimiento.
+* Los 7 instaladores de candidatas de IA (Claude Code, Codex CLI, OpenCode, Antigravity CLI, OpenClaw, Hermes Agent, Claude Desktop), registrados en `tools_catalog.sh` y `setup.js`, con [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md) documentando el mecanismo `curl-script` nuevo y `tests/test_curl_script_contract.sh` (I27) cubriendo los 6 que lo usan.
 
 ### Pendiente
 
-* Implementación de instaladores para las 7 candidatas de IA ya clasificadas: `required` (Claude Code, Codex CLI, OpenCode) y `optional` (Claude Desktop/Cowork, Antigravity, OpenClaw, Hermes Agent). Ninguna implementada todavía.
+* Mecanismo verificable para el IDE/Desktop de Antigravity (hoy solo tarball manual sin checksum/firma, ver ADR 0037) — diferido a propósito, no se implementa hasta encontrar una fuente que cumpla el estándar de seguridad del proyecto.
 
 ---
 

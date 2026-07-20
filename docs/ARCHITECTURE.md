@@ -472,6 +472,13 @@ Evitar duplicar funciones auxiliares.
 - `reinstall` no define función propia (mismo fallback mecánico del dispatcher); `update` vuelve a pedir `latest` vía Mise; `repair` no se implementa (misma limitación honesta que kubectl/Yarn).
 - Prueba funcional real nueva: `tests/docker/test_gh_via_mise.sh` (G01), mismo criterio que K01/Y01.
 
+**Candidatas de IA del Hito 16 — implementadas (2026-07-20):**
+
+- `scripts/lib/curl_script.sh` (nuevo, `manager=curl-script`, ver [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md)) — hermano de `apt.sh`/`snap.sh`/`apt_vendor_repo.sh`/`deb_direct.sh`/`git_clone.sh`. Descarga el script oficial de instalación a un archivo temporal y lo ejecuta con `bash`/`sh` en vez de un pipe directo (`curl \| bash`): funcionalmente equivalente para estos instaladores no interactivos, pero mockeable en pruebas sin invocar un intérprete real contra una URL falsa. `uninstall` remueve el binario de `~/.local/bin` — única ruta documentada, ya que ninguno de estos proyectos publica un `uninstall` oficial propio.
+- 6 instaladores nuevos usan este mecanismo: `install_claude_code.sh`, `install_codex_cli.sh`, `install_opencode.sh` (`category=development`/`subcategory=ai-cli`, `required`), `install_antigravity.sh` (solo el CLI `agy`, mismo `subcategory`, `optional`), `install_openclaw.sh`, `install_hermes_agent.sh` (`category=productivity`/`subcategory=ai-agent`, `optional`). Categorías confirmadas en [ADR 0036](adr/0036-candidatas-de-ia-en-categorias-existentes.md): se distribuyen por función real, no en una categoría `ai-tools` separada — Antigravity es la única con un editor de código propio, pero su IDE/Desktop queda diferido a propósito (sin mecanismo verificable, ver ADR 0037).
+- `install_claude_desktop.sh` reutiliza `manager=apt-vendor-repo` sin cambios en la biblioteca (mismo patrón que Docker/VS Code/Cursor): repo APT propio de Anthropic, `category=productivity`/`subcategory=ai-agent`.
+- Ninguno de los 7 tiene `update_tool`/`repair_tool` propios (rechazados por el dispatcher); `reinstall` usa el fallback mecánico en los 6 de `curl-script`. Prueba nueva: `tests/test_curl_script_contract.sh` (I27, mocks de `curl`, cubre los 6 instaladores `curl-script`); `install_claude_desktop.sh` queda sin prueba automatizada propia en esta ronda (`requires_manual_validation=yes`, mismo criterio para todo el grupo: dominios externos nuevos sin historial de estabilidad verificado en CI).
+
 ---
 
 # 16. Logging
