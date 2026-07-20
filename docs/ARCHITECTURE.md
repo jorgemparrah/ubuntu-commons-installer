@@ -425,6 +425,14 @@ Evitar duplicar funciones auxiliares.
 - Chrome conserva su verificación de arquitectura (`UNSUPPORTED` fuera de amd64, ver ADR 0028), sin cambios de comportamiento.
 - Se registraron en `tools_catalog.sh` con `manager=deb-direct`. Prueba nueva: `tests/test_deb_direct_full_contract.sh` (I23, ciclo de vida completo con mocks), que complementa sin reemplazar a `tests/test_chrome_arch_check.sh` (I09) y `tests/test_mongodb_compass_download.sh` (I07) — ambos ajustados para mockear `apt-get` (antes solo mockeaban `apt`), ya que `apt.sh` usa `apt-get` internamente.
 
+**Grupo git-clone migrado al contrato completo (Hito 11 — 2026-07-20):**
+
+- `scripts/lib/git_clone.sh` — helpers compartidos (`git_clone_present`, `git_clone_ensure`, `git_clone_update`) para instaladores que clonan un repositorio Git oficial directamente, hermano de `apt.sh`/`snap.sh`/`apt_vendor_repo.sh`/`deb_direct.sh` para este mecanismo.
+- **Corrección de una premisa incorrecta encontrada al leer el código antes de migrar**: a pesar de que "Oh My Zsh" sugiere el script oficial `curl | sh`, `install_oh_my_zsh.sh` (y `install_powerlevel10k.sh`) ya clonaban el repositorio directamente con `git clone --depth=1` desde el Hito 9 — precisamente para no tocar `.zshrc`/el shell por defecto al reutilizar `/home` (ver [ADR 0021](adr/0021-reutilizar-personalizacion-shell-en-home.md)). Ninguno de los dos requirió separación previa (a diferencia de ADR 0031): instalan un único paquete compartido (`zsh`) más un solo directorio clonado cada uno, no varios paquetes no relacionados bandeados.
+- Ambos migraron vía `installer_cli.sh` + `apt.sh` + `git_clone.sh`. `status` distingue `BROKEN` (el directorio existe pero no es un repositorio Git válido — un clon interrumpido a mitad de camino) de `NOT_INSTALLED`; no distingue `OUTDATED` (requeriría un `git fetch` contra la red en cada `status`, violando que debe ser liviano — limitación honesta). `update` corre `git pull --ff-only` (nunca fusiona ni reescribe commits locales). `repair` elimina el directorio corrupto y lo vuelve a clonar. `reinstall` no define función propia: el fallback mecánico del dispatcher ya era lo que ambos scripts hacían a mano.
+- `uninstall` pasó de `apt remove` a `apt_purge_packages` (vía `apt.sh`), alineándose con el resto de instaladores del proyecto — único cambio de comportamiento real de esta migración, de bajo riesgo (el paquete `zsh` no tiene configuración de usuario gestionada por este proyecto).
+- Se registraron en `tools_catalog.sh` con `manager=git-clone` (sin campo `packages`: no instalan un paquete propio con ese nombre, solo `zsh` como dependencia compartida). La prueba funcional real ya existente (`tests/docker/test_zsh_personalization.sh`, caso Z01) se extendió con escenarios de `update`/`reinstall`/`repair` (incluida la detección de `BROKEN` sobre un clon sin `.git`).
+
 ---
 
 # 16. Logging

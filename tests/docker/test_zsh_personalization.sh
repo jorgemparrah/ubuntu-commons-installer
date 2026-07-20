@@ -84,6 +84,37 @@ P10K_INSTALL_CODE=$?
 check "una segunda corrida de install_powerlevel10k.sh sale con código 0" '[[ ${P10K_INSTALL_CODE} -eq 0 ]]'
 
 echo ""
+echo "== 4.5. update/reinstall/repair (Hito 11, grupo git-clone: contrato completo de 6 verbos) =="
+"${INSTALL_OMZ_SH}" update
+OMZ_UPDATE_CODE=$?
+check "install_oh_my_zsh.sh: 'update' sale con código 0" '[[ ${OMZ_UPDATE_CODE} -eq 0 ]]'
+"${INSTALL_P10K_SH}" update
+P10K_UPDATE_CODE=$?
+check "install_powerlevel10k.sh: 'update' sale con código 0" '[[ ${P10K_UPDATE_CODE} -eq 0 ]]'
+
+"${INSTALL_OMZ_SH}" reinstall
+OMZ_REINSTALL_CODE=$?
+check "install_oh_my_zsh.sh: 'reinstall' (fallback mecánico del dispatcher) sale con código 0" '[[ ${OMZ_REINSTALL_CODE} -eq 0 ]]'
+check "~/.oh-my-zsh sigue presente después de 'reinstall'" '[[ -d "${HOME}/.oh-my-zsh" ]]'
+
+"${INSTALL_P10K_SH}" reinstall
+P10K_REINSTALL_CODE=$?
+check "install_powerlevel10k.sh: 'reinstall' (fallback mecánico del dispatcher) sale con código 0" '[[ ${P10K_REINSTALL_CODE} -eq 0 ]]'
+check "el tema powerlevel10k sigue presente después de 'reinstall'" '[[ -d "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]]'
+
+echo "== 4.6. repair sobre un clon corrupto (directorio presente, sin .git) =="
+rm -rf "${HOME}/.oh-my-zsh/.git"
+set +e
+OUTPUT="$("${INSTALL_OMZ_SH}" status 2>&1)"
+set -e
+check "install_oh_my_zsh.sh: 'status' reporta BROKEN sin '.git'" '[[ "${OUTPUT}" == *"BROKEN"* ]]'
+"${INSTALL_OMZ_SH}" repair
+OMZ_REPAIR_CODE=$?
+check "install_oh_my_zsh.sh: 'repair' sale con código 0" '[[ ${OMZ_REPAIR_CODE} -eq 0 ]]'
+OUTPUT="$("${INSTALL_OMZ_SH}" status 2>&1)"
+check "install_oh_my_zsh.sh: 'status' reporta INSTALLED después de 'repair'" '[[ "${OUTPUT}" == *"INSTALLED"* ]]'
+
+echo ""
 echo "== 5. ninguno de los dos toca .zshrc (respeta personalización existente, ADR 0021) =="
 check "~/.zshrc no fue creado/modificado por estos instaladores" '[[ ! -e "${HOME}/.zshrc" ]]'
 
