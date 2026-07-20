@@ -272,3 +272,19 @@ tools_registry_register "cursor" \
     "script=scripts/editors/install_cursor.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+# Grupo Mise (Hito 11): manager=mise, ver scripts/lib/runtime.sh (Hito 8).
+# migration_status=migrated aquí significa "usa scripts/lib/installer_cli.sh"
+# — la lógica de instalación en sí (scripts/lib/runtime.sh) no cambió,
+# solo el dispatcher.
+tools_registry_register "kubectl" \
+    "name=kubectl" "category=development" "manager=mise" "packages=kubectl" \
+    "script=scripts/development/install_kubectl.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "yarn" \
+    "name=Yarn" "category=development" "manager=mise" "packages=yarn" \
+    "script=scripts/development/install_yarn.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
