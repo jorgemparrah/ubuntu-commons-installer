@@ -107,6 +107,7 @@ jobs:
           - tools-catalog-docs-consistency
           - ulauncher-installer
           - tools-catalog-setup-js-consistency
+          - snap-installers-full-contract
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -287,6 +288,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I21"
             cmd: bash tests/test_tools_catalog_setup_js_consistency.sh
+          - case: snap-installers-full-contract
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I22"
+            cmd: bash tests/test_snap_installers_full_contract.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single
