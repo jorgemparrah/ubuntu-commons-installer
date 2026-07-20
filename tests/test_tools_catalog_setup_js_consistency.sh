@@ -35,7 +35,7 @@ if [[ ! -f "${UCI_SETUP_JS}" ]]; then
 fi
 
 echo "== Recolectar ids que son miembros internos de algún agrupador (no deberían tener entrada propia en setup.js) =="
-declare -A UCI_GROUP_MEMBERS
+declare -A UCI_GROUP_MEMBERS=()
 while IFS= read -r id; do
     [[ -z "${id}" ]] && continue
     if [[ "$(tools_registry_field "${id}" "kind")" == "group" ]]; then

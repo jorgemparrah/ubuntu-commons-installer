@@ -78,7 +78,6 @@ jobs:
           - backup-move-dir
           - migrations
           - install-nodejs-legacy
-          - system-utils-contract
           - system-update-contract
           - mongodb-compass-download
           - kernel-hwe-fallback
@@ -149,11 +148,6 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "Nivel 1"
             cmd: bash tests/test_install_nodejs_legacy.sh
-          - case: system-utils-contract
-            variant: base
-            dockerfile: tests/docker/Dockerfile
-            ids: "I01-I04"
-            cmd: bash tests/test_system_utils_contract.sh
           - case: system-update-contract
             variant: base
             dockerfile: tests/docker/Dockerfile

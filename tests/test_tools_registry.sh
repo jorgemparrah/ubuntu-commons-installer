@@ -3,11 +3,14 @@
 #
 # Pruebas no destructivas de scripts/lib/tools_registry.sh (el mecanismo)
 # y scripts/lib/tools_catalog.sh (los datos registrados, ver
-# docs/adr/0030-registro-central-de-metadata-de-instaladores.md y
-# docs/adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md).
+# docs/adr/0030-registro-central-de-metadata-de-instaladores.md,
+# docs/adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md
+# y docs/adr/0035-eliminar-agrupadores-delgados-y-recategorizar-catalogo.md).
 # La validación cruzada recorre TODAS las entradas registradas (incluidos
-# los 14 instaladores individuales y 3 agrupadores de ADR 0031), no una
-# lista fija. No instala nada real ni modifica ningún archivo.
+# los 14 instaladores individuales de ADR 0031, sin agrupador desde ADR
+# 0035), no una lista fija. El chequeo de kind=group/members sigue
+# existiendo (genérico, para cualquier agrupador futuro) aunque ningún id
+# lo use hoy. No instala nada real ni modifica ningún archivo.
 #
 # Uso:
 #   bash tests/test_tools_registry.sh

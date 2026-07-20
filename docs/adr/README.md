@@ -66,7 +66,8 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0028](0028-arquitectura-soportada-amd64.md) | Arquitectura oficialmente soportada: amd64 | Aceptada |
 | [0029](0029-contrato-completo-de-instalador-referencia.md) | `install_vim.sh` es el contrato de referencia; el Hito 11 migra el resto hacia él | Aceptada |
 | [0030](0030-registro-central-de-metadata-de-instaladores.md) | Registro central de metadata de instaladores (catálogo Bash, sin YAML/JSON) | Aceptada |
-| [0031](0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md) | Separar los instaladores multi-paquete en instaladores individuales, con un agrupador delgado | Aceptada |
+| [0031](0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md) | Separar los instaladores multi-paquete en instaladores individuales, con un agrupador delgado | Reemplazada parcialmente por 0035 |
 | [0032](0032-mecanismo-condicional-por-version-de-ubuntu.md) | Mecanismo de instalación condicional por versión de Ubuntu (Ghostty) | Aceptada |
 | [0033](0033-mise-amplia-su-rol-a-clis-via-registry.md) | Mise amplía su rol: de "solo runtimes" a también gestionar CLIs vía su registry (extiende 0002) | Reemplazada parcialmente por 0034 |
 | [0034](0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) | `gh` usa `manager=mise`, igual que kubectl y Yarn (corrige 0033) | Aceptada |
+| [0035](0035-eliminar-agrupadores-delgados-y-recategorizar-catalogo.md) | Eliminar los agrupadores delgados de ADR 0031 y recategorizar el catálogo | Aceptada |
