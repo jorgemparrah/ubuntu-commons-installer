@@ -275,9 +275,9 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** mantenimiento de documentación, sin hito asociado.
 
-#### M10. `docs/TOOLS.md` con clasificación `required | optional | retired | candidate` pendiente sin fecha de retoma  ✅ **Corregido (2026-07-19)**
+#### M10. `docs/TOOLS.md` con clasificación `required | optional | retired | candidate` pendiente sin fecha de retoma  ✅ **Corregido (2026-07-19; clasificación completada 2026-07-20)**
 
-> docs/TOOLS.md ahora asocia la clasificación pendiente a los Hitos 11/12, en vez de quedar sin fecha.
+> docs/TOOLS.md ahora asocia la clasificación pendiente a los Hitos 11/12, en vez de quedar sin fecha. Retomada y completada el 2026-07-20, tras confirmar caso por caso con el dueño del proyecto las 7 herramientas que faltaban: required (GitKraken, ULauncher, cmatrix, ranger) / optional (Postman, Insomnia, MongoDB Compass).
 
 **Dónde:** `docs/TOOLS.md` — diferido explícitamente por el dueño del proyecto desde 2026-07-15, sin dueño ni fecha en el roadmap.
 
