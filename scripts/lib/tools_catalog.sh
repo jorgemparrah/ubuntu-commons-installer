@@ -82,6 +82,15 @@ tools_registry_register "flameshot" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
+# ULauncher: manager=apt-vendor-repo (PPA propio, no repositorio oficial de
+# Ubuntu — ver ADR 0027) en vez de manager=apt como el resto de los
+# instaladores apt-simple migrados hasta ahora.
+tools_registry_register "ulauncher" \
+    "name=ULauncher" "category=productivity" "manager=apt-vendor-repo" "packages=ulauncher" \
+    "script=scripts/productivity/install_ulauncher.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
 # Instaladores individuales de "Development Tools" (ver ADR 0031)
 tools_registry_register "wget" \
     "name=wget" "category=system" "manager=apt" "packages=wget" \
