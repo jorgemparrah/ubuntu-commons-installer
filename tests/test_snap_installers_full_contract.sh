@@ -3,7 +3,8 @@
 #
 # Prueba simulada (mocks) del ciclo de vida completo de los instaladores
 # Snap migrados en el Hito 11 (DBeaver, GitKraken, Insomnia, Postman,
-# GIMP, OBS Studio, Spotify, Zoom) más Yazi (agregado después):
+# GIMP, Spotify, Zoom) más Yazi (agregado después; OBS Studio retirado en
+# ADR 0038 al migrar a su PPA oficial):
 # install/uninstall/update/reinstall/repair sobre scripts/lib/snap.sh +
 # scripts/lib/installer_cli.sh.
 # Complementa, sin reemplazar, tests/test_snap_installers_contract.sh
@@ -133,7 +134,6 @@ test_snap_full_contract "scripts/development/install_gitkraken.sh" "GitKraken" "
 test_snap_full_contract "scripts/development/install_insomnia.sh" "Insomnia" "insomnia" "yes"
 test_snap_full_contract "scripts/development/install_postman.sh" "Postman" "postman" "yes"
 test_snap_full_contract "scripts/system/install_gimp.sh" "GIMP" "gimp" "yes"
-test_snap_full_contract "scripts/system/install_obs_studio.sh" "OBS Studio" "obs-studio" "yes"
 test_snap_full_contract "scripts/productivity/install_spotify.sh" "Spotify" "spotify" "yes"
 test_snap_full_contract "scripts/productivity/install_zoom.sh" "Zoom" "zoom-client" "no"
 test_snap_full_contract "scripts/system/install_yazi.sh" "Yazi" "yazi" "yes"

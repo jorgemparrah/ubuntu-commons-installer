@@ -72,3 +72,5 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0034](0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) | `gh` usa `manager=mise`, igual que kubectl y Yarn (corrige 0033) | Aceptada |
 | [0035](0035-eliminar-agrupadores-delgados-y-recategorizar-catalogo.md) | Eliminar los agrupadores delgados de ADR 0031 y recategorizar el catálogo | Reemplazada parcialmente por 0036 |
 | [0036](0036-candidatas-de-ia-en-categorias-existentes.md) | Distribuir las candidatas de IA del Hito 16 en categorías existentes, no una `ai-tools` nueva | Aceptada |
+| [0037](0037-mecanismo-curl-script-para-clis-de-ia.md) | Mecanismo `curl-script` para las CLIs de IA del Hito 16 | Aceptada |
+| [0038](0038-obs-studio-migra-de-snap-a-ppa-oficial.md) | OBS Studio migra de Snap a su PPA oficial | Aceptada |

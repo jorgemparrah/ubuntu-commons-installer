@@ -91,6 +91,7 @@ run_suite "tests/test_tools_registry.sh" bash tests/test_tools_registry.sh
 run_suite "tests/test_split_installers_contract.sh" bash tests/test_split_installers_contract.sh
 run_suite "tests/test_tools_catalog_docs_consistency.sh" bash tests/test_tools_catalog_docs_consistency.sh
 run_suite "tests/test_ulauncher_installer.sh" bash tests/test_ulauncher_installer.sh
+run_suite "tests/test_obs_studio_installer.sh" bash tests/test_obs_studio_installer.sh
 run_suite "tests/test_tools_catalog_setup_js_consistency.sh" bash tests/test_tools_catalog_setup_js_consistency.sh
 run_suite "tests/test_tools_catalog_ubuntu_compatibility_consistency.sh" bash tests/test_tools_catalog_ubuntu_compatibility_consistency.sh
 run_suite "tests/test_snap_installers_full_contract.sh" bash tests/test_snap_installers_full_contract.sh

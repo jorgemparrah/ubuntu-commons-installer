@@ -105,6 +105,7 @@ jobs:
           - split-installers-contract
           - tools-catalog-docs-consistency
           - ulauncher-installer
+          - obs-studio-installer
           - tools-catalog-setup-js-consistency
           - tools-catalog-ubuntu-compatibility-consistency
           - snap-installers-full-contract
@@ -284,6 +285,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I20"
             cmd: bash tests/test_ulauncher_installer.sh
+          - case: obs-studio-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I28"
+            cmd: bash tests/test_obs_studio_installer.sh
           - case: tools-catalog-setup-js-consistency
             variant: base
             dockerfile: tests/docker/Dockerfile
