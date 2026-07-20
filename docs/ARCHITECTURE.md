@@ -441,6 +441,8 @@ Evitar duplicar funciones auxiliares.
 - Se registraron en `tools_catalog.sh` con un campo no-esquemático `kind=maintenance` (distinto de `kind=group` de ADR 0031), que además excluye a estas 3 entradas del chequeo "manager=apt implica sourcear apt.sh" en `tests/test_tools_registry.sh` — no gestionan un paquete puntual, actúan sobre todo el sistema.
 - Prueba existente extendida: `tests/test_system_update_contract.sh` (I05) ahora confirma explícitamente que `uninstall`/`reinstall`/`update`/`repair` se rechazan con código distinto de cero en `system_update`/`final_update`. `tests/test_kernel_hwe_fallback.sh` (I08) mantiene su restricción histórica de nunca invocar `install_tool`/`uninstall_tool`/`update_tool` ni el dispatcher, ni siquiera con mocks — la nueva separación `install`/`update` del kernel queda sin cobertura automatizada a propósito, por el mismo criterio de alto riesgo.
 
+**Tercer consumidor real del catálogo** (2026-07-20): `tests/test_tools_catalog_ubuntu_compatibility_consistency.sh` (I24) valida `docs/UBUNTU_COMPATIBILITY.md` contra el campo `requires_manual_validation` del catálogo — si el catálogo dice `no` (evidencia automatizada suficiente) pero la matriz todavía marca la herramienta `no verificable automáticamente`, o si el catálogo dice `yes` pero la matriz ya la marca `compatible` a secas, la prueba falla. No exige que toda entrada del catálogo tenga fila propia todavía (varios instaladores individuales de ADR 0031 no la tienen — expandir esa matriz fila por fila es trabajo de documentación separado): las entradas sin fila se cuentan como cobertura pendiente, registrada en la salida de la prueba, no como fallo.
+
 ---
 
 # 16. Logging

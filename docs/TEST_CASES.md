@@ -150,6 +150,14 @@ Cubierto hoy por: `tests/test_ulauncher_installer.sh` (I20, mocks — no toca la
 
 Cubierto hoy por: `tests/test_tools_catalog_setup_js_consistency.sh` (I21), incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`tools-catalog-setup-js-consistency`).
 
+### Tercer consumidor real del registro central (docs/UBUNTU_COMPATIBILITY.md vs. catálogo)
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I24 | `docs/UBUNTU_COMPATIBILITY.md` no contradice el campo `requires_manual_validation` del catálogo: si el catálogo dice `no` (evidencia automatizada suficiente), la matriz no debería seguir marcándolo `no verificable automáticamente`; si dice `yes`, la matriz no debería marcarlo `compatible` a secas | El catálogo real sourceado, `docs/UBUNTU_COMPATIBILITY.md` real leído del repositorio | Prueba simulada (validación cruzada, sin mocks) | Para cada id con fila encontrada (por nombre de script), no hay contradicción entre `requires_manual_validation` y el estado marcado en la matriz; los ids sin fila propia todavía (por ejemplo, varios instaladores individuales de ADR 0031) se cuentan como cobertura pendiente, no como fallo | ✅ pasa |
+
+Cubierto hoy por: `tests/test_tools_catalog_ubuntu_compatibility_consistency.sh` (I24), incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`tools-catalog-ubuntu-compatibility-consistency`).
+
 ### Grupo Snap (Hito 11)
 
 | ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
