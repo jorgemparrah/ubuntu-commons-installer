@@ -8,8 +8,8 @@
 
 | Script | Propósito | Decisión |
 |---|---|---|
-| `install_system_update.sh` | Actualizaciones del sistema | Mantener; `status` corregido en el Hito 9 para reportar un diagnóstico real (paquetes con actualización pendiente), no un stub fijo en `INSTALLED` (ver [ADR 0013](adr/0013-separar-mantenimiento-de-instaladores.md)) |
-| `install_kernel.sh` | Kernel y headers | Alto riesgo; revisar versión de Ubuntu y comportamiento de reinicio |
+| `install_system_update.sh` | Actualizaciones del sistema | Mantener; `status` corregido en el Hito 9 para reportar un diagnóstico real (paquetes con actualización pendiente), no un stub fijo en `INSTALLED` (ver [ADR 0013](adr/0013-separar-mantenimiento-de-instaladores.md)). **Migrado al dispatcher compartido en el Hito 11 (grupo mantenimiento, 2026-07-20)**: solo implementa `status`/`install` a propósito (es una acción de una sola vía, sin nada que desinstalar); `uninstall`/`reinstall`/`update`/`repair` se rechazan explícitamente — antes `uninstall` salía con código 0 sin hacer nada (bug corregido) |
+| `install_kernel.sh` | Kernel y headers | Alto riesgo; revisar versión de Ubuntu y comportamiento de reinicio. **Migrado al contrato completo en el Hito 11 (grupo mantenimiento, 2026-07-20)**: usa `scripts/lib/installer_cli.sh`; `install` ahora rechaza si el kernel HWE ya está presente (antes upgradeaba automáticamente, contradiciendo ADR 0004) — la actualización se separó a `update`. `repair` no se implementa (sin detección barata de instalación parcial) |
 | `install_development_tools.sh` | Agrupador delgado de 7 instaladores individuales (`wget`, `curl`, `git`, `build-essential`, `software-properties-common`, `apt-transport-https`, `gnupg2`) | **Separado en el Hito 11 (2026-07-19, [ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md))**: cada paquete ya tiene su propio instalador migrado al contrato completo de 6 verbos; este script solo delega `status`/`install`/`uninstall` en secuencia, para no romper la opción de menú de `setup.js` |
 | `install_system_utils.sh` | Agrupador delgado de 3 instaladores individuales (`meld`, `baobab`, `gparted`) | **Separado en el Hito 11 (2026-07-19, [ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md))**: mismo criterio que Development Tools |
 | `install_multimedia.sh` | Agrupador delgado de 4 instaladores individuales (`cheese`, `v4l-utils`, `ubuntu-restricted-extras`, `vlc`) | **Separado en el Hito 11 (2026-07-19, [ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md))**: mismo criterio que Development Tools; `install_ubuntu_restricted_extras.sh` es el único que conserva `DEBIAN_FRONTEND=noninteractive` (EULA de fuentes de Microsoft) |
@@ -60,7 +60,7 @@
 
 | Script | Propósito | Decisión |
 |---|---|---|
-| `install_final_update.sh` | Actualización final y limpieza | Mantener, pero renombrar conceptualmente como una acción de mantenimiento; `status` corregido en el Hito 9 para considerar actualizaciones y paquetes huérfanos pendientes (ver [ADR 0013](adr/0013-separar-mantenimiento-de-instaladores.md)) |
+| `install_final_update.sh` | Actualización final y limpieza | Mantener, pero renombrar conceptualmente como una acción de mantenimiento; `status` corregido en el Hito 9 para considerar actualizaciones y paquetes huérfanos pendientes (ver [ADR 0013](adr/0013-separar-mantenimiento-de-instaladores.md)). **Migrado al dispatcher compartido en el Hito 11 (grupo mantenimiento, 2026-07-20)**: mismo criterio que `install_system_update.sh` — solo `status`/`install`, el resto se rechaza explícitamente |
 
 ## Fuera de alcance (confirmado)
 

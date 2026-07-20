@@ -129,6 +129,41 @@ test_status_contract() {
         fail "${name}: subcomando inválido debería salir con código distinto de cero"
     fi
     teardown_mock_bin
+
+    # Hito 11: 'uninstall'/'reinstall'/'update'/'repair' se rechazan
+    # explícitamente (código distinto de cero) — antes de esta migración,
+    # 'uninstall' salía con código 0 sin haber hecho nada (bug real).
+    run_installer "${script}" "uninstall" "0" "0"
+    if [[ "${RUN_CODE}" -ne 0 ]]; then
+        pass "${name}: 'uninstall' se rechaza explícitamente (no aplica a una acción de mantenimiento)"
+    else
+        fail "${name}: 'uninstall' debería rechazarse con código distinto de cero (antes salía 0 sin hacer nada)"
+    fi
+    teardown_mock_bin
+
+    run_installer "${script}" "reinstall" "0" "0"
+    if [[ "${RUN_CODE}" -ne 0 ]]; then
+        pass "${name}: 'reinstall' se rechaza explícitamente (falla vía el mismo 'uninstall' del fallback mecánico)"
+    else
+        fail "${name}: 'reinstall' debería rechazarse con código distinto de cero"
+    fi
+    teardown_mock_bin
+
+    run_installer "${script}" "update" "0" "0"
+    if [[ "${RUN_CODE}" -ne 0 ]]; then
+        pass "${name}: 'update' se rechaza explícitamente (no implementado a propósito)"
+    else
+        fail "${name}: 'update' debería rechazarse con código distinto de cero"
+    fi
+    teardown_mock_bin
+
+    run_installer "${script}" "repair" "0" "0"
+    if [[ "${RUN_CODE}" -ne 0 ]]; then
+        pass "${name}: 'repair' se rechaza explícitamente (no implementado a propósito)"
+    else
+        fail "${name}: 'repair' debería rechazarse con código distinto de cero"
+    fi
+    teardown_mock_bin
 }
 
 test_status_contract "${UCI_REPO_ROOT}/scripts/system/install_system_update.sh" "System Update"

@@ -9,13 +9,19 @@
 # un paquete inexistente.
 #
 # ALTO RIESGO: install_kernel.sh modifica el kernel de arranque del host.
-# Esta prueba NUNCA invoca check_status/install_tool/uninstall_tool ni
-# 'main' — solo sourcea el archivo (con guarda BASH_SOURCE==0 para evitar
-# disparar main()) y llama directamente a la función pura de resolución
-# de nombres, que no tiene ningún efecto secundario (no instala nada, no
-# modifica GRUB, no reinicia, no toca el kernel real). La instalación real
-# de un kernel HWE requiere validación manual en una VM o máquina de
-# prueba dedicada — ver docs/UBUNTU_COMPATIBILITY.md.
+# Esta prueba NUNCA invoca check_status/install_tool/uninstall_tool/
+# update_tool ni el dispatcher (installer_run_cli) — solo sourcea el
+# archivo (con guarda BASH_SOURCE==0 para evitar disparar el dispatcher) y
+# llama directamente a la función pura de resolución de nombres, que no
+# tiene ningún efecto secundario (no instala nada, no modifica GRUB, no
+# reinicia, no toca el kernel real). Esta restricción se mantiene incluso
+# después de migrar el script al dispatcher compartido en el Hito 11
+# (grupo mantenimiento): la separación de responsabilidades entre
+# 'install' (rechaza si el kernel ya está presente) y 'update' (upgradea
+# uno ya instalado) queda sin cobertura automatizada a propósito, por el
+# mismo criterio de riesgo. La instalación real de un kernel HWE requiere
+# validación manual en una VM o máquina de prueba dedicada — ver
+# docs/UBUNTU_COMPATIBILITY.md.
 #
 # Uso:
 #   bash tests/test_kernel_hwe_fallback.sh

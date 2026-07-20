@@ -1,11 +1,33 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install_final_update.sh
 #
-# `status` es un diagnóstico real de solo lectura (no siempre "INSTALLED"
-# sin verificar nada, como antes — ver docs/adr/0013-separar-mantenimiento-de-instaladores.md
-# y el hallazgo de docs/UBUNTU_COMPATIBILITY.md): reporta si hay
+# Instalador migrado en el Hito 11 (grupo mantenimiento) al dispatcher
+# compartido (ver docs/ROADMAP.md y
+# docs/adr/0029-contrato-completo-de-instalador-referencia.md). Usa
+# scripts/lib/installer_cli.sh, pero implementa ÚNICAMENTE
+# `status`/`install` a propósito — mismo criterio que
+# scripts/system/install_system_update.sh: esto es una acción de
+# mantenimiento de una sola vía (actualizar y limpiar el sistema), no la
+# instalación de una herramienta con algo que "desinstalar" (ver
+# docs/adr/0013-separar-mantenimiento-de-instaladores.md).
+#
+# `uninstall_tool` rechaza explícitamente con código de salida distinto de
+# cero (antes de esta migración salía con código 0 sin haber hecho nada,
+# un bug real); al no definir `reinstall_tool` propia, el fallback
+# mecánico del dispatcher falla por el mismo motivo, sin código adicional.
+# `update`/`repair` tampoco se implementan (el dispatcher los rechaza con
+# código 3): no hay una semántica de "actualizar la actualización final" ni
+# un concepto de "estado roto" aquí.
+#
+# `status` es un diagnóstico real de solo lectura: reporta si hay
 # actualizaciones o paquetes huérfanos pendientes, usando `apt-get
 # --simulate` (nunca modifica nada) para el chequeo de autoremove.
+
+set -Eeuo pipefail
+
+UCI_FINAL_UPDATE_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../lib/installer_cli.sh
+source "${UCI_FINAL_UPDATE_SCRIPT_DIR}/../lib/installer_cli.sh"
 
 TOOL_NAME="Final System Update"
 
@@ -26,7 +48,7 @@ check_status() {
 
 # Function to install
 install_tool() {
-    echo "Instalando $TOOL_NAME..."
+    echo "Instalando ${TOOL_NAME}..."
     echo "Esto actualizará y limpiará el sistema."
 
     sudo apt update
@@ -37,38 +59,12 @@ install_tool() {
 }
 
 # Function to uninstall
+# 'uninstall' no aplica a una acción de mantenimiento de una sola vía: no
+# hay nada que desinstalar. Se rechaza explícitamente (código de salida
+# distinto de cero), en vez de fingir éxito como antes de esta migración.
 uninstall_tool() {
-    echo "Desinstalando $TOOL_NAME..."
-    echo "Las actualizaciones del sistema no se pueden desinstalar."
-    echo "Este comando solo actualiza y limpia el sistema."
+    echo "'uninstall' no aplica a ${TOOL_NAME}: es una acción de mantenimiento (actualizar y limpiar el sistema), no instala nada que se pueda desinstalar." >&2
+    return 1
 }
 
-# Function to reinstall
-reinstall_tool() {
-    echo "Reinstalando $TOOL_NAME..."
-    install_tool
-}
-
-# Main function
-main() {
-    case "$1" in
-        "status")
-            check_status
-            ;;
-        "install")
-            install_tool
-            ;;
-        "uninstall")
-            uninstall_tool
-            ;;
-        "reinstall")
-            reinstall_tool
-            ;;
-        *)
-            echo "Uso: $0 {status|install|uninstall|reinstall}"
-            exit 1
-            ;;
-    esac
-}
-
-main "$@"
+installer_run_cli "$@"
