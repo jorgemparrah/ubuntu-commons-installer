@@ -25,8 +25,9 @@
 #
 # `status` no distingue BROKEN: a diferencia de un paquete simple, no hay
 # una forma barata de detectar una instalación de kernel "parcial" sin
-# arriesgo (por ejemplo, sin invocar update-grub) — limitación honesta, no
-# una detección inventada. `repair` no se implementa por el mismo motivo;
+# arriesgo (por ejemplo, sin regenerar la configuración de arranque) —
+# limitación honesta, no una detección inventada. `repair` no se
+# implementa por el mismo motivo;
 # el dispatcher lo rechaza explícitamente (código 3).
 
 set -Eeuo pipefail
