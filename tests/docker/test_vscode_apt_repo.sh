@@ -86,6 +86,20 @@ SECOND_INSTALL_CODE=$?
 check "una segunda corrida de 'install' sigue saliendo con código 0" '[[ ${SECOND_INSTALL_CODE} -eq 0 ]]'
 
 echo ""
+echo "== 7.5. update/reinstall/repair (Hito 11: contrato completo de 6 verbos) =="
+"${INSTALL_VSCODE_SH}" update
+UPDATE_CODE=$?
+check "'update' sale con código 0" '[[ ${UPDATE_CODE} -eq 0 ]]'
+"${INSTALL_VSCODE_SH}" reinstall
+REINSTALL_CODE=$?
+check "'reinstall' sale con código 0" '[[ ${REINSTALL_CODE} -eq 0 ]]'
+check "el paquete 'code' sigue instalado después de 'reinstall'" 'dpkg -l code 2>/dev/null | grep -q "^ii"'
+"${INSTALL_VSCODE_SH}" repair
+REPAIR_CODE=$?
+check "'repair' sale con código 0" '[[ ${REPAIR_CODE} -eq 0 ]]'
+check "el binario 'code' sigue resolviendo después de 'repair'" 'command -v code &>/dev/null'
+
+echo ""
 echo "== 8. uninstall limpia el paquete, el repo y la clave =="
 "${INSTALL_VSCODE_SH}" uninstall
 check "el paquete 'code' ya no está instalado" '! dpkg -l code 2>/dev/null | grep -q "^ii"'
