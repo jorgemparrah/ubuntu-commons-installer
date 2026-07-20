@@ -110,6 +110,9 @@ jobs:
           - tools-catalog-ubuntu-compatibility-consistency
           - snap-installers-full-contract
           - deb-direct-full-contract
+          - terminal-apps-apt-simple-contract
+          - ghostty-installer
+          - wezterm-apt-repo
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -305,6 +308,21 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I23"
             cmd: bash tests/test_deb_direct_full_contract.sh
+          - case: terminal-apps-apt-simple-contract
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I25"
+            cmd: bash tests/test_terminal_apps_apt_simple_contract.sh
+          - case: ghostty-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I26"
+            cmd: bash tests/test_ghostty_installer.sh
+          - case: wezterm-apt-repo
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "W01"
+            cmd: bash tests/docker/test_wezterm_apt_repo.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single

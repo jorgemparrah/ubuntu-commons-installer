@@ -96,6 +96,8 @@ run_suite "tests/test_tools_catalog_setup_js_consistency.sh" bash tests/test_too
 run_suite "tests/test_tools_catalog_ubuntu_compatibility_consistency.sh" bash tests/test_tools_catalog_ubuntu_compatibility_consistency.sh
 run_suite "tests/test_snap_installers_full_contract.sh" bash tests/test_snap_installers_full_contract.sh
 run_suite "tests/test_deb_direct_full_contract.sh" bash tests/test_deb_direct_full_contract.sh
+run_suite "tests/test_terminal_apps_apt_simple_contract.sh" bash tests/test_terminal_apps_apt_simple_contract.sh
+run_suite "tests/test_ghostty_installer.sh" bash tests/test_ghostty_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then
