@@ -243,6 +243,8 @@ No introducir:
 
 salvo que se solicite explícitamente.
 
+Además de runtimes, Mise puede usarse como mecanismo de instalación para CLIs de herramientas (no solo runtimes de lenguaje) cuando la herramienta está en su registry, evaluado caso por caso — ver [ADR 0033](docs/adr/0033-mise-amplia-su-rol-a-clis-via-registry.md). Esto no reemplaza la jerarquía de fuentes de la sección 15 para el resto del catálogo.
+
 ---
 
 ## Migración

@@ -68,3 +68,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0030](0030-registro-central-de-metadata-de-instaladores.md) | Registro central de metadata de instaladores (catálogo Bash, sin YAML/JSON) | Aceptada |
 | [0031](0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md) | Separar los instaladores multi-paquete en instaladores individuales, con un agrupador delgado | Aceptada |
 | [0032](0032-mecanismo-condicional-por-version-de-ubuntu.md) | Mecanismo de instalación condicional por versión de Ubuntu (Ghostty) | Aceptada |
+| [0033](0033-mise-amplia-su-rol-a-clis-via-registry.md) | Mise amplía su rol: de "solo runtimes" a también gestionar CLIs vía su registry (extiende 0002) | Aceptada |
