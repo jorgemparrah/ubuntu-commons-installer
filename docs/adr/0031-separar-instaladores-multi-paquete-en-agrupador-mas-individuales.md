@@ -1,7 +1,7 @@
 # 0031. Separar los instaladores multi-paquete en instaladores individuales, con un agrupador delgado
 
 Fecha: 2026-07-19
-Estado: Aceptada
+Estado: Reemplazada parcialmente por 0035 (solo en cuanto a mantener agrupadores delgados; la decisión de separar en instaladores individuales sigue vigente, ver [0035](0035-eliminar-agrupadores-delgados-y-recategorizar-catalogo.md))
 
 ## Contexto
 

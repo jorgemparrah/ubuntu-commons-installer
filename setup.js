@@ -11,24 +11,44 @@ const {
 
 // Tools configuration (Node.js removed from list since it's installed as dependency)
 const tools = [
-    // SYSTEM
-    { name: 'System Updates', script: 'scripts/system/install_system_update.sh', category: 'SYSTEM' },
-    { name: 'Kernel & Headers', script: 'scripts/system/install_kernel.sh', category: 'SYSTEM' },
-    { name: 'Development Tools', script: 'scripts/system/install_development_tools.sh', category: 'SYSTEM' },
-    { name: 'System Utilities', script: 'scripts/system/install_system_utils.sh', category: 'SYSTEM' },
-    { name: 'Multimedia Tools', script: 'scripts/system/install_multimedia.sh', category: 'SYSTEM' },
+    // SYSTEM — cli-utils (ex agrupador "Development Tools", ver ADR 0035)
+    { name: 'wget', script: 'scripts/system/install_wget.sh', category: 'SYSTEM' },
+    { name: 'curl', script: 'scripts/system/install_curl.sh', category: 'SYSTEM' },
+    { name: 'Git', script: 'scripts/system/install_git.sh', category: 'SYSTEM' },
+    { name: 'build-essential', script: 'scripts/system/install_build_essential.sh', category: 'SYSTEM' },
+    { name: 'software-properties-common', script: 'scripts/system/install_software_properties_common.sh', category: 'SYSTEM' },
+    { name: 'apt-transport-https', script: 'scripts/system/install_apt_transport_https.sh', category: 'SYSTEM' },
+    { name: 'GnuPG', script: 'scripts/system/install_gnupg2.sh', category: 'SYSTEM' },
+
+    // SYSTEM — terminals
     { name: 'Terminator', script: 'scripts/system/install_terminator.sh', category: 'SYSTEM' },
-    { name: 'Oh My Zsh', script: 'scripts/system/install_oh_my_zsh.sh', category: 'SYSTEM' },
-    { name: 'Powerlevel10k', script: 'scripts/system/install_powerlevel10k.sh', category: 'SYSTEM' },
     { name: 'Ranger', script: 'scripts/system/install_ranger.sh', category: 'SYSTEM' },
-    { name: 'cmatrix', script: 'scripts/system/install_cmatrix.sh', category: 'SYSTEM' },
-    { name: 'GIMP', script: 'scripts/system/install_gimp.sh', category: 'SYSTEM' },
-    { name: 'OBS Studio', script: 'scripts/system/install_obs_studio.sh', category: 'SYSTEM' },
     { name: 'nnn', script: 'scripts/system/install_nnn.sh', category: 'SYSTEM' },
     { name: 'lf', script: 'scripts/system/install_lf.sh', category: 'SYSTEM' },
     { name: 'Yazi', script: 'scripts/system/install_yazi.sh', category: 'SYSTEM' },
     { name: 'Ghostty', script: 'scripts/system/install_ghostty.sh', category: 'SYSTEM' },
     { name: 'WezTerm', script: 'scripts/system/install_wezterm.sh', category: 'SYSTEM' },
+
+    // SYSTEM — shell-personalization
+    { name: 'Oh My Zsh', script: 'scripts/system/install_oh_my_zsh.sh', category: 'SYSTEM' },
+    { name: 'Powerlevel10k', script: 'scripts/system/install_powerlevel10k.sh', category: 'SYSTEM' },
+
+    // SYSTEM — gui-utils (Meld/Baobab/GParted: ex agrupador "System Utilities", ver ADR 0035)
+    { name: 'Meld', script: 'scripts/system/install_meld.sh', category: 'SYSTEM' },
+    { name: 'Baobab', script: 'scripts/system/install_baobab.sh', category: 'SYSTEM' },
+    { name: 'GParted', script: 'scripts/system/install_gparted.sh', category: 'SYSTEM' },
+    { name: 'GIMP', script: 'scripts/system/install_gimp.sh', category: 'SYSTEM' },
+    { name: 'OBS Studio', script: 'scripts/system/install_obs_studio.sh', category: 'SYSTEM' },
+
+    // SYSTEM — misc
+    { name: 'cmatrix', script: 'scripts/system/install_cmatrix.sh', category: 'SYSTEM' },
+
+    // MULTIMEDIA (ex agrupador "Multimedia Tools", ver ADR 0035; ya vivían
+    // en category=multimedia en tools_catalog.sh, ahora también en el menú)
+    { name: 'Cheese', script: 'scripts/system/install_cheese.sh', category: 'MULTIMEDIA' },
+    { name: 'v4l-utils', script: 'scripts/system/install_v4l_utils.sh', category: 'MULTIMEDIA' },
+    { name: 'ubuntu-restricted-extras', script: 'scripts/system/install_ubuntu_restricted_extras.sh', category: 'MULTIMEDIA' },
+    { name: 'VLC', script: 'scripts/system/install_vlc.sh', category: 'MULTIMEDIA' },
 
     // EDITORS
     { name: 'Visual Studio Code', script: 'scripts/editors/install_vscode.sh', category: 'EDITORS' },
@@ -53,7 +73,11 @@ const tools = [
     { name: 'Zoom', script: 'scripts/productivity/install_zoom.sh', category: 'PRODUCTIVITY' },
     { name: 'Flameshot', script: 'scripts/productivity/install_flameshot.sh', category: 'PRODUCTIVITY' },
     
-    // MAINTENANCE
+    // MAINTENANCE (System Updates/Kernel & Headers movidos aquí desde
+    // SYSTEM, ver ADR 0035 — consistente con category=maintenance en
+    // tools_catalog.sh)
+    { name: 'System Updates', script: 'scripts/system/install_system_update.sh', category: 'MAINTENANCE' },
+    { name: 'Kernel & Headers', script: 'scripts/system/install_kernel.sh', category: 'MAINTENANCE' },
     { name: 'Final System Update', script: 'scripts/maintenance/install_final_update.sh', category: 'MAINTENANCE' }
 ];
 
@@ -79,7 +103,7 @@ async function showMainMenu() {
         })
     );
     const choices = [];
-    const categories = ['SYSTEM', 'EDITORS', 'DEVELOPMENT', 'PRODUCTIVITY', 'MAINTENANCE'];
+    const categories = ['SYSTEM', 'MULTIMEDIA', 'EDITORS', 'DEVELOPMENT', 'PRODUCTIVITY', 'MAINTENANCE'];
 
     categories.forEach(category => {
         choices.push(new inquirer.Separator(`=== ${category} ===`));

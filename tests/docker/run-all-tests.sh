@@ -76,7 +76,6 @@ run_suite "tests/test_backup.sh" bash tests/test_backup.sh
 run_suite "tests/test_backup_move_dir.sh" bash tests/test_backup_move_dir.sh
 run_suite "tests/test_migrations.sh" bash tests/test_migrations.sh
 run_suite "tests/test_install_nodejs_legacy.sh" bash tests/test_install_nodejs_legacy.sh
-run_suite "tests/test_system_utils_contract.sh" bash tests/test_system_utils_contract.sh
 run_suite "tests/test_system_update_contract.sh" bash tests/test_system_update_contract.sh
 run_suite "tests/test_mongodb_compass_download.sh" bash tests/test_mongodb_compass_download.sh
 run_suite "tests/test_kernel_hwe_fallback.sh" bash tests/test_kernel_hwe_fallback.sh
