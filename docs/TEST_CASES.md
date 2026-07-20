@@ -158,8 +158,6 @@ Cubierto hoy por: `tests/test_tools_catalog_setup_js_consistency.sh` (I21), incl
 
 Cubierto hoy por: `tests/test_snap_installers_full_contract.sh` (I22), que complementa (sin reemplazar) a `tests/test_snap_installers_contract.sh` (I10, ya cubre los 3 casos de `status`: instalado/no instalado/snapd ausente). Incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`snap-installers-full-contract`). Ninguno de los 8 se prueba funcionalmente en CI (snapd no corre sin systemd en los contenedores Docker usados por este proyecto, ver `docs/UBUNTU_COMPATIBILITY.md`).
 
-Cubierto hoy por: `tests/test_tools_registry.sh` (I17), incluido en `tests/docker/run-all-tests.sh` (corre también dentro de `tests/docker/build-and-test-all.sh`) y en su propio job de CI (`tools-registry`). Es infraestructura puramente aditiva (no cambia comportamiento de ningún instalador existente, ver ADR 0030); no migra más instaladores por sí sola.
-
 ### Validación manual pendiente: instaladores Snap en Ubuntu 26.04 Desktop
 
 Ninguno de los 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify, Zoom) se prueba funcionalmente en CI: `snapd` no corre sin systemd dentro de los contenedores Docker usados por este proyecto. `tests/test_snap_installers_contract.sh` (I10) solo prueba la lógica de `status` con mocks. Antes de declarar cualquiera de estos 8 "probado funcionalmente" en Ubuntu 26.04, corresponde ejecutar esta pauta en un sistema Ubuntu 26.04 Desktop real (VM o máquina física, con systemd y snapd reales):
@@ -173,6 +171,14 @@ Ninguno de los 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP,
 7. `./scripts/<categoría>/install_<herramienta>.sh status` → confirmar `NOT_INSTALLED` otra vez.
 
 Repetir por cada uno de los 8. Ningún instalador Snap se marca como `compatible`/probado en `docs/UBUNTU_COMPATIBILITY.md` hasta que esta pauta se haya corrido al menos una vez en Ubuntu 26.04 Desktop real.
+
+### Grupo deb-directo (Hito 11)
+
+| ID | Escenario | Condición inicial | Clasificación | Resultado esperado | Estado |
+|---|---|---|---|---|---|
+| I23 | `install_chrome.sh`/`install_mongodb_compass.sh` migrados al contrato completo de 6 verbos vía `scripts/lib/deb_direct.sh` (nuevo, hermano de `apt.sh`/`snap.sh`/`apt_vendor_repo.sh`) + `scripts/lib/apt.sh` + `scripts/lib/installer_cli.sh` | Mocks de `dpkg`/`apt`/`apt-get`/`wget`/`sudo` | Prueba simulada (mocks) | `install` descarga el `.deb` (verificando que no quede vacío) y lo instala vía `apt-get install -y ./archivo.deb`; `status` distingue INSTALLED/BROKEN/OUTDATED igual que el resto de instaladores APT migrados; `update` invoca `--only-upgrade`; `reinstall` usa el fallback mecánico del dispatcher (purge + descargar e instalar de nuevo, sin función propia); `repair` corre `dpkg --configure -a` + reinstalación forzada, rechazando sobre NOT_INSTALLED; `uninstall` invoca `apt-get purge` (no remove) | ✅ pasa |
+
+Cubierto hoy por: `tests/test_deb_direct_full_contract.sh` (I23), que complementa (sin reemplazar) a `tests/test_chrome_arch_check.sh` (I09, ya cubre la verificación de arquitectura) y `tests/test_mongodb_compass_download.sh` (I07, ya cubre los fallos de descarga/instalación). Incluido en `tests/docker/run-all-tests.sh` y en su propio job de CI (`deb-direct-full-contract`).
 
 Instala software real (Mise, kubectl); solo corre en contenedores desechables.
 
