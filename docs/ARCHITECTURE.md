@@ -395,6 +395,14 @@ Evitar duplicar funciones auxiliares.
 
 **Segundo consumidor real del catálogo** (2026-07-19): `tests/test_tools_catalog_setup_js_consistency.sh` (I21) valida el menú interactivo de `setup.js` contra el catálogo — complementa al primer consumidor (I19, que valida `docs/TOOLS.md`), esta vez sobre el código que arma el menú. Excluye a propósito los ids que son solo miembros internos de un agrupador (por ejemplo `wget` dentro de `development_tools_group`): esos nunca tuvieron ni deben tener una entrada propia en el menú, solo su agrupador la tiene.
 
+**Grupo Snap migrado al contrato completo (Hito 11 — 2026-07-19):**
+
+- `scripts/lib/snap.sh` — helpers Snap compartidos (`snap_available`, `snap_package_installed`, `snap_install_package`, `snap_remove_package`), hermano de `scripts/lib/apt.sh` para este mecanismo. `snap_available` distingue snapd ausente/no disponible de "paquete no instalado" (antes cada instalador repetía la misma comprobación `command -v snap && snap list`).
+- Los 8 instaladores Snap (DBeaver, GitKraken, Insomnia, Postman, GIMP, OBS Studio, Spotify, Zoom) se migraron al contrato completo vía `installer_cli.sh` + `snap.sh`, y se registraron en `tools_catalog.sh` con `manager=snap` y `requires_manual_validation=yes` (snapd no corre sin systemd en los contenedores Docker de este proyecto).
+- `status` sigue sin distinguir `OUTDATED`: eso requeriría `snap refresh --list`, una consulta a la store de Snap por red — violaría que `status` debe ser liviano y de solo lectura local (mismo criterio que los paquetes meta de ADR 0031). `update` existe igual como verbo explícito (`snap refresh <paquete>`).
+- `repair` no se implementa en ninguno de los 8: un snap es una imagen squashfs autocontenida, sin el concepto de "instalación parcial" que justifica `repair` en un paquete APT — el dispatcher lo rechaza explícitamente (código 3) si se pide, en vez de inventar una semántica.
+- Prueba nueva: `tests/test_snap_installers_full_contract.sh` (I22, ciclo de vida completo con mocks), que complementa sin reemplazar a `tests/test_snap_installers_contract.sh` (I10, ya cubría los 3 casos de `status`).
+
 ---
 
 # 16. Logging
