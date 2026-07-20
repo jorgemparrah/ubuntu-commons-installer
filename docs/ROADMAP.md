@@ -834,6 +834,61 @@ Documentos requeridos:
 
 ---
 
+# Hito 16
+
+## GitHub CLI vía Mise y candidatas de IA
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+In Progress
+
+Depende de:
+
+Modernización de instaladores (Hito 11) — reutiliza `scripts/lib/installer_cli.sh` sin cambiarlo. No depende de los Hitos 12-15 (Framework de validación, Perfiles, Arquitectura de plugins, Documentación): mismo criterio de reordenamiento ya usado para adelantar el Hito 10 (ver [ADR 0026](adr/0026-adelantar-hito-10-ci-antes-que-hito-9.md)).
+
+Nota: los 5 instaladores de terminal (`nnn`, `lf`, Yazi, WezTerm, Ghostty) que originaron esta investigación ya fueron implementados, registrados en `tools_catalog.sh` y mergeados a `main` — ver "Ampliación del catálogo: terminales y gestores de archivos nuevos (2026-07-20)" al cierre del Hito 11. No forman parte del alcance pendiente de este hito.
+
+### Objetivo
+
+Agregar al catálogo el CLI oficial de GitHub, y dejar registrado un inventario investigado (mecanismo oficial de instalación por herramienta) de asistentes/CLIs de IA candidatos, sin implementarlos todavía hasta que se confirme su clasificación `required/optional/candidate`.
+
+### Tareas
+
+**`gh` (GitHub CLI):**
+
+* Decisión: se instala vía **Mise** (`manager=mise-tool`), no vía apt, aunque también está en el repositorio oficial de Ubuntu (`universe`, confirmado en 24.04 y 26.04) — decisión explícita del dueño del proyecto que amplía el rol de Mise más allá de runtimes. Ver [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md).
+* Pendiente de implementación: `install_gh.sh` (o extensión de `scripts/lib/runtime.sh`/biblioteca nueva `scripts/lib/mise_tool.sh`, a decidir en la implementación) — no se avanzó en este movimiento, queda para cuando el flujo principal lo tome.
+
+**Candidatas de IA — investigación del mecanismo oficial completa, sin instalador todavía:**
+
+| Herramienta | Mecanismo oficial investigado | Nivel de oficialidad |
+|---|---|---|
+| Claude Desktop (incluye Cowork) | Repo APT propio de Anthropic (`downloads.claude.ai/claude-desktop/apt/stable`, `signed-by`), paquete `claude-desktop`. Ubuntu 22.04+/Debian 12+, amd64/arm64. Cowork requiere KVM, ~25 GB disco, 8 GB RAM | Alto — mismo patrón que Docker/VS Code/Cursor |
+| Claude Code | Script oficial (`curl -fsSL https://claude.ai/install.sh \| bash`, sin Node), o npm (`@anthropic-ai/claude-code`, Node 22+), o repos apt/dnf/apk propios de Anthropic para sistemas gestionados | Alto — múltiples canales oficiales, incluye apt |
+| Antigravity (Google) | CLI (`agy`): script oficial (`curl -fsSL https://antigravity.google/cli/install.sh \| bash`) a `~/.local/bin`, o npm/`brew`. IDE/Desktop: sin apt/snap oficial, tarball descargado manualmente | Medio — oficial, sin paquete de sistema |
+| OpenCode | Script oficial (`curl -fsSL https://opencode.ai/install \| bash`), o npm (`opencode-ai`) | Medio — oficial, sin paquete de sistema |
+| OpenClaw | Script oficial (`curl -fsSL https://openclaw.ai/install.sh \| bash`), o npm (`openclaw`); requiere Node.js 22.22.3+/24.15+/25.9+ | Medio — oficial, sin paquete de sistema |
+| Codex CLI (OpenAI) | Script oficial (`curl -fsSL https://chatgpt.com/codex/install.sh \| sh`), o npm con scope (`@openai/codex` — el paquete `codex` sin scope es de otro proyecto) | Alto — oficial, terminal, soportado en Linux |
+
+Explícitamente descartado de este inventario: **Codex Desktop** (app Electron de OpenAI) — sin ninguna opción oficial de Linux; los únicos paquetes existentes son repaquetados de terceros sin firma real (`[trusted=yes]` en vez de `signed-by`), lo que no cumple el estándar de seguridad del proyecto (`AGENT.md` §16).
+
+### Entregables
+
+* [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md) (Mise amplía su rol a CLIs vía registry, extiende [ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md)).
+* Tabla de candidatas de IA arriba, como insumo para la clasificación `required/optional/candidate` pendiente con el dueño del proyecto — ninguna se implementa todavía en este movimiento.
+
+### Pendiente
+
+* Clasificación `required/optional/retired/candidate` de las 6 candidatas de IA (pendiente de confirmar con el dueño del proyecto, igual que se hizo para el resto del catálogo el 2026-07-20).
+* Implementación de `install_gh.sh` vía Mise.
+* Implementación de instaladores para las candidatas de IA que se confirmen (ninguna todavía).
+
+---
+
 # Preguntas resueltas por el dueño del proyecto (2026-07-15)
 
 Migradas desde la evaluación inicial del repositorio (2026-07-13) y resueltas en una revisión de inventario de herramientas. Las decisiones de arquitectura resultantes están en `docs/adr/` (0016–0021) y el inventario actualizado en `docs/TOOLS.md`.

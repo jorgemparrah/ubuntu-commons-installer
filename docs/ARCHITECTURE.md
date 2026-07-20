@@ -263,6 +263,8 @@ Runtimes futuros:
 
 deberían gestionarse todos a través de Mise siempre que sea posible.
 
+Mise también puede usarse, de forma adicional y evaluada caso por caso, como mecanismo de instalación de CLIs de herramientas que no son runtimes de lenguaje (por ejemplo `gh`), cuando la herramienta está en su registry (backends `aqua`/`asdf`/`ubi`). Este uso no reemplaza la jerarquía de fuentes de la Capa de Paquetes (sección 11) para el resto del catálogo — ver [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md).
+
 ---
 
 # 11. Capa de Paquetes

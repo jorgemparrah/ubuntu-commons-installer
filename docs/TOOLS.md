@@ -42,6 +42,7 @@
 | Script | Propósito | Decisión |
 |---|---|---|
 | `install_docker.sh` | Docker Engine | Mantener; alta prioridad de modernización. **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh`, `scripts/lib/apt.sh` y `scripts/lib/apt_vendor_repo.sh` (nuevo, grupo vendor-repo); `status` distingue `OUTDATED`/`BROKEN` igual que el resto de los instaladores APT migrados |
+| `install_gh.sh` | GitHub CLI (`gh`) | **Pendiente de implementación (Hito 16)** — decisión tomada: se instala vía **Mise** (`manager=mise-tool`), no vía apt, aunque `gh` también está en el repositorio oficial de Ubuntu (`universe`, 24.04 y 26.04). Amplía el rol de Mise más allá de runtimes; ver [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md). Sin script todavía — lo toma el flujo principal cuando corresponda |
 | `install_nodejs.sh` | Node.js vía NVM | Reemplazar por módulo de runtime Mise y migración (ver [ADR 0001](adr/0001-bootstrap-bash-sin-node.md), [ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md)). Política de versiones: última estable + últimas 2 LTS; se respetan `.nvmrc`/`.node-version`/`mise.toml` a nivel de proyecto (ver [ADR 0016](adr/0016-politica-de-versiones-node-mise.md)) |
 | `install_yarn.sh` | Yarn | **Vía Mise** — implementado en el Hito 9 usando `scripts/lib/runtime.sh` (ver [ADR 0017](adr/0017-mise-instala-yarn-pnpm-directo.md) y [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md)); antes instalaba el paquete `yarn` de apt, que en Ubuntu es en realidad `cmdtest` (bug preexistente detectado en `docs/UBUNTU_COMPATIBILITY.md`). **Migrado al dispatcher compartido en el Hito 11 (grupo Mise, 2026-07-20)**: adopta `scripts/lib/installer_cli.sh` sin tocar la lógica de `scripts/lib/runtime.sh`; agrega `update` (vuelve a pedir `latest` vía Mise), `reinstall` usa el fallback mecánico del dispatcher; `repair` no se implementa (Mise no tiene el concepto de instalación parcial que lo justifique) |
 | `install_postman.sh` | Postman | **Mantener** — confirmado, junto con Insomnia. **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh` y `scripts/lib/snap.sh` (helpers Snap compartidos, hermano de `apt.sh`, ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); `status` sigue sin distinguir `OUTDATED` (requeriría consultar la store de Snap por red) pero `update` existe como verbo explícito; `repair` se rechaza a propósito (código 3) **Clasificación: `optional`** (confirmada con el dueño del proyecto, 2026-07-20) |
@@ -66,6 +67,21 @@
 | Script | Propósito | Decisión |
 |---|---|---|
 | `install_final_update.sh` | Actualización final y limpieza | Mantener, pero renombrar conceptualmente como una acción de mantenimiento; `status` corregido en el Hito 9 para considerar actualizaciones y paquetes huérfanos pendientes (ver [ADR 0013](adr/0013-separar-mantenimiento-de-instaladores.md)). **Migrado al dispatcher compartido en el Hito 11 (grupo mantenimiento, 2026-07-20)**: mismo criterio que `install_system_update.sh` — solo `status`/`install`, el resto se rechaza explícitamente |
+
+## Candidatas de IA (Hito 16 — investigadas, sin instalador todavía)
+
+Mecanismo oficial de instalación investigado para cada una; ninguna tiene script en `scripts/` todavía. Pendiente de clasificación `required/optional/retired/candidate` con el dueño del proyecto antes de implementar. Ver el detalle completo en `docs/ROADMAP.md`, Hito 16.
+
+| Herramienta | Mecanismo oficial | Decisión |
+|---|---|---|
+| Claude Desktop (incluye Cowork) | Repo APT propio de Anthropic (`downloads.claude.ai/claude-desktop/apt/stable`, `signed-by`), paquete `claude-desktop` | `candidate` — mecanismo de mayor "oficialidad" del grupo (mismo patrón que Docker/VS Code/Cursor); Cowork requiere KVM, ~25 GB disco, 8 GB RAM |
+| Claude Code | Script oficial (`claude.ai/install.sh`), npm (`@anthropic-ai/claude-code`), o repos apt/dnf/apk propios de Anthropic | `candidate` |
+| Codex CLI (OpenAI) | Script oficial (`chatgpt.com/codex/install.sh`), o npm con scope (`@openai/codex`) | `candidate` |
+| Antigravity (Google) | CLI (`agy`): script oficial a `~/.local/bin`. IDE/Desktop: sin apt/snap oficial, tarball manual | `candidate` |
+| OpenCode | Script oficial (`opencode.ai/install`), o npm (`opencode-ai`) | `candidate` |
+| OpenClaw | Script oficial (`openclaw.ai/install.sh`), o npm (`openclaw`); requiere Node.js | `candidate` |
+
+**Descartado explícitamente:** Codex Desktop (app Electron de OpenAI) — sin ninguna opción oficial de Linux; los únicos paquetes existentes son repaquetados de terceros sin firma real (`[trusted=yes]`), lo que no cumple el estándar de seguridad del proyecto (`AGENT.md` §16).
 
 ## Fuera de alcance (confirmado)
 
