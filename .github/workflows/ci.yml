@@ -113,6 +113,7 @@ jobs:
           - terminal-apps-apt-simple-contract
           - ghostty-installer
           - wezterm-apt-repo
+          - gh-via-mise
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -323,6 +324,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "W01"
             cmd: bash tests/docker/test_wezterm_apt_repo.sh
+          - case: gh-via-mise
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "G01"
+            cmd: bash tests/docker/test_gh_via_mise.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single

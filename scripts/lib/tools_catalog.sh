@@ -289,6 +289,17 @@ tools_registry_register "yarn" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
+# gh (GitHub CLI): manager=mise igual que kubectl/Yarn, aunque también está
+# en el repositorio oficial de Ubuntu (universe) — decisión explícita del
+# dueño del proyecto (ver ADR 0033 y ADR 0034, esta última corrige el
+# manager=mise-tool propuesto originalmente en 0033 tras confirmar que
+# kubectl/Yarn ya resuelven este mismo caso con manager=mise).
+tools_registry_register "gh" \
+    "name=GitHub CLI" "category=development" "manager=mise" "packages=gh" \
+    "script=scripts/development/install_gh.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
 # Grupo deb-directo (Hito 11): manager=deb-direct, ver
 # scripts/lib/deb_direct.sh. Chrome es supported_arch=amd64 (ver ADR
 # 0028); MongoDB Compass no publica un .deb multi-arch tampoco pero su

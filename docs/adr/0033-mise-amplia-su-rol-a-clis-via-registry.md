@@ -1,7 +1,7 @@
 # 0033. Mise amplía su rol: de "solo runtimes" a también gestionar CLIs vía su registry
 
 Fecha: 2026-07-20
-Estado: Aceptada
+Estado: Reemplazada parcialmente por 0034 (solo en cuanto al valor de `manager` para `gh`; la decisión de fondo de esta ADR sigue vigente, ver [0034](0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md))
 
 ## Contexto
 
@@ -20,7 +20,7 @@ Se amplía el rol de Mise en este proyecto:
 
 - Mise sigue siendo el **único gestor de runtimes** soportado (Node.js, Python, Java, Go, Rust) — [ADR 0002](0002-mise-como-unico-gestor-runtime.md) no se reemplaza, se extiende.
 - Además, Mise pasa a ser un **mecanismo de instalación válido para CLIs de herramientas** (no solo runtimes de lenguaje) cuando la herramienta está disponible en el registry de Mise (`mise registry <nombre>`), usando cualquiera de sus backends (`aqua`, `asdf`, `ubi`, etc.).
-- Este nuevo mecanismo se llama `manager=mise-tool` en `tools_catalog.sh`, para distinguirlo de `manager=mise` (runtimes vía `scripts/lib/runtime.sh`, Hito 8) — son mecanismos hermanos pero con necesidades distintas: un runtime tiene política de versiones propia (última estable + últimas 2 LTS, ver [ADR 0016](0016-politica-de-versiones-node-mise.md)); una CLI vía Mise normalmente instala `latest` sin esa política.
+- Este mecanismo se registra en `tools_catalog.sh` con el mismo `manager=mise` que ya usan `kubectl` y Yarn — **corrección** (ver [ADR 0034](0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md)): esta ADR proponía originalmente un valor nuevo, `manager=mise-tool`, para distinguirlo de los runtimes de lenguaje, pero `kubectl`/Yarn ya resuelven exactamente este caso (CLI sin política de versiones propia, instala `latest`) con `manager=mise` sin esa distinción, así que no se introduce un valor nuevo.
 - **`gh` es el primer caso**: se instala vía Mise (`mise use -g gh@latest` o equivalente), no vía apt, aun cuando también está en los repositorios oficiales de Ubuntu — decisión explícita del dueño del proyecto, no una consecuencia automática de la jerarquía de fuentes de `AGENT.md` §15 (esa jerarquía sigue rigiendo para paquetes que no pasan por Mise).
 - Esto **no** cambia la jerarquía general de fuentes (`apt` > proveedor > instalador oficial > snap > flatpak) para el resto de las herramientas del catálogo — Mise-para-CLIs es una vía adicional, evaluada caso por caso, no un reemplazo de esa jerarquía.
 
