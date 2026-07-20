@@ -1,7 +1,7 @@
 # 0035. Eliminar los agrupadores delgados de ADR 0031 y recategorizar el catálogo
 
 Fecha: 2026-07-20
-Estado: Aceptada
+Estado: Reemplazada parcialmente por 0036 (solo en cuanto a la categoría reservada para las candidatas de IA del Hito 16; el resto de esta ADR sigue vigente, ver [0036](0036-candidatas-de-ia-en-categorias-existentes.md))
 
 ## Contexto
 
@@ -23,7 +23,7 @@ Al revisar el catálogo completo (`scripts/lib/tools_catalog.sh`, 49 entradas) p
   - `subcategory=misc`: cmatrix (única entrada que no encaja en ninguna de las anteriores).
   - Los 4 ex miembros de Multimedia Tools (Cheese, v4l-utils, ubuntu-restricted-extras, VLC) no necesitan subcategoría: ya vivían correctamente en `category=multimedia`, no en `system`.
 - Se corrige una inconsistencia menor detectada de paso: `install_system_update.sh` e `install_kernel.sh` tenían `category=system` pese a ser `kind=maintenance`, mientras que `install_final_update.sh` (mismo `kind=maintenance`) ya tenía `category=maintenance`. Los 3 quedan con `category=maintenance` para ser consistentes entre sí.
-- Se reserva `category=ai-tools` (con subcategorías `ai-cli`/`ai-desktop`) para cuando se implementen las 7 candidatas de IA del Hito 16 — no se registra nada nuevo en el catálogo todavía, ya que ningún instalador de esas candidatas existe aún.
+- Se reserva `category=ai-tools` (con subcategorías `ai-cli`/`ai-desktop`) para cuando se implementen las 7 candidatas de IA del Hito 16 — no se registra nada nuevo en el catálogo todavía, ya que ningún instalador de esas candidatas existe aún. **Corrección** (ver [ADR 0036](0036-candidatas-de-ia-en-categorias-existentes.md)): no se crea `category=ai-tools`; las 7 candidatas se distribuyen entre `editors`/`development`/`productivity` según su función real.
 
 ## Consecuencias
 
