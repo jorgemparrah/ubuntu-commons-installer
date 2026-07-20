@@ -67,3 +67,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0029](0029-contrato-completo-de-instalador-referencia.md) | `install_vim.sh` es el contrato de referencia; el Hito 11 migra el resto hacia él | Aceptada |
 | [0030](0030-registro-central-de-metadata-de-instaladores.md) | Registro central de metadata de instaladores (catálogo Bash, sin YAML/JSON) | Aceptada |
 | [0031](0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md) | Separar los instaladores multi-paquete en instaladores individuales, con un agrupador delgado | Aceptada |
+| [0032](0032-mecanismo-condicional-por-version-de-ubuntu.md) | Mecanismo de instalación condicional por versión de Ubuntu (Ghostty) | Aceptada |
