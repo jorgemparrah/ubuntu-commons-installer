@@ -893,7 +893,7 @@ Media
 
 **Estado**
 
-In Progress
+Done
 
 Depende de:
 
@@ -945,9 +945,13 @@ Nota de investigación (Hermes Agent): los primeros resultados de búsqueda incl
 * [ADR 0033](adr/0033-mise-amplia-su-rol-a-clis-via-registry.md) (Mise amplía su rol a CLIs vía registry, extiende [ADR 0002](adr/0002-mise-como-unico-gestor-runtime.md)) y [ADR 0034](adr/0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) (corrige el valor de `manager` de 0033 tras confirmar el precedente de `kubectl`/Yarn).
 * Los 7 instaladores de candidatas de IA (Claude Code, Codex CLI, OpenCode, Antigravity CLI, OpenClaw, Hermes Agent, Claude Desktop), registrados en `tools_catalog.sh` y `setup.js`, con [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md) documentando el mecanismo `curl-script` nuevo y `tests/test_curl_script_contract.sh` (I27) cubriendo los 6 que lo usan.
 
+### Cierre (2026-07-21)
+
+El pendiente del Antigravity IDE/Desktop quedó resuelto: la investigación original (ADR 0037) solo había encontrado un tarball manual sin checksum/firma, pero una revisión posterior confirmó que Google sí publica un repositorio APT oficial verificable (`us-central1-apt.pkg.dev`, `signed-by` + keyring). Se implementó `scripts/editors/install_antigravity_ide.sh` (`manager=apt-vendor-repo`, `category=editors`), ver [ADR 0041](adr/0041-antigravity-ide-via-repo-apt-oficial.md). Con esto, las 7 candidatas de IA del Hito 16 quedan completamente implementadas (CLI y IDE de Antigravity incluidos) y el hito se marca `Done`.
+
 ### Pendiente
 
-* Mecanismo verificable para el IDE/Desktop de Antigravity (hoy solo tarball manual sin checksum/firma, ver ADR 0037) — diferido a propósito, no se implementa hasta encontrar una fuente que cumpla el estándar de seguridad del proyecto.
+Ninguno.
 
 ---
 

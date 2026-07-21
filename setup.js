@@ -53,6 +53,7 @@ const tools = [
     // EDITORS
     { name: 'Visual Studio Code', script: 'scripts/editors/install_vscode.sh', category: 'EDITORS' },
     { name: 'Cursor AI IDE', script: 'scripts/editors/install_cursor.sh', category: 'EDITORS' },
+    { name: 'Antigravity IDE', script: 'scripts/editors/install_antigravity_ide.sh', category: 'EDITORS' },
     { name: 'Vim', script: 'scripts/editors/install_vim.sh', category: 'EDITORS' },
     
     // DEVELOPMENT

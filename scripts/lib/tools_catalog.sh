@@ -263,6 +263,16 @@ tools_registry_register "cursor" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
+# Antigravity IDE (Hito 16, 2026-07-21, ver ADR 0041): repo APT oficial de
+# Google, no el tarball manual que se había investigado originalmente en
+# ADR 0037 — distinto de "antigravity" (el CLI 'agy', category=development,
+# ver más abajo), son dos productos con mecanismos separados.
+tools_registry_register "antigravity_ide" \
+    "name=Antigravity IDE" "category=editors" "classification=optional" "profiles=desktop,developer,workstation,full,editor" "manager=apt-vendor-repo" "packages=antigravity" \
+    "script=scripts/editors/install_antigravity_ide.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 # Grupo Mise (Hito 11): manager=mise, ver scripts/lib/runtime.sh (Hito 8).
 # migration_status=migrated aquí significa "usa scripts/lib/installer_cli.sh"
 # — la lógica de instalación en sí (scripts/lib/runtime.sh) no cambió,
