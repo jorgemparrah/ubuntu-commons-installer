@@ -326,8 +326,11 @@ tools_registry_register "oh_my_zsh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
+# Powerlevel10k depende de Oh My Zsh (Hito 17, ver ADR 0042). Primer caso
+# real del campo depends_on: si Oh My Zsh no está instalado, install_tool
+# rechaza explícitamente en vez de instalarlo por su cuenta.
 tools_registry_register "powerlevel10k" \
-    "name=Powerlevel10k" "category=system" "classification=optional" "profiles=cli,full" "subcategory=shell-personalization" "manager=git-clone" \
+    "name=Powerlevel10k" "category=system" "classification=optional" "profiles=cli,full" "subcategory=shell-personalization" "manager=git-clone" "depends_on=oh_my_zsh" \
     "script=scripts/system/install_powerlevel10k.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"

@@ -17,6 +17,7 @@ INSTALL_SH="${UCI_REPO_ROOT}/scripts/productivity/install_flameshot.sh"
 readonly INSTALL_SH
 readonly UCI_BIN_NAME="flameshot"
 readonly UCI_PKG_NAME="flameshot"
+readonly UCI_KEYBINDING_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/flameshot/"
 
 # shellcheck source=lib/assertions.sh
 source "${UCI_TEST_DIR}/lib/assertions.sh"
@@ -286,6 +287,130 @@ else
     fail "el estado residual 'rc' no se manejó correctamente (código ${RUN_CODE}). Salida: ${RUN_OUTPUT}"
 fi
 teardown_mock_bin
+
+# setup_mock_gsettings <lista_inicial>
+# Agrega un 'gsettings' falso al mismo PATH temporal que setup_mock_bin ya
+# creó. El estado de la lista de custom-keybindings persiste en
+# UCI_MOCK_GSETTINGS_STATE entre llamadas de la misma corrida, para poder
+# distinguir 'get' antes y después de un 'set'.
+setup_mock_gsettings() {
+    local initial_list="$1"
+    UCI_MOCK_GSETTINGS_STATE="$(mktemp)"
+    echo "${initial_list}" > "${UCI_MOCK_GSETTINGS_STATE}"
+
+    cat > "${UCI_MOCK_BIN}/gsettings" <<EOF
+#!/usr/bin/env bash
+echo "gsettings \$*" >> "${UCI_MOCK_LOG}"
+if [[ "\$1" == "get" ]]; then
+    cat "${UCI_MOCK_GSETTINGS_STATE}"
+    exit 0
+fi
+if [[ "\$1" == "set" && "\$3" == "custom-keybindings" ]]; then
+    echo "\$4" > "${UCI_MOCK_GSETTINGS_STATE}"
+    exit 0
+fi
+exit 0
+EOF
+    chmod +x "${UCI_MOCK_BIN}/gsettings"
+}
+
+echo ""
+echo "== 15. configure: rechaza si Flameshot no está instalado =="
+UCI_TEST_HOME="$(mktemp -d)"
+setup_mock_bin "missing"
+set +e
+RUN_OUTPUT="$(PATH="${UCI_MOCK_BIN}:${PATH}" HOME="${UCI_TEST_HOME}" bash "${INSTALL_SH}" configure 2>&1)"
+RUN_CODE=$?
+set -e
+if [[ "${RUN_CODE}" -ne 0 ]]; then
+    pass "'configure' sobre NOT_INSTALLED sale con código distinto de cero"
+else
+    fail "'configure' sobre NOT_INSTALLED debería fallar"
+fi
+if [[ "${RUN_OUTPUT}" == *"install"* ]]; then
+    pass "'configure' sobre NOT_INSTALLED sugiere usar 'install' antes"
+else
+    fail "'configure' no sugirió usar 'install'. Salida: ${RUN_OUTPUT}"
+fi
+teardown_mock_bin
+rm -rf "${UCI_TEST_HOME}"
+
+echo ""
+echo "== 16. configure: rechaza si 'gsettings' no está disponible =="
+UCI_TEST_HOME="$(mktemp -d)"
+setup_mock_bin "ii"
+set +e
+RUN_OUTPUT="$(PATH="${UCI_MOCK_BIN}:${PATH}" HOME="${UCI_TEST_HOME}" bash "${INSTALL_SH}" configure 2>&1)"
+RUN_CODE=$?
+set -e
+if [[ "${RUN_CODE}" -ne 0 ]] && [[ "${RUN_OUTPUT}" == *"gsettings"* ]]; then
+    pass "'configure' sin 'gsettings' disponible rechaza con un mensaje claro"
+else
+    fail "'configure' debería rechazar si 'gsettings' no está disponible (código ${RUN_CODE}). Salida: ${RUN_OUTPUT}"
+fi
+teardown_mock_bin
+rm -rf "${UCI_TEST_HOME}"
+
+echo ""
+echo "== 17. configure: agrega el atajo PrintScreen y respalda la lista previa =="
+UCI_TEST_HOME="$(mktemp -d)"
+setup_mock_bin "ii"
+setup_mock_gsettings "@as []"
+set +e
+RUN_OUTPUT="$(PATH="${UCI_MOCK_BIN}:${PATH}" HOME="${UCI_TEST_HOME}" bash "${INSTALL_SH}" configure 2>&1)"
+RUN_CODE=$?
+set -e
+if [[ "${RUN_CODE}" -eq 0 ]]; then
+    pass "'configure' sobre una lista de atajos vacía sale con código 0"
+else
+    fail "'configure' debería salir con código 0 (fue ${RUN_CODE}). Salida: ${RUN_OUTPUT}"
+fi
+if grep -qF "${UCI_KEYBINDING_PATH}" "${UCI_MOCK_GSETTINGS_STATE}"; then
+    pass "'configure' agrega el path del atajo de Flameshot a la lista de custom-keybindings"
+else
+    fail "'configure' no agregó el atajo esperado. Estado: $(cat "${UCI_MOCK_GSETTINGS_STATE}")"
+fi
+if grep -qF "custom-keybinding:${UCI_KEYBINDING_PATH} command flameshot gui" "${UCI_MOCK_LOG}"; then
+    pass "'configure' setea el comando 'flameshot gui' para el atajo nuevo"
+else
+    fail "'configure' no seteó el comando esperado. Log: $(cat "${UCI_MOCK_LOG}")"
+fi
+if grep -qF "custom-keybinding:${UCI_KEYBINDING_PATH} binding Print" "${UCI_MOCK_LOG}"; then
+    pass "'configure' setea 'Print' como la tecla del atajo nuevo"
+else
+    fail "'configure' no seteó la tecla esperada. Log: $(cat "${UCI_MOCK_LOG}")"
+fi
+if find "${UCI_TEST_HOME}/.local/state/ubuntu-workstation/backups" -name 'gnome-custom-keybindings-*.bak' 2>/dev/null | grep -q .; then
+    pass "'configure' respalda la lista previa de atajos personalizados antes de modificarla"
+else
+    fail "'configure' no generó un respaldo de la lista previa de atajos"
+fi
+teardown_mock_bin
+rm -f "${UCI_MOCK_GSETTINGS_STATE}"
+rm -rf "${UCI_TEST_HOME}"
+
+echo ""
+echo "== 18. configure: idempotente si el atajo ya está configurado =="
+UCI_TEST_HOME="$(mktemp -d)"
+setup_mock_bin "ii"
+setup_mock_gsettings "['${UCI_KEYBINDING_PATH}']"
+set +e
+RUN_OUTPUT="$(PATH="${UCI_MOCK_BIN}:${PATH}" HOME="${UCI_TEST_HOME}" bash "${INSTALL_SH}" configure 2>&1)"
+RUN_CODE=$?
+set -e
+if [[ "${RUN_CODE}" -eq 0 ]] && [[ "${RUN_OUTPUT}" == *"ya está configurado"* ]]; then
+    pass "'configure' es idempotente: si el atajo ya existe, lo reporta sin duplicarlo"
+else
+    fail "'configure' debería reportar que el atajo ya está configurado (código ${RUN_CODE}). Salida: ${RUN_OUTPUT}"
+fi
+if grep -q "gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings" "${UCI_MOCK_LOG}"; then
+    fail "'configure' no debería reescribir la lista de atajos si el atajo ya está configurado"
+else
+    pass "'configure' no vuelve a escribir la lista de atajos si ya está configurado"
+fi
+teardown_mock_bin
+rm -f "${UCI_MOCK_GSETTINGS_STATE}"
+rm -rf "${UCI_TEST_HOME}"
 
 print_test_summary
 exit_with_test_summary

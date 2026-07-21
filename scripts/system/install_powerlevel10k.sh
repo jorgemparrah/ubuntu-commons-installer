@@ -18,20 +18,32 @@
 #
 # Semántica de los 6 verbos: idéntica a install_oh_my_zsh.sh, ver los
 # comentarios de ese archivo.
+#
+# Depende de Oh My Zsh (Hito 17, ver
+# docs/adr/0042-configuraciones-post-instalacion-y-dependencias.md,
+# campo depends_on=oh_my_zsh en tools_catalog.sh): install_tool rechaza
+# explícitamente si Oh My Zsh no está instalado, en vez de instalarlo por
+# su cuenta.
 
 set -Eeuo pipefail
 
 UCI_POWERLEVEL10K_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+UCI_POWERLEVEL10K_REPO_ROOT="$(cd "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../.." && pwd)"
 # shellcheck source=../lib/apt.sh
 source "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../lib/apt.sh"
 # shellcheck source=../lib/git_clone.sh
 source "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../lib/git_clone.sh"
+# shellcheck source=../lib/dependencies.sh
+source "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../lib/dependencies.sh"
+# shellcheck source=../lib/tools_catalog.sh
+source "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../lib/tools_catalog.sh"
 # shellcheck source=../lib/installer_cli.sh
 source "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../lib/installer_cli.sh"
 
 TOOL_NAME="Powerlevel10k"
 P10K_DIR="${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
 P10K_REPO="https://github.com/romkatv/powerlevel10k.git"
+UCI_POWERLEVEL10K_DEPENDS_ON="oh_my_zsh"
 
 # Function to check status
 check_status() {
@@ -58,6 +70,12 @@ install_tool() {
         return 1
     fi
 
+    local dep_script
+    dep_script="${UCI_POWERLEVEL10K_REPO_ROOT}/$(tools_registry_field "${UCI_POWERLEVEL10K_DEPENDS_ON}" "script")"
+    if ! dependency_require_installed "${dep_script}" "Oh My Zsh"; then
+        return 1
+    fi
+
     echo "Instalando ${TOOL_NAME}..."
 
     apt_install_packages zsh git
@@ -67,11 +85,19 @@ install_tool() {
 }
 
 # Function to uninstall
+# No purga el paquete `zsh`: es compartido con install_oh_my_zsh.sh (que
+# también lo instala/gestiona), y purgarlo acá rompía el check_status de
+# Oh My Zsh (requiere `command -v zsh`) aunque su clon siguiera intacto —
+# bug expuesto por la dependencia depends_on=oh_my_zsh del Hito 17 (ver
+# docs/adr/0042-configuraciones-post-instalacion-y-dependencias.md):
+# 'reinstall' (uninstall_tool + install_tool) rechazaba a mitad de camino
+# porque install_tool ya no encontraba Oh My Zsh "instalado". Desinstalar
+# Powerlevel10k solo retira el tema; desinstalar zsh es responsabilidad de
+# install_oh_my_zsh.sh.
 uninstall_tool() {
     echo "Desinstalando ${TOOL_NAME}..."
 
     rm -rf "${P10K_DIR}"
-    apt_purge_packages zsh
 
     echo "${TOOL_NAME} desinstalado correctamente."
 }
