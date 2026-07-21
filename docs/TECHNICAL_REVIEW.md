@@ -19,6 +19,15 @@
 * **M6 pasa de `En progreso` a `✅ Corregido`**: confirmado por grep directo que 53 de los 55 scripts `install_*.sh` del repositorio sourcean `scripts/lib/installer_cli.sh`; los 2 restantes (`install_vim.sh`, `install_nodejs.sh`) son exclusiones intencionales ya documentadas. Los 3 agrupadores delgados que M6 citaba como duplicadores de `check_package_installed()`/`check_all_packages_installed()` ya no existen (eliminados en el Hito 11 vía ADR 0035).
 * **M5, B2, B5, B8, B9 siguen abiertos de verdad, se confirma su estado sin cambios**: revisados uno por uno contra el código/CI actual — `test_docker_apt_repo.sh` sigue con el mismo patrón de grep frágil citado por M5 (nadie tocó ese test); `scripts/migrations/001_nvm_to_mise.sh` sigue en 629 líneas sin dividir (B2); la advertencia de Node.js 20 deprecado sigue apareciendo en las corridas de CI, ahora también visible en la PR #35 del Hito 17 (B5); `install_ulauncher.sh` sigue ejecutando `add-apt-repository -y universe` sin guardar en cada `install` (B8); `.github/workflows/ci.yml` sigue sin `--pull` explícito en los `docker build` (B9). Los cuatro quedan como estaban: backlog documentado, deliberadamente sin fecha comprometida, no bloqueantes para la primera versión estable.
 
+**Actualización 2026-07-21 (más tarde el mismo día) — se corrigen M5, B5 y B9; B2 y B8 se re-confirman diferidos con criterio explícito.** El dueño del proyecto pidió revisar de nuevo el backlog identificado arriba, esta vez para corregir lo que fuera seguro corregir, no solo auditar:
+
+* **M5 → `✅ Corregido`**: `tests/docker/test_docker_apt_repo.sh` adopta el mismo patrón `..._code_only()` (excluir comentarios antes de grepear) ya usado en `test_kernel_hwe_fallback.sh`/`test_install_nodejs_legacy.sh`.
+* **B5 → `✅ Corregido`**: bumpeadas `actions/checkout@v4→v7`, `docker/build-push-action@v6→v7`, `docker/setup-buildx-action@v3→v4` en `.github/workflows/ci.yml` — las 3 corren nativamente en Node 24, eliminando la advertencia. Verificado que existían versiones estables más nuevas (`gh api .../releases/latest`) sin cambios incompatibles con el uso simple que hace este proyecto.
+* **B9 → `✅ Corregido`**: se agregó `pull: true` al paso que construye la imagen base con `docker/build-push-action` — el razonamiento original ("no-issue en runners efímeros") dejó de ser válido en su totalidad desde que el hallazgo A5 agregó `cache-to: type=gha, mode=max` (que sí puede persistir la capa `FROM` entre corridas). No se tocaron los 2 `docker build` crudos restantes (uno usa una imagen puramente local como `FROM`, el otro no tiene cache configurado).
+* **B2 y B8 se re-confirman `⏭️ Diferido intencionalmente`**, con el criterio explícito ya documentado en cada hallazgo: B2 porque dividir `001_nvm_to_mise.sh` no es una corrección aislada de bajo riesgo; B8 porque el chequeo que "arreglaría" la redundancia sería, en sí mismo, el mismo patrón de grep frágil que M5 acaba de corregir en otro archivo — cambiarlo ahí sería cambiar riesgo por ahorro marginal, no una mejora real.
+
+Validación: CI de la PR correspondiente (no solo lectura de código) confirma que los bumps de versión y el `pull: true` no rompieron nada.
+
 **Convención de prioridad:**
 
 - **Crítico** — bloquea o desvía trabajo futuro ya planificado; corregirlo debería preceder a ese trabajo.
@@ -220,11 +229,11 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** tarea chica dentro del Hito 10 (gate de calidad, ya `Done`, mejora incremental). No requiere hito nuevo.
 
-#### M5. Clase de riesgo recurrente: greps de regresión frágiles ante los propios comentarios del código  ⏭️ **Diferido intencionalmente**
+#### M5. Clase de riesgo recurrente: greps de regresión frágiles ante los propios comentarios del código  ✅ **Corregido (2026-07-21)**
 
-> No se tocó ningún archivo nuevo que exhiba este patrón; se deja para corregir la próxima vez que se edite ese test puntual, tal como recomendaba el hallazgo original.
+> `tests/docker/test_docker_apt_repo.sh` corregido con el mismo patrón ya usado en `test_install_nodejs_legacy.sh`/`test_kernel_hwe_fallback.sh` (excluir comentarios antes de grepear código real).
 
-**Dónde:** patrón usado en varios tests (ya corregido dos veces en este proyecto: `test_install_nodejs_legacy.sh`, `test_kernel_hwe_fallback.sh`). Revisado puntualmente `tests/docker/test_docker_apt_repo.sh` (`! grep -qE "focal|jammy|bionic|xenial" ...`): hoy no produce falso positivo, pero el patrón sigue siendo frágil — cualquier futuro comentario explicativo que mencione esos codenames rompería la prueba en falso.
+**Dónde:** patrón usado en varios tests (ya corregido dos veces en este proyecto: `test_install_nodejs_legacy.sh`, `test_kernel_hwe_fallback.sh`). El caso puntual restante era `tests/docker/test_docker_apt_repo.sh` (`! grep -qE "focal|jammy|bionic|xenial" ...`): no producía falso positivo hoy, pero el patrón seguía siendo frágil — cualquier futuro comentario explicativo que mencionara esos codenames habría roto la prueba en falso. Se agregó `install_docker_code_only()` (mismo criterio que `install_kernel_code_only()`) y el check pasa a filtrar comentarios antes de grepear.
 
 **Propuesta:** cuando se toque ese test de nuevo, aplicar el mismo patrón ya usado en `test_kernel_hwe_fallback.sh` (excluir comentarios con `grep -vE '^\s*#'` antes de grepear código real).
 
@@ -332,11 +341,11 @@ El riesgo real es mínimo hoy (`tool.script` viene de un array interno fijo, no 
 
 Usado en `test_docker_apt_repo.sh`, `test_vscode_apt_repo.sh`, `test_cursor_apt_repo.sh`, y otros — construye condiciones vía `eval "${condition}"`. No es explotable hoy (condiciones literales hardcodeadas, no input externo), pero es un code smell: cualquier interpolación futura de una variable no controlada sería una inyección de comando trivial. Sin acción urgente; documentar la convención como "seguro solo con literales hardcodeados".
 
-#### B5. Advertencia de Node.js 20 deprecado en `actions/checkout@v4`  ⏭️ **Diferido intencionalmente**
+#### B5. Advertencia de Node.js 20 deprecado en `actions/checkout@v4`  ✅ **Corregido (2026-07-21)**
 
-> Sin acción: no hay una versión más nueva de actions/checkout verificable para adoptar; es un aviso de GitHub sobre el runner, no del proyecto.
+> Bumpeadas actions/checkout@v4→v7, docker/setup-buildx-action@v3→v4, docker/build-push-action@v6→v7 (las 3 corren nativamente en Node 24, sin la advertencia).
 
-Visible en las anotaciones de las últimas corridas de CI (19 jobs). No es un bug del proyecto sino de la versión fijada de la action. Sin apuro, pero GitHub eventualmente forzará la actualización.
+Visible en las anotaciones de corridas de CI recientes (por ejemplo la de la PR #35 del Hito 17), en las 3 actions fijadas en `.github/workflows/ci.yml`: `actions/checkout@v4`, `docker/build-push-action@v6`, `docker/setup-buildx-action@v3`. Al revisar de nuevo (2026-07-21), sí existían versiones más nuevas verificables (`actions/checkout` v7.0.1, `docker/build-push-action` v7.3.0, `docker/setup-buildx-action` v4.2.0 — confirmado vía `gh api`, changelogs revisados sin cambios incompatibles con el uso simple que hace este proyecto de las 3). Se corrige bumpeando las 3; CI (que corre en cada PR) es la validación real de que no rompió nada.
 
 #### B6. `CLAUDE.md` en la raíz es un symlink intencional a `AGENT.md`, sin documentarlo como tal  ✅ **Corregido (2026-07-19)**
 
@@ -350,17 +359,17 @@ Funciona correctamente (permite que Claude Code lea las mismas instrucciones que
 
 `sudo usermod -aG docker $USER` y `groups | grep -q docker` funcionan en la práctica (los nombres de usuario Unix no llevan espacios), pero son inconsistentes con el resto del archivo, que sí cita casi todo. El segundo además matchearía en falso un grupo hipotético `docker-foo`. Cosmético, sin impacto real hoy.
 
-#### B8. `install_ulauncher.sh` ejecuta `add-apt-repository -y universe` en cada `install`  ⏭️ **Diferido intencionalmente**
+#### B8. `install_ulauncher.sh` ejecuta `add-apt-repository -y universe` en cada `install`  ⏭️ **Diferido intencionalmente (re-confirmado 2026-07-21)**
 
-> Sin acción: el costo de la operación redundante es marginal frente al riesgo de tocar install_ulauncher.sh sin necesidad real.
+> Sin acción, re-evaluado: agregar un chequeo propio de "¿ya está `universe` habilitado?" sería un grep sobre `/etc/apt/sources.list`(.d) igual de frágil ante el formato deb822 nuevo de Ubuntu — exactamente la clase de riesgo que M5 acaba de corregir en otro archivo. `add-apt-repository` ya es idempotente por diseño (no duplica la línea si ya está); el costo real es solo la invocación redundante, no una duplicación de configuración.
 
 `universe` casi siempre ya está habilitado en Ubuntu estándar — operación idempotente y de bajo costo, no es un bug, solo trabajo redundante menor.
 
-#### B9. `docker build` en CI sin `--pull` explícito  ⏭️ **Diferido intencionalmente**
+#### B9. `docker build` en CI sin `--pull` explícito  ✅ **Corregido (2026-07-21)**
 
-> Sin acción: ya se documentó como no-issue en runners efímeros de GitHub Actions.
+> `pull: true` agregado a la construcción de la imagen base (`docker/build-push-action@v7`, ver el comentario nuevo junto a ese paso en `.github/workflows/ci.yml`). NO se agregó a los 2 `docker build` crudos (variante NVM y `Dockerfile.snapd`): uno usa como `FROM` una imagen puramente local sin equivalente remoto (`--pull` ahí rompería el build), y el otro no tiene cache-to/from configurado, así que ya pull-ea de cero en cada corrida.
 
-Sin garantía teórica de que la imagen base `ubuntu:${UBUNTU_VERSION}` esté actualizada si el runner tuviera una copia cacheada obsoleta — en la práctica, irrelevante en runners efímeros de GitHub Actions. Documentado como no-issue.
+Sin garantía teórica de que la imagen base `ubuntu:${UBUNTU_VERSION}` esté actualizada si el runner tuviera una copia cacheada obsoleta. Al re-evaluar (2026-07-21): el razonamiento original ("no-issue en runners efímeros") era correcto **antes** de que el hallazgo A5 agregara `cache-to: type=gha, mode=max` — ese modo puede persistir la capa `FROM` entre corridas de CI a través del cache de GitHub Actions, lo cual sí introduce el riesgo teórico que B9 describía. Se corrige agregando `pull: true` solo donde aplica.
 
 ---
 

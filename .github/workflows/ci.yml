@@ -27,7 +27,7 @@ jobs:
     name: Sintaxis y estilo
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: bash -n
         run: |
@@ -375,19 +375,32 @@ jobs:
             ids: "I33"
             cmd: bash tests/test_powerlevel10k_dependency.sh
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Configurar Docker Buildx (necesario para cache-from/cache-to type=gha)
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Construir imagen base (Ubuntu ${{ matrix.ubuntu }})
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: tests/docker/Dockerfile
           build-args: UBUNTU_VERSION=${{ matrix.ubuntu }}
           tags: ubuntu-workstation-test:${{ matrix.ubuntu }}
           load: true
+          pull: true
+          # 'pull: true' (hallazgo B9 de docs/TECHNICAL_REVIEW.md, revisado
+          # 2026-07-21): se había diferido como "no-issue en runners
+          # efímeros", correcto mientras no había cache entre corridas. Con
+          # 'cache-to: mode=max' (agregado después, ver A5) el cache de GHA
+          # puede persistir la capa 'FROM ubuntu:X.XX' entre corridas —
+          # forzar el pull evita reusar indefinidamente una imagen base
+          # vieja aunque el tag remoto se haya actualizado. No se agrega en
+          # los 'docker build' crudos de abajo: uno usa como FROM la imagen
+          # local recién cargada (ubuntu-workstation-test:X.XX, sin
+          # equivalente en un registro remoto — '--pull' ahí rompería el
+          # build), y el otro (Dockerfile.snapd) no tiene cache-to/from
+          # configurado, así que ya pull-ea de cero en cada corrida.
           cache-from: type=gha,scope=base-${{ matrix.ubuntu }}
           cache-to: type=gha,mode=max,scope=base-${{ matrix.ubuntu }}
 
@@ -437,7 +450,7 @@ jobs:
       matrix:
         ubuntu: ["24.04", "26.04"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Construir imagen con systemd+snapd (Ubuntu ${{ matrix.ubuntu }})
         run: |
