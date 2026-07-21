@@ -76,3 +76,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0038](0038-obs-studio-migra-de-snap-a-ppa-oficial.md) | OBS Studio migra de Snap a su PPA oficial | Aceptada |
 | [0039](0039-snapd-en-docker-para-ci-experimental.md) | snapd en Docker para CI (experimental) | Aceptada |
 | [0040](0040-cerrar-hito-14-via-tools-catalog.md) | Cerrar el Hito 14 (Arquitectura de plugins) vía `tools_catalog.sh`, sin reescribir instaladores | Aceptada |
+| [0041](0041-antigravity-ide-via-repo-apt-oficial.md) | Antigravity IDE se instala vía su repositorio APT oficial (corrige el diferimiento de ADR 0037) | Aceptada |
