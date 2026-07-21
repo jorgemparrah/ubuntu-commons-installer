@@ -22,9 +22,12 @@ UCI_DEPENDENCIES_SH_LOADED=1
 
 # dependency_is_installed <script_path>
 # Corre 'status' del script de la dependencia y confirma si reporta
-# INSTALLED. Revisa NOT_INSTALLED antes que INSTALLED a propósito:
-# "NOT_INSTALLED" contiene la subcadena "INSTALLED" (mismo bug de
-# substring ya detectado y corregido en setup.sh, ver Hito 13).
+# INSTALLED u OUTDATED (ambos cuentan como "la dependencia está presente",
+# mismo criterio que usan los propios instaladores para decidir si pueden
+# seguir operando, ver docs/adr/0012-modelo-de-estado-enriquecido.md).
+# Revisa NOT_INSTALLED antes que INSTALLED a propósito: "NOT_INSTALLED"
+# contiene la subcadena "INSTALLED" (mismo bug de substring ya detectado y
+# corregido en setup.sh, ver Hito 13).
 dependency_is_installed() {
     local script_path="$1"
     local status_output
@@ -33,7 +36,7 @@ dependency_is_installed() {
     if [[ "${status_output}" == *"NOT_INSTALLED"* ]]; then
         return 1
     fi
-    [[ "${status_output}" == *"INSTALLED"* ]]
+    [[ "${status_output}" == *"INSTALLED"* || "${status_output}" == *"OUTDATED"* ]]
 }
 
 # dependency_require_installed <script_path> <etiqueta_legible>

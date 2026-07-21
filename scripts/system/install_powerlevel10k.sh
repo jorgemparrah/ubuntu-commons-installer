@@ -85,11 +85,19 @@ install_tool() {
 }
 
 # Function to uninstall
+# No purga el paquete `zsh`: es compartido con install_oh_my_zsh.sh (que
+# también lo instala/gestiona), y purgarlo acá rompía el check_status de
+# Oh My Zsh (requiere `command -v zsh`) aunque su clon siguiera intacto —
+# bug expuesto por la dependencia depends_on=oh_my_zsh del Hito 17 (ver
+# docs/adr/0042-configuraciones-post-instalacion-y-dependencias.md):
+# 'reinstall' (uninstall_tool + install_tool) rechazaba a mitad de camino
+# porque install_tool ya no encontraba Oh My Zsh "instalado". Desinstalar
+# Powerlevel10k solo retira el tema; desinstalar zsh es responsabilidad de
+# install_oh_my_zsh.sh.
 uninstall_tool() {
     echo "Desinstalando ${TOOL_NAME}..."
 
     rm -rf "${P10K_DIR}"
-    apt_purge_packages zsh
 
     echo "${TOOL_NAME} desinstalado correctamente."
 }

@@ -107,5 +107,32 @@ fi
 teardown_mock_bin
 rm -rf "${UCI_TEST_HOME}"
 
+echo ""
+echo "== 3. 'uninstall' no purga el paquete 'zsh' compartido con Oh My Zsh =="
+UCI_TEST_HOME="$(mktemp -d)"
+mkdir -p "${UCI_TEST_HOME}/.oh-my-zsh/custom/themes/powerlevel10k/.git"
+setup_mock_bin
+set +e
+RUN_OUTPUT="$(PATH="${UCI_MOCK_BIN}:${PATH}" HOME="${UCI_TEST_HOME}" bash "${INSTALL_P10K_SH}" uninstall 2>&1)"
+RUN_CODE=$?
+set -e
+if [[ "${RUN_CODE}" -eq 0 ]]; then
+    pass "'uninstall' sale con código 0"
+else
+    fail "'uninstall' debería salir con código 0 (fue ${RUN_CODE}). Salida: ${RUN_OUTPUT}"
+fi
+if [[ -d "${UCI_TEST_HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]]; then
+    fail "'uninstall' debería eliminar el directorio del tema de Powerlevel10k"
+else
+    pass "'uninstall' elimina el directorio del tema de Powerlevel10k"
+fi
+if grep -q "purge" "${UCI_MOCK_LOG}"; then
+    fail "'uninstall' no debería purgar 'zsh' (paquete compartido con Oh My Zsh, ver Hito 17)"
+else
+    pass "'uninstall' no purga 'zsh' (evita romper el check_status de Oh My Zsh, que también lo usa)"
+fi
+teardown_mock_bin
+rm -rf "${UCI_TEST_HOME}"
+
 print_test_summary
 exit_with_test_summary
