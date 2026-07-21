@@ -818,17 +818,17 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
-Perfiles
+Perfiles (Hito 13)
 
 ### Objetivo
 
 Convertir los instaladores en plugins descubribles.
 
-Ejemplo:
+Ejemplo original considerado (no implementado, ver "Cierre" abajo):
 
 ```
 docker/
@@ -844,9 +844,15 @@ repair.sh
 status.sh
 ```
 
+### Cierre (2026-07-21, [ADR 0040](adr/0040-cerrar-hito-14-via-tools-catalog.md))
+
+El objetivo de fondo de este hito — metadata centralizada y descubrible para los instaladores, sin duplicación entre `setup.js` y cada script — ya se cumplió desde el Hito 11 vía `scripts/lib/tools_catalog.sh` ([ADR 0030](adr/0030-registro-central-de-metadata-de-instaladores.md)), con 3 consumidores automatizados (I19/I21/I24) que impiden que `docs/TOOLS.md`/`setup.js`/`docs/UBUNTU_COMPATIBILITY.md` diverjan del catálogo. "Descubrible" también se cumple hoy sin directorios separados: `tools_registry_ids()`/`tools_registry_field()` ya permiten recorrer/consultar cualquier herramienta mecánicamente (usado por `doctor_check_executables` del Hito 12 y `profile_installer_run` del Hito 13).
+
+Se cierra el hito **sin** reescribir los 53 instaladores existentes a la estructura de directorios del ejemplo original: esa reescritura no resolvería nada que el catálogo no resuelva ya, y contradice el principio de "cambios pequeños, evitar reescrituras grandes" (`AGENT.md`, sección 2). Ver ADR 0040 para el análisis completo.
+
 ### Decisión relacionada
 
-[ADR 0009](adr/0009-postergar-arquitectura-de-plugins.md) — postergada hasta este punto del roadmap.
+[ADR 0009](adr/0009-postergar-arquitectura-de-plugins.md) — postergada hasta este punto del roadmap (su decisión de postergar en su momento fue correcta, no se reemplaza). [ADR 0040](adr/0040-cerrar-hito-14-via-tools-catalog.md) — cierre de este hito documentando cómo se resolvió el problema de fondo por otra vía.
 
 ---
 
