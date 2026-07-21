@@ -100,6 +100,7 @@ run_suite "tests/test_terminal_apps_apt_simple_contract.sh" bash tests/test_term
 run_suite "tests/test_ghostty_installer.sh" bash tests/test_ghostty_installer.sh
 run_suite "tests/test_curl_script_contract.sh" bash tests/test_curl_script_contract.sh
 run_suite "tests/test_install_profile.sh" bash tests/test_install_profile.sh
+run_suite "tests/test_list_info_commands.sh" bash tests/test_list_info_commands.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

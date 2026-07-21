@@ -116,6 +116,7 @@ jobs:
           - gh-via-mise
           - curl-script-contract
           - install-profile
+          - list-info-commands
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
@@ -341,6 +342,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I30"
             cmd: bash tests/test_install_profile.sh
+          - case: list-info-commands
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I31"
+            cmd: bash tests/test_list_info_commands.sh
           - case: nvm-single
             variant: nvm-single
             dockerfile: tests/docker/Dockerfile.nvm-single

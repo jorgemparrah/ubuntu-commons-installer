@@ -566,6 +566,7 @@ Los perfiles definen qué herramientas se instalan.
 - 11 perfiles: `minimal` (las 10 `required`), `cli` (todo el catálogo con `requires_gui=no`, más amplio que `minimal`), `desktop`/`developer` (minimal + categorías de uso general/desarrollo), `workstation` (unión de los dos anteriores), `full` (las 53), `creator`/`productivity`/`coding`/`editor` (minimal + una categoría puntual cada uno), y `ai-cli` (solo `subcategory=ai-cli`, sin los agentes de escritorio `ai-agent`).
 - Comando nuevo, Bash puro (consistente con [ADR 0001](adr/0001-bootstrap-bash-sin-node.md)): `setup.sh install --profile <nombre>`. Recorre `tools_registry_ids()`, filtra por el campo `profiles`, y corre `install` solo si `status` no reporta ya instalado (idempotencia de [ADR 0004](adr/0004-idempotencia-instalado-igual-skip.md)).
 - `--profile custom` (o sin `--profile`) delega en el flujo interactivo existente (`setup.js`) — el checklist herramienta por herramienta ya cubre ese caso, no se construyó un modo nuevo para "elegir a mano".
+- **Comandos de consulta (2026-07-21):** `setup.sh list [--profile <nombre>]` imprime la metadata del catálogo (id/nombre/categoría/clasificación/mecanismo/perfiles) sin ejecutar nada; `setup.sh info [--profile <nombre>]` agrega una columna con el estado real de instalación (corre `status` de cada herramienta filtrada). Ambos reutilizan el mismo filtro `--profile` que `install`.
 
 ---
 

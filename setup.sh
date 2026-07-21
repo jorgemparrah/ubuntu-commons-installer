@@ -390,6 +390,10 @@ Uso:
   ./setup.sh runtime status     Muestra qué runtimes gestiona Mise (Node/Python/Java/Go/Rust)
   ./setup.sh install --profile <nombre>   Instala un perfil de herramientas (ver Hito 13)
   ./setup.sh install --profile custom     Igual que el flujo interactivo (elegir herramienta por herramienta)
+  ./setup.sh list                Lista el catálogo (metadata estática, no ejecuta nada)
+  ./setup.sh list --profile <nombre>   Filtra la lista a un perfil
+  ./setup.sh info                 Igual que 'list', agregando el estado real de instalación de cada herramienta
+  ./setup.sh info --profile <nombre>   Filtra 'info' a un perfil
 
 Perfiles disponibles (docs/ROADMAP.md, Hito 13):
   minimal, cli, desktop, developer, workstation, full,
@@ -597,6 +601,119 @@ cmd_install() {
     fi
 }
 
+# catalog_id_matches_profile <id> <profile>
+# 0 si <profile> está vacío (sin filtro) o si el campo 'profiles' de <id>
+# lo incluye. Mismo criterio de comparación que profile_installer_run,
+# duplicado a propósito (función chica, no vale la pena factorizarla
+# sobre código ya probado).
+catalog_id_matches_profile() {
+    local id="$1" profile="$2"
+    [[ -z "${profile}" ]] && return 0
+
+    local profiles_field p
+    local -a profile_arr
+    profiles_field="$(tools_registry_field "${id}" "profiles")"
+    IFS=',' read -ra profile_arr <<< "${profiles_field}"
+    for p in "${profile_arr[@]}"; do
+        [[ "${p}" == "${profile}" ]] && return 0
+    done
+    return 1
+}
+
+# catalog_list_run <profile_filter> <show_status:0|1>
+# Recorre el catálogo (tools_catalog.sh) e imprime una tabla con la
+# metadata de cada herramienta. Con <show_status>=1, corre 'status' real
+# de cada script (más lento, invoca 54 procesos); con 0, es puramente
+# lectura de datos del catálogo, sin ejecutar nada.
+catalog_list_run() {
+    local profile_filter="$1" show_status="$2"
+    local id name category subcategory cat_display classification manager profiles_field
+
+    printf '%-24s %-28s %-24s %-10s %-16s' "ID" "NOMBRE" "CATEGORÍA" "CLASIF." "MECANISMO"
+    if [[ "${show_status}" == "1" ]]; then
+        printf ' %-14s' "ESTADO"
+    fi
+    printf ' %s\n' "PERFILES"
+
+    while IFS= read -r id; do
+        [[ -z "${id}" ]] && continue
+        catalog_id_matches_profile "${id}" "${profile_filter}" || continue
+
+        name="$(tools_registry_field "${id}" "name")"
+        category="$(tools_registry_field "${id}" "category")"
+        subcategory="$(tools_registry_field "${id}" "subcategory")"
+        classification="$(tools_registry_field "${id}" "classification")"
+        manager="$(tools_registry_field "${id}" "manager")"
+        profiles_field="$(tools_registry_field "${id}" "profiles")"
+
+        cat_display="${category}"
+        [[ -n "${subcategory}" ]] && cat_display="${category}/${subcategory}"
+
+        printf '%-24s %-28s %-24s %-10s %-16s' "${id}" "${name}" "${cat_display}" "${classification}" "${manager}"
+
+        if [[ "${show_status}" == "1" ]]; then
+            local script_field script_path status_output status_str s
+            script_field="$(tools_registry_field "${id}" "script")"
+            script_path="${UCI_ROOT_DIR}/${script_field}"
+            set +e
+            status_output="$("${script_path}" status 2>&1)"
+            set -e
+            status_str="DESCONOCIDO"
+            for s in INSTALLED NOT_INSTALLED OUTDATED BROKEN UNSUPPORTED UNKNOWN; do
+                if [[ "${status_output}" == *"${s}"* ]]; then
+                    status_str="${s}"
+                    break
+                fi
+            done
+            printf ' %-14s' "${status_str}"
+        fi
+        printf ' %s\n' "${profiles_field}"
+    done < <(tools_registry_ids)
+}
+
+# parse_catalog_filter_args <nombre_comando> "$@"
+# Parsea '--profile <nombre>'/'--profile=<nombre>' para 'list'/'info'.
+# Deja el resultado en UCI_PARSED_PROFILE (variable global de comunicación,
+# ver mismo patrón ya usado por otras funciones cmd_* de este router).
+UCI_PARSED_PROFILE=""
+parse_catalog_filter_args() {
+    local cmd_name="$1"
+    shift
+    UCI_PARSED_PROFILE=""
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --profile)
+                UCI_PARSED_PROFILE="${2:-}"
+                shift 2
+                ;;
+            --profile=*)
+                UCI_PARSED_PROFILE="${1#--profile=}"
+                shift
+                ;;
+            *)
+                log_error "Opción desconocida para '${cmd_name}': '$1'"
+                exit 1
+                ;;
+        esac
+    done
+}
+
+cmd_list() {
+    parse_catalog_filter_args "list" "$@"
+    catalog_list_run "${UCI_PARSED_PROFILE}" 0
+}
+
+cmd_info() {
+    parse_catalog_filter_args "info" "$@"
+
+    if ! preflight_core; then
+        log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
+        exit 1
+    fi
+
+    catalog_list_run "${UCI_PARSED_PROFILE}" 1
+}
+
 cmd_interactive() {
     if ! preflight_core; then
         log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
@@ -642,6 +759,12 @@ main() {
             ;;
         install)
             cmd_install "$@"
+            ;;
+        list)
+            cmd_list "$@"
+            ;;
+        info)
+            cmd_info "$@"
             ;;
         *)
             log_error "Comando desconocido: '${cmd}'"
