@@ -118,11 +118,13 @@ Las 7 candidatas de IA del Hito 16 ya están implementadas (ver filas en `## Dev
 
 Node.js tiene un script instalador, pero está intencionalmente ausente de la lista interactiva de aplicaciones porque se lo trata como un prerequisito para la interfaz de Node.js. Esto genera un ciclo de bootstrap que se resuelve con [ADR 0001](adr/0001-bootstrap-bash-sin-node.md).
 
-## Clasificación `required | optional | retired | candidate` — completada
+## Clasificación `required | optional` — completada para las 53 herramientas
 
-Confirmada caso por caso con el dueño del proyecto el 2026-07-20 (cierra el hallazgo M10 de `docs/TECHNICAL_REVIEW.md`), aprovechando que la modernización de instaladores (Hito 11) ya revisó cada uno individualmente:
+Primera pasada (2026-07-20, cierra el hallazgo M10 de `docs/TECHNICAL_REVIEW.md`): solo 7 herramientas tenían una etiqueta explícita (GitKraken/ULauncher/cmatrix/ranger como `required`; Postman/Insomnia/MongoDB Compass como `optional`), aprovechando que la modernización de instaladores (Hito 11) ya había revisado cada una individualmente.
 
-- **required**: GitKraken, ULauncher, cmatrix, ranger.
-- **optional**: Postman, Insomnia, MongoDB Compass.
+**Revisión completa (2026-07-20, Hito 13):** antes de definir el perfil `minimal` (que depende de qué es indispensable), se completó la clasificación de las 53 herramientas del catálogo, incluyendo una relectura de las 7 ya clasificadas por si algo había cambiado. El dueño del proyecto confirmó una reclasificación real: **GitKraken, ULauncher, cmatrix y ranger pasan de `required` a `optional`** en esta revisión — la clasificación de 2026-07-20 (primera pasada) queda reemplazada por esta.
 
-Las etiquetas quedan anotadas directamente en la columna "Decisión" de cada fila arriba. El resto de las herramientas ya tenía una decisión de mantenimiento explícita ("Mantener"/"Revisar"/"Reemplazar") que no requería esta clasificación adicional para tener sentido operativo.
+- **`required` (10):** wget, curl, Git, build-essential, software-properties-common, apt-transport-https, Google Chrome, System Updates, Kernel & Headers, Final System Update.
+- **`optional` (43):** el resto del catálogo — incluye GitKraken, ULauncher, cmatrix, ranger, Postman, Insomnia, MongoDB Compass, y las 36 herramientas restantes que nunca habían tenido una etiqueta explícita. GnuPG queda `optional` a propósito, pese a compartir `subcategory=cli-utils` con el resto del grupo `required`.
+
+El campo estructurado vive en `scripts/lib/tools_catalog.sh` (`classification=required|optional`, mismo mecanismo sin esquema forzado que `kind`/`subcategory`, ver [ADR 0030](adr/0030-registro-central-de-metadata-de-instaladores.md)) — es la fuente de verdad que usa el campo `profiles` (Hito 13, ver `docs/ROADMAP.md`) para calcular qué entra en el perfil `minimal` y sus combinaciones. Las filas de las tablas arriba no se reescribieron una por una con esta clasificación; para el detalle completo por herramienta, consultar el catálogo directamente.

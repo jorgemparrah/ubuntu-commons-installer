@@ -41,6 +41,8 @@ source "${UCI_ROOT_DIR}/scripts/lib/backup.sh"
 source "${UCI_ROOT_DIR}/scripts/lib/migrations.sh"
 # shellcheck source=scripts/lib/runtime.sh
 source "${UCI_ROOT_DIR}/scripts/lib/runtime.sh"
+# shellcheck source=scripts/lib/tools_catalog.sh
+source "${UCI_ROOT_DIR}/scripts/lib/tools_catalog.sh"
 
 # Bloque gestionado de activación de Mise en archivos de shell (ADR 0007).
 # Mismos marcadores que usa scripts/migrations/001_nvm_to_mise.sh.
@@ -386,13 +388,16 @@ Uso:
   ./setup.sh migrate --dry-run  Muestra qué haría cada migración pendiente
   ./setup.sh migrate            Aplica las migraciones pendientes
   ./setup.sh runtime status     Muestra qué runtimes gestiona Mise (Node/Python/Java/Go/Rust)
+  ./setup.sh install --profile <nombre>   Instala un perfil de herramientas (ver Hito 13)
+  ./setup.sh install --profile custom     Igual que el flujo interactivo (elegir herramienta por herramienta)
+
+Perfiles disponibles (docs/ROADMAP.md, Hito 13):
+  minimal, cli, desktop, developer, workstation, full,
+  creator, productivity, coding, editor, ai-cli
 
 Variables de entorno:
   UCI_DEBUG=1               Activa mensajes de depuración (log_debug)
   UCI_HOME_DIR=<ruta>       Home a usar en vez de $HOME (para pruebas/simulación)
-
-Comandos planificados, todavía no disponibles (ver docs/ROADMAP.md):
-  validate
 EOF
 }
 
@@ -491,6 +496,107 @@ cmd_runtime() {
     esac
 }
 
+# UCI_INSTALL_PROFILES: perfiles válidos para 'install --profile' (Hito 13,
+# ver docs/ROADMAP.md). El valor real de cada perfil (qué herramientas
+# incluye) vive en el campo 'profiles' de scripts/lib/tools_catalog.sh, no
+# acá — esta lista solo sirve para validar el nombre pedido.
+UCI_INSTALL_PROFILES=(minimal cli desktop developer workstation full creator productivity coding editor ai-cli)
+readonly UCI_INSTALL_PROFILES
+
+# profile_installer_run <profile>
+# Instala, sin interacción, cada herramienta del catálogo cuyo campo
+# 'profiles' incluya <profile>. Respeta ADR 0004 (una herramienta ya
+# INSTALLED se omite, nunca se reinstala por defecto): corre 'status'
+# antes de cada 'install' y solo instala si no reporta código 0.
+profile_installer_run() {
+    local profile="$1"
+    local valid=0 p
+    for p in "${UCI_INSTALL_PROFILES[@]}"; do
+        [[ "${p}" == "${profile}" ]] && valid=1
+    done
+    if [[ "${valid}" -ne 1 ]]; then
+        log_error "Perfil desconocido: '${profile}' (disponibles: ${UCI_INSTALL_PROFILES[*]}, o 'custom' para el flujo interactivo)"
+        return 1
+    fi
+
+    local id script_field profiles_field script_path
+    local -a profile_arr
+    local status_output status_code
+    local installed=0 skipped=0 failed=0
+
+    while IFS= read -r id; do
+        [[ -z "${id}" ]] && continue
+        profiles_field="$(tools_registry_field "${id}" "profiles")"
+        IFS=',' read -ra profile_arr <<< "${profiles_field}"
+        local match=0
+        for p in "${profile_arr[@]}"; do
+            [[ "${p}" == "${profile}" ]] && match=1
+        done
+        [[ "${match}" -eq 0 ]] && continue
+
+        script_field="$(tools_registry_field "${id}" "script")"
+        script_path="${UCI_ROOT_DIR}/${script_field}"
+
+        set +e
+        status_output="$("${script_path}" status 2>&1)"
+        status_code=$?
+        set -e
+
+        if [[ "${status_code}" -eq 0 ]]; then
+            log_info "${id}: ya instalado, se omite"
+            skipped=$((skipped + 1))
+            continue
+        fi
+
+        log_info "${id}: instalando..."
+        if "${script_path}" install; then
+            installed=$((installed + 1))
+        else
+            log_error "${id}: falló la instalación"
+            failed=$((failed + 1))
+        fi
+    done < <(tools_registry_ids)
+
+    echo ""
+    log_info "Perfil '${profile}': ${installed} instalado(s), ${skipped} ya presente(s), ${failed} con error."
+    [[ "${failed}" -gt 0 ]] && return 1
+    return 0
+}
+
+cmd_install() {
+    local profile=""
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --profile)
+                profile="${2:-}"
+                shift 2
+                ;;
+            --profile=*)
+                profile="${1#--profile=}"
+                shift
+                ;;
+            *)
+                log_error "Opción desconocida para 'install': '$1'"
+                exit 1
+                ;;
+        esac
+    done
+
+    if [[ -z "${profile}" || "${profile}" == "custom" ]]; then
+        cmd_interactive
+        return
+    fi
+
+    if ! preflight_core; then
+        log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
+        exit 1
+    fi
+
+    if ! profile_installer_run "${profile}"; then
+        exit 1
+    fi
+}
+
 cmd_interactive() {
     if ! preflight_core; then
         log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
@@ -533,6 +639,9 @@ main() {
             ;;
         runtime)
             cmd_runtime "$@"
+            ;;
+        install)
+            cmd_install "$@"
             ;;
         *)
             log_error "Comando desconocido: '${cmd}'"
