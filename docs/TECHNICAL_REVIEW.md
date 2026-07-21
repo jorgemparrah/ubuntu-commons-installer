@@ -14,6 +14,11 @@
 
 **Actualización 2026-07-19 (más tarde el mismo día) — Hito 9 cerrado administrativamente, Hito 11 Fase 1 iniciada.** Se confirmó que las únicas validaciones pendientes del Hito 9 eran las dos ya conocidas (Snap en Ubuntu 26.04 Desktop, kernel HWE en VM); el hito pasa a `Done` con esas dos validaciones documentadas explícitamente como pendientes antes de una primera versión estable (ver `docs/ROADMAP.md`). Esto habilitó el Hito 11, que pasa de `Blocked` a `In Progress`. Se ejecutó únicamente su Fase 1 (infraestructura compartida): M6 pasa de `Diferido intencionalmente` a `En progreso` — ver el hallazgo M6 actualizado abajo. No se migró ningún instalador adicional más allá del piloto (`install_cmatrix.sh`); no se avanzó al Hito 12.
 
+**Actualización 2026-07-21 (Hito 22, ver `docs/ROADMAP.md`) — auditoría de cierre de todo el backlog Medio/Bajo, camino a la primera versión estable.** Con el Hito 11 ya completo y cerrado administrativamente (Hito 20), se revisó cada hallazgo `Medio`/`Bajo` que seguía sin marcarse `✅ Corregido`, para confirmar cuáles se resolvieron de hecho como efecto colateral de hitos posteriores sin que nadie lo haya marcado acá:
+
+* **M6 pasa de `En progreso` a `✅ Corregido`**: confirmado por grep directo que 53 de los 55 scripts `install_*.sh` del repositorio sourcean `scripts/lib/installer_cli.sh`; los 2 restantes (`install_vim.sh`, `install_nodejs.sh`) son exclusiones intencionales ya documentadas. Los 3 agrupadores delgados que M6 citaba como duplicadores de `check_package_installed()`/`check_all_packages_installed()` ya no existen (eliminados en el Hito 11 vía ADR 0035).
+* **M5, B2, B5, B8, B9 siguen abiertos de verdad, se confirma su estado sin cambios**: revisados uno por uno contra el código/CI actual — `test_docker_apt_repo.sh` sigue con el mismo patrón de grep frágil citado por M5 (nadie tocó ese test); `scripts/migrations/001_nvm_to_mise.sh` sigue en 629 líneas sin dividir (B2); la advertencia de Node.js 20 deprecado sigue apareciendo en las corridas de CI, ahora también visible en la PR #35 del Hito 17 (B5); `install_ulauncher.sh` sigue ejecutando `add-apt-repository -y universe` sin guardar en cada `install` (B8); `.github/workflows/ci.yml` sigue sin `--pull` explícito en los `docker build` (B9). Los cuatro quedan como estaban: backlog documentado, deliberadamente sin fecha comprometida, no bloqueantes para la primera versión estable.
+
 **Convención de prioridad:**
 
 - **Crítico** — bloquea o desvía trabajo futuro ya planificado; corregirlo debería preceder a ese trabajo.
@@ -225,11 +230,13 @@ El hallazgo más importante (Crítico #1) es que el Hito 11, tal como está desc
 
 **Roadmap:** checklist de PR para tests nuevos, no requiere trabajo inmediato.
 
-#### M6. Duplicación de dispatcher y de funciones de verificación multi-paquete entre instaladores  🚧 **En progreso (Hito 11, Fase 2 — 2026-07-19)**
+#### M6. Duplicación de dispatcher y de funciones de verificación multi-paquete entre instaladores  ✅ **Corregido (Hito 11, revisado 2026-07-21 al cerrar el Hito 22)**
 
 > Fase 1: se creó `scripts/lib/installer_cli.sh` (dispatcher compartido de 6 verbos, `installer_run_cli`) y `scripts/lib/apt.sh` (`apt_package_installed`/`apt_all_packages_installed`/`apt_install_packages`/`apt_purge_packages`), y se migró un único instalador piloto (`install_cmatrix.sh`) para validar la infraestructura de punta a punta.
 >
-> Fase 2: migrados `install_ranger.sh`, `install_terminator.sh` e `install_flameshot.sh` a la misma infraestructura, sin extenderla (validó que alcanza para instaladores apt-simples adicionales sin modificaciones). Los otros ~26 instaladores (incluidos `install_development_tools.sh`, `install_multimedia.sh` e `install_system_utils.sh`, que duplican `check_package_installed()`/`check_all_packages_installed()`) siguen sin migrar a propósito — se hará en grupos pequeños en las fases siguientes del Hito 11, no de una sola vez (ver `docs/ROADMAP.md`, Hito 11).
+> Fase 2: migrados `install_ranger.sh`, `install_terminator.sh` e `install_flameshot.sh` a la misma infraestructura, sin extenderla (validó que alcanza para instaladores apt-simples adicionales sin modificaciones).
+>
+> **Cierre (2026-07-21):** con el Hito 11 completo y cerrado administrativamente (Hito 20), se confirmó que 53 de los 55 scripts `install_*.sh` del repositorio sourcean `scripts/lib/installer_cli.sh` hoy (verificado por grep directo, sin ambigüedad) — los únicos 2 que no lo hacen son intencionales: `install_vim.sh` (instalador de referencia del contrato, [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)) e `install_nodejs.sh` (legado congelado desde el Hito 7, sin acciones activas). Los 3 agrupadores delgados que en su momento duplicaban `check_package_installed()`/`check_all_packages_installed()` (`install_development_tools.sh`, `install_multimedia.sh`, `install_system_utils.sh`) ya no existen: se eliminaron en el Hito 11 al separarlos en instaladores individuales ([ADR 0035](adr/0035-eliminar-agrupadores-delgados-y-recategorizar-catalogo.md)). El hallazgo queda completamente resuelto, no solo "en progreso".
 
 **Dónde:** los ~30 instaladores repiten un dispatcher `main()`/`case` casi idéntico (~15-20 líneas cada uno); `install_development_tools.sh`, `install_multimedia.sh` e `install_system_utils.sh` además duplican literalmente `check_package_installed()`/`check_all_packages_installed()`.
 
