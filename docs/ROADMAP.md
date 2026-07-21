@@ -955,6 +955,46 @@ Ninguno.
 
 ---
 
+# Hito 17
+
+## Configuraciones post-instalación y dependencias entre instaladores
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Modernización de instaladores (Hito 11) — reutiliza `scripts/lib/installer_cli.sh`/`scripts/lib/tools_catalog.sh` sin cambiarlos.
+
+### Objetivo
+
+Registrado el 2026-07-21 a partir de dos necesidades relacionadas, detectadas al revisar la deuda pendiente de Flameshot (el atajo `PrintScreen` nunca se configuró, solo se instaló el paquete, ver [ADR 0019](adr/0019-flameshot-atajo-printscreen.md)):
+
+1. **Espacio para configuraciones adicionales, revisables después de instalar.** Hoy el único verbo que "hace algo" es `install`; no hay un lugar separado para pasos de configuración (por ejemplo, el atajo de teclado de Flameshot) que:
+   - Solo tengan sentido si la herramienta ya está instalada (no se puede configurar el atajo de Flameshot si Flameshot no está instalado — es una dependencia real, no solo de orden de ejecución).
+   - Se puedan revisar/re-ejecutar en cualquier momento después de la instalación, no solo una vez durante `install`.
+2. **Dependencias entre instaladores del catálogo.** Algunas herramientas necesitan que otra ya esté instalada antes de tener sentido — por ejemplo, Powerlevel10k (tema de Zsh) necesita Oh My Zsh instalado primero. Hoy esto funciona por convención/orden manual, sin que el catálogo lo declare ni lo verifique.
+
+### Tareas (a definir, ninguna implementada todavía)
+
+* Diseñar un mecanismo de dependencias entre entradas del catálogo (por ejemplo, un campo nuevo `depends_on=<id>` en `tools_catalog.sh`, sin esquema forzado, mismo patrón que `kind`/`subcategory`/`classification`/`profiles`).
+* Diseñar una capa de configuración post-instalación separada del verbo `install` (por ejemplo, un verbo nuevo `configure`, o un script opcional junto al instalador), que:
+  - Se rechace explícitamente si la herramienta no está `INSTALLED` (mismo criterio que el dispatcher ya usa para rechazar `repair` sobre `NOT_INSTALLED`).
+  - Sea re-ejecutable en cualquier momento, no solo durante la instalación inicial.
+* Aplicar el mecanismo al caso concreto ya identificado: Flameshot + atajo `PrintScreen`.
+* Revisar si Powerlevel10k debería declarar formalmente su dependencia de Oh My Zsh en el catálogo.
+
+### Pendiente
+
+Todo — este hito queda registrado para diseño e implementación futura. No se implementó nada en este movimiento.
+
+---
+
 # Preguntas resueltas por el dueño del proyecto (2026-07-15)
 
 Migradas desde la evaluación inicial del repositorio (2026-07-13) y resueltas en una revisión de inventario de herramientas. Las decisiones de arquitectura resultantes están en `docs/adr/` (0016–0021) y el inventario actualizado en `docs/TOOLS.md`.
