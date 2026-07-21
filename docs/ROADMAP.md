@@ -802,6 +802,15 @@ Antes de definir `minimal` (que depende de qué es indispensable), se completó 
 * **`--profile custom`** (o sin `--profile`): delega en el flujo interactivo existente (`main_setup`/`setup.js`), que ya permite elegir herramienta por herramienta con checkboxes — no hizo falta un modo nuevo, el checklist ya existía.
 * Prueba nueva: `tests/test_install_profile.sh` (I30), mocks de `curl` sobre el perfil `ai-cli` (las 4 únicas herramientas que comparten el mismo mecanismo `curl-script`, ver ADR 0037) — perfil desconocido, instalación de las 4, e idempotencia en una segunda corrida.
 
+### Comandos de consulta del catálogo (2026-07-21)
+
+Pedido explícito del dueño del proyecto: exponer la metadata del catálogo directamente, sin tener que abrir `tools_catalog.sh`.
+
+* `setup.sh list [--profile <nombre>]` — tabla con ID/nombre/categoría-subcategoría/clasificación/mecanismo/perfiles de cada herramienta. Puramente lectura de datos: no ejecuta ningún script.
+* `setup.sh info [--profile <nombre>]` — igual que `list`, agregando una columna `ESTADO` con el resultado real de `status` de cada herramienta filtrada. Más lento (invoca un proceso por herramienta), consistente con que `doctor`/`install --profile` ya asumen ese costo cuando corresponde.
+* Ambos aceptan el mismo filtro `--profile` que `install`, reutilizando el campo `profiles` del catálogo — sin filtro, muestran las 54 herramientas.
+* Prueba nueva: `tests/test_list_info_commands.sh` (I31) — `list` se prueba directo contra el catálogo real (sin mocks, no ejecuta nada); `info --profile ai-cli` reutiliza el mock de `curl` de I30.
+
 ### Pendiente
 
 * Ninguno funcional. Posible trabajo futuro: perfiles adicionales si surge la necesidad (por ejemplo, uno específico para utilidades GUI de sistema o para terminales/shell, descartados en esta ronda a favor de combinaciones con `minimal`).
