@@ -29,3 +29,7 @@ scripts/installers/docker/
 ## Revisión (2026-07-19)
 
 El disparador ya se cumplió: los cuatro hitos referenciados (Bootstrap, Gestor de Backups, Framework de migraciones, Gestor de runtimes/Mise) están `Done` en `docs/ROADMAP.md` desde antes del cierre del Hito 9. Se revisó esta decisión (`docs/TECHNICAL_REVIEW.md`, hallazgo M9) y **se confirma la postergación**: no es que falten las condiciones técnicas, sino que el Hito 11 (Modernización de instaladores, ver [ADR 0029](0029-contrato-completo-de-instalador-referencia.md)) tiene prioridad más alta en el roadmap actual y aborda primero la consistencia del contrato de instalador (`status/install/uninstall/reinstall/update/repair`) antes de introducir una capa de metadata declarativa sobre ese contrato. La arquitectura de plugins sigue siendo Hito 14 (`Blocked`), sin fecha comprometida.
+
+## Cierre (2026-07-21)
+
+El Hito 14 se cerró como `Done` — ver [ADR 0040](0040-cerrar-hito-14-via-tools-catalog.md). El problema de fondo que esta ADR postergaba (metadata duplicada entre `setup.js` y cada instalador) se resolvió, pero no con la estructura de directorios por plugin que se consideraba acá como posible solución futura: se resolvió con `scripts/lib/tools_catalog.sh` (registro central, [ADR 0030](0030-registro-central-de-metadata-de-instaladores.md)), que ya centraliza esa metadata para las 53 herramientas del catálogo. La postergación en sí fue la decisión correcta en su momento; el problema simplemente se resolvió por otra vía antes de que hiciera falta implementar lo que esta ADR imaginaba.

@@ -651,7 +651,7 @@ Nunca modificar la configuración SSH sin confirmación.
 
 A largo plazo, cada aplicación debería convertirse en un plugin.
 
-Ejemplo:
+Ejemplo original considerado (no implementado, ver "Cierre" abajo):
 
 ```
 Docker
@@ -674,6 +674,8 @@ repair.sh
 El instalador descubre dinámicamente los plugins disponibles.
 
 No debería requerirse un registro central.
+
+**Cierre (Hito 14, 2026-07-21, [ADR 0040](adr/0040-cerrar-hito-14-via-tools-catalog.md)):** esta sección describía la visión original, que explícitamente evitaba un registro central. En la práctica, el problema de fondo (metadata duplicada entre `setup.js` y cada instalador) se resolvió al revés de lo previsto acá: con un registro central (`scripts/lib/tools_catalog.sh`, sección 15, [ADR 0030](adr/0030-registro-central-de-metadata-de-instaladores.md)), no con directorios de plugin autocontenidos. `tools_registry_ids()`/`tools_registry_field()` ya cubren el "descubrimiento dinámico" que buscaba esta sección. No se reescriben los 53 instaladores existentes a esta estructura — el Hito 14 se cierra reinterpretando su objetivo como cumplido por esta vía distinta.
 
 ---
 
