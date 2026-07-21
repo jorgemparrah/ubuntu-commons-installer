@@ -595,6 +595,10 @@ repair
 
 Status debe ser liviano.
 
+**7° verbo opcional, `configure` (Hito 17, 2026-07-21, ver [ADR 0042](adr/0042-configuraciones-post-instalacion-y-dependencias.md)):** para pasos post-instalación que solo tienen sentido si la herramienta ya está instalada (por ejemplo, un atajo de teclado de escritorio), y que deben poder re-ejecutarse en cualquier momento después de `install`, no solo una vez. Mismo patrón que `update`/`repair`: si el instalador no define `configure_tool`, el dispatcher lo rechaza explícitamente con código 3, nunca falla con "command not found". El dispatcher no fuerza centralmente que la herramienta esté `INSTALLED`: cada instalador que implemente `configure_tool` es responsable de rechazar si su propio `check_status` no lo reporta. Primer caso real: `scripts/productivity/install_flameshot.sh` (atajo `PrintScreen` vía `gsettings`).
+
+**Dependencias entre instaladores, campo `depends_on` (mismo Hito/ADR):** campo no-esquemático nuevo en `scripts/lib/tools_catalog.sh`, `depends_on=<id>`. Si la dependencia falta, el instalador rechaza con un mensaje claro vía `scripts/lib/dependencies.sh::dependency_require_installed` — nunca la instala por su cuenta. Primer caso real: `powerlevel10k` → `depends_on=oh_my_zsh`. Cuando dependencia y dependiente se piden instalar juntas (mismo perfil), el orden correcto se confía al orden de registro en `tools_catalog.sh` — una simplificación deliberada mientras exista una sola relación de dependencia (ver ADR 0042).
+
 ---
 
 # 22. Migraciones

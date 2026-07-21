@@ -120,6 +120,8 @@ jobs:
           - nvm-single
           - nvm-multi
           - nvm-mise-preexisting
+          - dependencies-lib
+          - powerlevel10k-dependency
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -362,6 +364,16 @@ jobs:
             dockerfile: tests/docker/Dockerfile.nvm-mise-preexisting
             ids: "M06"
             cmd: bash tests/docker/test_nvm_to_mise_mise_preexisting.sh
+          - case: dependencies-lib
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I32"
+            cmd: bash tests/test_dependencies_lib.sh
+          - case: powerlevel10k-dependency
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I33"
+            cmd: bash tests/test_powerlevel10k_dependency.sh
     steps:
       - uses: actions/checkout@v4
 

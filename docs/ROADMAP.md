@@ -974,7 +974,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -998,9 +998,20 @@ Registrado el 2026-07-21 a partir de dos necesidades relacionadas, detectadas al
 * Aplicar el mecanismo al caso concreto ya identificado: Flameshot + atajo `PrintScreen`.
 * Revisar si Powerlevel10k debería declarar formalmente su dependencia de Oh My Zsh en el catálogo.
 
+### Implementación (2026-07-21)
+
+Ver [ADR 0042](adr/0042-configuraciones-post-instalacion-y-dependencias.md) para el detalle completo de la decisión.
+
+* Verbo opcional nuevo `configure` en el contrato de `scripts/lib/installer_cli.sh` (7° verbo, junto a `status/install/uninstall/reinstall/update/repair`): si el instalador no define `configure_tool`, el dispatcher rechaza explícitamente con código 3, mismo patrón que `update`/`repair`. Cada instalador que lo implemente es responsable de rechazar si su propio `check_status` no reporta `INSTALLED`.
+* Caso concreto aplicado: `scripts/productivity/install_flameshot.sh` implementa `configure_tool()` para el atajo `PrintScreen` (vía `gsettings`/`org.gnome.settings-daemon.plugins.media-keys`), cerrando la deuda de [ADR 0019](adr/0019-flameshot-atajo-printscreen.md). Rechaza si Flameshot no está instalado o si `gsettings` no está disponible; respalda la lista previa de atajos personalizados antes de tocarla (AGENT.md §17); es idempotente (no duplica el atajo si ya existe). Requiere una sesión GNOME real — no hay prueba automatizada para el paso de `gsettings` en sí (no se puede simular dbus/GNOME en los contenedores Docker de este proyecto), validación manual pendiente.
+* Campo nuevo `depends_on=<id>` en `scripts/lib/tools_catalog.sh` (no-esquemático, mismo mecanismo que `kind`/`subcategory`/`classification`/`profiles`). Caso concreto aplicado: `powerlevel10k` → `depends_on=oh_my_zsh`.
+* `scripts/lib/dependencies.sh` (nueva biblioteca): `dependency_require_installed <script_path> <etiqueta>` rechaza con un mensaje claro si la dependencia no está instalada — política explícita: nunca la instala por su cuenta. `install_powerlevel10k.sh` la usa al principio de `install_tool()`.
+* Cuando la dependencia y la dependiente se piden instalar juntas (mismo perfil de `setup.sh install --profile`), el orden correcto se garantiza confiando en el orden de registro en `tools_catalog.sh` (`oh_my_zsh` ya está registrado antes que `powerlevel10k`) — una simplificación deliberada mientras exista una sola relación de dependencia, documentada explícitamente en ADR 0042 como limitación conocida.
+* Cobertura de pruebas: `tests/test_installer_cli.sh` (verbo `configure` genérico), `tests/test_flameshot_installer.sh` (nuevo `configure_tool()`), `tests/test_dependencies_lib.sh` (I32) y `tests/test_powerlevel10k_dependency.sh` (I33) — ver `docs/TEST_CASES.md`.
+
 ### Pendiente
 
-Todo — este hito queda registrado para diseño e implementación futura. No se implementó nada en este movimiento.
+Ninguno.
 
 ---
 

@@ -6,9 +6,10 @@
 # Reemplaza el bloque `main()`/`case` que ~29 de los ~30 instaladores del
 # proyecto duplicaban de forma casi idéntica.
 #
-# Contrato de 6 verbos aprobado por ADR 0004, ADR 0012 y ADR 0029:
+# Contrato de 6 verbos aprobado por ADR 0004, ADR 0012 y ADR 0029, más un
+# 7° verbo opcional agregado en el Hito 17 (ver ADR 0042):
 #
-#   status | install | uninstall | reinstall | update | repair
+#   status | install | uninstall | reinstall | update | repair | configure
 #
 # Uso: cada instalador define `TOOL_NAME` y las funciones que necesite,
 # sourcea esta biblioteca, y termina con una única línea:
@@ -31,13 +32,21 @@
 #     proyecto (desinstalar + instalar). Esto no es una acción por
 #     defecto ante una herramienta instalada y sana (ADR 0004) — solo se
 #     ejecuta si la persona usuaria pide 'reinstall' explícitamente.
-#   - update_tool / repair_tool: NO tienen fallback implícito. Si el
-#     instalador no las define, el dispatcher rechaza el verbo con un
-#     mensaje explícito y código de salida distinto ('no soportado'),
-#     citando ADR 0029. 'update' y 'repair' tienen semántica propia
-#     (responden a los estados OUTDATED/BROKEN de ADR 0012) — NUNCA se
-#     redirigen en silencio a 'reinstall', que es una operación distinta
-#     (destructiva: desinstala antes de volver a instalar).
+#   - update_tool / repair_tool / configure_tool: NO tienen fallback
+#     implícito. Si el instalador no las define, el dispatcher rechaza el
+#     verbo con un mensaje explícito y código de salida distinto ('no
+#     soportado'), citando ADR 0029 (update/repair) o ADR 0042
+#     (configure). 'update' y 'repair' tienen semántica propia (responden
+#     a los estados OUTDATED/BROKEN de ADR 0012) — NUNCA se redirigen en
+#     silencio a 'reinstall', que es una operación distinta (destructiva:
+#     desinstala antes de volver a instalar). 'configure' (Hito 17, ADR
+#     0042) es para pasos post-instalación que solo tienen sentido si la
+#     herramienta ya está instalada (por ejemplo, el atajo de teclado de
+#     Flameshot) — cada instalador que la implemente es responsable de
+#     rechazarla si su propio `check_status` no reporta `INSTALLED`,
+#     mismo criterio que ya usa `repair_tool` para rechazar sobre
+#     `NOT_INSTALLED` (el dispatcher no lo fuerza centralmente, para no
+#     asumir cómo cada instalador define "instalado").
 #
 # Diseño explícitamente verificado contra los requisitos del Hito 11 Fase 1:
 #   - No usa `eval` en ningún punto (declare -F es una comprobación
@@ -71,7 +80,7 @@ readonly UCI_INSTALLER_CLI_EXIT_USAGE UCI_INSTALLER_CLI_EXIT_MISSING_FN UCI_INST
 
 # installer_cli_usage
 installer_cli_usage() {
-    echo "Uso: $0 {status|install|uninstall|reinstall|update|repair}" >&2
+    echo "Uso: $0 {status|install|uninstall|reinstall|update|repair|configure}" >&2
 }
 
 # installer_cli_require_fn <nombre_de_funcion>
@@ -139,6 +148,14 @@ installer_run_cli() {
                 return "${UCI_INSTALLER_CLI_EXIT_UNSUPPORTED}"
             fi
             repair_tool
+            return $?
+            ;;
+        configure)
+            if ! declare -F configure_tool > /dev/null; then
+                echo "${TOOL_NAME:-Este instalador} todavía no implementa 'configure' (ver docs/adr/0042-configuraciones-post-instalacion-y-dependencias.md)." >&2
+                return "${UCI_INSTALLER_CLI_EXIT_UNSUPPORTED}"
+            fi
+            configure_tool
             return $?
             ;;
         *)

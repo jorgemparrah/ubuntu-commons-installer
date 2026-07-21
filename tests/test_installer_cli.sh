@@ -50,9 +50,10 @@ make_fixture() {
     echo "${fixture}"
 }
 
-# Fixture con los 6 verbos implementados, cada uno deja una marca
-# distinguible en UCI_FIXTURE_MARKER para poder confirmar que se invocó la
-# función correcta.
+# Fixture con los 7 verbos implementados (6 del contrato original + el
+# 'configure' opcional del Hito 17), cada uno deja una marca distinguible
+# en UCI_FIXTURE_MARKER para poder confirmar que se invocó la función
+# correcta.
 FULL_FIXTURE="$(make_fixture '
 check_status() { echo "status-called" >> "${UCI_FIXTURE_MARKER}"; echo "INSTALLED"; return 0; }
 install_tool() { echo "install-called" >> "${UCI_FIXTURE_MARKER}"; return 0; }
@@ -60,11 +61,13 @@ uninstall_tool() { echo "uninstall-called" >> "${UCI_FIXTURE_MARKER}"; return 0;
 reinstall_tool() { echo "reinstall-called" >> "${UCI_FIXTURE_MARKER}"; return 0; }
 update_tool() { echo "update-called" >> "${UCI_FIXTURE_MARKER}"; return 0; }
 repair_tool() { echo "repair-called" >> "${UCI_FIXTURE_MARKER}"; return 0; }
+configure_tool() { echo "configure-called" >> "${UCI_FIXTURE_MARKER}"; return 0; }
 ')"
 
-echo "== Los 6 comandos válidos invocan la función correspondiente =="
+echo "== Los 7 comandos válidos invocan la función correspondiente =="
 for pair in "status:status-called" "install:install-called" "uninstall:uninstall-called" \
-            "reinstall:reinstall-called" "update:update-called" "repair:repair-called"; do
+            "reinstall:reinstall-called" "update:update-called" "repair:repair-called" \
+            "configure:configure-called"; do
     verb="${pair%%:*}"
     expected_marker="${pair##*:}"
     : > "${UCI_FIXTURE_MARKER}"
@@ -133,6 +136,29 @@ for verb in update repair; do
         pass "'${verb}' sin implementación propia no ejecuta ninguna función (nunca cae a reinstall)"
     fi
 done
+
+echo ""
+echo "== configure SIN función propia (Hito 17) se rechaza explícitamente, código 3, citando ADR 0042 =="
+: > "${UCI_FIXTURE_MARKER}"
+set +e
+OUTPUT="$(bash "${NO_REINSTALL_FIXTURE}" configure 2>&1)"
+code=$?
+set -e
+if [[ "${code}" -eq 3 ]]; then
+    pass "'configure' sin implementación propia sale con código 3 (UNSUPPORTED)"
+else
+    fail "'configure' sin implementación propia debería salir con código 3 (fue ${code})"
+fi
+if [[ "${OUTPUT}" == *"no implementa"* ]] && [[ "${OUTPUT}" == *"0042"* ]]; then
+    pass "'configure' sin implementación imprime un mensaje explícito citando ADR 0042"
+else
+    fail "'configure' no imprimió un mensaje explícito citando ADR 0042. Salida: ${OUTPUT}"
+fi
+if [[ -s "${UCI_FIXTURE_MARKER}" ]]; then
+    fail "'configure' sin implementación propia no debería haber ejecutado ninguna función"
+else
+    pass "'configure' sin implementación propia no ejecuta ninguna función"
+fi
 
 echo ""
 echo "== comando desconocido: no ejecuta nada, sale con código de uso (1), imprime ayuda =="
