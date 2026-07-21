@@ -176,3 +176,14 @@ Corre en su propio job de CI, `snap-functional-experimental`, con `continue-on-e
 ## Qué no reemplaza esto
 
 Los contenedores Docker no tienen systemd por defecto (salvo la variante experimental de arriba, limitada a probar snapd), así que servicios como el demonio de Docker-dentro-de-Docker, algunos paquetes que dependen de systemd, o el comportamiento real de GNOME/atajos de teclado (Flameshot, `xdg-desktop-portal`, etc.) no se pueden validar ahí. Para eso sigue haciendo falta una VM o máquina real con escritorio, como se documenta en `docs/ROADMAP.md` y `docs/adr/0003-migracion-nvm-sin-borrado-directo.md`.
+
+## Nivel 3 — Validación manual en VM real (`tests/manual/`, Hito 18)
+
+Registrado el 2026-07-21 al planificar el camino hacia la primera versión estable: el cierre del Hito 9 dejó como condición explícita previa a esa versión estable validar en una VM/máquina real lo que ningún contenedor Docker de este proyecto puede probar de verdad (ver `docs/RELEASES.md`, fila del Hito 9). `tests/manual/` (ver su propio `README.md`) cubre los 8 instaladores Snap del catálogo, Antigravity IDE y las 7 candidatas de IA del Hito 16, el atajo `PrintScreen` de Flameshot (`configure_tool`, Hito 17, requiere sesión GNOME real) y el kernel HWE (`install_kernel.sh`, alto riesgo, solo lectura por defecto).
+
+```bash
+# Dentro de una VM Ubuntu 24.04/26.04 Desktop desechable, con el repo clonado:
+bash tests/manual/run_all_manual_tests.sh
+```
+
+A diferencia de los Niveles 1 y 2, esto nunca corre en CI ni en la máquina de desarrollo de este repositorio — es exclusivamente para que la persona usuaria lo ejecute en su propia VM y comparta el log de resultados (ver Hito 19 en `docs/ROADMAP.md`, explícitamente no bloqueante para el resto del roadmap mientras se espera ese resultado).
