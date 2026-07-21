@@ -616,11 +616,13 @@ Alta
 
 **Estado**
 
-In Progress
+Done
 
 Depende de:
 
 Gate de calidad automatizado (CI), Compatibilidad con Ubuntu 26
+
+**Cierre administrativo (2026-07-21, Hito 20):** funcionalmente completo desde hace varias sesiones (28 de 30 instaladores migrados al contrato de 6 verbos; los 2 restantes quedan fuera a propósito, ver "Estado de la modernización tras esta ronda" más abajo), pero nunca se había propuesto su cierre formal como `Done`. El dueño del proyecto confirmó cerrarlo al planificar el camino hacia la primera versión estable.
 
 **Corrección administrativa (2026-07-17):** se agrega Compatibilidad con Ubuntu 26 (Hito 9) como dependencia adicional — no tiene sentido estandarizar interfaces de instaladores antes de saber cuáles ya son compatibles con Ubuntu 26 y cuáles necesitan cambios reales primero.
 
@@ -715,11 +717,13 @@ Media
 
 **Estado**
 
-In Progress
+Done
 
 Depende de:
 
 Modernización de instaladores (Hito 11)
+
+**Cierre administrativo (2026-07-21, Hito 20):** los 5 chequeos del framework de validación ya están implementados dentro de `doctor` desde 2026-07-20 (ver "Implementación" más abajo); el dueño del proyecto confirmó cerrarlo como `Done` al planificar el camino hacia la primera versión estable.
 
 **Corrección administrativa (2026-07-20):** el Hito 11 sigue formalmente en `In Progress` (decisión explícita del dueño del proyecto: no se propuso su cierre como `Done`, ver su propia sección), pero la dependencia real de este hito — que los instaladores estén modernizados — ya está cumplida en la práctica: 28 de 30 están migrados al contrato de 6 verbos, y los 2 restantes quedan fuera a propósito (`install_vim.sh` es el instalador de referencia del contrato, `install_nodejs.sh` es legado congelado sin acciones activas), no por trabajo pendiente. El dueño del proyecto confirmó reinterpretar la dependencia como cumplida y pasar este hito de `Blocked` a `In Progress`.
 
@@ -763,11 +767,13 @@ Media
 
 **Estado**
 
-In Progress
+Done
 
 Depende de:
 
 Framework de validación (Hito 12)
+
+**Cierre administrativo (2026-07-21, Hito 20):** los 11 perfiles y los comandos `install --profile`/`list`/`info` ya están implementados y probados desde 2026-07-20/21 (ver "Implementación" y "Comandos de consulta del catálogo" más abajo); el dueño del proyecto confirmó cerrarlo como `Done` al planificar el camino hacia la primera versión estable. El único ítem que quedaba en "Pendiente" era trabajo futuro opcional (perfiles adicionales si surge la necesidad), no un requisito de cierre.
 
 **Corrección administrativa (2026-07-20):** el Hito 12 sigue formalmente en `In Progress` (no se propuso su cierre como `Done`), pero la dependencia real (framework de validación funcionando) ya está cumplida en la práctica — los 5 chequeos ya están implementados en `doctor`. El dueño del proyecto confirmó reinterpretar la dependencia como cumplida y pasar este hito de `Blocked` a `In Progress`, mismo criterio ya usado entre los Hitos 11→12.
 
@@ -877,7 +883,7 @@ Continua
 
 Mantener la documentación sincronizada.
 
-Una vez aceptada la nueva arquitectura, acortar el `README.md` raíz a propósito, inicio rápido, seguridad y enlaces a `docs/`; mover los detalles de implementación a `docs/`; asegurar que los ejemplos no prometan idempotencia hasta que esté implementada.
+Una vez aceptada la nueva arquitectura, acortar el `README.md` raíz a propósito, inicio rápido, seguridad y enlaces a `docs/`; mover los detalles de implementación a `docs/`; asegurar que los ejemplos no prometan idempotencia hasta que esté implementada. **Hecho el 2026-07-21, ver Hito 23** — el `README.md` quedó acortado a inicio rápido/seguridad/enlaces, con el detalle de instaladores/perfiles/estructura del repo movido a `docs/ARCHITECTURE.md` y `docs/TOOLS.md` (ya lo tenían).
 
 Documentos requeridos:
 
@@ -1012,6 +1018,184 @@ Ver [ADR 0042](adr/0042-configuraciones-post-instalacion-y-dependencias.md) para
 ### Pendiente
 
 Ninguno.
+
+---
+
+# Hito 18
+
+## Scripts de prueba manual para VM
+
+**Prioridad**
+
+Alta
+
+**Estado**
+
+Done
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-21 al planificar el camino hacia la primera versión estable: el cierre del Hito 9 (ver `docs/RELEASES.md`) dejó dos validaciones manuales pendientes como condición explícita previa a esa versión estable (Snap en Ubuntu 26.04 Desktop real, kernel HWE en VM), y desde entonces la deuda de `requires_manual_validation=yes` creció con más herramientas del catálogo que ningún contenedor Docker de este proyecto puede probar de verdad (sin systemd/snapd real, sin sesión GNOME/dbus, sin GPU/hardware real para el kernel HWE).
+
+### Implementación (2026-07-21)
+
+Directorio nuevo `tests/manual/` (ver su propio `README.md`), separado de `tests/docker/` (corre en CI) y `tests/lib/` (mocks) — deja explícito que nada de esto se ejecuta automáticamente ni en la máquina de desarrollo de este repositorio:
+
+* `lib_manual.sh` — helpers compartidos (secciones, asserts con log completo, `manual_run_lifecycle` para el ciclo `status→install→status→uninstall→status` genérico).
+* `test_manual_snap_apps.sh` — los 8 instaladores `manager=snap`: DBeaver, GitKraken, Insomnia, Postman, GIMP, Spotify, Zoom, Yazi.
+* `test_manual_ai_and_ide.sh` — Antigravity IDE (`manager=apt-vendor-repo`) y los 7 candidatos de IA del Hito 16 (Claude Code, Codex CLI, OpenCode, Antigravity CLI, OpenClaw, Hermes Agent, Claude Desktop).
+* `test_manual_flameshot_configure.sh` — el `configure_tool()` de Flameshot (Hito 17): confirma vía `gsettings get` que el atajo `PrintScreen` se agrega, que una segunda corrida es idempotente (no se duplica), y que queda un respaldo de la lista previa; el único paso que no automatiza (apretar la tecla físicamente) se deja como confirmación manual explícita al final del log.
+* `test_manual_kernel_hwe.sh` — `install_kernel.sh`, deliberadamente de solo lectura por defecto (solo `status`); instalar de verdad requiere el flag `--install` y una confirmación interactiva escrita, nunca corre `uninstall` automáticamente (alto riesgo de dejar la VM sin arrancar).
+* `run_all_manual_tests.sh` — punto de entrada único, mismo patrón de log que `tests/docker/build-and-test-all.sh` (`exec > >(tee ...)`, log con timestamp + symlink `-latest`), corre los 4 scripts en orden sin nunca pasar `--install` al de kernel.
+
+`docs/TESTING.md` documenta esto como su "Nivel 3".
+
+### Entregables
+
+Scripts de prueba + instrucciones de uso (clonar el repo en la VM, ejecutar, guardar el log) — completos, ver `tests/manual/README.md`.
+
+---
+
+# Hito 19
+
+## Ejecución de las pruebas manuales en VM
+
+**Prioridad**
+
+Alta
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Scripts de prueba manual para VM (Hito 18).
+
+### Objetivo
+
+Registrado el 2026-07-21 junto con el Hito 18, del que depende directamente. La persona usuaria ejecuta en su propia VM Ubuntu 26.04 Desktop los scripts del Hito 18 y comparte el log de resultados. A partir de ahí se itera: corregir instaladores reales si algo falla, o corregir los propios scripts de prueba si el problema está en cómo prueban.
+
+**Explícitamente no bloqueante para el resto del roadmap** (confirmado con el dueño del proyecto): mientras este hito espera resultados, el trabajo continúa en los Hitos 20-23.
+
+### Pendiente
+
+Esperando la ejecución en VM y el log de resultados correspondiente.
+
+---
+
+# Hito 20
+
+## Cierre administrativo de Hitos 11/12/13
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Done
+
+Depende de:
+
+Ninguno (es una decisión administrativa sobre trabajo ya implementado, no depende de código nuevo).
+
+### Objetivo
+
+Registrado el 2026-07-21 al planificar el camino hacia la primera versión estable. Los Hitos 11 (Modernización de instaladores), 12 (Framework de validación) y 13 (Perfiles) están funcionalmente completos desde hace varias sesiones, pero seguían formalmente `In Progress` en este documento porque nunca se propuso su cierre explícito como `Done`:
+
+* **Hito 11:** 28 de 30 instaladores migrados al contrato completo de 6 verbos; los 2 restantes quedan fuera a propósito (`install_vim.sh` es el instalador de referencia, `install_nodejs.sh` es legado congelado sin acciones activas).
+* **Hito 12:** los 5 chequeos del framework de validación ya están implementados dentro de `doctor` (PATH, ejecutables, dependencias compartidas, symlinks rotos, versiones de runtime).
+* **Hito 13:** los 11 perfiles y los comandos `install --profile`/`list`/`info` ya están implementados y probados.
+
+### Implementación (2026-07-21)
+
+Los tres se marcaron `Done` en sus propias secciones de este documento, cada uno con una nota "Cierre administrativo (2026-07-21, Hito 20)" que referencia este hito, sin reabrir ni reescribir su historial de implementación ya registrado.
+
+---
+
+# Hito 21
+
+## Actualizar `docs/RELEASES.md`
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Done
+
+Depende de:
+
+Cierre administrativo de Hitos 11/12/13 (Hito 20) — para poder registrar su cierre real en la bitácora.
+
+### Objetivo
+
+Registrado el 2026-07-21. `docs/RELEASES.md` quedó desactualizado desde el cierre de la Fase 1 del Hito 11 (2026-07-19): no reflejaba nada de lo ocurrido desde entonces (resto de fases del Hito 11, Hitos 12 a 20). Completada la bitácora de hitos entregados hasta el estado actual del roadmap (Hitos 11 a 20), como paso previo a poder llamar a este estado "primera versión estable".
+
+---
+
+# Hito 22
+
+## Revisión de `docs/TECHNICAL_REVIEW.md`
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Done
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-21. `docs/TECHNICAL_REVIEW.md` (revisión técnica integral del 2026-07-18) dejó hallazgos `Medio`/`Bajo` como backlog documentado, sin fecha comprometida. Auditar cada uno de esos hallazgos pendientes: confirmar cuáles ya se resolvieron de hecho como efecto colateral de hitos posteriores (sin que nadie lo haya marcado ahí explícitamente) y cuáles siguen abiertos de verdad, actualizando el documento en consecuencia.
+
+### Implementación (2026-07-21)
+
+De los 6 hallazgos que seguían sin `✅ Corregido` (M5, M6, B2, B5, B8, B9):
+
+* **M6 se cerró** (pasó de `En progreso` a `✅ Corregido`): verificado por grep directo que 53 de los 55 `install_*.sh` sourcean `scripts/lib/installer_cli.sh` hoy, con los mismos 2 excluidos a propósito que ya documentaba el roadmap (`install_vim.sh`, `install_nodejs.sh`); los 3 agrupadores delgados que M6 citaba ya no existen (ADR 0035).
+* **M5, B2, B5, B8, B9 siguen abiertos de verdad**, confirmado contra el código/CI actual (no solo asumido): quedan como backlog documentado, sin fecha comprometida, no bloqueantes para la primera versión estable.
+
+Ver la nota "Actualización 2026-07-21 (Hito 22)" en el propio `docs/TECHNICAL_REVIEW.md` para el detalle completo.
+
+---
+
+# Hito 23
+
+## Actualizar `README.md`
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Done
+
+Depende de:
+
+Revisión de `docs/TECHNICAL_REVIEW.md` (Hito 22) — último paso antes de considerar cerrado el camino hacia la primera versión estable.
+
+### Objetivo
+
+Acortar el `README.md` raíz a inicio rápido, seguridad y enlaces a `docs/`, moviendo el detalle de implementación a `docs/` (ver Hito 15, tarea pospuesta explícitamente por el dueño del proyecto hasta este punto: "Todavía no, dejarla como borrador").
+
+### Implementación (2026-07-21)
+
+`README.md` reescrito: inicio rápido (`git clone` + comandos más usados, incluyendo `list`/`info`/`install --profile` del Hito 13 y `doctor`/`backup`/`migrate`), una sección de Seguridad nueva (backups, `doctor` de solo lectura, `/home` reutilizado, migración NVM sin borrado, `sudo`/secretos), y la lista de documentación de referencia ampliada con `CONTRIBUTING.md`/`MIGRATIONS.md`/`RELEASES.md` (ya existían, pero el README todavía no los enlazaba). Se retiró todo el detalle que había quedado desactualizado y duplicado con `docs/ARCHITECTURE.md`/`docs/TOOLS.md`: la lista completa de instaladores por categoría (incluía los 3 agrupadores delgados eliminados en el Hito 11, ADR 0035) y la descripción del contrato de verbos como si la migración siguiera "incremental, en fases" (el Hito 11 ya cerró, Hito 20).
+
+**Con este hito se completa la lista de los 6 hitos (18, 19, 20, 21, 22, 23) definida para el camino hacia la primera versión estable**, salvo el Hito 19 (ejecución de las pruebas manuales en VM), que sigue esperando el log de resultados de la persona usuaria — explícitamente no bloqueante para llamar `Done` al resto.
 
 ---
 
