@@ -72,7 +72,16 @@ check "se detectó una arquitectura no vacía" '[[ -n "${DETECTED_ARCH}" ]]'
 check "se detectó un codename no vacío" '[[ -n "${DETECTED_CODENAME}" ]]'
 check "el script usa detección dinámica de arquitectura (dpkg --print-architecture)" 'grep -q "dpkg --print-architecture" "${INSTALL_DOCKER_SH}"'
 check "el script usa detección dinámica de codename (VERSION_CODENAME)" 'grep -q "VERSION_CODENAME" "${INSTALL_DOCKER_SH}"'
-check "el script no tiene un fallback hacia el codename de otra versión de Ubuntu" '! grep -qE "focal|jammy|bionic|xenial" "${INSTALL_DOCKER_SH}"'
+
+# Se ignoran los comentarios: este propio archivo (y docs/UBUNTU_COMPATIBILITY.md)
+# documentan en prosa qué codenames NO debe usar el script como fallback —
+# eso no debe confundirse con código real (hallazgo M5 de
+# docs/TECHNICAL_REVIEW.md, mismo criterio ya aplicado en
+# tests/test_kernel_hwe_fallback.sh y tests/test_install_nodejs_legacy.sh).
+install_docker_code_only() {
+    grep -vE '^\s*#' "${INSTALL_DOCKER_SH}"
+}
+check "el script no tiene un fallback hacia el codename de otra versión de Ubuntu" '! install_docker_code_only | grep -qE "focal|jammy|bionic|xenial"'
 
 echo ""
 echo "== 4. install (real, hasta donde el proveedor lo permita) =="
