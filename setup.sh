@@ -659,7 +659,11 @@ catalog_list_run() {
             status_output="$("${script_path}" status 2>&1)"
             set -e
             status_str="DESCONOCIDO"
-            for s in INSTALLED NOT_INSTALLED OUTDATED BROKEN UNSUPPORTED UNKNOWN; do
+            # NOT_INSTALLED antes que INSTALLED a propósito: "NOT_INSTALLED"
+            # contiene la subcadena "INSTALLED", así que revisarlo después
+            # haría que este chequeo reporte "INSTALLED" incluso cuando el
+            # estado real es "NOT_INSTALLED" (bug real, detectado en CI).
+            for s in NOT_INSTALLED INSTALLED OUTDATED BROKEN UNSUPPORTED UNKNOWN; do
                 if [[ "${status_output}" == *"${s}"* ]]; then
                     status_str="${s}"
                     break
