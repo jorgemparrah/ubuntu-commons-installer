@@ -137,6 +137,33 @@ tools_registry_register "gnupg2" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
+# Herramientas CLI (Hito 28, 2026-07-21): fzf/thefuck/jq (apt-simple),
+# yq (snap oficial de Mike Farah — el paquete apt de Ubuntu es un
+# programa DISTINTO e incompatible, ver el propio install_yq.sh).
+tools_registry_register "fzf" \
+    "name=fzf" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=fzf" \
+    "script=scripts/system/install_fzf.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "thefuck" \
+    "name=thefuck" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=thefuck" \
+    "script=scripts/system/install_thefuck.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "jq" \
+    "name=jq" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=jq" \
+    "script=scripts/system/install_jq.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "yq" \
+    "name=yq" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=snap" "packages=yq" \
+    "script=scripts/system/install_yq.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
 # Instaladores individuales ex "Multimedia Tools" (ver ADR 0031/0035) — ya
 # vivían en category=multimedia, no necesitan subcategoría
 tools_registry_register "cheese" \
@@ -513,6 +540,22 @@ tools_registry_register "opencode" \
 tools_registry_register "antigravity" \
     "name=Antigravity CLI" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding,ai-cli" "subcategory=ai-cli" "manager=curl-script" \
     "script=scripts/development/install_antigravity.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Ollama (Hito 28, 2026-07-21): runtime local de LLM, no un asistente de
+# código — subcategory=ai-runtime (nueva), distinta de ai-cli/ai-agent.
+tools_registry_register "ollama" \
+    "name=Ollama" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding" "subcategory=ai-runtime" "manager=curl-script" \
+    "script=scripts/development/install_ollama.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+# ngrok (Hito 28, 2026-07-21): repo APT oficial propio, distro/codename
+# fijo 'bookworm' (mismo patrón que Slack/OnlyOffice).
+tools_registry_register "ngrok" \
+    "name=ngrok" "category=development" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=ngrok" \
+    "script=scripts/development/install_ngrok.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
 

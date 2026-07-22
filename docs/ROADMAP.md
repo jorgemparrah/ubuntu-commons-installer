@@ -1386,7 +1386,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1402,9 +1402,27 @@ Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar fzf
 * **ngrok** — publica repositorio APT propio oficial.
 * **Ollama** — se instala vía script oficial `curl | sh` (mismo mecanismo `curl-script` ya usado por Claude Code/Codex CLI/OpenCode, ver [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md)); confirmar si corresponde `subcategory=ai-cli` o si merece su propia subcategoría al no ser un asistente de código.
 
+### Investigación (2026-07-21)
+
+* **fzf**: confirmado en repos oficiales de Ubuntu, pero crónicamente desactualizado frente a GitHub (problema documentado activamente por el propio proyecto, junegunn/fzf#2599). Sin repo/snap oficial alternativo — se usa `apt-simple` de todas formas, con la limitación documentada explícitamente (mismo criterio que LibreOffice).
+* **thefuck**: confirmado en repos oficiales; el proyecto (nvbn/thefuck) sigue con actividad real.
+* **jq**: confirmado en repos oficiales, sin complicaciones.
+* **yq**: **ambigüedad real confirmada**. El paquete `yq` de Ubuntu es el de Kislyuk en Python (wrapper de jq para YAML) — NO es el de Mike Farah (Go, el esperado). El PPA histórico de terceros que empaquetaba el de Mike Farah está descontinuado; publica en cambio un snap oficial verificado (cuenta `mikefarah`).
+* **ngrok**: confirmado repo APT oficial, clave ya lista (sin `gpg --dearmor`, mismo patrón que Brave), codename fijo `bookworm` (Debian, mismo patrón que Slack/OnlyOffice).
+* **Ollama**: confirmado `curl -fsSL https://ollama.com/install.sh | sh`, binario `ollama`. Funciona en modo CPU-only sin dependencias especiales.
+
+### Implementación (2026-07-21)
+
+* `scripts/system/install_{fzf,thefuck,jq}.sh` (`manager=apt`, apt-simple) — agregados al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (I25).
+* `scripts/system/install_yq.sh` (`manager=snap`, snap de Mike Farah, sin `--classic`) — agregado a los tests parametrizados existentes del grupo Snap (I10/I22). El paquete `yq` de Ubuntu nunca se usa para esta herramienta.
+* `scripts/development/install_ngrok.sh` (`manager=apt-vendor-repo`, mismo mecanismo `apt_vendor_repo_fetch_file_plain` que Brave) — prueba mockeada dedicada nueva (I40).
+* `scripts/development/install_ollama.sh` (`manager=curl-script`) — `uninstall_tool()` propio, no reutiliza la convención `~/.local/bin/<binario>` del resto del grupo (Ollama instala en una ruta del sistema vía systemd); sigue los pasos de desinstalación documentados oficialmente. Prueba mockeada dedicada nueva (I41), ya que no encaja en el test parametrizado genérico de curl-script.
+* `subcategory=ai-runtime` nueva para Ollama (distinta de `ai-cli`/`ai-agent`: es un runtime local de LLM, no un asistente de código).
+* Todos quedan `requires_manual_validation=yes` salvo fzf/thefuck/jq (apt-simple estándar, mismo criterio que nnn/lf).
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

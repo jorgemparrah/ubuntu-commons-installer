@@ -19,6 +19,10 @@ const tools = [
     { name: 'software-properties-common', script: 'scripts/system/install_software_properties_common.sh', category: 'SYSTEM' },
     { name: 'apt-transport-https', script: 'scripts/system/install_apt_transport_https.sh', category: 'SYSTEM' },
     { name: 'GnuPG', script: 'scripts/system/install_gnupg2.sh', category: 'SYSTEM' },
+    { name: 'fzf', script: 'scripts/system/install_fzf.sh', category: 'SYSTEM' },
+    { name: 'thefuck', script: 'scripts/system/install_thefuck.sh', category: 'SYSTEM' },
+    { name: 'jq', script: 'scripts/system/install_jq.sh', category: 'SYSTEM' },
+    { name: 'yq', script: 'scripts/system/install_yq.sh', category: 'SYSTEM' },
 
     // SYSTEM — terminals
     { name: 'Terminator', script: 'scripts/system/install_terminator.sh', category: 'SYSTEM' },
@@ -67,6 +71,10 @@ const tools = [
     { name: 'MongoDB Compass', script: 'scripts/development/install_mongodb_compass.sh', category: 'DEVELOPMENT' },
     { name: 'kubectl', script: 'scripts/development/install_kubectl.sh', category: 'DEVELOPMENT' },
     { name: 'VirtualBox', script: 'scripts/development/install_virtualbox.sh', category: 'DEVELOPMENT' },
+
+    // DEVELOPMENT — herramientas CLI (Hito 28)
+    { name: 'ngrok', script: 'scripts/development/install_ngrok.sh', category: 'DEVELOPMENT' },
+    { name: 'Ollama', script: 'scripts/development/install_ollama.sh', category: 'DEVELOPMENT' },
 
     // DEVELOPMENT — CLIs de IA (Hito 16, ver ADR 0036/0037)
     { name: 'Claude Code', script: 'scripts/development/install_claude_code.sh', category: 'DEVELOPMENT' },
