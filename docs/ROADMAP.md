@@ -2189,6 +2189,37 @@ Todo — investigación e implementación no comenzadas.
 
 ---
 
+# Hito 54
+
+## Nerd Fonts como dependencia explícita (Powerlevel10k, Starship y futuros consumidores)
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto: Powerlevel10k (ya en el catálogo) requiere una Nerd Font instalada y habilitada en la terminal para renderizar sus íconos correctamente (prerrequisito documentado oficialmente por el propio proyecto) — hoy ese requisito no está gestionado por este instalador. Starship (Hito 49) tiene el mismo requisito para sus símbolos/íconos por defecto.
+
+* Implementar un instalador nuevo (`category=system`, `subcategory=shell-personalization`, mismo grupo que Oh My Zsh/Powerlevel10k) para una Nerd Font — investigar cuál usar por defecto (candidatas típicas: **MesloLGS NF**, la recomendada explícitamente por la documentación oficial de Powerlevel10k, o **FiraCode Nerd Font**/**JetBrainsMono Nerd Font**, más generalistas) y su mecanismo de instalación (los binarios de fuentes parcheadas se publican en GitHub Releases del proyecto Nerd Fonts, `ryanoasis/nerd-fonts`, no hay paquete apt oficial equivalente).
+* Usar el campo `depends_on` ya existente (ver [ADR 0042](adr/0042-configuraciones-post-instalacion-y-dependencias.md), primer caso real: `powerlevel10k` → `depends_on=oh_my_zsh`) para declarar `powerlevel10k` → `depends_on=nerd_fonts` (y lo mismo para Starship cuando se implemente en el Hito 49) — misma política explícita ya confirmada: si falta la fuente, el instalador dependiente rechaza con un mensaje claro, nunca la instala por su cuenta sin pedirlo.
+* Confirmar si esto es un segundo caso real de dependencia múltiple (Powerlevel10k pasaría a depender de dos cosas: Oh My Zsh y Nerd Fonts) — la convención actual de "orden de registro garantiza dependencia antes que dependiente" (ADR 0042) asume una sola relación por herramienta; con dos dependencias sigue siendo válida siempre que ambas se registren antes en `tools_catalog.sh`, pero vale la pena revisar el mecanismo de `dependency_require_installed` para confirmar que soporta múltiples `depends_on` sin cambios.
+* Investigar también si instalar una fuente requiere pasos post-instalación (actualizar el cache de fuentes vía `fc-cache`, o configurar el perfil de la terminal para usarla) — similar en espíritu a `configure_tool()` de Flameshot (Hito 17, ADR 0042), aunque configurar la fuente de la terminal probablemente no sea automatizable de forma genérica (depende de qué emulador de terminal use la persona usuaria).
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
 # Preguntas resueltas por el dueño del proyecto (2026-07-15)
 
 Migradas desde la evaluación inicial del repositorio (2026-07-13) y resueltas en una revisión de inventario de herramientas. Las decisiones de arquitectura resultantes están en `docs/adr/` (0016–0021) y el inventario actualizado en `docs/TOOLS.md`.
