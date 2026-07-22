@@ -257,6 +257,18 @@ tools_registry_register "vscode" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
 
+# VirtualBox (Hito 24, 2026-07-21): repo APT oficial de Oracle (nunca el
+# paquete 'virtualbox' de Ubuntu, que suele quedar desactualizado). Primer
+# instalador que depende de un módulo de kernel (vboxdrv vía DKMS) —
+# requires_manual_validation=yes porque ningún contenedor Docker de este
+# proyecto puede cargar un módulo de kernel real; se valida en
+# tests/manual/ (Hito 19), no en CI.
+tools_registry_register "virtualbox" \
+    "name=VirtualBox" "category=development" "subcategory=virtualization" "classification=optional" "profiles=developer,workstation,full,coding" "manager=apt-vendor-repo" \
+    "script=scripts/development/install_virtualbox.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 tools_registry_register "cursor" \
     "name=Cursor AI IDE" "category=editors" "classification=optional" "profiles=desktop,developer,workstation,full,editor" "manager=apt-vendor-repo" "packages=cursor" \
     "script=scripts/editors/install_cursor.sh" \

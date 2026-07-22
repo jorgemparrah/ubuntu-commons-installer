@@ -122,6 +122,7 @@ jobs:
           - nvm-mise-preexisting
           - dependencies-lib
           - powerlevel10k-dependency
+          - virtualbox-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -374,6 +375,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I33"
             cmd: bash tests/test_powerlevel10k_dependency.sh
+          - case: virtualbox-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I34"
+            cmd: bash tests/test_virtualbox_installer.sh
     steps:
       - uses: actions/checkout@v7
 

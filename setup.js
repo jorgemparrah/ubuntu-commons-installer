@@ -66,6 +66,7 @@ const tools = [
     { name: 'Insomnia', script: 'scripts/development/install_insomnia.sh', category: 'DEVELOPMENT' },
     { name: 'MongoDB Compass', script: 'scripts/development/install_mongodb_compass.sh', category: 'DEVELOPMENT' },
     { name: 'kubectl', script: 'scripts/development/install_kubectl.sh', category: 'DEVELOPMENT' },
+    { name: 'VirtualBox', script: 'scripts/development/install_virtualbox.sh', category: 'DEVELOPMENT' },
 
     // DEVELOPMENT — CLIs de IA (Hito 16, ver ADR 0036/0037)
     { name: 'Claude Code', script: 'scripts/development/install_claude_code.sh', category: 'DEVELOPMENT' },

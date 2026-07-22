@@ -1209,7 +1209,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1222,9 +1222,22 @@ Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar VMw
 * **VMware Workstation** — software propietario con licencia; instalador `.bundle` oficial (no repositorio APT). Investigar si Workstation Pro sigue siendo gratuito para uso personal (cambio de política de Broadcom/VMware post-adquisición) antes de asumir el mecanismo de instalación.
 * **VirtualBox** — Oracle publica un repositorio APT oficial (`download.virtualbox.org`); requiere `dkms`/módulos de kernel para el driver de virtualización (`vboxdrv`), a diferencia del resto del catálogo — primer caso real de un instalador que depende de compilar/cargar un módulo de kernel.
 
+### Investigación y decisión: VMware Workstation (2026-07-21)
+
+Investigado antes de escribir código, como pide el objetivo. Dos bloqueantes reales para un instalador automatizado limpio:
+
+1. **Descarga sin URL pública.** Desde el 11/nov/2024, Broadcom liberó VMware Workstation Pro gratis para uso personal/comercial/educativo sin clave de licencia ([Broadcom KB](https://knowledge.broadcom.com/external/article/368667/download-and-license-vmware-desktop-hype.html)) — la licencia ya no es un bloqueante. Pero la descarga del `.bundle` requiere iniciar sesión en el portal `support.broadcom.com`; no existe una URL pública descargable con `curl`/`wget` sin autenticación.
+2. **Módulos de kernel (vmmon/vmnet) sin soporte oficial en kernels recientes.** VMware no mantiene compatibilidad oficial con Ubuntu 24.04+ (kernel 6.8+); los módulos no compilan sin parches de terceros (repos comunitarios no oficiales de la comunidad). Cae en la categoría "fuente comunitaria, requiere justificación explícita" de [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md), no "instalador oficial" limpio.
+
+**Decisión (2026-07-21):** el dueño del proyecto confirmó descartar VMware Workstation del catálogo — no se implementa ningún instalador, ni se documenta como "instalación manual". Motivo: los dos bloqueantes de arriba (descarga sin URL pública, módulos de kernel sin soporte oficial dependientes de un parche comunitario no oficial) no justifican el esfuerzo/riesgo frente al beneficio, mismo criterio de "requiere justificación explícita" de [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md) que no se cumplió. Fuera de alcance de este proyecto, igual que NVIDIA/CUDA ([ADR 0020](adr/0020-alcance-fuera-nvidia-dotfiles-agentes.md)).
+
+### Implementación: VirtualBox (2026-07-21)
+
+Sin bloqueantes reales — implementado. `scripts/development/install_virtualbox.sh` (`manager=apt-vendor-repo`, `category=development`, `subcategory=virtualization` nueva): agrega el repositorio oficial de Oracle (nunca el paquete `virtualbox` de Ubuntu, que suele quedar desactualizado); el nombre del paquete (`virtualbox-X.Y`) se resuelve dinámicamente tras agregar el repo, sin hardcodear una versión que quedaría obsoleta (mismo criterio que `install_kernel.sh::get_latest_hwe_kernel`). Primer instalador que depende de un módulo de kernel (`vboxdrv` vía DKMS): `status` distingue `BROKEN` (paquete instalado, módulo no cargado) de `INSTALLED`; el "VirtualBox Extension Pack" (licencia PUEL) queda deliberadamente fuera. `requires_manual_validation=yes` (ningún contenedor Docker de este proyecto puede cargar un módulo de kernel real — se valida en `tests/manual/`, Hito 19). Prueba nueva: `tests/test_virtualbox_installer.sh` (I34), mocks completos incluyendo un dispositivo `/dev/vboxdrv` simulable (`UCI_VIRTUALBOX_VBOXDRV_PATH`, mismo criterio que `UCI_HOME_DIR` de [ADR 0023](adr/0023-variable-uci-home-dir-para-pruebas.md), extendido por primera vez a un dispositivo).
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno. VMware Workstation queda descartado (ver decisión arriba); VirtualBox implementado.
 
 ---
 
