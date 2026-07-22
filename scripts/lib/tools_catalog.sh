@@ -618,6 +618,21 @@ tools_registry_register "hoppscotch" \
     "supported_os=24.04,26.04" "supported_arch=amd64" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# Beekeeper Studio y DbGate (Hito 32, 2026-07-22): mismo grupo db-clients
+# que DBeaver/MongoDB Compass. Ambos vía deb-direct + github_release.sh
+# (ver advertencias de mecanismo real documentadas en cada script).
+tools_registry_register "beekeeper_studio" \
+    "name=Beekeeper Studio" "category=development" "subcategory=db-clients" "classification=optional" "profiles=developer,workstation,full,coding" "manager=deb-direct" "packages=beekeeper-studio" \
+    "script=scripts/development/install_beekeeper_studio.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "dbgate" \
+    "name=DbGate" "category=development" "subcategory=db-clients" "classification=optional" "profiles=developer,workstation,full,coding" "manager=deb-direct" "packages=dbgate" \
+    "script=scripts/development/install_dbgate.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 tools_registry_register "openclaw" \
     "name=OpenClaw" "category=ai" "classification=optional" "profiles=cli,desktop,workstation,full,productivity" "subcategory=ai-assistants" "manager=curl-script" \
     "script=scripts/productivity/install_openclaw.sh" \

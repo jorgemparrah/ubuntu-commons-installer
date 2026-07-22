@@ -134,6 +134,8 @@ jobs:
           - steam-installer
           - soapui-installer
           - hoppscotch-installer
+          - beekeeper-studio-installer
+          - dbgate-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -446,6 +448,16 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I45"
             cmd: bash tests/test_hoppscotch_installer.sh
+          - case: beekeeper-studio-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I46"
+            cmd: bash tests/test_beekeeper_studio_installer.sh
+          - case: dbgate-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I47"
+            cmd: bash tests/test_dbgate_installer.sh
     steps:
       - uses: actions/checkout@v7
 
