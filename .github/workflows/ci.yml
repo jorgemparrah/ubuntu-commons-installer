@@ -128,6 +128,8 @@ jobs:
           - keepassxc-installer
           - onlyoffice-installer
           - brave-installer
+          - ngrok-installer
+          - ollama-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -410,6 +412,16 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I39"
             cmd: bash tests/test_brave_installer.sh
+          - case: ngrok-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I40"
+            cmd: bash tests/test_ngrok_installer.sh
+          - case: ollama-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I41"
+            cmd: bash tests/test_ollama_installer.sh
     steps:
       - uses: actions/checkout@v7
 

@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # tests/test_terminal_apps_apt_simple_contract.sh
 #
-# Prueba simulada (mocks) del ciclo de vida completo de los instaladores
-# apt-simple de terminal agregados al catálogo (nnn, lf): ambos están en
-# los repositorios oficiales de Ubuntu, mismo patrón que
-# scripts/system/install_ranger.sh. No instala nada real: apt-get/apt/
-# dpkg/sudo se interceptan con comandos falsos en un PATH temporal.
+# Prueba simulada (mocks) del ciclo de vida completo de instaladores
+# apt-simple agregados al catálogo después del piloto (nnn, lf; fzf,
+# thefuck, jq del Hito 28): todos están en los repositorios oficiales de
+# Ubuntu, mismo patrón que scripts/system/install_ranger.sh. No instala
+# nada real: apt-get/apt/dpkg/sudo se interceptan con comandos falsos en
+# un PATH temporal.
 #
 # Uso:
 #   bash tests/test_terminal_apps_apt_simple_contract.sh
@@ -202,6 +203,9 @@ test_apt_simple_contract() {
 
 test_apt_simple_contract "scripts/system/install_nnn.sh" "nnn" "nnn" "nnn"
 test_apt_simple_contract "scripts/system/install_lf.sh" "lf" "lf" "lf"
+test_apt_simple_contract "scripts/system/install_fzf.sh" "fzf" "fzf" "fzf"
+test_apt_simple_contract "scripts/system/install_thefuck.sh" "thefuck" "thefuck" "thefuck"
+test_apt_simple_contract "scripts/system/install_jq.sh" "jq" "jq" "jq"
 
 print_test_summary
 exit_with_test_summary
