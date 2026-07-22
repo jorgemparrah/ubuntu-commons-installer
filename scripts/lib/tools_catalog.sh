@@ -296,6 +296,24 @@ tools_registry_register "keepassxc" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# Navegadores (Hito 27, 2026-07-21): Brave (repo APT oficial, primer caso
+# real de apt_vendor_repo_fetch_file_plain — clave ya lista y archivo
+# .sources DEB822 completo, sin línea 'deb [...]' a mano), Chromium
+# (snap oficial de Canonical: el paquete chromium-browser de Ubuntu es
+# transicional y en la práctica instala este mismo snap).
+# subcategory=browsers nueva.
+tools_registry_register "brave" \
+    "name=Brave" "category=productivity" "subcategory=browsers" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=brave-browser" \
+    "script=scripts/productivity/install_brave.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "chromium" \
+    "name=Chromium" "category=productivity" "subcategory=browsers" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=snap" "packages=chromium" \
+    "script=scripts/productivity/install_chromium.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 # Grupo vendor-repo (Hito 11): manager=apt-vendor-repo, ver
 # scripts/lib/apt_vendor_repo.sh. requires_manual_validation=no: los 3
 # tienen prueba funcional real en CI (tests/docker/test_*_apt_repo.sh:

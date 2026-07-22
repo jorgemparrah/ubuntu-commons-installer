@@ -108,6 +108,7 @@ run_suite "tests/test_slack_installer.sh" bash tests/test_slack_installer.sh
 run_suite "tests/test_libreoffice_installer.sh" bash tests/test_libreoffice_installer.sh
 run_suite "tests/test_keepassxc_installer.sh" bash tests/test_keepassxc_installer.sh
 run_suite "tests/test_onlyoffice_installer.sh" bash tests/test_onlyoffice_installer.sh
+run_suite "tests/test_brave_installer.sh" bash tests/test_brave_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

@@ -61,23 +61,49 @@ apt_vendor_repo_fetch_key_dearmored() {
     rm -f "${tmp_keyring}"
 }
 
+# apt_vendor_repo_fetch_file_plain <url> <dest_path>
+# Descarga <url> a un archivo temporal (nunca directo a <dest_path>) y
+# recién si el contenido no quedó vacío lo instala de forma atómica con
+# 'sudo install' — mismo patrón en dos pasos que
+# apt_vendor_repo_fetch_key_dearmored (descargar a un temporal propio,
+# verificar, e instalar recién ahí), en vez de escribir directo al
+# destino final vía 'curl -o': evita dejar un archivo parcial en
+# <dest_path> si la descarga se corta a mitad de camino, y hace que el
+# paso de instalación sea el único que toca la ruta real del sistema
+# (mismo criterio ya aplicado en tests/test_virtualbox_installer.sh:
+# mockear ese paso, no la descarga en sí). Sirve tanto para claves ya
+# listas para 'signed-by' (ver apt_vendor_repo_fetch_key_plain, debajo)
+# como para archivos de repositorio completos en formato DEB822
+# (`.sources`) que un proveedor publica ya armados, sin que este proyecto
+# deba construir una línea 'deb [...]' a mano (primer caso real: Brave,
+# Hito 27, ver scripts/productivity/install_brave.sh).
+apt_vendor_repo_fetch_file_plain() {
+    local url="$1" dest_path="$2"
+    local tmp_file
+    tmp_file="$(mktemp)"
+
+    if ! curl -fsSL "${url}" -o "${tmp_file}"; then
+        echo "No se pudo descargar ${url}" >&2
+        rm -f "${tmp_file}"
+        return 1
+    fi
+    if [[ ! -s "${tmp_file}" ]]; then
+        echo "El archivo descargado desde ${url} quedó vacío; abortando" >&2
+        rm -f "${tmp_file}"
+        return 1
+    fi
+
+    sudo mkdir -p "$(dirname "${dest_path}")"
+    sudo install -D -o root -g root -m 644 "${tmp_file}" "${dest_path}"
+    rm -f "${tmp_file}"
+}
+
 # apt_vendor_repo_fetch_key_plain <url> <keyring_path>
 # Para claves que YA vienen listas para usar como 'signed-by' sin pasar
 # por 'gpg --dearmor' (ej. la clave de Docker, publicada en formato
 # ASCII-armored directamente utilizable).
 apt_vendor_repo_fetch_key_plain() {
-    local url="$1" keyring_path="$2"
-
-    sudo mkdir -p "$(dirname "${keyring_path}")"
-    if ! sudo curl -fsSL "${url}" -o "${keyring_path}"; then
-        echo "No se pudo descargar la clave GPG desde ${url}" >&2
-        return 1
-    fi
-    if [[ ! -s "${keyring_path}" ]]; then
-        echo "El keyring descargado desde ${url} quedó vacío; abortando" >&2
-        return 1
-    fi
-    sudo chmod a+r "${keyring_path}"
+    apt_vendor_repo_fetch_file_plain "$1" "$2"
 }
 
 # apt_vendor_repo_write_list <list_path> <línea 'deb [...] ...'>
