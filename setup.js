@@ -44,7 +44,7 @@ const tools = [
     { name: 'GIMP', script: 'scripts/system/install_gimp.sh', category: 'SYSTEM' },
     { name: 'OBS Studio', script: 'scripts/system/install_obs_studio.sh', category: 'SYSTEM' },
 
-    // SYSTEM — misc
+    // SYSTEM — extras
     { name: 'cmatrix', script: 'scripts/system/install_cmatrix.sh', category: 'SYSTEM' },
 
     // MULTIMEDIA (ex agrupador "Multimedia Tools", ver ADR 0035; ya vivían
@@ -56,10 +56,8 @@ const tools = [
 
     // EDITORS
     { name: 'Visual Studio Code', script: 'scripts/editors/install_vscode.sh', category: 'EDITORS' },
-    { name: 'Cursor AI IDE', script: 'scripts/editors/install_cursor.sh', category: 'EDITORS' },
-    { name: 'Antigravity IDE', script: 'scripts/editors/install_antigravity_ide.sh', category: 'EDITORS' },
     { name: 'Vim', script: 'scripts/editors/install_vim.sh', category: 'EDITORS' },
-    
+
     // DEVELOPMENT
     { name: 'Docker', script: 'scripts/development/install_docker.sh', category: 'DEVELOPMENT' },
     { name: 'Yarn', script: 'scripts/development/install_yarn.sh', category: 'DEVELOPMENT' },
@@ -74,16 +72,27 @@ const tools = [
 
     // DEVELOPMENT — herramientas CLI (Hito 28)
     { name: 'ngrok', script: 'scripts/development/install_ngrok.sh', category: 'DEVELOPMENT' },
-    { name: 'Ollama', script: 'scripts/development/install_ollama.sh', category: 'DEVELOPMENT' },
 
     // DEVELOPMENT — misceláneos (Hito 29)
     { name: 'SoapUI', script: 'scripts/development/install_soapui.sh', category: 'DEVELOPMENT' },
 
-    // DEVELOPMENT — CLIs de IA (Hito 16, ver ADR 0036/0037)
-    { name: 'Claude Code', script: 'scripts/development/install_claude_code.sh', category: 'DEVELOPMENT' },
-    { name: 'Codex CLI', script: 'scripts/development/install_codex_cli.sh', category: 'DEVELOPMENT' },
-    { name: 'OpenCode', script: 'scripts/development/install_opencode.sh', category: 'DEVELOPMENT' },
-    { name: 'Antigravity CLI', script: 'scripts/development/install_antigravity.sh', category: 'DEVELOPMENT' },
+    // AI — asistentes de escritorio (ver ADR 0043)
+    { name: 'Claude Desktop', script: 'scripts/productivity/install_claude_desktop.sh', category: 'AI' },
+    { name: 'OpenClaw', script: 'scripts/productivity/install_openclaw.sh', category: 'AI' },
+    { name: 'Hermes Agent', script: 'scripts/productivity/install_hermes_agent.sh', category: 'AI' },
+
+    // AI — CLIs (Hito 16, ver ADR 0036/0037/0043)
+    { name: 'Claude Code', script: 'scripts/development/install_claude_code.sh', category: 'AI' },
+    { name: 'Codex CLI', script: 'scripts/development/install_codex_cli.sh', category: 'AI' },
+    { name: 'OpenCode', script: 'scripts/development/install_opencode.sh', category: 'AI' },
+    { name: 'Antigravity CLI', script: 'scripts/development/install_antigravity.sh', category: 'AI' },
+
+    // AI — IDEs (ver ADR 0043)
+    { name: 'Cursor AI IDE', script: 'scripts/editors/install_cursor.sh', category: 'AI' },
+    { name: 'Antigravity IDE', script: 'scripts/editors/install_antigravity_ide.sh', category: 'AI' },
+
+    // AI — modelos locales (Hito 28, ver ADR 0043)
+    { name: 'Ollama', script: 'scripts/development/install_ollama.sh', category: 'AI' },
 
     // PRODUCTIVITY
     { name: 'ULauncher', script: 'scripts/productivity/install_ulauncher.sh', category: 'PRODUCTIVITY' },
@@ -111,11 +120,6 @@ const tools = [
     { name: 'LocalSend', script: 'scripts/productivity/install_localsend.sh', category: 'PRODUCTIVITY' },
     { name: 'Steam', script: 'scripts/productivity/install_steam.sh', category: 'PRODUCTIVITY' },
     { name: 'Okular', script: 'scripts/productivity/install_okular.sh', category: 'PRODUCTIVITY' },
-
-    // PRODUCTIVITY — agentes de IA de propósito general (Hito 16, ver ADR 0036/0037)
-    { name: 'Claude Desktop', script: 'scripts/productivity/install_claude_desktop.sh', category: 'PRODUCTIVITY' },
-    { name: 'OpenClaw', script: 'scripts/productivity/install_openclaw.sh', category: 'PRODUCTIVITY' },
-    { name: 'Hermes Agent', script: 'scripts/productivity/install_hermes_agent.sh', category: 'PRODUCTIVITY' },
 
     // MAINTENANCE (System Updates/Kernel & Headers movidos aquí desde
     // SYSTEM, ver ADR 0035 — consistente con category=maintenance en
@@ -147,7 +151,7 @@ async function showMainMenu() {
         })
     );
     const choices = [];
-    const categories = ['SYSTEM', 'MULTIMEDIA', 'EDITORS', 'DEVELOPMENT', 'PRODUCTIVITY', 'MAINTENANCE'];
+    const categories = ['SYSTEM', 'MULTIMEDIA', 'EDITORS', 'DEVELOPMENT', 'AI', 'PRODUCTIVITY', 'MAINTENANCE'];
 
     categories.forEach(category => {
         choices.push(new inquirer.Separator(`=== ${category} ===`));

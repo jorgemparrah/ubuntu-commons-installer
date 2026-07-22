@@ -16,17 +16,24 @@
 | `install_fzf.sh`, `install_thefuck.sh`, `install_jq.sh` | fzf, thefuck, jq (Hito 28, 2026-07-21) | **Nuevos** — `optional`, `manager=apt` (apt-simple). `fzf` queda desactualizado frente a GitHub por diseño del propio paquete de Ubuntu (documentado como limitación conocida, mismo criterio que LibreOffice); `thefuck`/`jq` sin complicaciones |
 | `install_yq.sh` | yq (Hito 28, 2026-07-21) | **Nuevo** — `optional`. `manager=snap`, snap oficial de Mike Farah (`mikefarah/yq`, Go). **Cuidado**: el paquete `yq` de los repositorios oficiales de Ubuntu es un programa DISTINTO e incompatible (el de Kislyuk en Python, wrapper de jq para YAML) — nunca usar ese paquete para esta herramienta. `requires_manual_validation=yes` (solo prueba mockeada en esta ronda) |
 
-### Terminales y gestores de archivos de terminal (`subcategory=terminals`)
+### Terminales (`subcategory=terminals`)
 
 | Script | Propósito | Decisión |
 |---|---|---|
 | `install_terminator.sh` | Terminal Terminator | **Mantener** — confirmado, sigue siendo la terminal preferida. **Migrado al contrato completo de 6 verbos en el Hito 11, Fase 2 (2026-07-19)**: usa `scripts/lib/installer_cli.sh` y `scripts/lib/apt.sh` (ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); ya no tiene fallback a Snap |
+| `install_ghostty.sh` | Ghostty (terminal acelerada por GPU) | **Mantener** — agregado 2026-07-20. Mecanismo condicional por versión de Ubuntu (ver [ADR 0032](adr/0032-mecanismo-condicional-por-version-de-ubuntu.md)): repo oficial en 26.04+, PPA `mkasberg/ghostty-ubuntu` en 24.04 |
+| `install_wezterm.sh` | WezTerm (terminal acelerada por GPU) | **Mantener** — agregado 2026-07-20. No está en apt de Ubuntu; se instala vía su repositorio APT propio en Fury.io (`apt.fury.io/wez`, signed-by, repo "flat" sin codename) |
+
+### Gestores de archivos de terminal (`subcategory=file-managers`)
+
+**Nota (2026-07-22):** hasta ahora estos 4 vivían bajo `subcategory=terminals`, junto a los emuladores de terminal reales (Terminator/Ghostty/WezTerm) — corrección de categorización a pedido del dueño del proyecto: son gestores de archivos con interfaz de texto (TUI), no emuladores de terminal.
+
+| Script | Propósito | Decisión |
+|---|---|---|
 | `install_ranger.sh` | Gestor de archivos de terminal | Mantener, salvo que surja una alternativa más amigable. **Migrado al contrato completo de 6 verbos en el Hito 11, Fase 2 (2026-07-19)**: usa `scripts/lib/installer_cli.sh` y `scripts/lib/apt.sh` (ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); ya no tiene fallback a Snap **Clasificación: `required`** (confirmada con el dueño del proyecto, 2026-07-20) |
 | `install_nnn.sh` | nnn (gestor de archivos de terminal) | **Mantener** — agregado 2026-07-20. Ya está en los repositorios oficiales de Ubuntu (universe) desde 18.04: apt-simple directo, mismo patrón que `install_ranger.sh` |
 | `install_lf.sh` | lf (gestor de archivos de terminal) | **Mantener** — agregado 2026-07-20. Ya está en los repositorios oficiales de Ubuntu (universe) desde 24.04: apt-simple directo; la versión empaquetada suele ir por detrás de upstream, riesgo aceptado |
 | `install_yazi.sh` | Yazi (gestor de archivos de terminal, Rust) | **Mantener** — agregado 2026-07-20. No está en apt de Ubuntu; se instala vía el snap oficial del proyecto (`--classic`) |
-| `install_ghostty.sh` | Ghostty (terminal acelerada por GPU) | **Mantener** — agregado 2026-07-20. Mecanismo condicional por versión de Ubuntu (ver [ADR 0032](adr/0032-mecanismo-condicional-por-version-de-ubuntu.md)): repo oficial en 26.04+, PPA `mkasberg/ghostty-ubuntu` en 24.04 |
-| `install_wezterm.sh` | WezTerm (terminal acelerada por GPU) | **Mantener** — agregado 2026-07-20. No está en apt de Ubuntu; se instala vía su repositorio APT propio en Fury.io (`apt.fury.io/wez`, signed-by, repo "flat" sin codename) |
 
 ### Personalización de shell (`subcategory=shell-personalization`)
 
@@ -37,13 +44,13 @@
 
 ### Utilidades GUI (`subcategory=gui-utils`)
 
+**Nota (2026-07-22):** GIMP y OBS Studio se movieron a `category=multimedia` (ver sección Multimedia más abajo) — corrección de categorización a pedido del dueño del proyecto: son herramientas de creación/captura de contenido, no utilidades de sistema como Meld/Baobab/GParted.
+
 | Script | Propósito | Decisión |
 |---|---|---|
 | `install_meld.sh`, `install_baobab.sh`, `install_gparted.sh` | Ex miembros del agrupador "System Utilities" | **Nuevos en el Hito 11 ([ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md))**: contrato completo de 6 verbos, los 3 con binario propio (`meld`/`baobab`/`gparted`). Desde ADR 0035 (2026-07-20) se exponen directamente en el menú, sin agrupador |
-| `install_gimp.sh` | GIMP vía Snap | **Mantener — fuente confirmada (2026-07-20, ver [ADR 0038](adr/0038-obs-studio-migra-de-snap-a-ppa-oficial.md))**: el Snap Store sigue GIMP 3.2.x en las 3 LTS soportadas (incluida 24.04, donde apt todavía trae 2.10.x); en 26.04 apt ya trae 3.2.x también. Snap es la fuente más actualizada de forma consistente. **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh` y `scripts/lib/snap.sh` (helpers Snap compartidos, hermano de `apt.sh`, ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); `status` sigue sin distinguir `OUTDATED` (requeriría consultar la store de Snap por red) pero `update` existe como verbo explícito; `repair` se rechaza a propósito (código 3) |
-| `install_obs_studio.sh` | OBS Studio vía su PPA oficial | **Mantener — migrado de Snap a `ppa:obsproject/obs-studio` (2026-07-20, [ADR 0038](adr/0038-obs-studio-migra-de-snap-a-ppa-oficial.md))**: el snap está etiquetado "unofficial" por el propio OBS Project, que recomienda su PPA (o Flatpak) como únicos builds Linux oficiales. Mismo mecanismo que `install_ulauncher.sh` (`manager=apt-vendor-repo` vía `add-apt-repository`); `status` distingue `BROKEN`/`OUTDATED` igual que ULauncher/Ranger; ya no depende de `snapd`, se prueba automáticamente en CI (`requires_manual_validation=no`) |
 
-### Misceláneo (`subcategory=misc`)
+### Extras (`subcategory=extras`)
 
 | Script | Propósito | Decisión |
 |---|---|---|
@@ -51,20 +58,40 @@
 
 ## Multimedia
 
-Ex miembros del agrupador "Multimedia Tools" (ver [ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md)) — a diferencia de "Development Tools"/"System Utilities", estos 4 ya vivían en `category=multimedia` desde esa ADR, no en `system`; el único cambio de ADR 0035 (2026-07-20) es que se exponen directamente en el menú, sin agrupador.
+Ex miembros del agrupador "Multimedia Tools" (ver [ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md)) — a diferencia de "Development Tools"/"System Utilities", estos 4 ya vivían en `category=multimedia` desde esa ADR, no en `system`; el único cambio de ADR 0035 (2026-07-20) es que se exponen directamente en el menú, sin agrupador. **Nota (2026-07-22):** se agregó el campo `subcategory` (`capture`/`codecs`/`playback`/`graphics`) para subdividir esta categoría, igual que ya existía para `system`; GIMP y OBS Studio se sumaron aquí ese mismo día (ver más abajo).
+
+### Reproducción (`subcategory=playback`)
 
 | Script | Propósito | Decisión |
 |---|---|---|
-| `install_cheese.sh`, `install_v4l_utils.sh`, `install_ubuntu_restricted_extras.sh`, `install_vlc.sh` | Cheese, v4l-utils, ubuntu-restricted-extras, VLC | **Nuevos en el Hito 11 ([ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md))**: contrato completo de 6 verbos vía `scripts/lib/installer_cli.sh`/`scripts/lib/apt.sh`. `ubuntu-restricted-extras` es un paquete meta (sin `BROKEN`) y el único que fija `DEBIAN_FRONTEND=noninteractive` (EULA de fuentes de Microsoft) |
+| `install_vlc.sh` | VLC | **Nuevo en el Hito 11** ([ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md)): contrato completo de 6 verbos vía `scripts/lib/installer_cli.sh`/`scripts/lib/apt.sh` |
+
+### Códecs (`subcategory=codecs`)
+
+| Script | Propósito | Decisión |
+|---|---|---|
+| `install_ubuntu_restricted_extras.sh` | ubuntu-restricted-extras | **Nuevo en el Hito 11** ([ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md)): paquete meta (sin `BROKEN`), único que fija `DEBIAN_FRONTEND=noninteractive` (EULA de fuentes de Microsoft) |
+
+### Captura (`subcategory=capture`)
+
+| Script | Propósito | Decisión |
+|---|---|---|
+| `install_cheese.sh` | Cheese (webcam) | **Nuevo en el Hito 11** ([ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md)): contrato completo de 6 verbos vía `scripts/lib/installer_cli.sh`/`scripts/lib/apt.sh` |
+| `install_v4l_utils.sh` | v4l-utils (utilidades Video4Linux, CLI) | **Nuevo en el Hito 11** ([ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md)): contrato completo de 6 verbos vía `scripts/lib/installer_cli.sh`/`scripts/lib/apt.sh` |
+| `install_obs_studio.sh` | OBS Studio vía su PPA oficial | **Movido aquí el 2026-07-22** (antes `system/gui-utils` — corrección de categorización). **Mantener — migrado de Snap a `ppa:obsproject/obs-studio` (2026-07-20, [ADR 0038](adr/0038-obs-studio-migra-de-snap-a-ppa-oficial.md))**: el snap está etiquetado "unofficial" por el propio OBS Project, que recomienda su PPA (o Flatpak) como únicos builds Linux oficiales. Mismo mecanismo que `install_ulauncher.sh` (`manager=apt-vendor-repo` vía `add-apt-repository`); `status` distingue `BROKEN`/`OUTDATED` igual que ULauncher/Ranger; ya no depende de `snapd`, se prueba automáticamente en CI (`requires_manual_validation=no`) |
+
+### Gráficos (`subcategory=graphics`)
+
+| Script | Propósito | Decisión |
+|---|---|---|
+| `install_gimp.sh` | GIMP vía Snap | **Movido aquí el 2026-07-22** (antes `system/gui-utils` — corrección de categorización: es un editor gráfico, no una utilidad de sistema). **Mantener — fuente confirmada (2026-07-20, ver [ADR 0038](adr/0038-obs-studio-migra-de-snap-a-ppa-oficial.md))**: el Snap Store sigue GIMP 3.2.x en las 3 LTS soportadas (incluida 24.04, donde apt todavía trae 2.10.x); en 26.04 apt ya trae 3.2.x también. Snap es la fuente más actualizada de forma consistente. **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh` y `scripts/lib/snap.sh` (helpers Snap compartidos, hermano de `apt.sh`, ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); `status` sigue sin distinguir `OUTDATED` (requeriría consultar la store de Snap por red) pero `update` existe como verbo explícito; `repair` se rechaza a propósito (código 3) |
 
 ## Editors
 
 | Script | Propósito | Decisión |
 |---|---|---|
 | `install_vscode.sh` | Visual Studio Code | Mantener. **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh`, `scripts/lib/apt.sh` y `scripts/lib/apt_vendor_repo.sh` (nuevo, grupo vendor-repo); `status` distingue `OUTDATED`/`BROKEN` igual que el resto de los instaladores APT migrados |
-| `install_cursor.sh` | Cursor | Mantener — corregido en el Hito 9: pasó de AppImage (x86_64 hardcodeado, sin checksum) a su repo APT oficial (`downloads.cursor.com/aptrepo`, `signed-by`, amd64+arm64), ver [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md). **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh`, `scripts/lib/apt.sh` y `scripts/lib/apt_vendor_repo.sh` (nuevo, grupo vendor-repo); `status` distingue `OUTDATED`/`BROKEN` igual que el resto de los instaladores APT migrados |
 | `install_vim.sh` | Vim | Mantener como editor base; instalador de referencia del contrato de estado enriquecido (`status` soporta `INSTALLED\|NOT_INSTALLED\|OUTDATED\|BROKEN\|UNSUPPORTED`, y agrega las acciones `update`/`repair`). Ver [ADR 0012](adr/0012-modelo-de-estado-enriquecido.md) |
-| `install_antigravity_ide.sh` | Antigravity IDE (Google) | **Mantener** — `optional`, agregado 2026-07-21 (Hito 16). Repo APT propio de Google (`us-central1-apt.pkg.dev`), `manager=apt-vendor-repo` (reutiliza `scripts/lib/apt_vendor_repo.sh`, mismo patrón que VS Code/Cursor). Corrige la investigación original de [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md) (solo tarball manual sin firma) — ver [ADR 0041](adr/0041-antigravity-ide-via-repo-apt-oficial.md). Distinto de `install_antigravity.sh` (el CLI `agy`, categoría Development) |
 
 ## Development
 
@@ -82,9 +109,6 @@ Ex miembros del agrupador "Multimedia Tools" (ver [ADR 0031](adr/0031-separar-in
 | `install_kubectl.sh` | kubectl | **Vía Mise** (ver [ADR 0018](adr/0018-kubectl-via-mise.md)) — implementado en el Hito 9 usando `scripts/lib/runtime.sh` (Hito 8); antes se recomendaba mantener Snap, y el script siguió en Snap hasta esta corrección. **Migrado al dispatcher compartido en el Hito 11 (grupo Mise, 2026-07-20)**: adopta `scripts/lib/installer_cli.sh` sin tocar la lógica de `scripts/lib/runtime.sh`; agrega `update` (vuelve a pedir `latest` vía Mise), `reinstall` usa el fallback mecánico del dispatcher; `repair` no se implementa (Mise no tiene el concepto de instalación parcial que lo justifique) |
 | `install_virtualbox.sh` | VirtualBox (Hito 24, 2026-07-21) | **Nuevo** — `optional`. `manager=apt-vendor-repo` contra el repositorio oficial de Oracle (`download.virtualbox.org`), nunca el paquete `virtualbox` de Ubuntu (suele quedar desactualizado — criterio explícito del dueño del proyecto de priorizar siempre la fuente más actualizada). El nombre del paquete (`virtualbox-X.Y`) se resuelve dinámicamente tras agregar el repo, sin hardcodear una versión. Primer instalador que depende de un módulo de kernel (`vboxdrv` vía DKMS): `status` distingue `BROKEN` (paquete instalado, módulo no cargado) de `INSTALLED`. `subcategory=virtualization` (nueva). `requires_manual_validation=yes`: ningún contenedor Docker de este proyecto puede cargar un módulo de kernel real, se valida en `tests/manual/` (Hito 19). El "VirtualBox Extension Pack" (licencia PUEL) queda deliberadamente fuera de este instalador |
 | `install_ngrok.sh` | ngrok (Hito 28, 2026-07-21) | **Nuevo** — `optional`. `manager=apt-vendor-repo` contra el repositorio oficial (`ngrok-agent.s3.amazonaws.com`), clave ya lista vía `apt_vendor_repo_fetch_file_plain` (mismo mecanismo que Brave). Distro/codename fijo `bookworm` (Debian, no Ubuntu — mismo patrón que Slack/OnlyOffice). `requires_manual_validation=yes` (solo prueba mockeada en esta ronda) |
-| `install_ollama.sh` | Ollama (Hito 28, 2026-07-21) | **Nuevo** — `optional`. `manager=curl-script` (`ollama.com/install.sh`), pero `uninstall_tool()` NO reutiliza la convención `~/.local/bin/<binario>` del resto del grupo curl-script: sigue los pasos de desinstalación documentados oficialmente por Ollama (detener/deshabilitar el servicio systemd, quitar el binario y el usuario/grupo dedicados). `category=development`, `subcategory=ai-runtime` (nueva, distinta de `ai-cli`/`ai-agent`: es un runtime local de LLM, no un asistente de código). `requires_manual_validation=yes` |
-| `install_claude_code.sh`, `install_codex_cli.sh`, `install_opencode.sh` | Claude Code, Codex CLI, OpenCode (CLIs de desarrollo, Hito 16) | **Mantener** — `required`, confirmado con el dueño del proyecto. `manager=curl-script` (nuevo, ver [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md)): script oficial `curl \| bash/sh` de cada proveedor, instala a `~/.local/bin`. `subcategory=ai-cli` (ver [ADR 0036](adr/0036-candidatas-de-ia-en-categorias-existentes.md)). `update`/`repair` se rechazan a propósito; `reinstall` usa el fallback mecánico del dispatcher; `requires_manual_validation=yes` (sin prueba funcional real contra los dominios oficiales en esta ronda) |
-| `install_antigravity.sh` | Antigravity CLI (`agy`) | **Mantener** — `optional`, confirmado con el dueño del proyecto. Mismo mecanismo `curl-script` que Claude Code/Codex CLI/OpenCode. Solo el CLI: el IDE/Desktop de Antigravity queda explícitamente diferido (sin apt/snap oficial, solo tarball manual sin checksum/firma, ver ADR 0037) |
 | `install_soapui.sh` | SoapUI (Hito 29, 2026-07-22) | **Nuevo** — `optional`. `manager=izpack-installer` (nuevo, primer y único caso hasta ahora): instalador `.sh` tipo IzPack en modo silencioso (`-q`), sin alias estable de "última versión" — la URL se resuelve dinámicamente contra la API de GitHub Releases del repo oficial vía `scripts/lib/github_release.sh` (nuevo). Alto grado de incertidumbre documentado explícitamente en el propio script: no está confirmado el directorio final de instalación ni si `-q` basta por sí solo en un entorno headless; `install_tool()` busca el binario en ubicaciones plausibles y rechaza con un mensaje explícito apuntando a `tests/manual/` si no lo encuentra. `requires_manual_validation=yes` |
 
 ## Productivity
@@ -108,8 +132,37 @@ Ex miembros del agrupador "Multimedia Tools" (ver [ADR 0031](adr/0031-separar-in
 | `install_localsend.sh` | LocalSend (Hito 29, 2026-07-22) | **Nuevo** — `optional`. `manager=deb-direct`, URL resuelta dinámicamente contra la API de GitHub Releases del repo oficial (`scripts/lib/github_release.sh`) en vez de una URL fija (a diferencia de Chrome/MongoDB Compass/Discord). LocalSend no publica repositorio APT propio ni snap oficial confirmado. El nombre del paquete resultante (`localsend_app`) está inferido del app id, no confirmado por documentación oficial — a verificar en la validación manual (`tests/manual/`, Hito 19). `subcategory=file-sharing` (nueva). `requires_manual_validation=yes` |
 | `install_steam.sh` | Steam (Hito 29, 2026-07-22) | **Nuevo** — `optional`. `manager=apt` (apt-simple, paquete oficial `steam-installer`), con un paso adicional real en `install_tool()`: habilita la arquitectura `i386` (`dpkg --add-architecture i386` + `apt-get update`) antes de instalar si todavía no está habilitada — requisito confirmado en la investigación de este hito, sin el cual `steam-libs-i386` falla por dependencias no satisfechas. `subcategory=gaming` (nueva). `requires_manual_validation=yes` |
 | `install_okular.sh` | Okular (Hito 29, 2026-07-22) | **Nuevo** — `optional`. `manager=apt` (apt-simple), sin lógica especial, mismo patrón que `install_ranger.sh`. `requires_manual_validation=no` (mismo criterio que nnn/lf/fzf/thefuck/jq: solo mocks, sin prueba funcional real en esta ronda, pero sin ningún mecanismo que amerite marcarlo como pendiente de validación manual) |
-| `install_claude_desktop.sh` | Claude Desktop (incluye Cowork) | **Mantener** — `optional`, confirmado con el dueño del proyecto (Hito 16). Repo APT propio de Anthropic (`downloads.claude.ai/claude-desktop/apt/stable`), `manager=apt-vendor-repo` (reutiliza `scripts/lib/apt_vendor_repo.sh`, mismo patrón que Docker/VS Code/Cursor). Cowork requiere KVM/~25 GB disco/8 GB RAM, no validado por el instalador. `subcategory=ai-agent` (ver [ADR 0036](adr/0036-candidatas-de-ia-en-categorias-existentes.md)) |
+
+## AI
+
+**Nota (2026-07-22, [ADR 0043](adr/0043-consolidar-herramientas-de-ia-en-category-ai.md)):** las 10 herramientas de IA del catálogo se consolidaron en una `category=ai` propia, con 4 subcategorías — antes vivían repartidas entre `## Development` (`subcategory=ai-cli`/`ai-runtime`), `## Editors` (`subcategory=ai-ide`) y `## Productivity` (`subcategory=ai-agent`), según el criterio de [ADR 0036](adr/0036-candidatas-de-ia-en-categorias-existentes.md) (agrupar por función real dentro de categorías generalistas). El dueño del proyecto pidió consolidarlas al revisar la categorización completa del catálogo.
+
+### Asistentes de escritorio (`subcategory=ai-assistants`)
+
+| Script | Propósito | Decisión |
+|---|---|---|
+| `install_claude_desktop.sh` | Claude Desktop (incluye Cowork) | **Mantener** — `optional`, confirmado con el dueño del proyecto (Hito 16). Repo APT propio de Anthropic (`downloads.claude.ai/claude-desktop/apt/stable`), `manager=apt-vendor-repo` (reutiliza `scripts/lib/apt_vendor_repo.sh`, mismo patrón que Docker/VS Code/Cursor). Cowork requiere KVM/~25 GB disco/8 GB RAM, no validado por el instalador |
 | `install_openclaw.sh`, `install_hermes_agent.sh` | OpenClaw, Hermes Agent (agentes de propósito general, Hito 16) | **Mantener** — `optional`, confirmado con el dueño del proyecto. `manager=curl-script` (ver [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md)), mismo mecanismo que las CLIs de desarrollo. OpenClaw requiere Node.js 22.22.3+/24.15+/25.9+, no gestionado por este instalador. Hermes Agent bundlea `uv`/Python/Node/ripgrep/ffmpeg/Git en su propio script oficial |
+
+### CLIs (`subcategory=ai-cli`)
+
+| Script | Propósito | Decisión |
+|---|---|---|
+| `install_claude_code.sh`, `install_codex_cli.sh`, `install_opencode.sh` | Claude Code, Codex CLI, OpenCode (CLIs de desarrollo, Hito 16) | **Mantener** — `required`, confirmado con el dueño del proyecto. `manager=curl-script` (nuevo, ver [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md)): script oficial `curl \| bash/sh` de cada proveedor, instala a `~/.local/bin`. `update`/`repair` se rechazan a propósito; `reinstall` usa el fallback mecánico del dispatcher; `requires_manual_validation=yes` (sin prueba funcional real contra los dominios oficiales en esta ronda) |
+| `install_antigravity.sh` | Antigravity CLI (`agy`) | **Mantener** — `optional`, confirmado con el dueño del proyecto. Mismo mecanismo `curl-script` que Claude Code/Codex CLI/OpenCode. Solo el CLI: el IDE/Desktop de Antigravity vive por separado (ver más abajo) |
+
+### IDEs (`subcategory=ai-ide`)
+
+| Script | Propósito | Decisión |
+|---|---|---|
+| `install_cursor.sh` | Cursor | Mantener — corregido en el Hito 9: pasó de AppImage (x86_64 hardcodeado, sin checksum) a su repo APT oficial (`downloads.cursor.com/aptrepo`, `signed-by`, amd64+arm64), ver [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md). **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh`, `scripts/lib/apt.sh` y `scripts/lib/apt_vendor_repo.sh` (nuevo, grupo vendor-repo); `status` distingue `OUTDATED`/`BROKEN` igual que el resto de los instaladores APT migrados |
+| `install_antigravity_ide.sh` | Antigravity IDE (Google) | **Mantener** — `optional`, agregado 2026-07-21 (Hito 16). Repo APT propio de Google (`us-central1-apt.pkg.dev`), `manager=apt-vendor-repo` (reutiliza `scripts/lib/apt_vendor_repo.sh`, mismo patrón que VS Code/Cursor). Corrige la investigación original de [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md) (solo tarball manual sin firma) — ver [ADR 0041](adr/0041-antigravity-ide-via-repo-apt-oficial.md). Distinto de `install_antigravity.sh` (el CLI `agy`) |
+
+### Modelos locales (`subcategory=local-models`)
+
+| Script | Propósito | Decisión |
+|---|---|---|
+| `install_ollama.sh` | Ollama (Hito 28, 2026-07-21) | **Nuevo** — `optional`. `manager=curl-script` (`ollama.com/install.sh`), pero `uninstall_tool()` NO reutiliza la convención `~/.local/bin/<binario>` del resto del grupo curl-script: sigue los pasos de desinstalación documentados oficialmente por Ollama (detener/deshabilitar el servicio systemd, quitar el binario y el usuario/grupo dedicados). Runtime local de LLM, distinto de un asistente de código. `requires_manual_validation=yes` |
 
 ## Maintenance
 
@@ -123,7 +176,7 @@ Ex miembros del agrupador "Multimedia Tools" (ver [ADR 0031](adr/0031-separar-in
 
 ## Candidatas de IA — Antigravity IDE, diferido
 
-Las 7 candidatas de IA del Hito 16 ya están implementadas (ver filas en `## Development` y `## Productivity` arriba). Queda un único punto diferido a propósito: el **IDE/Desktop de Antigravity** — no tiene apt/snap oficial, solo un tarball manual sin checksum/firma descripta, lo que no cumple el estándar de seguridad del proyecto (`AGENT.md` §16, ver [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md)). Se retoma cuando exista un mecanismo verificable; mientras tanto, solo su CLI (`agy`) está instalado vía `install_antigravity.sh`.
+Las 7 candidatas de IA del Hito 16 ya están implementadas (ver `## AI` arriba). Queda un único punto diferido a propósito: el **IDE/Desktop de Antigravity** — no tiene apt/snap oficial, solo un tarball manual sin checksum/firma descripta, lo que no cumple el estándar de seguridad del proyecto (`AGENT.md` §16, ver [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md)). Se retoma cuando exista un mecanismo verificable; mientras tanto, solo su CLI (`agy`) está instalado vía `install_antigravity.sh`.
 
 **Descartado explícitamente:** Codex Desktop (app Electron de OpenAI) — sin ninguna opción oficial de Linux; los únicos paquetes existentes son repaquetados de terceros sin firma real (`[trusted=yes]`), lo que no cumple el estándar de seguridad del proyecto (`AGENT.md` §16).
 
