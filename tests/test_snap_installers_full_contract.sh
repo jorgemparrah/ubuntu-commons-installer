@@ -3,8 +3,9 @@
 #
 # Prueba simulada (mocks) del ciclo de vida completo de los instaladores
 # Snap migrados en el Hito 11 (DBeaver, GitKraken, Insomnia, Postman,
-# GIMP, Spotify, Zoom) más Yazi, Telegram Desktop y Obsidian (agregados
-# después; OBS Studio retirado en ADR 0038 al migrar a su PPA oficial):
+# GIMP, Spotify, Zoom) más Yazi, Telegram Desktop, Obsidian y Chromium
+# (agregados después; OBS Studio retirado en ADR 0038 al migrar a su PPA
+# oficial):
 # install/uninstall/update/reinstall/repair sobre scripts/lib/snap.sh +
 # scripts/lib/installer_cli.sh.
 # Complementa, sin reemplazar, tests/test_snap_installers_contract.sh
@@ -139,6 +140,7 @@ test_snap_full_contract "scripts/productivity/install_zoom.sh" "Zoom" "zoom-clie
 test_snap_full_contract "scripts/system/install_yazi.sh" "Yazi" "yazi" "yes"
 test_snap_full_contract "scripts/productivity/install_telegram_desktop.sh" "Telegram Desktop" "telegram-desktop" "no"
 test_snap_full_contract "scripts/productivity/install_obsidian.sh" "Obsidian" "obsidian" "yes"
+test_snap_full_contract "scripts/productivity/install_chromium.sh" "Chromium" "chromium" "no"
 
 print_test_summary
 exit_with_test_summary

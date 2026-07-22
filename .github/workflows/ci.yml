@@ -127,6 +127,7 @@ jobs:
           - libreoffice-installer
           - keepassxc-installer
           - onlyoffice-installer
+          - brave-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -404,6 +405,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I38"
             cmd: bash tests/test_onlyoffice_installer.sh
+          - case: brave-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I39"
+            cmd: bash tests/test_brave_installer.sh
     steps:
       - uses: actions/checkout@v7
 

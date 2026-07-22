@@ -1344,7 +1344,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1357,9 +1357,22 @@ Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar Bra
 * **Brave** — repositorio APT oficial documentado (`brave-browser-apt-release.s3.brave.com`), mismo patrón `apt-vendor-repo` ya usado por VS Code/Cursor/Docker.
 * **Chromium** — en Ubuntu moderno el paquete `chromium-browser` del repositorio oficial es en realidad un wrapper que instala el snap (`chromium`, mantenido por Canonical) — confirmar este detalle antes de asumir que es un `apt-simple` tradicional como Chrome no lo es.
 
+### Investigación (2026-07-21)
+
+* **Brave**: confirmado en `brave.com/linux/` (fuente oficial). A diferencia de Docker/VS Code/Cursor/VirtualBox/Slack/OnlyOffice, Brave publica su clave GPG YA lista para `signed-by` (sin `gpg --dearmor`) y, en vez de una línea `deb [...]` para construir a mano, un archivo `.sources` completo en formato DEB822 — ambos se descargan tal cual.
+* **Chromium**: confirmado (Launchpad + fuentes técnicas): en Ubuntu 24.04+ `chromium-browser` de los repos oficiales es un paquete transicional vacío que en la práctica instala el snap `chromium`, publicado por Canonical (cuenta verificada), sin `--classic`.
+
+### Implementación (2026-07-21)
+
+* **`scripts/lib/apt_vendor_repo.sh` ampliado**: nuevo helper genérico `apt_vendor_repo_fetch_file_plain <url> <dest_path>` para archivos que un proveedor publica ya listos para usar (sin `gpg --dearmor` ni una línea `deb [...]` a construir) — primer caso real, Brave, para su clave y su archivo `.sources`. `apt_vendor_repo_fetch_key_plain` (ya usado por Docker) pasa a ser un alias de este nuevo helper, sin cambiar su comportamiento.
+* **Hallazgo real durante la implementación**: la primera versión de `apt_vendor_repo_fetch_file_plain` escribía directo al destino final vía `curl -o <dest_path>` (como el propio Docker ya hacía con `fetch_key_plain`) — funcionaba en la práctica (Docker solo tiene prueba funcional real, con root de verdad), pero al escribir la primera prueba MOCKEADA de este mecanismo (Brave) quedó expuesto que ese patrón deja un archivo parcial en el destino si la descarga se corta a mitad de camino, y que no es testeable sin permisos reales. Se corrigió para descargar siempre a un temporal primero y recién instalar de forma atómica con `sudo install -D` — mismo patrón en dos pasos que `apt_vendor_repo_fetch_key_dearmored`, ahora consistente en toda la biblioteca. No cambia el comportamiento observable de Docker.
+* `scripts/productivity/install_brave.sh` (`manager=apt-vendor-repo`) y `scripts/productivity/install_chromium.sh` (`manager=snap`, sin `--classic`).
+* `subcategory=browsers` nueva. Chromium se agregó a los tests parametrizados existentes del grupo Snap (I10/I22); Brave tiene una prueba mockeada dedicada nueva (I39), con el mismo cuidado de mockear `install` explícitamente (lección de VirtualBox/Slack/OnlyOffice).
+* Ambos quedan `requires_manual_validation=yes` (solo mocks en esta ronda).
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

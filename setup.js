@@ -92,6 +92,10 @@ const tools = [
     { name: 'Obsidian', script: 'scripts/productivity/install_obsidian.sh', category: 'PRODUCTIVITY' },
     { name: 'KeePassXC', script: 'scripts/productivity/install_keepassxc.sh', category: 'PRODUCTIVITY' },
 
+    // PRODUCTIVITY — navegadores (Hito 27)
+    { name: 'Brave', script: 'scripts/productivity/install_brave.sh', category: 'PRODUCTIVITY' },
+    { name: 'Chromium', script: 'scripts/productivity/install_chromium.sh', category: 'PRODUCTIVITY' },
+
     // PRODUCTIVITY — agentes de IA de propósito general (Hito 16, ver ADR 0036/0037)
     { name: 'Claude Desktop', script: 'scripts/productivity/install_claude_desktop.sh', category: 'PRODUCTIVITY' },
     { name: 'OpenClaw', script: 'scripts/productivity/install_openclaw.sh', category: 'PRODUCTIVITY' },
