@@ -115,6 +115,31 @@ EOF
         chmod +x "${UCI_MOCK_BIN}/${cmd}"
     done
 
+    # 'install'/'tee': apt_vendor_repo_fetch_key_dearmored/apt_vendor_repo_write_list
+    # (scripts/lib/apt_vendor_repo.sh) los invocan vía 'sudo' para escribir
+    # el keyring/la lista de repos en rutas reales del sistema
+    # (/usr/share/keyrings, /etc/apt/sources.list.d). Como el mock de
+    # 'sudo' de acá hace passthrough directo (no simula privilegios), sin
+    # mockear también 'install'/'tee' se invocarían los binarios REALES
+    # del sistema contra esas rutas, fallando por permisos en un
+    # contenedor no-root (bug real encontrado en la primera corrida de
+    # CI de este test). Se mockean con el mismo criterio que el resto:
+    # solo registran la invocación, nunca tocan el sistema real.
+    cat > "${UCI_MOCK_BIN}/install" <<EOF
+#!/usr/bin/env bash
+echo "install \$*" >> "${UCI_MOCK_LOG}"
+exit 0
+EOF
+    chmod +x "${UCI_MOCK_BIN}/install"
+
+    cat > "${UCI_MOCK_BIN}/tee" <<EOF
+#!/usr/bin/env bash
+echo "tee \$*" >> "${UCI_MOCK_LOG}"
+cat > /dev/null
+exit 0
+EOF
+    chmod +x "${UCI_MOCK_BIN}/tee"
+
     cat > "${UCI_MOCK_BIN}/groups" <<'EOF'
 #!/usr/bin/env bash
 echo "usuario vboxusers sudo"
