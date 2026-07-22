@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # tests/test_deb_direct_full_contract.sh
 #
-# Prueba simulada (mocks) del ciclo de vida completo de los 2 instaladores
-# deb-directo migrados en el Hito 11 (Google Chrome, MongoDB Compass):
+# Prueba simulada (mocks) del ciclo de vida completo de los instaladores
+# deb-directo migrados en el Hito 11 (Google Chrome, MongoDB Compass) más
+# Discord (Hito 25, agregado después):
 # install/uninstall/update/reinstall/repair sobre scripts/lib/apt.sh +
 # scripts/lib/deb_direct.sh + scripts/lib/installer_cli.sh. Complementa,
 # sin reemplazar, tests/test_chrome_arch_check.sh (I09, ya cubre la
@@ -194,6 +195,7 @@ test_deb_direct_full_contract() {
 
 test_deb_direct_full_contract "scripts/productivity/install_chrome.sh" "Google Chrome" "google-chrome-stable" "google-chrome" "google-chrome-stable_current_amd64.deb"
 test_deb_direct_full_contract "scripts/development/install_mongodb_compass.sh" "MongoDB Compass" "mongodb-compass" "mongodb-compass" "mongodb-compass_1.46.8_amd64.deb"
+test_deb_direct_full_contract "scripts/productivity/install_discord.sh" "Discord" "discord" "discord" "discord.deb"
 
 print_test_summary
 exit_with_test_summary

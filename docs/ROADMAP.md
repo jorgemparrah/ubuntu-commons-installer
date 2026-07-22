@@ -1251,7 +1251,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1265,9 +1265,24 @@ Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar Tel
 * **Slack** — Slack Technologies publica un `.deb` oficial y también un snap; evaluar cuál conviene como mecanismo gestionado (ver orden de fuentes por categoría, [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md)).
 * **Discord** — no publica repositorio APT oficial; típicamente `.deb` de descarga directa (mismo mecanismo `deb-direct` ya usado por Chrome/MongoDB Compass) o Snap.
 
+### Investigación (2026-07-21)
+
+* **Telegram Desktop**: Telegram FZ-LLC no publica repositorio APT propio. El snap `telegram-desktop` (publicado por la cuenta verificada de Telegram FZ-LLC en Snap Store) es la única fuente mantenida directamente por el fabricante; no requiere `--classic` (confinamiento estricto normal).
+* **Slack**: publica repositorio APT propio hosteado en Packagecloud (`packagecloud.io/slacktechnologies/slack`), preferido sobre el `.deb` suelto por permitir `apt upgrade` (mismo criterio de priorizar la fuente más "nativa" para actualizaciones). La línea del repo usa `ubuntu trusty` como distro/codename fijo, tal como documentan las instrucciones oficiales — no depende de la versión real de Ubuntu.
+* **Discord**: confirmado que no publica repositorio APT oficial, pero sí un endpoint estable (`discord.com/api/download?platform=linux&format=deb`) que siempre resuelve a la última versión, sin necesidad de fijar ni scrapear un número de versión (mecanismo `deb-direct`, mejor que el de MongoDB Compass en ese sentido).
+
+### Implementación (2026-07-21)
+
+* `scripts/productivity/install_telegram_desktop.sh` (`manager=snap`) — reutiliza `scripts/lib/snap.sh` sin cambios.
+* `scripts/productivity/install_slack.sh` (`manager=apt-vendor-repo`) — reutiliza `scripts/lib/apt_vendor_repo.sh` sin cambios.
+* `scripts/productivity/install_discord.sh` (`manager=deb-direct`) — reutiliza `scripts/lib/deb_direct.sh` sin cambios.
+* `subcategory=communication` nueva en `tools_catalog.sh` para los 3.
+* Cobertura de pruebas: Telegram Desktop se agregó a los tests parametrizados ya existentes del grupo Snap (`tests/test_snap_installers_contract.sh`/I10, `tests/test_snap_installers_full_contract.sh`/I22); Discord se agregó al parametrizado del grupo deb-directo (`tests/test_deb_direct_full_contract.sh`/I23); Slack (primer caso `apt-vendor-repo` con una prueba mockeada dedicada, ya que Docker/VS Code/Cursor solo tenían pruebas funcionales reales) tiene `tests/test_slack_installer.sh` (I35) nuevo — este último expuso y corrigió un bug real: el mock de `sudo` de passthrough directo dejaba que `sudo install`/`sudo tee` (usados por `apt_vendor_repo_fetch_key_dearmored`/`apt_vendor_repo_write_list`) invocaran los binarios reales del sistema, fallando por permisos en CI; se corrigió mockeando también `install`/`tee` (mismo fix aplicado retroactivamente a `tests/test_virtualbox_installer.sh`, donde se encontró primero).
+* `requires_manual_validation=yes` en los 3: ninguno tiene todavía una prueba funcional real (solo mocks); Telegram Desktop además hereda la limitación estructural del grupo Snap (sin systemd en los contenedores de este proyecto).
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 
