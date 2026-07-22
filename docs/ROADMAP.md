@@ -1550,7 +1550,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1563,9 +1563,19 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=d
 * **Beekeeper Studio** — cliente SQL multi-motor, GPL-3.0.
 * **DbGate** — cliente SQL/NoSQL multi-motor, FOSS.
 
+### Investigación (2026-07-22)
+
+* **Beekeeper Studio**: confirmado en vivo que el release "latest" de GitHub (v5.9.2) publica `beekeeper-studio_5.9.2_amd64.deb`. Inspeccionando el `.deb` real (`dpkg-deb`): el `postinst` crea el symlink `/usr/bin/beekeeper-studio` automáticamente y sugiere fuertemente la existencia de un repositorio APT oficial propio (migra `sources.list.d/beekeeper-studio.list` a `beekeeper-studio-app.list`, embebe una clave GPG), pero no se pudo confirmar la URL/línea de repo exacta por una restricción de red del entorno de desarrollo — se implementó con `deb-direct` (confirmado funcionando) en vez de arriesgar una configuración de `apt-vendor-repo` no verificada; queda como candidato a migrar en una ronda futura. Licencia GPL-3.0 confirmada, la edición "Ultimate" de pago no bloquea el uso básico.
+* **DbGate**: confirmado en vivo que el release "latest" (v7.2.3) publica `dbgate-7.2.3-linux_amd64.deb`, junto a varios assets de la edición "premium" de pago (sin `.deb` para Linux, solo AppImage) y un alias `dbgate-latest.deb` en el mismo release — el patrón de resolución exige un dígito justo después de `dbgate-` para excluir ambos, verificado. Inspeccionando el `.deb` real: el `postinst` crea `/usr/bin/dbgate` automáticamente. Licencia MIT confirmada para la edición community.
+
+### Implementación (2026-07-22)
+
+* `scripts/development/install_beekeeper_studio.sh` y `scripts/development/install_dbgate.sh` (`manager=deb-direct` vía `scripts/lib/github_release.sh`, mismo mecanismo que LocalSend/Hoppscotch) — pruebas mockeadas dedicadas nuevas (I46, I47).
+* Ambos quedan `requires_manual_validation=yes`.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

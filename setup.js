@@ -80,6 +80,10 @@ const tools = [
     { name: 'Bruno', script: 'scripts/development/install_bruno.sh', category: 'DEVELOPMENT' },
     { name: 'Hoppscotch', script: 'scripts/development/install_hoppscotch.sh', category: 'DEVELOPMENT' },
 
+    // DEVELOPMENT — clientes de bases de datos open source (Hito 32)
+    { name: 'Beekeeper Studio', script: 'scripts/development/install_beekeeper_studio.sh', category: 'DEVELOPMENT' },
+    { name: 'DbGate', script: 'scripts/development/install_dbgate.sh', category: 'DEVELOPMENT' },
+
     // AI — asistentes de escritorio (ver ADR 0043)
     { name: 'Claude Desktop', script: 'scripts/productivity/install_claude_desktop.sh', category: 'AI' },
     { name: 'OpenClaw', script: 'scripts/productivity/install_openclaw.sh', category: 'AI' },

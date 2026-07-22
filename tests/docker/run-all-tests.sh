@@ -115,6 +115,8 @@ run_suite "tests/test_localsend_installer.sh" bash tests/test_localsend_installe
 run_suite "tests/test_steam_installer.sh" bash tests/test_steam_installer.sh
 run_suite "tests/test_soapui_installer.sh" bash tests/test_soapui_installer.sh
 run_suite "tests/test_hoppscotch_installer.sh" bash tests/test_hoppscotch_installer.sh
+run_suite "tests/test_beekeeper_studio_installer.sh" bash tests/test_beekeeper_studio_installer.sh
+run_suite "tests/test_dbgate_installer.sh" bash tests/test_dbgate_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then
