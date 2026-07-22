@@ -1,7 +1,7 @@
 # 0036. Distribuir las candidatas de IA del Hito 16 en categorías existentes, no una `ai-tools` nueva
 
 Fecha: 2026-07-20
-Estado: Aceptada
+Estado: Reemplazada por [0043](0043-consolidar-herramientas-de-ia-en-category-ai.md)
 
 ## Contexto
 

@@ -1500,6 +1500,728 @@ Todo — bloqueado hasta que el dueño del proyecto revise el alcance y dé luz 
 
 ---
 
+# Hito 31
+
+## Ampliación del catálogo: clientes API open source
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto a partir de una investigación de alternativas FOSS por subcategoría (`category=development`/`subcategory=api-clients`, mismo grupo que Postman/Insomnia/SoapUI):
+
+* **Bruno** — cliente API git-native, local-first (sin sincronización a la nube por defecto). **Nota:** el ítem 7 de "Preguntas resueltas por el dueño del proyecto (2026-07-15)" registra una decisión previa de NO agregarlo ("se mantienen Postman e Insomnia") — esta instrucción del 2026-07-22 la reemplaza explícitamente. Licencia: núcleo MIT, con una edición "Bruno Cloud" de pago que NO es necesaria para el uso local — confirmar en la investigación que ninguna función esencial quede detrás de esa edición antes de implementar.
+* **Hoppscotch** — cliente API 100% FOSS (MIT), self-hosteable; existe tanto como app de escritorio (Electron/Tauri) como versión web.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 32
+
+## Ampliación del catálogo: clientes de bases de datos open source
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=development`/`subcategory=db-clients`, mismo grupo que DBeaver/MongoDB Compass):
+
+* **Beekeeper Studio** — cliente SQL multi-motor, GPL-3.0.
+* **DbGate** — cliente SQL/NoSQL multi-motor, FOSS.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 33
+
+## Ampliación del catálogo: contenedores, Git TUI y virtualización libre
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
+
+* **Podman** (`subcategory=containers`, mismo grupo que Docker/kubectl) — motor de contenedores daemonless/rootless, Apache-2.0, ya está en el repositorio `universe` oficial de Ubuntu (instalación más simple que Docker, que necesita `apt-vendor-repo`). Evaluar si conviven ambos en el catálogo o si amerita alguna nota de "elegir uno u otro" (no son mutuamente excluyentes a nivel de paquete, pero sí a nivel de mensaje al usuario).
+* **Lazygit** (`subcategory=git-tools`, mismo grupo que GitHub CLI/GitKraken) — TUI de Git, MIT, ya tiene un PPA propio activo (`ppa:lazygit-team/daily`).
+* **virt-manager** (`subcategory=virtualization`, mismo grupo que VirtualBox) — front-end GTK para QEMU/KVM, GPL, sin el Extension Pack propietario que restringe a VirtualBox; paquete en el repositorio oficial de Ubuntu. Investigar si además hace falta gestionar `qemu-kvm`/`libvirt` como dependencia (posible primer caso real de `depends_on` fuera del grupo shell-personalization, ver ADR 0042).
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 34
+
+## Ampliación del catálogo: editores libres
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=editors`):
+
+* **VSCodium** (`subcategory=gui-editors`, mismo grupo que Visual Studio Code) — mismo binario de VS Code sin telemetría de Microsoft ni marca registrada; tiene su propio repositorio APT documentado.
+* **Neovim** (`subcategory=terminal-editors`, mismo grupo que Vim) — se agrega como complemento, no reemplazo de Vim (LSP nativo, desarrollo más activo). Confirmar si conviene distinguir "Vim clásico" de "Neovim" como dos herramientas separadas y coexistentes en el catálogo (mismo criterio que Ghostty/Terminator/WezTerm conviviendo en `terminals`).
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 35
+
+## Ampliación del catálogo: gráficos
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=multimedia`/`subcategory=graphics`, mismo grupo que GIMP):
+
+* **Inkscape** — editor de gráficos vectoriales, GPL-3.0, complementario a GIMP (que es solo raster).
+* **Krita** — pintura digital, GPL-3.0, complementario a GIMP.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 36
+
+## Ampliación del catálogo: comunicación y notas open source
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=productivity`):
+
+* **Element** (`subcategory=communication`, mismo grupo que Slack/Discord/Telegram Desktop/Zoom) — cliente oficial del protocolo Matrix, Apache-2.0, repo APT oficial.
+* **Signal Desktop** (`subcategory=communication`) — cliente de Signal Messenger, AGPL-3.0, repo APT oficial de signal.org.
+* **Joplin** (`subcategory=notes`, mismo grupo que Obsidian) — alternativa 100% FOSS a Obsidian (que es gratis pero de código cerrado), AGPL-3.0, repo APT oficial.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 37
+
+## Ampliación del catálogo: gaming open source
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=productivity`/`subcategory=gaming`, mismo grupo que Steam):
+
+* **Lutris** — gestor de bibliotecas de juegos multi-plataforma (Wine/Proton/emuladores/nativos), GPL-3.0, en apt/repo propio.
+* **Heroic Games Launcher** — launcher FOSS para Epic Games Store/GOG/Amazon Games (usa Legendary como backend), publica `.deb`/AppImage en GitHub Releases.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 38
+
+## Ampliación del catálogo: CLI moderna — clientes HTTP
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=system`/`subcategory=cli-utils`, mismo grupo que fzf/thefuck/jq/yq):
+
+* **HTTPie** — cliente HTTP de línea de comandos con salida legible, BSD-3-Clause.
+* **xh** — reimplementación de HTTPie en Rust, mucho más rápida, MIT/Apache-2.0.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 39
+
+## Ampliación del catálogo: CLI moderna — utilidades de sistema y navegación
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=system`/`subcategory=cli-utils`):
+
+* **dust** — reemplazo de `du` con salida en árbol, Apache-2.0.
+* **duf** — reemplazo de `df` con salida más legible, MIT.
+* **procs** — reemplazo de `ps`, MIT.
+* **zoxide** — reemplazo inteligente de `cd` (aprende rutas frecuentes), MIT.
+* **btop** — monitor de recursos en TUI, Apache-2.0.
+* **tldr** — páginas de ayuda simplificadas (alternativa a `man`), varias licencias FOSS según el cliente elegido — confirmar cuál (hay varios clientes de `tldr-pages`, p. ej. el oficial en Node o `tealdeer` en Rust).
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 40
+
+## Ampliación del catálogo: terminales adicionales
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=system`/`subcategory=terminals`, mismo grupo que Ghostty/Terminator/WezTerm):
+
+* **Kitty** — terminal acelerada por GPU, GPL-3.0, ya está en el repositorio oficial de Ubuntu.
+* **Alacritty** — terminal acelerada por GPU, Apache-2.0, con PPA propio activo (`ppa:mmstick76/alacritty`).
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 41
+
+## Campo `description` retroactivo para las 74 herramientas existentes
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto, ver [ADR 0044](adr/0044-campo-description-en-el-catalogo.md): agregar `description=<texto corto>` a las 74 entradas ya existentes en `scripts/lib/tools_catalog.sh` (trabajo de una sola pasada, no incremental — separado de cualquier otro Hito para no mezclar una migración retroactiva grande con cambios funcionales). Incluye investigar y decidir el mecanismo concreto para mostrarla en `setup.js` (checklist interactivo de `inquirer`) además de `setup.sh list`/`info`.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 42
+
+## Ampliación del catálogo: CLIs de nube e infraestructura como código
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
+
+* **Terraform** (`category=development`, subcategoría nueva a definir en la investigación — p. ej. `iac`) — HashiCorp dejó de publicar Terraform bajo licencia FOSS (BUSL desde 2023); investigar si conviene igual incluirlo (uso gratuito permitido salvo competir con HashiCorp) o solo ofrecer OpenTofu.
+* **OpenTofu** — fork FOSS (MPL-2.0) de Terraform tras el cambio de licencia, mantenido por la Linux Foundation; candidato preferido si se prioriza estrictamente FOSS.
+* **AWS CLI**, **Azure CLI**, **Google Cloud CLI** (mismo grupo, subcategoría `iac` o una dedicada `cloud-cli`) — clientes CLI oficiales de cada proveedor; cada uno con su propio mecanismo de instalación oficial (investigar: AWS CLI vía instalador `.zip` oficial, Azure CLI vía repo APT/Microsoft, Google Cloud CLI vía repo APT propio de Google).
+* **pnpm** (`category=development`, `subcategory=package-managers`, mismo grupo que Yarn) — gestor de paquetes Node.js, mismo mecanismo `manager=mise` que Yarn (ver [ADR 0017](adr/0017-mise-instala-yarn-pnpm-directo.md), que ya contempla pnpm vía Mise sin haberlo implementado hasta ahora).
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 43
+
+## Ampliación del catálogo: herramientas multimedia de línea de comandos
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=multimedia`, subcategoría nueva a definir en la investigación — p. ej. `conversion`, distinta de `capture`/`codecs`/`graphics`/`playback` ya existentes):
+
+* **ImageMagick** — suite de manipulación de imágenes por línea de comandos, en los repositorios oficiales de Ubuntu.
+* **FFmpeg** — conversión/procesamiento de audio y video por línea de comandos, en los repositorios oficiales de Ubuntu.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 44
+
+## Ampliación del catálogo: seguridad, sincronización y transferencia de archivos
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
+
+* **Bitwarden** (`category=productivity`, `subcategory=security`, mismo grupo que KeePassXC) — gestor de contraseñas, cliente de escritorio FOSS (AGPL-3.0); confirmar mecanismo (snap oficial vs. `.deb` de GitHub Releases).
+* **Syncthing** (`category=productivity`, `subcategory=file-sharing`, mismo grupo que LocalSend) — sincronización de archivos P2P sin nube, MPL-2.0; probablemente ya está en los repositorios oficiales de Ubuntu.
+* **FileZilla** (`category=productivity`, `subcategory=file-sharing`) — cliente FTP/SFTP, GPL-2.0, en los repositorios oficiales de Ubuntu.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 45
+
+## Ampliación del catálogo: CLI moderna — archivos y compresión
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=system`/`subcategory=cli-utils`):
+
+* **ripgrep** (`rg`) — búsqueda de texto recursiva, mucho más rápida que `grep`, MIT/Unlicense, en los repositorios oficiales de Ubuntu.
+* **fd** (`fd-find`/`fdfind` en Ubuntu) — reemplazo de `find`, MIT/Apache-2.0, en los repositorios oficiales de Ubuntu.
+* **bat** (`batcat` en Ubuntu) — reemplazo de `cat` con resaltado de sintaxis, MIT/Apache-2.0, en los repositorios oficiales de Ubuntu.
+* **eza** — reemplazo de `ls` (fork mantenido de `exa`), MIT, con repositorio APT propio (`deb.gierens.de`).
+* **tree** — listado de directorios en árbol, GPL-2.0, en los repositorios oficiales de Ubuntu.
+* **unzip**, **zip** — utilidades de compresión estándar, en los repositorios oficiales de Ubuntu.
+* **rsync** — sincronización/transferencia de archivos, GPL-3.0, en los repositorios oficiales de Ubuntu.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 46
+
+## Ampliación del catálogo: redes y túneles
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto. **Renombra el alcance de la subcategoría `networking`** (hoy solo ngrok, dentro de `category=development`) a un ámbito más amplio de redes y túneles — investigar si conviene mantenerla en `development` o moverla a `system`, dado que estas herramientas son más de infraestructura de red que de desarrollo puro:
+
+* **WireGuard** — VPN moderna integrada en el kernel de Linux, GPL-2.0, en los repositorios oficiales de Ubuntu.
+* **OpenVPN** — VPN tradicional, GPL-2.0, en los repositorios oficiales de Ubuntu.
+* **Tailscale** — mesh VPN basada en WireGuard, cliente open-source (BSD-3-Clause) aunque el servicio de coordinación es propietario (con capa gratuita); repositorio APT oficial propio.
+* **Cloudflare Tunnel** (`cloudflared`) — túneles salientes sin abrir puertos; el cliente es open-source (Apache-2.0/BSD según el componente), aunque depende del servicio de Cloudflare; repositorio APT oficial propio.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 47
+
+## Ampliación del catálogo: extras de terminal (visuales y decorativos)
+
+**Prioridad**
+
+Baja
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=system`/`subcategory=extras`, mismo grupo que cmatrix):
+
+* **pipes.sh** — salvapantallas de terminal de tuberías animadas, script Bash sin paquete propio (instalación probable vía `git-clone` o descarga directa del script).
+* **fortune** (`fortune-mod`) — frases aleatorias, en los repositorios oficiales de Ubuntu.
+* **cowsay** — arte ASCII con frases, en los repositorios oficiales de Ubuntu.
+* **lolcat** — colorea la salida de terminal, en los repositorios oficiales de Ubuntu (gem de Ruby empaquetado) o vía gem directo.
+* **figlet** — arte ASCII de texto grande, en los repositorios oficiales de Ubuntu.
+* **toilet** — similar a figlet con más efectos, en los repositorios oficiales de Ubuntu.
+* **xeyes** (paquete `x11-apps`) — ojos que siguen el cursor, en los repositorios oficiales de Ubuntu.
+* **fastfetch** — reemplazo moderno de neofetch (info del sistema con arte ASCII), MIT, con PPA propio o binario de GitHub Releases (neofetch está discontinuado, fastfetch es el sucesor activo recomendado por la comunidad).
+* **pokemon-colorscripts** — arte ASCII de Pokémon coloreado en terminal, sin paquete oficial de Ubuntu, instalación vía clon de repositorio GitHub.
+* **cbonsai** — árbol bonsai ASCII animado, en los repositorios oficiales de Ubuntu (24.04+) o compilación desde fuente en versiones más viejas.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 48
+
+## Ampliación del catálogo: virtualización de entornos de desarrollo y acceso remoto
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
+
+* **Vagrant** (`category=development`, `subcategory=virtualization`, mismo grupo que VirtualBox/virt-manager, Hito 33) — orquestación de máquinas virtuales de desarrollo reproducibles, licencia BUSL desde 2023 (igual que Terraform, ver Hito 42) — investigar si el uso gratuito sigue siendo viable o si conviene evaluar alternativas FOSS (p. ej. Vagrant sigue siendo de código fuente disponible, pero no OSI-approved desde el cambio de licencia).
+* **Remmina** (`category=productivity`, subcategoría nueva — p. ej. `remote-access`) — cliente de acceso remoto (RDP/VNC/SSH/SPICE), GPL-2.0, en los repositorios oficiales de Ubuntu.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 49
+
+## Ampliación del catálogo: editor de terminal y prompt de shell
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
+
+* **Helix** (`category=editors`, `subcategory=terminal-editors`, mismo grupo que Vim/Neovim, Hito 34) — editor modal con LSP integrado por defecto (sin plugins adicionales), MPL-2.0, con PPA propio o snap oficial.
+* **Starship** (`category=system`, `subcategory=shell-personalization`, mismo grupo que Oh My Zsh/Powerlevel10k) — prompt de shell multi-shell (bash/zsh/fish/nu), ISC License, instalador oficial `curl \| sh` (mismo mecanismo `curl-script` ya usado por las CLIs de IA, ver ADR 0037) o binario de GitHub Releases.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 50
+
+## Ampliación del catálogo: multimedia adicional
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=multimedia`):
+
+* **Kooha** (`subcategory=capture`, mismo grupo que OBS Studio/Cheese) — grabador de pantalla simple para GNOME/Wayland, GPL-3.0, Flatpak (sin paquete apt/snap oficial confirmado — investigar si este proyecto ya soporta Flatpak como mecanismo o si sería el primer caso).
+* **MPV** (`subcategory=playback`, mismo grupo que VLC) — reproductor multimedia minimalista basado en mplayer/mplayer2, GPL-2.0/LGPL-2.1, en los repositorios oficiales de Ubuntu.
+* **Papers** (`category=productivity`, `subcategory=office`, mismo grupo que LibreOffice/OnlyOffice/Okular) — visor/editor de documentos y PDF de GNOME (sucesor de Evince), GPL-3.0; investigar disponibilidad en Ubuntu 24.04/26.04 (proyecto relativamente nuevo dentro del ecosistema GNOME).
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 51
+
+## Ampliación del catálogo: notas y lanzadores de aplicaciones
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
+
+* **Logseq** (`category=productivity`, `subcategory=notes`, mismo grupo que Obsidian/Joplin, Hito 36) — notas en Markdown local con vista de grafo, AGPL-3.0, solo AppImage/Flatpak (sin paquete apt/snap oficial confirmado, mismo patrón de incertidumbre que LocalSend/SoapUI).
+* **Albert** (`category=productivity`, mismo grupo que ULauncher — evaluar si comparten subcategoría nueva `launchers`) — lanzador de aplicaciones extensible, GPL-3.0, con PPA propio (`ppa:nilarimogard/webupd8` está descontinuado — verificar el PPA activo actual del proyecto antes de implementar).
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 52
+
+## Ampliación del catálogo: análisis de red
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
+
+* **Wireshark** (subcategoría a definir — evaluar si encaja en el ámbito ampliado de "redes y túneles" del Hito 46 o merece la suya propia, ya que es análisis/diagnóstico, no VPN/túnel) — analizador de protocolos de red, GPL-2.0, en los repositorios oficiales de Ubuntu. Requiere el grupo `wireshark`/capacidades de captura de paquetes sin root — investigar si el instalador debe gestionar ese paso de configuración (similar en espíritu al grupo `vboxusers` de VirtualBox, Hito 24).
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 53
+
+## Ampliación del catálogo: interfaces locales de IA
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=ai`, `subcategory=local-models`, mismo grupo que Ollama, ver [ADR 0043](adr/0043-consolidar-herramientas-de-ia-en-category-ai.md)) — interfaces/frontends para correr modelos de lenguaje localmente, complementarias a Ollama (que es solo el runtime, sin interfaz gráfica propia):
+
+* **Open WebUI** — interfaz web self-hosteada para Ollama/OpenAI-compatible, MIT (con una cláusula de marca registrada adicional desde 2025 — confirmar en la investigación que no restringe el uso local antes de implementar), se instala vía Docker o `pip`, no como paquete del sistema — investigar el mecanismo más apropiado para este catálogo.
+* **AnythingLLM** — interfaz de escritorio + RAG local, MIT (aplicación núcleo), `.deb`/AppImage vía GitHub Releases.
+* **LM Studio** — interfaz de escritorio para correr modelos locales, **gratuito pero de código cerrado** (a diferencia de Open WebUI/AnythingLLM) — confirmar con el dueño del proyecto si se incluye pese a no ser FOSS (mismo criterio ya aceptado para Obsidian/Discord/Slack/etc., que tampoco son FOSS) antes de implementar.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 54
+
+## Instalar Nerd Font como configuración post-instalación de Powerlevel10k (y Starship)
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-22, pedido explícito del dueño del proyecto: Powerlevel10k (ya en el catálogo) requiere una Nerd Font instalada y habilitada en la terminal para renderizar sus íconos correctamente (prerrequisito documentado oficialmente por el propio proyecto) — hoy ese requisito no está gestionado por este instalador. Starship (Hito 49) tiene el mismo requisito para sus símbolos/íconos por defecto.
+
+**Corrección de enfoque (2026-07-22):** no se trata de un instalador separado con `depends_on` (ese mecanismo rechaza en vez de resolver, ver ADR 0042 §"Dependencias entre instaladores" — apropiado quizás para otro caso, pero no para este). El dueño del proyecto pidió específicamente el patrón ya usado por **Flameshot** (Hito 17, `configure_tool()`, el 7° verbo de ADR 0042, `configure`): la instalación de la fuente se ejecuta como **configuración post-instalación** de `install_powerlevel10k.sh` (y `install_starship.sh` cuando exista, Hito 49), no como un instalador ni una dependencia separada que el usuario deba resolver a mano.
+
+* Implementar `configure_tool()` en `install_powerlevel10k.sh`: descarga e instala la Nerd Font recomendada oficialmente por el propio proyecto (**MesloLGS NF**) a `~/.local/share/fonts` (o la ruta estándar equivalente), corre `fc-cache` para refrescar el cache de fuentes. Mismo criterio de rechazo que Flameshot: si Powerlevel10k no está instalado, `configure` rechaza explícitamente en vez de instalar la fuente igual.
+* Idempotente (mismo criterio que `configure_tool()` de Flameshot): si la fuente ya está instalada, no la vuelve a descargar.
+* Investigar si además hace falta (o es siquiera automatizable) configurar el emulador de terminal para que use la fuente instalada — Flameshot, en su propia configuración, se limitó a lo automatizable vía `gsettings` (el atajo de teclado) sin tocar configuración de apps de terceros; aquí el equivalente sería tocar la configuración de Terminator/Ghostty/WezTerm/etc., que varía por terminal — probablemente quede fuera de alcance igual que quedó fuera de Flameshot, documentándolo explícitamente en vez de intentar cubrir todos los emuladores de terminal del catálogo.
+* Extender el mismo `configure_tool()` (o uno propio) a `install_starship.sh` una vez implementado en el Hito 49, reutilizando la misma lógica de instalación de fuente en vez de duplicarla (posible candidato a extraer a una función compartida si ambos casos terminan siendo prácticamente idénticos).
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
 # Preguntas resueltas por el dueño del proyecto (2026-07-15)
 
 Migradas desde la evaluación inicial del repositorio (2026-07-13) y resueltas en una revisión de inventario de herramientas. Las decisiones de arquitectura resultantes están en `docs/adr/` (0016–0021) y el inventario actualizado en `docs/TOOLS.md`.
@@ -1510,7 +2232,7 @@ Migradas desde la evaluación inicial del repositorio (2026-07-13) y resueltas e
 4. **Terminal:** se mantiene Terminator.
 5. **Oh My Zsh y Powerlevel10k:** se mantienen ambos; al reutilizar `/home` se respalda/reutiliza la personalización existente en vez de sobrescribirla. Ver [ADR 0021](adr/0021-reutilizar-personalizacion-shell-en-home.md).
 6. **Postman, Insomnia, GitKraken:** se mantienen los tres.
-7. **Bruno:** no se agrega; se mantienen Postman e Insomnia.
+7. **Bruno:** no se agrega; se mantienen Postman e Insomnia. **Revertido el 2026-07-22:** el dueño del proyecto pidió explícitamente agregarlo (ver Hito 31) — Postman/Insomnia se mantienen también, Bruno se suma como tercera opción, no como reemplazo.
 8. **MongoDB Compass:** se mantiene.
 9. **kubectl:** se gestiona vía Mise, no vía Snap. Ver [ADR 0018](adr/0018-kubectl-via-mise.md).
 10. **Obligatorias vs. opcionales:** el dueño del proyecto prefiere revisar la clasificación `required | optional | retired | candidate` caso por caso en una sesión posterior — sigue pendiente, ver `docs/TOOLS.md`.
