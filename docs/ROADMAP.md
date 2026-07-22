@@ -1209,7 +1209,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1229,7 +1229,7 @@ Investigado antes de escribir código, como pide el objetivo. Dos bloqueantes re
 1. **Descarga sin URL pública.** Desde el 11/nov/2024, Broadcom liberó VMware Workstation Pro gratis para uso personal/comercial/educativo sin clave de licencia ([Broadcom KB](https://knowledge.broadcom.com/external/article/368667/download-and-license-vmware-desktop-hype.html)) — la licencia ya no es un bloqueante. Pero la descarga del `.bundle` requiere iniciar sesión en el portal `support.broadcom.com`; no existe una URL pública descargable con `curl`/`wget` sin autenticación.
 2. **Módulos de kernel (vmmon/vmnet) sin soporte oficial en kernels recientes.** VMware no mantiene compatibilidad oficial con Ubuntu 24.04+ (kernel 6.8+); los módulos no compilan sin parches de terceros (repos comunitarios no oficiales de la comunidad). Cae en la categoría "fuente comunitaria, requiere justificación explícita" de [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md), no "instalador oficial" limpio.
 
-**Queda pendiente de decisión explícita del dueño del proyecto** antes de continuar: ¿se documenta VMware Workstation como "requiere instalación manual" (sin instalador automatizado, mismo criterio que NVIDIA/CUDA en [ADR 0020](adr/0020-alcance-fuera-nvidia-dotfiles-agentes.md)), o se acepta el riesgo de depender de un parche comunitario no oficial para los módulos de kernel? Ninguna de las dos se implementó todavía.
+**Decisión (2026-07-21):** el dueño del proyecto confirmó descartar VMware Workstation del catálogo — no se implementa ningún instalador, ni se documenta como "instalación manual". Motivo: los dos bloqueantes de arriba (descarga sin URL pública, módulos de kernel sin soporte oficial dependientes de un parche comunitario no oficial) no justifican el esfuerzo/riesgo frente al beneficio, mismo criterio de "requiere justificación explícita" de [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md) que no se cumplió. Fuera de alcance de este proyecto, igual que NVIDIA/CUDA ([ADR 0020](adr/0020-alcance-fuera-nvidia-dotfiles-agentes.md)).
 
 ### Implementación: VirtualBox (2026-07-21)
 
@@ -1237,7 +1237,7 @@ Sin bloqueantes reales — implementado. `scripts/development/install_virtualbox
 
 ### Pendiente
 
-VMware Workstation: decisión explícita del dueño del proyecto sobre cómo proceder (ver arriba). VirtualBox: ninguno.
+Ninguno. VMware Workstation queda descartado (ver decisión arriba); VirtualBox implementado.
 
 ---
 
