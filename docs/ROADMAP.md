@@ -1510,7 +1510,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1523,9 +1523,20 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto a partir de 
 * **Bruno** — cliente API git-native, local-first (sin sincronización a la nube por defecto). **Nota:** el ítem 7 de "Preguntas resueltas por el dueño del proyecto (2026-07-15)" registra una decisión previa de NO agregarlo ("se mantienen Postman e Insomnia") — esta instrucción del 2026-07-22 la reemplaza explícitamente. Licencia: núcleo MIT, con una edición "Bruno Cloud" de pago que NO es necesaria para el uso local — confirmar en la investigación que ninguna función esencial quede detrás de esa edición antes de implementar.
 * **Hoppscotch** — cliente API 100% FOSS (MIT), self-hosteable; existe tanto como app de escritorio (Electron/Tauri) como versión web.
 
+### Investigación (2026-07-22)
+
+* **Bruno**: confirmado snap oficial (`bruno`) publicado por el propio creador del proyecto (`helloanoop`), sincronizado con el último release de GitHub — preferido sobre `deb-direct` por simplicidad. Licencia MIT en el núcleo confirmada; "Bruno Cloud" es un servicio opcional de pago que no bloquea ninguna función esencial del uso local.
+* **Hoppscotch**: confirmado que SÍ existe una app de escritorio oficial real, basada en **Tauri** (no Electron), en un repo de releases separado (`hoppscotch/releases`). **Hallazgo real durante la implementación**: ni la API JSON de `releases/latest` ni el endpoint fijo de descarga documentado oficialmente (`.../releases/latest/download/Hoppscotch_linux_x64.deb`) son confiables — se confirmó en vivo que el release "latest" en ese momento (v26.6.1-0) es un hotfix que solo publica el asset "SelfHost" (para autohospedar el backend, un producto distinto), sin el `.deb` de escritorio; el endpoint fijo devolvía 404. Se implementó una resolución que recorre la lista de releases recientes (`/releases`, no `/releases/latest`) hasta encontrar uno que sí publique `Hoppscotch_linux_x64.deb`. También se confirmó (inspeccionando el `.deb` real) que el paquete se llama `hoppscotch` pero el binario que instala es `hoppscotch-desktop`, no `hoppscotch`.
+
+### Implementación (2026-07-22)
+
+* `scripts/development/install_bruno.sh` (`manager=snap`, `--classic` — mismo criterio que Obsidian, necesita acceso amplio al filesystem para abrir colecciones git-native en cualquier ubicación del home) — agregado a los tests parametrizados existentes del grupo Snap (I10/I22).
+* `scripts/development/install_hoppscotch.sh` (`manager=deb-direct` con resolución propia sobre la lista de releases, sin usar `scripts/lib/github_release.sh` por el hallazgo real documentado arriba — caso único hasta ahora, no se abstrae por ahora, ver criterio de ADR 0032) — prueba mockeada dedicada nueva (I45), que simula exactamente el escenario "release más reciente solo trae SelfHost".
+* Ambos quedan `requires_manual_validation=yes`.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

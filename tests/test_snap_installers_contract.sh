@@ -129,6 +129,7 @@ test_installer "scripts/productivity/install_telegram_desktop.sh" "Telegram Desk
 test_installer "scripts/productivity/install_obsidian.sh" "Obsidian" "obsidian"
 test_installer "scripts/productivity/install_chromium.sh" "Chromium" "chromium"
 test_installer "scripts/system/install_yq.sh" "yq" "yq"
+test_installer "scripts/development/install_bruno.sh" "Bruno" "bruno"
 
 print_test_summary
 echo "Nota: ninguno de estos 12 instaladores se prueba funcionalmente (requiere"

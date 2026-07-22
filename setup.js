@@ -76,6 +76,10 @@ const tools = [
     // DEVELOPMENT — misceláneos (Hito 29)
     { name: 'SoapUI', script: 'scripts/development/install_soapui.sh', category: 'DEVELOPMENT' },
 
+    // DEVELOPMENT — clientes API open source (Hito 31)
+    { name: 'Bruno', script: 'scripts/development/install_bruno.sh', category: 'DEVELOPMENT' },
+    { name: 'Hoppscotch', script: 'scripts/development/install_hoppscotch.sh', category: 'DEVELOPMENT' },
+
     // AI — asistentes de escritorio (ver ADR 0043)
     { name: 'Claude Desktop', script: 'scripts/productivity/install_claude_desktop.sh', category: 'AI' },
     { name: 'OpenClaw', script: 'scripts/productivity/install_openclaw.sh', category: 'AI' },
