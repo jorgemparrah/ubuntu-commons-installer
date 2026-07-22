@@ -130,6 +130,9 @@ jobs:
           - brave-installer
           - ngrok-installer
           - ollama-installer
+          - localsend-installer
+          - steam-installer
+          - soapui-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -422,6 +425,21 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I41"
             cmd: bash tests/test_ollama_installer.sh
+          - case: localsend-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I42"
+            cmd: bash tests/test_localsend_installer.sh
+          - case: steam-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I43"
+            cmd: bash tests/test_steam_installer.sh
+          - case: soapui-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I44"
+            cmd: bash tests/test_soapui_installer.sh
     steps:
       - uses: actions/checkout@v7
 

@@ -1436,7 +1436,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1451,9 +1451,26 @@ Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar Soa
 * **Steam** — Valve publica un `.deb` oficial (también está en el repositorio `multiverse` de Ubuntu); confirmar cuál de los dos conviene como mecanismo gestionado.
 * **Okular** — visor/editor de PDF de KDE; está en los repositorios oficiales de Ubuntu, candidato directo a `apt-simple`.
 
+### Investigación (2026-07-22)
+
+* **SoapUI**: confirmado instalador `.sh` tipo IzPack (`SoapUI-x64-<version>.sh`) publicado en GitHub Releases (`SmartBear/soapui`), sin alias estable de "última versión" — se resuelve dinámicamente vía la API de GitHub Releases. Flag `-q` confirmado en foros de la comunidad SmartBear como modo silencioso, pero NO está confirmado el directorio final de instalación ni si `-q` basta por sí solo en todos los casos — alto grado de incertidumbre, documentado explícitamente en el propio script.
+* **LocalSend**: publica `.deb`/AppImage en GitHub Releases (`localsend/localsend`), sin repositorio APT propio ni snap oficial confirmado. Se eligió `.deb` vía `deb-direct` con URL resuelta dinámicamente (mismo criterio de "preferir la fuente más actualizada" que VirtualBox). El nombre del paquete resultante (`localsend_app`) se infiere del app id (`org.localsend.localsend_app`), sin confirmación directa — a verificar en la validación manual (Hito 19).
+* **Steam**: confirmado que Valve recomienda el paquete `steam-installer` de los repositorios oficiales de Ubuntu (`multiverse`) sobre el `.deb` suelto (mismo resultado final, pero con actualizaciones vía `apt`). Confirmado (Ubuntu Discourse + reportes de GitHub) que instalar sin antes habilitar la arquitectura `i386` deja `steam-libs-i386` con dependencias no satisfechas.
+* **Okular**: confirmado en los repositorios oficiales de Ubuntu, sin complicaciones — candidato directo a `apt-simple`.
+
+### Implementación (2026-07-22)
+
+* `scripts/lib/github_release.sh` (nuevo, `github_release_asset_url`): resuelve dinámicamente la URL de un asset de GitHub Releases vía su API pública, sin depender de `jq`. Justificado como "segundo caso real" (SoapUI y LocalSend lo necesitan simultáneamente), cruzando el umbral que [ADR 0032](adr/0032-mecanismo-condicional-por-version-de-ubuntu.md) exige antes de abstraer un patrón en vez de duplicarlo.
+* `scripts/development/install_soapui.sh` (`manager=izpack-installer`, nuevo y único caso en el catálogo) — busca el binario resultante en ubicaciones plausibles (`$HOME/SoapUI-*/bin/soapui.sh`, `/opt/SoapUI-*/bin/soapui.sh`) en vez de asumir una sola; rechaza explícitamente con un mensaje que apunta a `tests/manual/` si no encuentra un binario resoluble tras correr el instalador. Prueba mockeada dedicada nueva (I44).
+* `scripts/productivity/install_localsend.sh` (`manager=deb-direct` + resolución dinámica vía `github_release.sh`) — sin `reinstall_tool` propio: el fallback mecánico del dispatcher (desinstalar + instalar) ya vuelve a resolver la última URL en cada corrida, que es exactamente el comportamiento deseado. Prueba mockeada dedicada nueva (I42).
+* `scripts/productivity/install_steam.sh` (`manager=apt`, apt-simple) — `install_tool()` habilita la arquitectura `i386` de forma idempotente (solo si no estaba ya habilitada) antes de instalar `steam-installer`. Prueba mockeada dedicada nueva (I43).
+* `scripts/productivity/install_okular.sh` (`manager=apt`, apt-simple estándar) — agregado al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (I25), sin sumar un ID nuevo.
+* `subcategory=file-sharing` (LocalSend) y `subcategory=gaming` (Steam) nuevas; Okular reutiliza `subcategory=office`.
+* Todos `requires_manual_validation=yes` salvo Okular (apt-simple estándar, mismo criterio que nnn/lf/fzf/thefuck/jq).
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 
