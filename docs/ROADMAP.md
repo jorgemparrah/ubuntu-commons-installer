@@ -1296,7 +1296,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1311,9 +1311,26 @@ Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar Lib
 * **Obsidian** — distribuye AppImage y también publica en Snap Store (`obsidian`, oficial); evaluar cuál conviene.
 * **KeePassXC** — tiene PPA oficial del proyecto además de estar en los repositorios de Ubuntu; confirmar si la versión de repos oficiales es lo bastante reciente o si conviene el PPA.
 
+### Investigación (2026-07-21)
+
+* **LibreOffice**: el paquete de los repos oficiales de Ubuntu queda desactualizado frente a la última versión de TDF, pero el único PPA propio de TDF ("Fresh PPA") se documenta a sí mismo como testing/bleeding-edge, "no recomendado para el usuario promedio" — excepción consciente al criterio de priorizar la fuente más fresca: acá fresco significa menos estable, por diseño del propio mantenedor. Para una suite ofimática, la estabilidad de formatos pesa más. Se usa `apt-simple` con el paquete oficial de Ubuntu.
+* **OnlyOffice**: confirmado repo APT propio (`download.onlyoffice.com`), clave GPG en URL HTTPS directa, paquete `onlyoffice-desktopeditors`.
+* **Obsidian**: el snap `obsidian` está publicado por la cuenta verificada `obsidianmd` (el propio equipo) — fuente oficial. Requiere `--classic`.
+* **KeePassXC**: el PPA `ppa:phoerious/keepassxc`, mantenido por el propio equipo de KeePassXC, sigue activo y actualizado.
+
+### Implementación (2026-07-21)
+
+* `scripts/productivity/install_libreoffice.sh` (`manager=apt`, apt-simple) — mismo patrón que `install_ranger.sh`.
+* `scripts/productivity/install_onlyoffice.sh` (`manager=apt-vendor-repo`) — reutiliza `scripts/lib/apt_vendor_repo.sh` sin cambios; la línea del repo usa `debian squeeze` como distro/codename fijo, mismo patrón que Slack con `ubuntu trusty`.
+* `scripts/productivity/install_obsidian.sh` (`manager=snap`, `--classic`) — reutiliza `scripts/lib/snap.sh` sin cambios.
+* `scripts/productivity/install_keepassxc.sh` (`manager=apt-vendor-repo` vía PPA) — mismo patrón que `install_ulauncher.sh`.
+* `subcategory=office`/`notes`/`security` nuevas en `tools_catalog.sh`.
+* Cobertura de pruebas: Obsidian se agregó a los tests parametrizados existentes del grupo Snap (I10/I22, igual que Telegram Desktop en el Hito 25); LibreOffice (I36), KeePassXC (I37) y OnlyOffice (I38) tienen pruebas mockeadas dedicadas nuevas, siguiendo el mismo criterio de mockear `install`/`tee` explícitamente para los dos mecanismos `apt-vendor-repo` (KeePassXC vía PPA no lo necesita, igual que ULauncher).
+* Los 4 quedan `requires_manual_validation=yes` (solo mocks en esta ronda, sin prueba funcional real), mismo criterio aplicado a los 3 del Hito 25.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

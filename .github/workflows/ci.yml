@@ -124,6 +124,9 @@ jobs:
           - powerlevel10k-dependency
           - virtualbox-installer
           - slack-installer
+          - libreoffice-installer
+          - keepassxc-installer
+          - onlyoffice-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -386,6 +389,21 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I35"
             cmd: bash tests/test_slack_installer.sh
+          - case: libreoffice-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I36"
+            cmd: bash tests/test_libreoffice_installer.sh
+          - case: keepassxc-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I37"
+            cmd: bash tests/test_keepassxc_installer.sh
+          - case: onlyoffice-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I38"
+            cmd: bash tests/test_onlyoffice_installer.sh
     steps:
       - uses: actions/checkout@v7
 

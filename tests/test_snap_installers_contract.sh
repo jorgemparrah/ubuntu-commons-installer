@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # tests/test_snap_installers_contract.sh
 #
-# Prueba simulada (Hito 9, Fase B; Yazi y Telegram Desktop agregados
+# Prueba simulada (Hito 9, Fase B; Yazi, Telegram Desktop y Obsidian agregados
 # después, OBS Studio retirado en ADR 0038 al migrar a su PPA oficial) de
-# los 9 instaladores basados en Snap (DBeaver, GitKraken, Insomnia,
-# Postman, GIMP, Spotify, Zoom, Yazi, Telegram Desktop): confirma que
-# 'status' distingue correctamente tres casos —
+# los 10 instaladores basados en Snap (DBeaver, GitKraken, Insomnia,
+# Postman, GIMP, Spotify, Zoom, Yazi, Telegram Desktop, Obsidian):
+# confirma que 'status' distingue correctamente tres casos —
 # snap instalado, snap no instalado, snapd ausente (UNKNOWN) — donde
 # antes los dos últimos se reportaban igual como NOT_INSTALLED (hallazgo
 # de docs/UBUNTU_COMPATIBILITY.md). No instala nada real: el comando
@@ -125,9 +125,10 @@ test_installer "scripts/productivity/install_spotify.sh" "Spotify" "spotify"
 test_installer "scripts/productivity/install_zoom.sh" "Zoom" "zoom-client"
 test_installer "scripts/system/install_yazi.sh" "Yazi" "yazi"
 test_installer "scripts/productivity/install_telegram_desktop.sh" "Telegram Desktop" "telegram-desktop"
+test_installer "scripts/productivity/install_obsidian.sh" "Obsidian" "obsidian"
 
 print_test_summary
-echo "Nota: ninguno de estos 9 instaladores se prueba funcionalmente (requiere"
+echo "Nota: ninguno de estos 10 instaladores se prueba funcionalmente (requiere"
 echo "snapd/systemd real) — ver la pauta de validación manual para Ubuntu"
 echo "26.04 Desktop en docs/UBUNTU_COMPATIBILITY.md."
 
