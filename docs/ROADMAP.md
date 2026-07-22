@@ -1199,6 +1199,214 @@ Acortar el `README.md` raíz a inicio rápido, seguridad y enlaces a `docs/`, mo
 
 ---
 
+# Hito 24
+
+## Ampliación del catálogo: virtualización
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar VMware Workstation y VirtualBox al catálogo. Mismo patrón que toda ampliación anterior (Hito 11 "terminales nuevos", Hito 16): investigar el mecanismo oficial de instalación de cada una, categorizar (`category`/`subcategory`/`classification`/`profiles`), detectar dependencias reales (módulos de kernel, licenciamiento), y recién ahí preparar los instaladores — nada se implementa sin esa investigación previa.
+
+* **VMware Workstation** — software propietario con licencia; instalador `.bundle` oficial (no repositorio APT). Investigar si Workstation Pro sigue siendo gratuito para uso personal (cambio de política de Broadcom/VMware post-adquisición) antes de asumir el mecanismo de instalación.
+* **VirtualBox** — Oracle publica un repositorio APT oficial (`download.virtualbox.org`); requiere `dkms`/módulos de kernel para el driver de virtualización (`vboxdrv`), a diferencia del resto del catálogo — primer caso real de un instalador que depende de compilar/cargar un módulo de kernel.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 25
+
+## Ampliación del catálogo: mensajería/comunicación
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar Telegram Desktop, Slack y Discord al catálogo. Mismo criterio de investigación previa que el Hito 24.
+
+* **Telegram Desktop** — evaluar entre el repositorio oficial vs. Snap vs. tarball oficial.
+* **Slack** — Slack Technologies publica un `.deb` oficial y también un snap; evaluar cuál conviene como mecanismo gestionado (ver orden de fuentes por categoría, [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md)).
+* **Discord** — no publica repositorio APT oficial; típicamente `.deb` de descarga directa (mismo mecanismo `deb-direct` ya usado por Chrome/MongoDB Compass) o Snap.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 26
+
+## Ampliación del catálogo: productividad de escritorio
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar LibreOffice, OnlyOffice, Obsidian y KeePassXC al catálogo. Mismo criterio de investigación previa que el Hito 24.
+
+* **LibreOffice** — ya está en los repositorios oficiales de Ubuntu (viene preinstalado en la mayoría de las imágenes Desktop); confirmar si corresponde un instalador `apt-simple` igual (para máquinas donde se haya retirado, o instalaciones Server) o si se documenta como ya cubierto.
+* **OnlyOffice** — publica repositorio APT propio oficial.
+* **Obsidian** — distribuye AppImage y también publica en Snap Store (`obsidian`, oficial); evaluar cuál conviene.
+* **KeePassXC** — tiene PPA oficial del proyecto además de estar en los repositorios de Ubuntu; confirmar si la versión de repos oficiales es lo bastante reciente o si conviene el PPA.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 27
+
+## Ampliación del catálogo: navegadores
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar Brave y Chromium al catálogo. Mismo criterio de investigación previa que el Hito 24.
+
+* **Brave** — repositorio APT oficial documentado (`brave-browser-apt-release.s3.brave.com`), mismo patrón `apt-vendor-repo` ya usado por VS Code/Cursor/Docker.
+* **Chromium** — en Ubuntu moderno el paquete `chromium-browser` del repositorio oficial es en realidad un wrapper que instala el snap (`chromium`, mantenido por Canonical) — confirmar este detalle antes de asumir que es un `apt-simple` tradicional como Chrome no lo es.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 28
+
+## Ampliación del catálogo: herramientas CLI
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar fzf, thefuck, jq, yq, ngrok y Ollama al catálogo. Mismo criterio de investigación previa que el Hito 24.
+
+* **fzf**, **jq** — en los repositorios oficiales de Ubuntu, candidatos directos a `apt-simple` (mismo patrón que `install_ranger.sh`).
+* **thefuck** — en los repositorios oficiales de Ubuntu (paquete `thefuck`, requiere Python); confirmar dependencias de runtime.
+* **yq** — el `yq` de Mike Farah (Go, el más usado hoy para YAML/JSON tipo `jq`) generalmente NO está en los repositorios oficiales de Ubuntu con esa identidad (existe un paquete `yq` distinto, basado en Python/`jq`, con opciones incompatibles) — investigar con cuidado cuál es el que se espera antes de instalar el equivocado.
+* **ngrok** — publica repositorio APT propio oficial.
+* **Ollama** — se instala vía script oficial `curl | sh` (mismo mecanismo `curl-script` ya usado por Claude Code/Codex CLI/OpenCode, ver [ADR 0037](adr/0037-mecanismo-curl-script-para-clis-de-ia.md)); confirmar si corresponde `subcategory=ai-cli` o si merece su propia subcategoría al no ser un asistente de código.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 29
+
+## Ampliación del catálogo: misceláneos
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-21, pedido explícito del dueño del proyecto: agregar SoapUI, LocalSend, Steam y Okular al catálogo. Mismo criterio de investigación previa que el Hito 24.
+
+* **SoapUI** — SmartBear distribuye un instalador `.sh` (bundle), no un repositorio APT.
+* **LocalSend** — publica AppImage/`.deb`/Flatpak/Snap en su repositorio de GitHub releases; evaluar cuál conviene.
+* **Steam** — Valve publica un `.deb` oficial (también está en el repositorio `multiverse` de Ubuntu); confirmar cuál de los dos conviene como mecanismo gestionado.
+* **Okular** — visor/editor de PDF de KDE; está en los repositorios oficiales de Ubuntu, candidato directo a `apt-simple`.
+
+### Pendiente
+
+Todo — investigación e implementación no comenzadas.
+
+---
+
+# Hito 30
+
+## Extensiones de GNOME (extensions.gnome.org)
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno. **No ejecutar sin aprobación explícita adicional del dueño del proyecto** — a diferencia de los Hitos 24-29, este necesita revisión antes de empezar a trabajarlo.
+
+### Objetivo
+
+Registrado el 2026-07-21, pedido explícito del dueño del proyecto: soporte para instalar/gestionar extensiones de GNOME Shell (`extensions.gnome.org`). Conceptualmente distinto al resto de los Hitos 24-29: no es "una app con un instalador", sino habilitar el ecosistema de extensiones — probablemente derive en instalar el gestor de extensiones (`gnome-shell-extension-manager`) y/o el conector de navegador (`gnome-browser-connector`, antes `chrome-gnome-shell`) que permite instalar extensiones directamente desde el sitio oficial. Necesita una investigación previa más abierta que el resto (qué significa exactamente "registrar" una extensión en este catálogo: ¿el gestor en sí, un puñado de extensiones específicas pedidas por el dueño del proyecto, o el mecanismo de instalación en general) antes de poder definir tareas concretas.
+
+### Pendiente
+
+Todo — bloqueado hasta que el dueño del proyecto revise el alcance y dé luz verde para empezar.
+
+---
+
 # Preguntas resueltas por el dueño del proyecto (2026-07-15)
 
 Migradas desde la evaluación inicial del repositorio (2026-07-13) y resueltas en una revisión de inventario de herramientas. Las decisiones de arquitectura resultantes están en `docs/adr/` (0016–0021) y el inventario actualizado en `docs/TOOLS.md`.
