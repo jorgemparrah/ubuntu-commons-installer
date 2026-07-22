@@ -265,6 +265,37 @@ tools_registry_register "discord" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# Productividad de escritorio (Hito 26, 2026-07-21): LibreOffice
+# (apt-simple, el paquete oficial de Ubuntu ya está razonablemente al
+# día; el PPA "Fresh" de TDF es explícitamente bleeding-edge/inestable,
+# excepción consciente al criterio de priorizar la fuente más reciente),
+# OnlyOffice (repo APT oficial propio), Obsidian (snap oficial
+# 'obsidianmd', --classic), KeePassXC (PPA oficial del propio equipo,
+# ppa:phoerious/keepassxc). subcategory=office/notes/security nuevas.
+tools_registry_register "libreoffice" \
+    "name=LibreOffice" "category=productivity" "subcategory=office" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt" "packages=libreoffice" \
+    "script=scripts/productivity/install_libreoffice.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "onlyoffice" \
+    "name=OnlyOffice" "category=productivity" "subcategory=office" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=onlyoffice-desktopeditors" \
+    "script=scripts/productivity/install_onlyoffice.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "obsidian" \
+    "name=Obsidian" "category=productivity" "subcategory=notes" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=snap" "packages=obsidian" \
+    "script=scripts/productivity/install_obsidian.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "keepassxc" \
+    "name=KeePassXC" "category=productivity" "subcategory=security" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=keepassxc" \
+    "script=scripts/productivity/install_keepassxc.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 # Grupo vendor-repo (Hito 11): manager=apt-vendor-repo, ver
 # scripts/lib/apt_vendor_repo.sh. requires_manual_validation=no: los 3
 # tienen prueba funcional real en CI (tests/docker/test_*_apt_repo.sh:
