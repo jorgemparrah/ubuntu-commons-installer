@@ -133,6 +133,7 @@ jobs:
           - localsend-installer
           - steam-installer
           - soapui-installer
+          - hoppscotch-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -440,6 +441,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I44"
             cmd: bash tests/test_soapui_installer.sh
+          - case: hoppscotch-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I45"
+            cmd: bash tests/test_hoppscotch_installer.sh
     steps:
       - uses: actions/checkout@v7
 

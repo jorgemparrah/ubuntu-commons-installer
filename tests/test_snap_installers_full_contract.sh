@@ -142,6 +142,7 @@ test_snap_full_contract "scripts/productivity/install_telegram_desktop.sh" "Tele
 test_snap_full_contract "scripts/productivity/install_obsidian.sh" "Obsidian" "obsidian" "yes"
 test_snap_full_contract "scripts/productivity/install_chromium.sh" "Chromium" "chromium" "no"
 test_snap_full_contract "scripts/system/install_yq.sh" "yq" "yq" "no"
+test_snap_full_contract "scripts/development/install_bruno.sh" "Bruno" "bruno" "yes"
 
 print_test_summary
 exit_with_test_summary

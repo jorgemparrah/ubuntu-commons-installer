@@ -601,6 +601,23 @@ tools_registry_register "soapui" \
     "supported_os=24.04,26.04" "supported_arch=amd64" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# Bruno y Hoppscotch (Hito 31, 2026-07-22): mismo grupo api-clients que
+# Insomnia/Postman/SoapUI. Bruno vía snap oficial del propio autor
+# (manager=snap, --classic). Hoppscotch vía deb-direct con resolución
+# sobre la lista de releases (no solo 'releases/latest' — ver la
+# advertencia real documentada en el propio install_hoppscotch.sh).
+tools_registry_register "bruno" \
+    "name=Bruno" "category=development" "subcategory=api-clients" "classification=optional" "profiles=developer,workstation,full,coding" "manager=snap" "packages=bruno" \
+    "script=scripts/development/install_bruno.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "hoppscotch" \
+    "name=Hoppscotch" "category=development" "subcategory=api-clients" "classification=optional" "profiles=developer,workstation,full,coding" "manager=deb-direct" "packages=hoppscotch" \
+    "script=scripts/development/install_hoppscotch.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 tools_registry_register "openclaw" \
     "name=OpenClaw" "category=ai" "classification=optional" "profiles=cli,desktop,workstation,full,productivity" "subcategory=ai-assistants" "manager=curl-script" \
     "script=scripts/productivity/install_openclaw.sh" \
