@@ -52,6 +52,18 @@ EOF
     cat > "${UCI_MOCK_BIN}/apt-get" <<EOF
 #!/usr/bin/env bash
 echo "apt-get \$*" >> "${UCI_MOCK_LOG}"
+# Simula que instalar software-properties-common de verdad deja
+# 'add-apt-repository' disponible en PATH (igual que en un sistema real),
+# aunque el mock haya arrancado sin él (mismo criterio que
+# tests/test_ulauncher_installer.sh).
+if [[ "\$*" == *"software-properties-common"* ]]; then
+    {
+        printf '%s\n' '#!/usr/bin/env bash'
+        printf 'echo "add-apt-repository \$*" >> "%s"\n' "${UCI_MOCK_LOG}"
+        printf '%s\n' 'exit 0'
+    } > "${UCI_MOCK_BIN}/add-apt-repository"
+    chmod +x "${UCI_MOCK_BIN}/add-apt-repository"
+fi
 exit 0
 EOF
     chmod +x "${UCI_MOCK_BIN}/apt-get"
