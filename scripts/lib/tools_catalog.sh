@@ -341,6 +341,28 @@ tools_registry_register "chromium" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# Misceláneos (Hito 29, 2026-07-21): LocalSend (deb-direct desde GitHub
+# Releases, URL resuelta dinámicamente), Steam (apt-simple + arquitectura
+# i386 habilitada explícitamente en install_tool), Okular (apt-simple).
+# subcategory=file-sharing/gaming nuevas.
+tools_registry_register "localsend" \
+    "name=LocalSend" "category=productivity" "subcategory=file-sharing" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=deb-direct" "packages=localsend_app" \
+    "script=scripts/productivity/install_localsend.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "steam" \
+    "name=Steam" "category=productivity" "subcategory=gaming" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt" "packages=steam-installer" \
+    "script=scripts/productivity/install_steam.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "okular" \
+    "name=Okular" "category=productivity" "subcategory=office" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt" "packages=okular" \
+    "script=scripts/productivity/install_okular.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
 # Grupo vendor-repo (Hito 11): manager=apt-vendor-repo, ver
 # scripts/lib/apt_vendor_repo.sh. requires_manual_validation=no: los 3
 # tienen prueba funcional real en CI (tests/docker/test_*_apt_repo.sh:
@@ -558,6 +580,15 @@ tools_registry_register "ngrok" \
     "script=scripts/development/install_ngrok.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+# SoapUI (Hito 29, 2026-07-21): instalador .sh tipo IzPack, mecanismo
+# distinto a todo lo demás del catálogo — ver la advertencia de
+# incertidumbre en el propio scripts/development/install_soapui.sh.
+tools_registry_register "soapui" \
+    "name=SoapUI" "category=development" "classification=optional" "profiles=desktop,developer,workstation,full,coding" "manager=izpack-installer" \
+    "script=scripts/development/install_soapui.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
 tools_registry_register "openclaw" \
     "name=OpenClaw" "category=productivity" "classification=optional" "profiles=cli,desktop,workstation,full,productivity" "subcategory=ai-agent" "manager=curl-script" \

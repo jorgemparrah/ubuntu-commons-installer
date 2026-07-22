@@ -76,6 +76,9 @@ const tools = [
     { name: 'ngrok', script: 'scripts/development/install_ngrok.sh', category: 'DEVELOPMENT' },
     { name: 'Ollama', script: 'scripts/development/install_ollama.sh', category: 'DEVELOPMENT' },
 
+    // DEVELOPMENT — misceláneos (Hito 29)
+    { name: 'SoapUI', script: 'scripts/development/install_soapui.sh', category: 'DEVELOPMENT' },
+
     // DEVELOPMENT — CLIs de IA (Hito 16, ver ADR 0036/0037)
     { name: 'Claude Code', script: 'scripts/development/install_claude_code.sh', category: 'DEVELOPMENT' },
     { name: 'Codex CLI', script: 'scripts/development/install_codex_cli.sh', category: 'DEVELOPMENT' },
@@ -103,6 +106,11 @@ const tools = [
     // PRODUCTIVITY — navegadores (Hito 27)
     { name: 'Brave', script: 'scripts/productivity/install_brave.sh', category: 'PRODUCTIVITY' },
     { name: 'Chromium', script: 'scripts/productivity/install_chromium.sh', category: 'PRODUCTIVITY' },
+
+    // PRODUCTIVITY — misceláneos (Hito 29)
+    { name: 'LocalSend', script: 'scripts/productivity/install_localsend.sh', category: 'PRODUCTIVITY' },
+    { name: 'Steam', script: 'scripts/productivity/install_steam.sh', category: 'PRODUCTIVITY' },
+    { name: 'Okular', script: 'scripts/productivity/install_okular.sh', category: 'PRODUCTIVITY' },
 
     // PRODUCTIVITY — agentes de IA de propósito general (Hito 16, ver ADR 0036/0037)
     { name: 'Claude Desktop', script: 'scripts/productivity/install_claude_desktop.sh', category: 'PRODUCTIVITY' },

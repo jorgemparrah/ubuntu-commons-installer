@@ -111,6 +111,9 @@ run_suite "tests/test_onlyoffice_installer.sh" bash tests/test_onlyoffice_instal
 run_suite "tests/test_brave_installer.sh" bash tests/test_brave_installer.sh
 run_suite "tests/test_ngrok_installer.sh" bash tests/test_ngrok_installer.sh
 run_suite "tests/test_ollama_installer.sh" bash tests/test_ollama_installer.sh
+run_suite "tests/test_localsend_installer.sh" bash tests/test_localsend_installer.sh
+run_suite "tests/test_steam_installer.sh" bash tests/test_steam_installer.sh
+run_suite "tests/test_soapui_installer.sh" bash tests/test_soapui_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then
