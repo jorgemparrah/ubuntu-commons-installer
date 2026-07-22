@@ -241,6 +241,30 @@ tools_registry_register "zoom" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# Mensajería (Hito 25, 2026-07-21): Telegram Desktop (snap oficial, sin
+# repo APT propio), Slack (repo APT oficial vía Packagecloud, preferido
+# sobre el .deb suelto que también publican), Discord (sin repo APT
+# oficial; endpoint estable que siempre resuelve a la última versión, sin
+# fijar número de versión como MongoDB Compass). subcategory=communication
+# nueva.
+tools_registry_register "telegram_desktop" \
+    "name=Telegram Desktop" "category=productivity" "subcategory=communication" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=snap" "packages=telegram-desktop" \
+    "script=scripts/productivity/install_telegram_desktop.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "slack" \
+    "name=Slack" "category=productivity" "subcategory=communication" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=slack-desktop" \
+    "script=scripts/productivity/install_slack.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "discord" \
+    "name=Discord" "category=productivity" "subcategory=communication" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=deb-direct" "packages=discord" \
+    "script=scripts/productivity/install_discord.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 # Grupo vendor-repo (Hito 11): manager=apt-vendor-repo, ver
 # scripts/lib/apt_vendor_repo.sh. requires_manual_validation=no: los 3
 # tienen prueba funcional real en CI (tests/docker/test_*_apt_repo.sh:

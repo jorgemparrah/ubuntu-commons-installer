@@ -81,6 +81,11 @@ const tools = [
     { name: 'Zoom', script: 'scripts/productivity/install_zoom.sh', category: 'PRODUCTIVITY' },
     { name: 'Flameshot', script: 'scripts/productivity/install_flameshot.sh', category: 'PRODUCTIVITY' },
 
+    // PRODUCTIVITY — mensajería/comunicación (Hito 25)
+    { name: 'Telegram Desktop', script: 'scripts/productivity/install_telegram_desktop.sh', category: 'PRODUCTIVITY' },
+    { name: 'Slack', script: 'scripts/productivity/install_slack.sh', category: 'PRODUCTIVITY' },
+    { name: 'Discord', script: 'scripts/productivity/install_discord.sh', category: 'PRODUCTIVITY' },
+
     // PRODUCTIVITY — agentes de IA de propósito general (Hito 16, ver ADR 0036/0037)
     { name: 'Claude Desktop', script: 'scripts/productivity/install_claude_desktop.sh', category: 'PRODUCTIVITY' },
     { name: 'OpenClaw', script: 'scripts/productivity/install_openclaw.sh', category: 'PRODUCTIVITY' },
