@@ -103,6 +103,7 @@ run_suite "tests/test_install_profile.sh" bash tests/test_install_profile.sh
 run_suite "tests/test_list_info_commands.sh" bash tests/test_list_info_commands.sh
 run_suite "tests/test_dependencies_lib.sh" bash tests/test_dependencies_lib.sh
 run_suite "tests/test_powerlevel10k_dependency.sh" bash tests/test_powerlevel10k_dependency.sh
+run_suite "tests/test_virtualbox_installer.sh" bash tests/test_virtualbox_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then
