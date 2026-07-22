@@ -170,7 +170,13 @@ if grep -q "curl -fsSL https://brave-browser-apt-release.s3.brave.com/brave-brow
 else
     fail "'install' no descargó el archivo .sources esperado. Log: $(cat "${UCI_MOCK_LOG}")"
 fi
-if grep -qw "gpg" "${UCI_MOCK_LOG}"; then
+# '-w "gpg"' a secas daría un falso positivo: la URL de la clave termina
+# en '...keyring.gpg', y "gpg" ahí ya cuenta como palabra completa
+# delimitada por '.' (bug real encontrado en la primera corrida de CI de
+# este test). Se busca en cambio una línea de log que arranque con el
+# comando 'gpg' de verdad (mismo formato "comando \$*" que loguean todos
+# los mocks de este archivo).
+if grep -q "^gpg " "${UCI_MOCK_LOG}"; then
     fail "'install' no debería invocar 'gpg' (la clave de Brave ya viene lista)"
 else
     pass "'install' no invoca 'gpg' (mecanismo distinto a Slack/OnlyOffice)"
