@@ -633,6 +633,31 @@ tools_registry_register "dbgate" \
     "supported_os=24.04,26.04" "supported_arch=amd64" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# Podman, Lazygit y virt-manager (Hito 33, 2026-07-22): Podman en
+# subcategory=containers (mismo grupo que Docker/kubectl, sin
+# podman-docker para no chocar con Docker ya instalado); Lazygit en
+# subcategory=git-tools (mismo grupo que GitHub CLI/GitKraken, el PPA
+# histórico está descontinuado); virt-manager en subcategory=virtualization
+# (mismo grupo que VirtualBox, apt-simple con múltiples paquetes y dos
+# grupos del sistema, libvirt/kvm).
+tools_registry_register "podman" \
+    "name=Podman" "category=development" "subcategory=containers" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=apt" "packages=podman" \
+    "script=scripts/development/install_podman.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "lazygit" \
+    "name=Lazygit" "category=development" "subcategory=git-tools" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=apt" "packages=lazygit" \
+    "script=scripts/development/install_lazygit.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "virt_manager" \
+    "name=virt-manager" "category=development" "subcategory=virtualization" "classification=optional" "profiles=developer,workstation,full,coding" "manager=apt" "packages=virt-manager,qemu-kvm,libvirt-daemon-system,libvirt-clients,bridge-utils,cpu-checker" \
+    "script=scripts/development/install_virt_manager.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 tools_registry_register "openclaw" \
     "name=OpenClaw" "category=ai" "classification=optional" "profiles=cli,desktop,workstation,full,productivity" "subcategory=ai-assistants" "manager=curl-script" \
     "script=scripts/productivity/install_openclaw.sh" \
