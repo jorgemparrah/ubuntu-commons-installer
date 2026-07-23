@@ -1003,3 +1003,65 @@ tools_registry_register "cloudflared" \
     "script=scripts/system/install_cloudflared.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Grupo extras de terminal, visuales y decorativos (Hito 47, ver
+# docs/ROADMAP.md): mismo grupo que cmatrix (subcategory=extras).
+tools_registry_register "fortune" \
+    "name=fortune" "description=Frases y galletas de la fortuna aleatorias en la terminal" "category=system" "subcategory=extras" "classification=optional" "profiles=cli,full" "manager=apt" "packages=fortune-mod" \
+    "script=scripts/system/install_fortune.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "cowsay" \
+    "name=cowsay" "description=Arte ASCII de una vaca (u otros personajes) diciendo una frase" "category=system" "subcategory=extras" "classification=optional" "profiles=cli,full" "manager=apt" "packages=cowsay" \
+    "script=scripts/system/install_cowsay.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "lolcat" \
+    "name=lolcat" "description=Colorea con un arcoíris la salida de otros comandos en la terminal" "category=system" "subcategory=extras" "classification=optional" "profiles=cli,full" "manager=apt" "packages=lolcat" \
+    "script=scripts/system/install_lolcat.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "figlet" \
+    "name=figlet" "description=Arte ASCII de texto grande a partir de una frase" "category=system" "subcategory=extras" "classification=optional" "profiles=cli,full" "manager=apt" "packages=figlet" \
+    "script=scripts/system/install_figlet.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "toilet" \
+    "name=toilet" "description=Arte ASCII de texto grande con más efectos y colores que figlet" "category=system" "subcategory=extras" "classification=optional" "profiles=cli,full" "manager=apt" "packages=toilet" \
+    "script=scripts/system/install_toilet.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "xeyes" \
+    "name=xeyes" "description=Un par de ojos que siguen el cursor del mouse por la pantalla" "category=system" "subcategory=extras" "classification=optional" "profiles=desktop,full" "manager=apt" "packages=x11-apps" \
+    "script=scripts/system/install_xeyes.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "cbonsai" \
+    "name=cbonsai" "description=Árbol bonsai ASCII generado y animado en la terminal" "category=system" "subcategory=extras" "classification=optional" "profiles=cli,full" "manager=apt" "packages=cbonsai" \
+    "script=scripts/system/install_cbonsai.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "fastfetch" \
+    "name=fastfetch" "description=Información del sistema con arte ASCII, sucesor activo de neofetch" "category=system" "subcategory=extras" "classification=optional" "profiles=cli,full" "manager=apt-vendor-repo" "packages=fastfetch" \
+    "script=scripts/system/install_fastfetch.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "pipes_sh" \
+    "name=pipes.sh" "description=Salvapantallas de terminal de tuberías animadas" "category=system" "subcategory=extras" "classification=optional" "profiles=cli,full" "manager=git-clone" \
+    "script=scripts/system/install_pipes_sh.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "pokemon_colorscripts" \
+    "name=pokemon-colorscripts" "description=Arte ASCII de Pokémon coloreado en la terminal" "category=system" "subcategory=extras" "classification=optional" "profiles=cli,full" "manager=git-clone" \
+    "script=scripts/system/install_pokemon_colorscripts.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"

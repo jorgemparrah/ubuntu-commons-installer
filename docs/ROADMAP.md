@@ -2178,7 +2178,7 @@ Baja
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2198,6 +2198,23 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=s
 * **fastfetch** — reemplazo moderno de neofetch (info del sistema con arte ASCII), MIT, con PPA propio o binario de GitHub Releases (neofetch está discontinuado, fastfetch es el sucesor activo recomendado por la comunidad).
 * **pokemon-colorscripts** — arte ASCII de Pokémon coloreado en terminal, sin paquete oficial de Ubuntu, instalación vía clon de repositorio GitHub.
 * **cbonsai** — árbol bonsai ASCII animado, en los repositorios oficiales de Ubuntu (24.04+) o compilación desde fuente en versiones más viejas.
+
+### Investigación (2026-07-23)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent):
+
+* **fortune, cowsay, lolcat, figlet, toilet, xeyes (`x11-apps`), cbonsai**: confirmados en los repositorios oficiales de Ubuntu (`apt-cache policy`). El paquete `fortune-mod` (no `fortune`, transicional) instala el binario `fortune` en `/usr/games` (confirmado con `apt-get download`+`dpkg-deb -c`), ruta ya incluida en el PATH por defecto. `x11-apps` es un paquete meta con varias utilidades X11 clásicas, no solo xeyes.
+* **fastfetch**: no está en los repositorios de Ubuntu 24.04/26.04 (recién desde Ubuntu 25.04). El propio README oficial recomienda `ppa:zhangsongcui3371/fastfetch` como método para obtener la última versión en Ubuntu — mismo mecanismo que ULauncher.
+* **pipes.sh**: sin paquete propio. Se leyó el `Makefile` oficial del repo (`github.com/pipeseroni/pipes.sh`, solo lectura) y se confirmó que provee targets `install`/`uninstall` estándar — se reutilizan directamente (`make PREFIX="$HOME/.local" install`), sin necesidad de replicar su lógica a mano.
+* **pokemon-colorscripts**: sin paquete propio. Se leyó (solo lectura, nunca ejecutado a ciegas) el `install.sh` oficial del repo (`gitlab.com/phoneybadger/pokemon-colorscripts`) para entender exactamente qué hace: copia archivos a un directorio y crea un symlink. Se replica esa misma lógica directamente en el instalador, a nivel de usuario (`~/.local/share`/`~/.local/bin`) en vez de `/usr/local` con sudo.
+
+### Implementación (2026-07-23)
+
+10 instaladores nuevos en `scripts/system/`. 7 vía `manager=apt` (fortune, cowsay, lolcat, figlet, toilet, xeyes, cbonsai) agregados al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (sin jobs de CI nuevos). fastfetch vía `manager=apt-vendor-repo` (PPA, mismo patrón que ULauncher) con test dedicado (`tests/test_fastfetch_installer.sh`, I69). pipes.sh y pokemon-colorscripts vía `manager=git-clone` (primer caso de este mecanismo que además invoca un paso de build/instalación adicional — `make install` y un symlink manual respectivamente), cada uno con test dedicado (`tests/test_pipes_sh_installer.sh` I70, `tests/test_pokemon_colorscripts_installer.sh` I71). Catálogo pasa de 122 a 132 entradas.
+
+### Pendiente
+
+Ninguno.
 
 ### Pendiente
 
