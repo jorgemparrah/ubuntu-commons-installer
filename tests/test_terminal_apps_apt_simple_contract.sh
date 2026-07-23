@@ -209,6 +209,7 @@ test_apt_simple_contract "scripts/system/install_jq.sh" "jq" "jq" "jq"
 test_apt_simple_contract "scripts/productivity/install_okular.sh" "Okular" "okular" "okular"
 test_apt_simple_contract "scripts/development/install_podman.sh" "Podman" "podman" "podman"
 test_apt_simple_contract "scripts/development/install_lazygit.sh" "Lazygit" "lazygit" "lazygit"
+test_apt_simple_contract "scripts/editors/install_neovim.sh" "Neovim" "neovim" "nvim"
 
 print_test_summary
 exit_with_test_summary

@@ -658,6 +658,23 @@ tools_registry_register "virt_manager" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# VSCodium y Neovim (Hito 34, 2026-07-22): VSCodium en subcategory=gui-editors
+# (mismo grupo que VS Code, apt-vendor-repo con clave/`.sources` ya
+# listos, mismo mecanismo que Brave/ngrok); Neovim en
+# subcategory=terminal-editors (mismo grupo que Vim, apt-simple —
+# complemento, no reemplazo).
+tools_registry_register "vscodium" \
+    "name=VSCodium" "category=editors" "subcategory=gui-editors" "classification=optional" "profiles=desktop,developer,workstation,full,editor" "manager=apt-vendor-repo" "packages=codium" \
+    "script=scripts/editors/install_vscodium.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "neovim" \
+    "name=Neovim" "category=editors" "subcategory=terminal-editors" "classification=optional" "profiles=cli,desktop,developer,workstation,full,editor" "manager=apt" "packages=neovim" \
+    "script=scripts/editors/install_neovim.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
 tools_registry_register "openclaw" \
     "name=OpenClaw" "category=ai" "classification=optional" "profiles=cli,desktop,workstation,full,productivity" "subcategory=ai-assistants" "manager=curl-script" \
     "script=scripts/productivity/install_openclaw.sh" \

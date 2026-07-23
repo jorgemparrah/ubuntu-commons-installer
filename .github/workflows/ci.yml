@@ -137,6 +137,7 @@ jobs:
           - beekeeper-studio-installer
           - dbgate-installer
           - virt-manager-installer
+          - vscodium-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -464,6 +465,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I48"
             cmd: bash tests/test_virt_manager_installer.sh
+          - case: vscodium-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I49"
+            cmd: bash tests/test_vscodium_installer.sh
     steps:
       - uses: actions/checkout@v7
 
