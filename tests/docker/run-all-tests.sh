@@ -138,6 +138,9 @@ run_suite "tests/test_eza_installer.sh" bash tests/test_eza_installer.sh
 run_suite "tests/test_zip_utils_installer.sh" bash tests/test_zip_utils_installer.sh
 run_suite "tests/test_tailscale_installer.sh" bash tests/test_tailscale_installer.sh
 run_suite "tests/test_cloudflared_installer.sh" bash tests/test_cloudflared_installer.sh
+run_suite "tests/test_fastfetch_installer.sh" bash tests/test_fastfetch_installer.sh
+run_suite "tests/test_pipes_sh_installer.sh" bash tests/test_pipes_sh_installer.sh
+run_suite "tests/test_pokemon_colorscripts_installer.sh" bash tests/test_pokemon_colorscripts_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

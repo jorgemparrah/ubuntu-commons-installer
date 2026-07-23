@@ -7,7 +7,8 @@
 # 33; HTTPie del Hito 38; duf, btop, zoxide, tealdeer del Hito 39; Kitty,
 # Alacritty del Hito 40; ImageMagick, FFmpeg del Hito 43; FileZilla del
 # Hito 44; ripgrep, fd, bat, tree, rsync del Hito 45; WireGuard, OpenVPN
-# del Hito 46): todos están en los repositorios oficiales de Ubuntu,
+# del Hito 46; fortune, cowsay, lolcat, figlet, toilet, xeyes, cbonsai
+# del Hito 47): todos están en los repositorios oficiales de Ubuntu,
 # mismo patrón que
 # scripts/system/install_ranger.sh. No instala
 # nada real: apt-get/apt/dpkg/sudo se interceptan con comandos falsos en
@@ -232,6 +233,13 @@ test_apt_simple_contract "scripts/system/install_tree.sh" "tree" "tree" "tree"
 test_apt_simple_contract "scripts/system/install_rsync.sh" "rsync" "rsync" "rsync"
 test_apt_simple_contract "scripts/system/install_wireguard.sh" "WireGuard" "wireguard" "wg"
 test_apt_simple_contract "scripts/system/install_openvpn.sh" "OpenVPN" "openvpn" "openvpn"
+test_apt_simple_contract "scripts/system/install_fortune.sh" "fortune" "fortune-mod" "fortune"
+test_apt_simple_contract "scripts/system/install_cowsay.sh" "cowsay" "cowsay" "cowsay"
+test_apt_simple_contract "scripts/system/install_lolcat.sh" "lolcat" "lolcat" "lolcat"
+test_apt_simple_contract "scripts/system/install_figlet.sh" "figlet" "figlet" "figlet"
+test_apt_simple_contract "scripts/system/install_toilet.sh" "toilet" "toilet" "toilet"
+test_apt_simple_contract "scripts/system/install_xeyes.sh" "xeyes" "x11-apps" "xeyes"
+test_apt_simple_contract "scripts/system/install_cbonsai.sh" "cbonsai" "cbonsai" "cbonsai"
 
 print_test_summary
 exit_with_test_summary

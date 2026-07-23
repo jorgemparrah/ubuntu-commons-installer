@@ -158,6 +158,9 @@ jobs:
           - zip-utils-installer
           - tailscale-installer
           - cloudflared-installer
+          - fastfetch-installer
+          - pipes-sh-installer
+          - pokemon-colorscripts-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -590,6 +593,21 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I68"
             cmd: bash tests/test_cloudflared_installer.sh
+          - case: fastfetch-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I69"
+            cmd: bash tests/test_fastfetch_installer.sh
+          - case: pipes-sh-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I70"
+            cmd: bash tests/test_pipes_sh_installer.sh
+          - case: pokemon-colorscripts-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I71"
+            cmd: bash tests/test_pokemon_colorscripts_installer.sh
     steps:
       - uses: actions/checkout@v7
 

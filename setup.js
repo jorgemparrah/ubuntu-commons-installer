@@ -70,6 +70,18 @@ const tools = [
     // SYSTEM — extras
     { name: 'cmatrix', description: 'Efecto visual de terminal estilo Matrix, sin utilidad práctica más allá de lo decorativo', script: 'scripts/system/install_cmatrix.sh', category: 'SYSTEM' },
 
+    // SYSTEM — extras de terminal, visuales y decorativos (Hito 47)
+    { name: 'fortune', description: 'Frases y galletas de la fortuna aleatorias en la terminal', script: 'scripts/system/install_fortune.sh', category: 'SYSTEM' },
+    { name: 'cowsay', description: 'Arte ASCII de una vaca (u otros personajes) diciendo una frase', script: 'scripts/system/install_cowsay.sh', category: 'SYSTEM' },
+    { name: 'lolcat', description: 'Colorea con un arcoíris la salida de otros comandos en la terminal', script: 'scripts/system/install_lolcat.sh', category: 'SYSTEM' },
+    { name: 'figlet', description: 'Arte ASCII de texto grande a partir de una frase', script: 'scripts/system/install_figlet.sh', category: 'SYSTEM' },
+    { name: 'toilet', description: 'Arte ASCII de texto grande con más efectos y colores que figlet', script: 'scripts/system/install_toilet.sh', category: 'SYSTEM' },
+    { name: 'xeyes', description: 'Un par de ojos que siguen el cursor del mouse por la pantalla', script: 'scripts/system/install_xeyes.sh', category: 'SYSTEM' },
+    { name: 'cbonsai', description: 'Árbol bonsai ASCII generado y animado en la terminal', script: 'scripts/system/install_cbonsai.sh', category: 'SYSTEM' },
+    { name: 'fastfetch', description: 'Información del sistema con arte ASCII, sucesor activo de neofetch', script: 'scripts/system/install_fastfetch.sh', category: 'SYSTEM' },
+    { name: 'pipes.sh', description: 'Salvapantallas de terminal de tuberías animadas', script: 'scripts/system/install_pipes_sh.sh', category: 'SYSTEM' },
+    { name: 'pokemon-colorscripts', description: 'Arte ASCII de Pokémon coloreado en la terminal', script: 'scripts/system/install_pokemon_colorscripts.sh', category: 'SYSTEM' },
+
     // MULTIMEDIA (ex agrupador "Multimedia Tools", ver ADR 0035; ya vivían
     // en category=multimedia en tools_catalog.sh, ahora también en el menú)
     { name: 'Cheese', description: 'Aplicación de cámara web para tomar fotos y video', script: 'scripts/system/install_cheese.sh', category: 'MULTIMEDIA' },
