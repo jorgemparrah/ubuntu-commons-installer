@@ -31,6 +31,13 @@ const tools = [
     { name: 'zoxide', description: 'Reemplazo inteligente de \'cd\' que aprende las rutas usadas con frecuencia', script: 'scripts/system/install_zoxide.sh', category: 'SYSTEM' },
     { name: 'btop', description: 'Monitor de recursos del sistema (CPU/memoria/red/procesos) en la terminal', script: 'scripts/system/install_btop.sh', category: 'SYSTEM' },
     { name: 'tealdeer', description: 'Cliente rápido (en Rust) de tldr: páginas de ayuda de comandos simplificadas', script: 'scripts/system/install_tealdeer.sh', category: 'SYSTEM' },
+    { name: 'ripgrep', description: 'Búsqueda de texto recursiva, mucho más rápida que grep', script: 'scripts/system/install_ripgrep.sh', category: 'SYSTEM' },
+    { name: 'fd', description: 'Reemplazo simple y rápido de find', script: 'scripts/system/install_fd.sh', category: 'SYSTEM' },
+    { name: 'bat', description: 'Reemplazo de cat con resaltado de sintaxis y números de línea', script: 'scripts/system/install_bat.sh', category: 'SYSTEM' },
+    { name: 'eza', description: 'Reemplazo moderno de ls, con colores y soporte de Git', script: 'scripts/system/install_eza.sh', category: 'SYSTEM' },
+    { name: 'tree', description: 'Listado de directorios en forma de árbol', script: 'scripts/system/install_tree.sh', category: 'SYSTEM' },
+    { name: 'unzip/zip', description: 'Utilidades estándar de compresión y descompresión ZIP', script: 'scripts/system/install_zip_utils.sh', category: 'SYSTEM' },
+    { name: 'rsync', description: 'Sincronización y transferencia eficiente de archivos', script: 'scripts/system/install_rsync.sh', category: 'SYSTEM' },
 
     // SYSTEM — terminals
     { name: 'Terminator', description: 'Emulador de terminal con soporte para dividir la ventana en paneles', script: 'scripts/system/install_terminator.sh', category: 'SYSTEM' },

@@ -922,3 +922,48 @@ tools_registry_register "filezilla" \
     "script=scripts/productivity/install_filezilla.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+# Grupo CLI moderna: archivos y compresión (Hito 45, ver
+# docs/ROADMAP.md): ripgrep, fd, bat, eza, tree, unzip/zip, rsync.
+# subcategory=cli-utils, mismo grupo que duf/btop/zoxide/tealdeer.
+tools_registry_register "ripgrep" \
+    "name=ripgrep" "description=Búsqueda de texto recursiva, mucho más rápida que grep" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=ripgrep" \
+    "script=scripts/system/install_ripgrep.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "fd" \
+    "name=fd" "description=Reemplazo simple y rápido de find" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=fd-find" \
+    "script=scripts/system/install_fd.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "bat" \
+    "name=bat" "description=Reemplazo de cat con resaltado de sintaxis y números de línea" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=bat" \
+    "script=scripts/system/install_bat.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "eza" \
+    "name=eza" "description=Reemplazo moderno de ls, con colores y soporte de Git" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt-vendor-repo" "packages=eza" \
+    "script=scripts/system/install_eza.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "tree" \
+    "name=tree" "description=Listado de directorios en forma de árbol" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=tree" \
+    "script=scripts/system/install_tree.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "zip_utils" \
+    "name=unzip/zip" "description=Utilidades estándar de compresión y descompresión ZIP" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=unzip,zip" \
+    "script=scripts/system/install_zip_utils.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "rsync" \
+    "name=rsync" "description=Sincronización y transferencia eficiente de archivos" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=rsync" \
+    "script=scripts/system/install_rsync.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"

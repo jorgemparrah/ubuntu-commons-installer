@@ -134,6 +134,8 @@ run_suite "tests/test_azure_cli_installer.sh" bash tests/test_azure_cli_installe
 run_suite "tests/test_google_cloud_cli_installer.sh" bash tests/test_google_cloud_cli_installer.sh
 run_suite "tests/test_awscli_installer.sh" bash tests/test_awscli_installer.sh
 run_suite "tests/test_syncthing_installer.sh" bash tests/test_syncthing_installer.sh
+run_suite "tests/test_eza_installer.sh" bash tests/test_eza_installer.sh
+run_suite "tests/test_zip_utils_installer.sh" bash tests/test_zip_utils_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

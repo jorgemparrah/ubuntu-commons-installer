@@ -154,6 +154,8 @@ jobs:
           - google-cloud-cli-installer
           - pnpm-via-mise
           - syncthing-installer
+          - eza-installer
+          - zip-utils-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -566,6 +568,16 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I64"
             cmd: bash tests/test_syncthing_installer.sh
+          - case: eza-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I65"
+            cmd: bash tests/test_eza_installer.sh
+          - case: zip-utils-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I66"
+            cmd: bash tests/test_zip_utils_installer.sh
     steps:
       - uses: actions/checkout@v7
 

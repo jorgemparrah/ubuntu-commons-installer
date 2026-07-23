@@ -2086,7 +2086,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2104,9 +2104,23 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=s
 * **unzip**, **zip** — utilidades de compresión estándar, en los repositorios oficiales de Ubuntu.
 * **rsync** — sincronización/transferencia de archivos, GPL-3.0, en los repositorios oficiales de Ubuntu.
 
+### Investigación (2026-07-23)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent), verificando en vivo cada paquete/binario (descarga real de `.deb`s vía `apt-get download` + inspección con `dpkg-deb -c`, sin instalar nada):
+
+* **ripgrep, tree, rsync**: paquete y binario coinciden con el nombre de la herramienta, sin ninguna particularidad.
+* **fd**: el paquete oficial de Ubuntu se llama `fd-find` (no `fd`, colisión de nombre con otro paquete Debian) e instala el binario `fdfind`, sin symlink `fd` — confirmado con `dpkg -L fd-find`.
+* **bat**: el paquete `bat` instala el binario `batcat`, no `bat` (colisión de nombre con otro paquete Debian preexistente) — confirmado descargando el `.deb` real e inspeccionándolo con `dpkg-deb -c`.
+* **eza**: no está en los repositorios oficiales de Ubuntu. El propio `INSTALL.md` del proyecto referencia `deb.gierens.de` como repositorio APT recomendado; clave confirmada en vivo como ASCII-armored (`curl` + inspección del contenido), requiere `gpg --dearmor`. Distro fija `stable`/componente `main`, sin depender del codename.
+* **unzip, zip**: se agrupan en un único instalador (mismo criterio que `install_virt_manager.sh`), cada uno con su binario homónimo, sin ninguna particularidad.
+
+### Implementación (2026-07-23)
+
+`scripts/system/install_{ripgrep,fd,bat,eza,tree,zip_utils,rsync}.sh` (6 vía `manager=apt`, eza vía `manager=apt-vendor-repo`). ripgrep/fd/bat/tree/rsync se agregaron al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (sin jobs de CI nuevos); eza y unzip/zip tienen tests dedicados (`tests/test_eza_installer.sh` I65, `tests/test_zip_utils_installer.sh` I66) con sus propios jobs de CI (`eza-installer`, `zip-utils-installer`). Catálogo pasa de 111 a 118 entradas.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 
