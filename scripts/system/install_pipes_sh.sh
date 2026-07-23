@@ -97,7 +97,7 @@ update_tool() {
 
 # Function to repair (para el estado BROKEN)
 repair_tool() {
-    if [[ ! -d "${UCI_PIPES_SH_DIR}" ]]; then
+    if ! command -v pipes.sh &> /dev/null; then
         echo "${TOOL_NAME} no está instalado; usa 'install' en vez de 'repair'." >&2
         return 1
     fi
