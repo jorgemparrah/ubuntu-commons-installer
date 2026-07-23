@@ -136,6 +136,7 @@ const tools = [
     { name: 'Podman', description: 'Motor de contenedores sin daemon y sin privilegios de root, alternativa a Docker', script: 'scripts/development/install_podman.sh', category: 'DEVELOPMENT' },
     { name: 'Lazygit', description: 'Interfaz de terminal (TUI) para operar Git de forma visual', script: 'scripts/development/install_lazygit.sh', category: 'DEVELOPMENT' },
     { name: 'virt-manager', description: 'Interfaz gráfica para administrar máquinas virtuales QEMU/KVM', script: 'scripts/development/install_virt_manager.sh', category: 'DEVELOPMENT' },
+    { name: 'Vagrant', description: 'Orquestación de máquinas virtuales de desarrollo reproducibles (licencia BUSL, no FOSS desde 2023)', script: 'scripts/development/install_vagrant.sh', category: 'DEVELOPMENT' },
 
     // DEVELOPMENT — CLIs de nube e infraestructura como código (Hito 42)
     { name: 'Terraform', description: 'Herramienta de infraestructura como código de HashiCorp (licencia BUSL, no FOSS desde 2023)', script: 'scripts/development/install_terraform.sh', category: 'DEVELOPMENT' },
@@ -196,6 +197,7 @@ const tools = [
     { name: 'Lutris', description: 'Gestor de bibliotecas de juegos multi-plataforma (Wine/Proton/emuladores)', script: 'scripts/productivity/install_lutris.sh', category: 'PRODUCTIVITY' },
     { name: 'Heroic Games Launcher', description: 'Launcher libre para juegos de Epic Games Store, GOG y Amazon Games', script: 'scripts/productivity/install_heroic.sh', category: 'PRODUCTIVITY' },
     { name: 'Okular', description: 'Visor y editor de documentos/PDF de KDE', script: 'scripts/productivity/install_okular.sh', category: 'PRODUCTIVITY' },
+    { name: 'Remmina', description: 'Cliente de acceso remoto (RDP/VNC/SSH/SPICE)', script: 'scripts/productivity/install_remmina.sh', category: 'PRODUCTIVITY' },
 
     // MAINTENANCE (System Updates/Kernel & Headers movidos aquí desde
     // SYSTEM, ver ADR 0035 — consistente con category=maintenance en
