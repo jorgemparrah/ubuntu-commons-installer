@@ -1631,7 +1631,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1644,9 +1644,20 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=e
 * **VSCodium** (`subcategory=gui-editors`, mismo grupo que Visual Studio Code) — mismo binario de VS Code sin telemetría de Microsoft ni marca registrada; tiene su propio repositorio APT documentado.
 * **Neovim** (`subcategory=terminal-editors`, mismo grupo que Vim) — se agrega como complemento, no reemplazo de Vim (LSP nativo, desarrollo más activo). Confirmar si conviene distinguir "Vim clásico" de "Neovim" como dos herramientas separadas y coexistentes en el catálogo (mismo criterio que Ghostty/Terminator/WezTerm conviviendo en `terminals`).
 
+### Investigación (2026-07-22)
+
+* **VSCodium**: confirmado en vivo el repo APT oficial moderno (`repo.vscodium.dev/vscodium.sources`, DEB822 completo + `repo.vscodium.dev/vscodium.gpg`, ya lista para `signed-by`) — mismo patrón que Brave/ngrok (`apt_vendor_repo_fetch_file_plain`, sin construir línea `deb [...]` a mano). Paquete y binario: `codium` (no `vscodium`).
+* **Neovim**: confirmado que Ubuntu 24.04 trae 0.9.5 en `universe` vs v0.12.x en GitHub Releases — brecha real de 3 versiones mayores, mayor que fzf/lazygit. Existe `ppa:neovim-ppa/stable` activo, pero el propio Launchpad advierte explícitamente que "the Neovim team does not maintain the PPA packages" — se prefiere el paquete oficial de Ubuntu (apt-simple) antes que un PPA de terceros no verificado como oficial. Se confirma que conviene distinguirlo de Vim como dos herramientas separadas y coexistentes (mismo criterio que Ghostty/Terminator/WezTerm).
+
+### Implementación (2026-07-22)
+
+* `scripts/editors/install_vscodium.sh` (`manager=apt-vendor-repo` vía `apt_vendor_repo_fetch_file_plain`) — prueba mockeada dedicada nueva (I49), mismo patrón que Brave.
+* `scripts/editors/install_neovim.sh` (`manager=apt`, apt-simple) — agregado al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (I25), sin sumar un ID nuevo.
+* VSCodium queda `requires_manual_validation=yes`; Neovim queda `requires_manual_validation=no` (apt-simple estándar).
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

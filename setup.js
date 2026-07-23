@@ -56,7 +56,9 @@ const tools = [
 
     // EDITORS
     { name: 'Visual Studio Code', script: 'scripts/editors/install_vscode.sh', category: 'EDITORS' },
+    { name: 'VSCodium', script: 'scripts/editors/install_vscodium.sh', category: 'EDITORS' },
     { name: 'Vim', script: 'scripts/editors/install_vim.sh', category: 'EDITORS' },
+    { name: 'Neovim', script: 'scripts/editors/install_neovim.sh', category: 'EDITORS' },
 
     // DEVELOPMENT
     { name: 'Docker', script: 'scripts/development/install_docker.sh', category: 'DEVELOPMENT' },

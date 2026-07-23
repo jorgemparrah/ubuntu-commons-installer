@@ -118,6 +118,7 @@ run_suite "tests/test_hoppscotch_installer.sh" bash tests/test_hoppscotch_instal
 run_suite "tests/test_beekeeper_studio_installer.sh" bash tests/test_beekeeper_studio_installer.sh
 run_suite "tests/test_dbgate_installer.sh" bash tests/test_dbgate_installer.sh
 run_suite "tests/test_virt_manager_installer.sh" bash tests/test_virt_manager_installer.sh
+run_suite "tests/test_vscodium_installer.sh" bash tests/test_vscodium_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

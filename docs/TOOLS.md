@@ -91,7 +91,9 @@ Ex miembros del agrupador "Multimedia Tools" (ver [ADR 0031](adr/0031-separar-in
 | Script | Propósito | Decisión |
 |---|---|---|
 | `install_vscode.sh` | Visual Studio Code | Mantener. **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh`, `scripts/lib/apt.sh` y `scripts/lib/apt_vendor_repo.sh` (nuevo, grupo vendor-repo); `status` distingue `OUTDATED`/`BROKEN` igual que el resto de los instaladores APT migrados |
+| `install_vscodium.sh` | VSCodium (Hito 34, 2026-07-22) | **Nuevo** — `optional`. `manager=apt-vendor-repo`, mismo mecanismo que Brave/ngrok: clave ya lista para `signed-by` y archivo `.sources` completo en formato DEB822 (`repo.vscodium.dev`), confirmado en vivo — endpoint moderno recomendado por el propio proyecto para Ubuntu 24.04+. Mismo binario de VS Code sin telemetría de Microsoft. Paquete `codium`, binario `codium`. `requires_manual_validation=yes` |
 | `install_vim.sh` | Vim | Mantener como editor base; instalador de referencia del contrato de estado enriquecido (`status` soporta `INSTALLED\|NOT_INSTALLED\|OUTDATED\|BROKEN\|UNSUPPORTED`, y agrega las acciones `update`/`repair`). Ver [ADR 0012](adr/0012-modelo-de-estado-enriquecido.md) |
+| `install_neovim.sh` | Neovim (Hito 34, 2026-07-22) | **Nuevo** — `optional`. `manager=apt` (apt-simple). Se agrega como complemento de Vim, no reemplazo (LSP nativo, desarrollo más activo). El paquete oficial de Ubuntu queda desactualizado frente a GitHub (0.9.5 en 24.04 vs v0.12.x, brecha mayor que fzf/lazygit) — riesgo aceptado y documentado, mismo criterio. Existe un PPA (`ppa:neovim-ppa/stable`) pero no está mantenido por el equipo oficial de Neovim (aviso explícito en Launchpad) — se prefiere el paquete oficial antes que un PPA de terceros no verificado. `requires_manual_validation=no` |
 
 ## Development
 
