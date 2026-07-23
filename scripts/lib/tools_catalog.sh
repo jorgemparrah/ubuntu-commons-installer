@@ -736,8 +736,15 @@ tools_registry_register "ollama" \
 
 # ngrok (Hito 28, 2026-07-21): repo APT oficial propio, distro/codename
 # fijo 'bookworm' (mismo patrón que Slack/OnlyOffice).
+# Recategorizado de category=development a category=system en el Hito 46
+# (ver docs/ROADMAP.md): el alcance de subcategory=networking se amplía
+# de "solo túneles de desarrollo" a redes/túneles en general (WireGuard,
+# OpenVPN, Tailscale, Cloudflare Tunnel) — ngrok encaja mejor ahí que en
+# development. El script permanece en scripts/development/install_ngrok.sh
+# (no se mueve de directorio, mismo criterio ya usado con GIMP/OBS Studio
+# al recategorizar a category=multimedia sin mover sus scripts).
 tools_registry_register "ngrok" \
-    "name=ngrok" "description=Túneles seguros para exponer servicios locales a internet" "category=development" "subcategory=networking" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=ngrok" \
+    "name=ngrok" "description=Túneles seguros para exponer servicios locales a internet" "category=system" "subcategory=networking" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=ngrok" \
     "script=scripts/development/install_ngrok.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
@@ -967,3 +974,32 @@ tools_registry_register "rsync" \
     "script=scripts/system/install_rsync.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+# Grupo redes y túneles (Hito 46, ver docs/ROADMAP.md): WireGuard,
+# OpenVPN, Tailscale, Cloudflare Tunnel. subcategory=networking, mismo
+# grupo que ngrok (recategorizado en este mismo Hito de
+# category=development a category=system, ver la nota junto a su
+# entrada).
+tools_registry_register "wireguard" \
+    "name=WireGuard" "description=VPN moderna integrada en el kernel de Linux" "category=system" "subcategory=networking" "classification=optional" "profiles=cli,desktop,developer,workstation,full,coding" "manager=apt" "packages=wireguard" \
+    "script=scripts/system/install_wireguard.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "openvpn" \
+    "name=OpenVPN" "description=VPN tradicional basada en TLS" "category=system" "subcategory=networking" "classification=optional" "profiles=cli,desktop,developer,workstation,full,coding" "manager=apt" "packages=openvpn" \
+    "script=scripts/system/install_openvpn.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "tailscale" \
+    "name=Tailscale" "description=Mesh VPN basada en WireGuard, con coordinación centralizada" "category=system" "subcategory=networking" "classification=optional" "profiles=cli,desktop,developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=tailscale" \
+    "script=scripts/system/install_tailscale.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "cloudflared" \
+    "name=Cloudflare Tunnel" "description=Túneles salientes sin abrir puertos, vía la red de Cloudflare" "category=system" "subcategory=networking" "classification=optional" "profiles=cli,desktop,developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=cloudflared" \
+    "script=scripts/system/install_cloudflared.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"

@@ -39,6 +39,14 @@ const tools = [
     { name: 'unzip/zip', description: 'Utilidades estándar de compresión y descompresión ZIP', script: 'scripts/system/install_zip_utils.sh', category: 'SYSTEM' },
     { name: 'rsync', description: 'Sincronización y transferencia eficiente de archivos', script: 'scripts/system/install_rsync.sh', category: 'SYSTEM' },
 
+    // SYSTEM — redes y túneles (Hito 46; ngrok recategorizado aquí desde
+    // DEVELOPMENT, ver la nota en scripts/lib/tools_catalog.sh)
+    { name: 'ngrok', description: 'Túneles seguros para exponer servicios locales a internet', script: 'scripts/development/install_ngrok.sh', category: 'SYSTEM' },
+    { name: 'WireGuard', description: 'VPN moderna integrada en el kernel de Linux', script: 'scripts/system/install_wireguard.sh', category: 'SYSTEM' },
+    { name: 'OpenVPN', description: 'VPN tradicional basada en TLS', script: 'scripts/system/install_openvpn.sh', category: 'SYSTEM' },
+    { name: 'Tailscale', description: 'Mesh VPN basada en WireGuard, con coordinación centralizada', script: 'scripts/system/install_tailscale.sh', category: 'SYSTEM' },
+    { name: 'Cloudflare Tunnel', description: 'Túneles salientes sin abrir puertos, vía la red de Cloudflare', script: 'scripts/system/install_cloudflared.sh', category: 'SYSTEM' },
+
     // SYSTEM — terminals
     { name: 'Terminator', description: 'Emulador de terminal con soporte para dividir la ventana en paneles', script: 'scripts/system/install_terminator.sh', category: 'SYSTEM' },
     { name: 'Ranger', description: 'Gestor de archivos de terminal con vista en columnas al estilo Miller', script: 'scripts/system/install_ranger.sh', category: 'SYSTEM' },
@@ -100,9 +108,6 @@ const tools = [
     { name: 'MongoDB Compass', description: 'Cliente gráfico oficial para explorar y consultar bases de datos MongoDB', script: 'scripts/development/install_mongodb_compass.sh', category: 'DEVELOPMENT' },
     { name: 'kubectl', description: 'Cliente de línea de comandos para administrar clústeres de Kubernetes', script: 'scripts/development/install_kubectl.sh', category: 'DEVELOPMENT' },
     { name: 'VirtualBox', description: 'Software de virtualización de máquinas virtuales de Oracle', script: 'scripts/development/install_virtualbox.sh', category: 'DEVELOPMENT' },
-
-    // DEVELOPMENT — herramientas CLI (Hito 28)
-    { name: 'ngrok', description: 'Túneles seguros para exponer servicios locales a internet', script: 'scripts/development/install_ngrok.sh', category: 'DEVELOPMENT' },
 
     // DEVELOPMENT — misceláneos (Hito 29)
     { name: 'SoapUI', description: 'Herramienta de pruebas de servicios web SOAP/REST', script: 'scripts/development/install_soapui.sh', category: 'DEVELOPMENT' },
