@@ -2232,7 +2232,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2245,9 +2245,20 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
 * **Vagrant** (`category=development`, `subcategory=virtualization`, mismo grupo que VirtualBox/virt-manager, Hito 33) — orquestación de máquinas virtuales de desarrollo reproducibles, licencia BUSL desde 2023 (igual que Terraform, ver Hito 42) — investigar si el uso gratuito sigue siendo viable o si conviene evaluar alternativas FOSS (p. ej. Vagrant sigue siendo de código fuente disponible, pero no OSI-approved desde el cambio de licencia).
 * **Remmina** (`category=productivity`, subcategoría nueva — p. ej. `remote-access`) — cliente de acceso remoto (RDP/VNC/SSH/SPICE), GPL-2.0, en los repositorios oficiales de Ubuntu.
 
+### Investigación (2026-07-23)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent):
+
+* **Vagrant**: confirmado en vivo (`apt-cache policy vagrant`) que es otro producto de HashiCorp publicado en el mismo repositorio APT oficial que Terraform (`apt.releases.hashicorp.com`) — mismo mecanismo exacto (clave dearmorada, codename dinámico). Misma licencia BUSL 1.1 desde 2023 que Terraform: se incluye igual, mismo precedente ya establecido (Terraform/Obsidian/Discord/Slack/Steam), sin necesidad de reevaluar alternativas FOSS por separado.
+* **Remmina**: confirmado en los repositorios oficiales de Ubuntu (`apt-cache policy`), sin ninguna particularidad. Nueva `subcategory=remote-access`.
+
+### Implementación (2026-07-23)
+
+`scripts/development/install_vagrant.sh` (`manager=apt-vendor-repo`, calco exacto del mecanismo de Terraform) y `scripts/productivity/install_remmina.sh` (`manager=apt`, apt-simple). Vagrant tiene test dedicado (`tests/test_vagrant_installer.sh`, I72) con su propio job de CI, mismo patrón que Terraform. Remmina se agregó al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (sin job de CI nuevo). Catálogo pasa de 132 a 134 entradas.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

@@ -161,6 +161,7 @@ jobs:
           - fastfetch-installer
           - pipes-sh-installer
           - pokemon-colorscripts-installer
+          - vagrant-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -608,6 +609,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I71"
             cmd: bash tests/test_pokemon_colorscripts_installer.sh
+          - case: vagrant-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I72"
+            cmd: bash tests/test_vagrant_installer.sh
     steps:
       - uses: actions/checkout@v7
 

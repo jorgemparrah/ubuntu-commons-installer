@@ -1065,3 +1065,19 @@ tools_registry_register "pokemon_colorscripts" \
     "script=scripts/system/install_pokemon_colorscripts.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Grupo virtualización de entornos de desarrollo y acceso remoto (Hito
+# 48, ver docs/ROADMAP.md): Vagrant (subcategory=virtualization, mismo
+# grupo que VirtualBox/virt-manager) y Remmina (subcategory=
+# remote-access, nueva).
+tools_registry_register "vagrant" \
+    "name=Vagrant" "description=Orquestación de máquinas virtuales de desarrollo reproducibles (licencia BUSL, no FOSS desde 2023)" "category=development" "subcategory=virtualization" "classification=optional" "profiles=developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=vagrant" \
+    "script=scripts/development/install_vagrant.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "remmina" \
+    "name=Remmina" "description=Cliente de acceso remoto (RDP/VNC/SSH/SPICE)" "category=productivity" "subcategory=remote-access" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt" "packages=remmina" \
+    "script=scripts/productivity/install_remmina.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"

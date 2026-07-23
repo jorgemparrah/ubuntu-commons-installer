@@ -8,8 +8,8 @@
 # Alacritty del Hito 40; ImageMagick, FFmpeg del Hito 43; FileZilla del
 # Hito 44; ripgrep, fd, bat, tree, rsync del Hito 45; WireGuard, OpenVPN
 # del Hito 46; fortune, cowsay, lolcat, figlet, toilet, xeyes, cbonsai
-# del Hito 47): todos están en los repositorios oficiales de Ubuntu,
-# mismo patrón que
+# del Hito 47; Remmina del Hito 48): todos están en los repositorios
+# oficiales de Ubuntu, mismo patrón que
 # scripts/system/install_ranger.sh. No instala
 # nada real: apt-get/apt/dpkg/sudo se interceptan con comandos falsos en
 # un PATH temporal.
@@ -240,6 +240,7 @@ test_apt_simple_contract "scripts/system/install_figlet.sh" "figlet" "figlet" "f
 test_apt_simple_contract "scripts/system/install_toilet.sh" "toilet" "toilet" "toilet"
 test_apt_simple_contract "scripts/system/install_xeyes.sh" "xeyes" "x11-apps" "xeyes"
 test_apt_simple_contract "scripts/system/install_cbonsai.sh" "cbonsai" "cbonsai" "cbonsai"
+test_apt_simple_contract "scripts/productivity/install_remmina.sh" "Remmina" "remmina" "remmina"
 
 print_test_summary
 exit_with_test_summary
