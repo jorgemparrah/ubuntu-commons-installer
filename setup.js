@@ -71,6 +71,10 @@ const tools = [
     { name: 'Inkscape', description: 'Editor de gráficos vectoriales', script: 'scripts/system/install_inkscape.sh', category: 'MULTIMEDIA' },
     { name: 'Krita', description: 'Aplicación de pintura digital e ilustración', script: 'scripts/system/install_krita.sh', category: 'MULTIMEDIA' },
 
+    // MULTIMEDIA — línea de comandos (Hito 43)
+    { name: 'ImageMagick', description: 'Suite de manipulación de imágenes por línea de comandos', script: 'scripts/system/install_imagemagick.sh', category: 'MULTIMEDIA' },
+    { name: 'FFmpeg', description: 'Conversión y procesamiento de audio y video por línea de comandos', script: 'scripts/system/install_ffmpeg.sh', category: 'MULTIMEDIA' },
+
     // EDITORS
     { name: 'Visual Studio Code', description: 'Editor de código de Microsoft con soporte de extensiones', script: 'scripts/editors/install_vscode.sh', category: 'EDITORS' },
     { name: 'VSCodium', description: 'Build de Visual Studio Code sin telemetría ni marca de Microsoft', script: 'scripts/editors/install_vscodium.sh', category: 'EDITORS' },

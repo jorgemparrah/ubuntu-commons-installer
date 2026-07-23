@@ -5,8 +5,9 @@
 # apt-simple agregados al catálogo después del piloto (nnn, lf; fzf,
 # thefuck, jq del Hito 28; Okular del Hito 29; Podman, Lazygit del Hito
 # 33; HTTPie del Hito 38; duf, btop, zoxide, tealdeer del Hito 39; Kitty,
-# Alacritty del Hito 40): todos están en los repositorios oficiales de
-# Ubuntu, mismo patrón que scripts/system/install_ranger.sh. No instala
+# Alacritty del Hito 40; ImageMagick, FFmpeg del Hito 43): todos están en
+# los repositorios oficiales de Ubuntu, mismo patrón que
+# scripts/system/install_ranger.sh. No instala
 # nada real: apt-get/apt/dpkg/sudo se interceptan con comandos falsos en
 # un PATH temporal.
 #
@@ -219,6 +220,8 @@ test_apt_simple_contract "scripts/system/install_btop.sh" "btop" "btop" "btop"
 test_apt_simple_contract "scripts/system/install_zoxide.sh" "zoxide" "zoxide" "zoxide"
 test_apt_simple_contract "scripts/system/install_tealdeer.sh" "tealdeer" "tealdeer" "tldr"
 test_apt_simple_contract "scripts/editors/install_neovim.sh" "Neovim" "neovim" "nvim"
+test_apt_simple_contract "scripts/system/install_imagemagick.sh" "ImageMagick" "imagemagick" "convert"
+test_apt_simple_contract "scripts/system/install_ffmpeg.sh" "FFmpeg" "ffmpeg" "ffmpeg"
 
 print_test_summary
 exit_with_test_summary
