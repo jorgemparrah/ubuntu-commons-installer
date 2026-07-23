@@ -2003,7 +2003,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2016,9 +2016,21 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=m
 * **ImageMagick** — suite de manipulación de imágenes por línea de comandos, en los repositorios oficiales de Ubuntu.
 * **FFmpeg** — conversión/procesamiento de audio y video por línea de comandos, en los repositorios oficiales de Ubuntu.
 
+### Investigación (2026-07-23)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent):
+
+* **ImageMagick**: el paquete `imagemagick` de los repositorios oficiales de Ubuntu es en realidad un paquete transicional vacío (confirmado descargando el `.deb` real vía `apt-get download` e inspeccionándolo con `dpkg-deb`), que depende de `imagemagick-6.q16` (ImageMagick 6, no 7 — versión que Ubuntu empaqueta por defecto). Los binarios reales del paquete `imagemagick-6.q16` están sufijados (`convert-im6.q16`, `identify-im6.q16`, etc., confirmado con `dpkg-deb -c`); el binario plano `convert` (usado para `check_status`) lo registra automáticamente el propio `postinst` del paquete vía `update-alternatives --install /usr/bin/convert ...` (confirmado inspeccionando el `postinst` real con `dpkg-deb -e`), sin ningún paso adicional necesario en el instalador.
+* **FFmpeg**: paquete `ffmpeg` estándar de los repositorios oficiales de Ubuntu, sin ninguna particularidad — mismo patrón apt-simple que HTTPie/Okular.
+* Ambos son herramientas maduras y estables donde el paquete oficial de Ubuntu es adecuado (a diferencia de otros casos de este catálogo como Neovim/Lazygit, no se justifica priorizar una fuente más "fresca" por sobre la oficial).
+
+### Implementación (2026-07-23)
+
+`scripts/system/install_{imagemagick,ffmpeg}.sh` (ambos `manager=apt`, apt-simple). Nueva `subcategory=conversion` en `category=multimedia`. Sin tests dedicados: se agregaron al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (mismo job de CI `terminal-apps-apt-simple-contract`, sin jobs nuevos). Catálogo pasa de 106 a 108 entradas.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

@@ -68,7 +68,7 @@
 
 ## Multimedia
 
-Ex miembros del agrupador "Multimedia Tools" (ver [ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md)) — a diferencia de "Development Tools"/"System Utilities", estos 4 ya vivían en `category=multimedia` desde esa ADR, no en `system`; el único cambio de ADR 0035 (2026-07-20) es que se exponen directamente en el menú, sin agrupador. **Nota (2026-07-22):** se agregó el campo `subcategory` (`capture`/`codecs`/`playback`/`graphics`) para subdividir esta categoría, igual que ya existía para `system`; GIMP y OBS Studio se sumaron aquí ese mismo día (ver más abajo).
+Ex miembros del agrupador "Multimedia Tools" (ver [ADR 0031](adr/0031-separar-instaladores-multi-paquete-en-agrupador-mas-individuales.md)) — a diferencia de "Development Tools"/"System Utilities", estos 4 ya vivían en `category=multimedia` desde esa ADR, no en `system`; el único cambio de ADR 0035 (2026-07-20) es que se exponen directamente en el menú, sin agrupador. **Nota (2026-07-22):** se agregó el campo `subcategory` (`capture`/`codecs`/`playback`/`graphics`, y `conversion` agregada en el Hito 43) para subdividir esta categoría, igual que ya existía para `system`; GIMP y OBS Studio se sumaron aquí ese mismo día (ver más abajo).
 
 ### Reproducción (`subcategory=playback`)
 
@@ -97,6 +97,13 @@ Ex miembros del agrupador "Multimedia Tools" (ver [ADR 0031](adr/0031-separar-in
 | `install_gimp.sh` | GIMP vía Snap | **Movido aquí el 2026-07-22** (antes `system/gui-utils` — corrección de categorización: es un editor gráfico, no una utilidad de sistema). **Mantener — fuente confirmada (2026-07-20, ver [ADR 0038](adr/0038-obs-studio-migra-de-snap-a-ppa-oficial.md))**: el Snap Store sigue GIMP 3.2.x en las 3 LTS soportadas (incluida 24.04, donde apt todavía trae 2.10.x); en 26.04 apt ya trae 3.2.x también. Snap es la fuente más actualizada de forma consistente. **Migrado al contrato completo de 6 verbos en el Hito 11 (2026-07-19)**: usa `scripts/lib/installer_cli.sh` y `scripts/lib/snap.sh` (helpers Snap compartidos, hermano de `apt.sh`, ver [ADR 0029](adr/0029-contrato-completo-de-instalador-referencia.md)); `status` sigue sin distinguir `OUTDATED` (requeriría consultar la store de Snap por red) pero `update` existe como verbo explícito; `repair` se rechaza a propósito (código 3) |
 | `install_inkscape.sh` | Inkscape (Hito 35, 2026-07-22) | **Nuevo** — `optional`. `manager=apt-vendor-repo` vía PPA oficial del propio equipo de Inkscape (`ppa:inkscape.dev/stable`, confirmado activo en Launchpad), mismo patrón que KeePassXC/ULauncher. El paquete de los repositorios oficiales de Ubuntu queda 2 versiones mayores atrás (1.2.2 en 24.04 vs 1.4.x upstream). Complementario a GIMP (vectorial vs. raster). `requires_manual_validation=yes` |
 | `install_krita.sh` | Krita (Hito 35, 2026-07-22) | **Nuevo** — `optional`. `manager=snap`, snap oficial publicado por la cuenta verificada de la Krita Foundation, sin `--classic` (confirmado en la documentación oficial, a diferencia de GIMP). Versión más actualizada que el paquete de Ubuntu (5.2.11 vs 5.2.2 en 24.04). Complementario a GIMP (pintura digital vs. edición raster general). `requires_manual_validation=yes` (mismo criterio que el resto del grupo Snap) |
+
+### Conversión (`subcategory=conversion`, nueva)
+
+| Script | Propósito | Decisión |
+|---|---|---|
+| `install_imagemagick.sh` | ImageMagick (Hito 43, 2026-07-23) | **Nuevo** — `optional`. `manager=apt` (apt-simple). El paquete `imagemagick` de Ubuntu es un paquete transicional vacío (confirmado inspeccionando el `.deb` real) que depende de `imagemagick-6.q16` (ImageMagick 6, no 7). Los binarios reales están sufijados (`convert-im6.q16`, etc.); el binario plano `convert` lo registra automáticamente el `postinst` del paquete vía `update-alternatives` (confirmado inspeccionando el script real), sin pasos adicionales de este instalador. `requires_manual_validation=no` |
+| `install_ffmpeg.sh` | FFmpeg (Hito 43, 2026-07-23) | **Nuevo** — `optional`. `manager=apt` (apt-simple), sin lógica especial. `requires_manual_validation=no` |
 
 ## Editors
 

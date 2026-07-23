@@ -885,3 +885,18 @@ tools_registry_register "google_cloud_cli" \
     "script=scripts/development/install_google_cloud_cli.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+# Grupo multimedia de línea de comandos (Hito 43, ver docs/ROADMAP.md):
+# ImageMagick y FFmpeg. Nueva subcategory=conversion, distinta de
+# capture/codecs/graphics/playback ya existentes en category=multimedia.
+tools_registry_register "imagemagick" \
+    "name=ImageMagick" "description=Suite de manipulación de imágenes por línea de comandos" "category=multimedia" "subcategory=conversion" "classification=optional" "profiles=cli,desktop,workstation,full,creator" "manager=apt" "packages=imagemagick" \
+    "script=scripts/system/install_imagemagick.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "ffmpeg" \
+    "name=FFmpeg" "description=Conversión y procesamiento de audio y video por línea de comandos" "category=multimedia" "subcategory=conversion" "classification=optional" "profiles=cli,desktop,workstation,full,creator" "manager=apt" "packages=ffmpeg" \
+    "script=scripts/system/install_ffmpeg.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
