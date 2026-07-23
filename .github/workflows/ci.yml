@@ -139,6 +139,9 @@ jobs:
           - virt-manager-installer
           - vscodium-installer
           - inkscape-installer
+          - element-installer
+          - signal-desktop-installer
+          - joplin-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -476,6 +479,21 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I50"
             cmd: bash tests/test_inkscape_installer.sh
+          - case: element-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I51"
+            cmd: bash tests/test_element_installer.sh
+          - case: signal-desktop-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I52"
+            cmd: bash tests/test_signal_desktop_installer.sh
+          - case: joplin-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I53"
+            cmd: bash tests/test_joplin_installer.sh
     steps:
       - uses: actions/checkout@v7
 

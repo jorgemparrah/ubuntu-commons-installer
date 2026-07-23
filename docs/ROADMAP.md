@@ -1712,7 +1712,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1726,9 +1726,22 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=p
 * **Signal Desktop** (`subcategory=communication`) — cliente de Signal Messenger, AGPL-3.0, repo APT oficial de signal.org.
 * **Joplin** (`subcategory=notes`, mismo grupo que Obsidian) — alternativa 100% FOSS a Obsidian (que es gratis pero de código cerrado), AGPL-3.0, repo APT oficial.
 
+### Investigación (2026-07-22)
+
+* **Element**: confirmado en vivo el repo APT oficial (`packages.element.io/debian`), con clave ya lista para `signed-by` (sin `gpg --dearmor`). A diferencia de Brave/VSCodium, NO publican un archivo `.sources` completo — la línea de repo se construye a mano, con distro fija `default` (no depende de la versión real de Ubuntu, mismo patrón que Slack/ngrok). Paquete y binario: `element-desktop`.
+* **Signal Desktop**: confirmado en vivo que combina ambos sub-mecanismos de `apt_vendor_repo.sh` en un mismo instalador (primer caso real de este proyecto): la clave requiere `gpg --dearmor`, pero el `.sources` SÍ viene completo y listo. El propio `.sources` oficial fija la ruta del keyring en `/usr/share/keyrings/signal-desktop-keyring.gpg` — el instalador debe dejar la clave exactamente ahí para que coincidan.
+* **Joplin**: confirmado que no publica repositorio APT ni snap oficial como principal — el mecanismo recomendado es el script `Joplin_install_and_update.sh` (`curl | bash`). **Hallazgo real inspeccionando el script**: instala el AppImage en `~/.joplin/Joplin.AppImage` (con un archivo `~/.joplin/VERSION` junto al lanzador `.desktop`), sin crear ningún symlink en el PATH — incompatible con la convención genérica `~/.local/bin/<binario>` del resto del grupo `curl-script`. Se reutiliza `curl_script_run` (scripts/lib/curl_script.sh) solo para el paso de descarga/ejecución, con `check_status`/`uninstall_tool` propios (mismo criterio de adaptación que Ollama).
+
+### Implementación (2026-07-22)
+
+* `scripts/productivity/install_element.sh` (`manager=apt-vendor-repo`, `fetch_file_plain` + `write_list`, mismo mecanismo que ngrok) — prueba mockeada dedicada nueva (I51).
+* `scripts/productivity/install_signal_desktop.sh` (`manager=apt-vendor-repo`, combina `fetch_key_dearmored` + `fetch_file_plain`) — prueba mockeada dedicada nueva (I52).
+* `scripts/productivity/install_joplin.sh` (`manager=curl-script`, `check_status`/`uninstall_tool` propios) — prueba mockeada dedicada nueva (I53).
+* Los 3 quedan `requires_manual_validation=yes`.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

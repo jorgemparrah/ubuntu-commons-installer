@@ -127,11 +127,14 @@ const tools = [
     { name: 'Telegram Desktop', script: 'scripts/productivity/install_telegram_desktop.sh', category: 'PRODUCTIVITY' },
     { name: 'Slack', script: 'scripts/productivity/install_slack.sh', category: 'PRODUCTIVITY' },
     { name: 'Discord', script: 'scripts/productivity/install_discord.sh', category: 'PRODUCTIVITY' },
+    { name: 'Element', script: 'scripts/productivity/install_element.sh', category: 'PRODUCTIVITY' },
+    { name: 'Signal Desktop', script: 'scripts/productivity/install_signal_desktop.sh', category: 'PRODUCTIVITY' },
 
     // PRODUCTIVITY — productividad de escritorio (Hito 26)
     { name: 'LibreOffice', script: 'scripts/productivity/install_libreoffice.sh', category: 'PRODUCTIVITY' },
     { name: 'OnlyOffice', script: 'scripts/productivity/install_onlyoffice.sh', category: 'PRODUCTIVITY' },
     { name: 'Obsidian', script: 'scripts/productivity/install_obsidian.sh', category: 'PRODUCTIVITY' },
+    { name: 'Joplin', script: 'scripts/productivity/install_joplin.sh', category: 'PRODUCTIVITY' },
     { name: 'KeePassXC', script: 'scripts/productivity/install_keepassxc.sh', category: 'PRODUCTIVITY' },
 
     // PRODUCTIVITY — navegadores (Hito 27)
