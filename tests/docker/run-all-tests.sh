@@ -123,6 +123,8 @@ run_suite "tests/test_inkscape_installer.sh" bash tests/test_inkscape_installer.
 run_suite "tests/test_element_installer.sh" bash tests/test_element_installer.sh
 run_suite "tests/test_signal_desktop_installer.sh" bash tests/test_signal_desktop_installer.sh
 run_suite "tests/test_joplin_installer.sh" bash tests/test_joplin_installer.sh
+run_suite "tests/test_lutris_installer.sh" bash tests/test_lutris_installer.sh
+run_suite "tests/test_heroic_installer.sh" bash tests/test_heroic_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

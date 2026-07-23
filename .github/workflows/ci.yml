@@ -142,6 +142,8 @@ jobs:
           - element-installer
           - signal-desktop-installer
           - joplin-installer
+          - lutris-installer
+          - heroic-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -494,6 +496,16 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I53"
             cmd: bash tests/test_joplin_installer.sh
+          - case: lutris-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I54"
+            cmd: bash tests/test_lutris_installer.sh
+          - case: heroic-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I55"
+            cmd: bash tests/test_heroic_installer.sh
     steps:
       - uses: actions/checkout@v7
 

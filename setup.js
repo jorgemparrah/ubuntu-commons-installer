@@ -144,6 +144,8 @@ const tools = [
     // PRODUCTIVITY — misceláneos (Hito 29)
     { name: 'LocalSend', script: 'scripts/productivity/install_localsend.sh', category: 'PRODUCTIVITY' },
     { name: 'Steam', script: 'scripts/productivity/install_steam.sh', category: 'PRODUCTIVITY' },
+    { name: 'Lutris', script: 'scripts/productivity/install_lutris.sh', category: 'PRODUCTIVITY' },
+    { name: 'Heroic Games Launcher', script: 'scripts/productivity/install_heroic.sh', category: 'PRODUCTIVITY' },
     { name: 'Okular', script: 'scripts/productivity/install_okular.sh', category: 'PRODUCTIVITY' },
 
     // MAINTENANCE (System Updates/Kernel & Headers movidos aquí desde

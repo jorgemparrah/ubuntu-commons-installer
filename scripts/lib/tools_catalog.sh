@@ -412,6 +412,24 @@ tools_registry_register "steam" \
     "supported_os=24.04,26.04" "supported_arch=amd64" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# Lutris y Heroic Games Launcher (Hito 37, 2026-07-22): mismo grupo
+# gaming que Steam. Ambos vía deb-direct + github_release.sh (Lutris
+# preferido sobre su propio PPA oficial porque la documentación de
+# lutris.net recomienda el .deb de GitHub Releases; ambos verificados
+# contra el release real, sin el problema de releases mixtos ya visto
+# con Hoppscotch/DbGate).
+tools_registry_register "lutris" \
+    "name=Lutris" "category=productivity" "subcategory=gaming" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=deb-direct" "packages=lutris" \
+    "script=scripts/productivity/install_lutris.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "heroic" \
+    "name=Heroic Games Launcher" "category=productivity" "subcategory=gaming" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=deb-direct" "packages=heroic" \
+    "script=scripts/productivity/install_heroic.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 tools_registry_register "okular" \
     "name=Okular" "category=productivity" "subcategory=office" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt" "packages=okular" \
     "script=scripts/productivity/install_okular.sh" \
