@@ -2,6 +2,7 @@
 
 Fecha: 2026-07-22
 Estado: Aceptada
+Actualizada: 2026-07-23 (implementación real, ver Consecuencias)
 
 ## Contexto
 
@@ -19,7 +20,8 @@ Alcance de la migración:
 
 ## Consecuencias
 
-- `scripts/lib/tools_catalog.sh`: 74 entradas existentes ganan `description=...` (Hito 41); todas las entradas nuevas de los Hitos 31-40 en adelante la incluyen desde el inicio.
-- `setup.sh list`/`info` (`scripts/lib/*` que los implementan, ver ADR sobre Hito 13): agregan una columna `DESCRIPCIÓN`.
-- `setup.js`: el checklist interactivo (usa `inquirer`) muestra la descripción de cada opción — investigar el mecanismo concreto (`choice.name` multilínea vs. algún plugin de `inquirer` para "hint"/detalle expandible) como parte de la implementación del Hito 41, no se prescribe aquí.
+- **Implementación real (2026-07-23)**: en la práctica, los Hitos 31-40 (26 herramientas nuevas) se implementaron sin `description` pese a lo planeado en esta ADR — quedó como deuda hasta este Hito 41, que terminó agregando el campo a las **100 entradas** del catálogo en una sola pasada (las 74 originales + las 26 de los Hitos 31-40), en vez de a 74 nomás. Resultado más simple de verificar (una sola pasada consistente) que el plan incremental original.
+- `scripts/lib/tools_catalog.sh`: 100 entradas con `description=...`, insertado siempre inmediatamente después de `name=...` en cada registro.
+- `setup.sh list`/`info` (`catalog_list_run` en `setup.sh`): agrega una columna `DESCRIPCIÓN` al final de la tabla (después de `PERFILES`), tanto con `show_status=0` (list) como `show_status=1` (info).
+- `setup.js`: **duplicado manual** — el array `tools` ya era una copia de metadata mantenida a mano en paralelo a `tools_catalog.sh` (mismo patrón ya existente para `name`/`script`/`category`, sin mecanismo de sincronización automática entre Bash y JS); se le agregó un campo `description` por entrada con el mismo texto. El checklist interactivo (`inquirer`, tipo `checkbox`) no tiene un panel de detalle/hint nativo sin agregar una dependencia nueva — se optó por mostrar la descripción inline en la etiqueta de cada opción (`${icon} ${tool.name} (${text}) — ${tool.description}`), sin agregar paquetes nuevos.
 - No cambia el comportamiento de ningún instalador ni del dispatcher — es puramente un campo de metadata adicional, igual en naturaleza a `name`/`category`.

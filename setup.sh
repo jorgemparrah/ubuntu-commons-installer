@@ -627,13 +627,13 @@ catalog_id_matches_profile() {
 # lectura de datos del catálogo, sin ejecutar nada.
 catalog_list_run() {
     local profile_filter="$1" show_status="$2"
-    local id name category subcategory cat_display classification manager profiles_field
+    local id name category subcategory cat_display classification manager profiles_field description
 
     printf '%-24s %-28s %-24s %-10s %-16s' "ID" "NOMBRE" "CATEGORÍA" "CLASIF." "MECANISMO"
     if [[ "${show_status}" == "1" ]]; then
         printf ' %-14s' "ESTADO"
     fi
-    printf ' %s\n' "PERFILES"
+    printf ' %-18s %s\n' "PERFILES" "DESCRIPCIÓN"
 
     while IFS= read -r id; do
         [[ -z "${id}" ]] && continue
@@ -645,6 +645,7 @@ catalog_list_run() {
         classification="$(tools_registry_field "${id}" "classification")"
         manager="$(tools_registry_field "${id}" "manager")"
         profiles_field="$(tools_registry_field "${id}" "profiles")"
+        description="$(tools_registry_field "${id}" "description")"
 
         cat_display="${category}"
         [[ -n "${subcategory}" ]] && cat_display="${category}/${subcategory}"
@@ -671,7 +672,7 @@ catalog_list_run() {
             done
             printf ' %-14s' "${status_str}"
         fi
-        printf ' %s\n' "${profiles_field}"
+        printf ' %-18s %s\n' "${profiles_field}" "${description}"
     done < <(tools_registry_ids)
 }
 

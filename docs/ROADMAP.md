@@ -1915,7 +1915,7 @@ Ninguno.
 
 # Hito 41
 
-## Campo `description` retroactivo para las 74 herramientas existentes
+## Campo `description` retroactivo para las herramientas existentes
 
 **Prioridad**
 
@@ -1923,7 +1923,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1933,9 +1933,17 @@ Ninguno.
 
 Registrado el 2026-07-22, pedido explícito del dueño del proyecto, ver [ADR 0044](adr/0044-campo-description-en-el-catalogo.md): agregar `description=<texto corto>` a las 74 entradas ya existentes en `scripts/lib/tools_catalog.sh` (trabajo de una sola pasada, no incremental — separado de cualquier otro Hito para no mezclar una migración retroactiva grande con cambios funcionales). Incluye investigar y decidir el mecanismo concreto para mostrarla en `setup.js` (checklist interactivo de `inquirer`) además de `setup.sh list`/`info`.
 
+### Implementación (2026-07-23)
+
+* **Alcance real**: los Hitos 31-40 (26 herramientas) se implementaron sin `description` (deuda no cerrada en el momento), así que este Hito terminó cubriendo las **100 entradas** del catálogo completo en una sola pasada, no solo las 74 originales — ver la actualización de [ADR 0044](adr/0044-campo-description-en-el-catalogo.md).
+* `scripts/lib/tools_catalog.sh`: se agregó `description=<texto corto en español>` inmediatamente después de `name=...` en cada una de las 100 entradas, aplicado con un script Python de manipulación de texto (nunca ejecuta ningún `.sh`/`.js` del repo) que inserta el campo por coincidencia exacta del valor de `name=`. Ningún instalador cambia de comportamiento.
+* `setup.sh` (`catalog_list_run`): agrega una columna `DESCRIPCIÓN` al final de la tabla, tanto en `list` (`show_status=0`) como en `info` (`show_status=1`).
+* `setup.js`: el array `tools` (ya era un duplicado manual de la metadata de `tools_catalog.sh`, sin mecanismo de sincronización automática entre Bash y JS — mismo patrón que `name`/`script`/`category`) recibió el mismo campo `description` por entrada. El checklist interactivo (`inquirer`, tipo `checkbox`) no tiene un panel de detalle/hint nativo sin agregar una dependencia nueva — se optó por mostrar la descripción inline en la etiqueta de cada opción, sin agregar paquetes nuevos.
+* Verificación: script Python de solo lectura confirma que las 100 entradas tienen `description` no vacía y sin caracteres que rompan el bash (`"`, `` ` ``, `$`, `\`); `bash -n`/`node --check` (solo sintaxis, no ejecución) sobre los archivos modificados.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 
