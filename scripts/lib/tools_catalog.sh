@@ -175,10 +175,54 @@ tools_registry_register "httpie" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 tools_registry_register "xh" \
-    "name=xh" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=tarball-direct" \
+    "name=xh" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=archive-direct" \
     "script=scripts/system/install_xh.sh" \
     "supported_os=24.04,26.04" "supported_arch=amd64" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+# dust, duf, procs, zoxide, btop, tealdeer (Hito 39, 2026-07-23): mismo
+# grupo cli-utils. dust vía deb-direct (paquete du-dust, sin chocar con
+# el paquete "dust" de Debian, un juego infantil sin relación). procs
+# vía archive-direct (segundo caso real de este mecanismo, ver
+# install_procs.sh — .zip en vez de .tar.gz). duf/btop/zoxide/tealdeer
+# apt-simple estándar; tealdeer instala el binario `tldr` (no confundir
+# con el paquete `tldr` de Ubuntu, el cliente Haskell del mismo
+# proyecto, deliberadamente NO usado).
+tools_registry_register "dust" \
+    "name=dust" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=deb-direct" "packages=du-dust" \
+    "script=scripts/system/install_dust.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "duf" \
+    "name=duf" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=duf" \
+    "script=scripts/system/install_duf.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "procs" \
+    "name=procs" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=archive-direct" \
+    "script=scripts/system/install_procs.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "zoxide" \
+    "name=zoxide" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=zoxide" \
+    "script=scripts/system/install_zoxide.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "btop" \
+    "name=btop" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=btop" \
+    "script=scripts/system/install_btop.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "tealdeer" \
+    "name=tealdeer" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=tealdeer" \
+    "script=scripts/system/install_tealdeer.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
 # Instaladores individuales ex "Multimedia Tools" (ver ADR 0031/0035) — ya
 # vivían en category=multimedia. subcategory=capture/playback/codecs

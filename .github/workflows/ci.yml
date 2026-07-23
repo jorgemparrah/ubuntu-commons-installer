@@ -145,6 +145,8 @@ jobs:
           - lutris-installer
           - heroic-installer
           - xh-installer
+          - dust-installer
+          - procs-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -512,6 +514,16 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I56"
             cmd: bash tests/test_xh_installer.sh
+          - case: dust-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I57"
+            cmd: bash tests/test_dust_installer.sh
+          - case: procs-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I58"
+            cmd: bash tests/test_procs_installer.sh
     steps:
       - uses: actions/checkout@v7
 

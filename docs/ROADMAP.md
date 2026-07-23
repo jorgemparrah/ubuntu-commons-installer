@@ -1815,7 +1815,7 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=s
 ### Implementación (2026-07-23)
 
 * `scripts/system/install_httpie.sh` (`manager=apt`, apt-simple estándar) — agregado al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (I25), sin sumar un ID nuevo.
-* `scripts/system/install_xh.sh` (`manager=tarball-direct`, nuevo — primer y único caso hasta ahora, no se abstrae a una biblioteca compartida, ver criterio de ADR 0032): reutiliza `github_release_asset_url` (`scripts/lib/github_release.sh`) para resolver la URL del tarball y `curl_script_uninstall_local_bin` (`scripts/lib/curl_script.sh`) para la desinstalación, ya que el binario resultante queda en `~/.local/bin/xh` (misma convención que el grupo curl-script). Prueba mockeada dedicada nueva (I56), que mockea `tar` explícitamente (simula la extracción real en vez de generar un `.tar.gz` real).
+* `scripts/system/install_xh.sh` (`manager=tarball-direct`, nuevo — primer y único caso hasta ahora, no se abstrae a una biblioteca compartida, ver criterio de ADR 0032): reutiliza `github_release_asset_url` (`scripts/lib/github_release.sh`) para resolver la URL del tarball y `curl_script_uninstall_local_bin` (`scripts/lib/curl_script.sh`) para la desinstalación, ya que el binario resultante queda en `~/.local/bin/xh` (misma convención que el grupo curl-script). Prueba mockeada dedicada nueva (I56), que mockea `tar` explícitamente (simula la extracción real en vez de generar un `.tar.gz` real). **Nota (Hito 39, 2026-07-23):** renombrado a `manager=archive-direct` al aparecer un segundo caso real (`procs`, que usa `.zip` en vez de `.tar.gz`) — ver ese hito.
 * HTTPie queda `requires_manual_validation=no`; xh queda `requires_manual_validation=yes`.
 
 ### Pendiente
@@ -1834,7 +1834,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1851,9 +1851,26 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=s
 * **btop** — monitor de recursos en TUI, Apache-2.0.
 * **tldr** — páginas de ayuda simplificadas (alternativa a `man`), varias licencias FOSS según el cliente elegido — confirmar cuál (hay varios clientes de `tldr-pages`, p. ej. el oficial en Node o `tealdeer` en Rust).
 
+### Investigación (2026-07-23)
+
+* **dust**: confirmado en vivo que no está en apt/snap de Ubuntu, pero SÍ publica un `.deb` propio en GitHub Releases (`du-dust_<version>-1_amd64.deb`). Paquete `du-dust` (para no chocar con el paquete `dust` de Debian, un juego infantil), binario `dust` (verificado inspeccionando el `.deb` real).
+* **duf**: confirmado en `universe` de Ubuntu 24.04 (0.8.1 vs v0.9.1 en GitHub, brecha menor aceptada).
+* **procs**: confirmado en vivo que no está en apt/snap ni publica `.deb` — solo `.rpm` y `.zip` en GitHub Releases (ni siquiera `.tar.gz`). Esto es un segundo caso real del mecanismo `manager=archive-direct` introducido con xh en el Hito 38 (que usaba `.tar.gz`) — se generalizó el nombre del mecanismo de `tarball-direct` a `archive-direct` para cubrir ambos formatos (ver ADR 0032, "esperar un segundo caso real antes de generalizar"); la lógica de extracción en sí sigue siendo propia de cada script, no se creó una biblioteca compartida.
+* **zoxide**: confirmado en `universe` de Ubuntu 24.04 (0.9.3-1). Requiere un hook de shell (`eval "$(zoxide init bash)"` o equivalente) para reemplazar efectivamente a `cd` — **no se automatiza** (mismo criterio que Oh My Zsh/Powerlevel10k, AGENT.md §17: la configuración de shell le pertenece al usuario); el instalador solo deja el binario y documenta el paso manual en su mensaje de `install`.
+* **btop**: confirmado en `universe` de Ubuntu 24.04 (1.3.0 vs v1.4.7 en GitHub, brecha aceptada, mismo criterio que fzf).
+* **tldr**: confirmado que el paquete `tldr` de Ubuntu es el cliente Haskell del proyecto (más lento, peor renderizado en algunos casos) — el paquete recomendado es `tealdeer` (cliente en Rust, confirmado en `universe` de Ubuntu 24.04, ~8x más rápido según benchmarks del propio proyecto), que instala el binario `tldr` (no `tealdeer`) — verificado inspeccionando el `.deb` real. Se eligió `tealdeer`, no el paquete `tldr`.
+
+### Implementación (2026-07-23)
+
+* `scripts/system/install_{duf,zoxide,btop,tealdeer}.sh` (`manager=apt`, apt-simple estándar) — agregados al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (I25), sin sumar IDs nuevos.
+* `scripts/system/install_dust.sh` (`manager=deb-direct` vía `scripts/lib/github_release.sh`, mismo mecanismo que LocalSend/Hoppscotch/Lutris/Heroic) — prueba mockeada dedicada nueva (I57).
+* `scripts/system/install_procs.sh` (`manager=archive-direct`, segundo caso real — ver Investigación) — prueba mockeada dedicada nueva (I58), que mockea `unzip` explícitamente.
+* `scripts/system/install_xh.sh` (Hito 38) actualizado: `manager` renombrado de `tarball-direct` a `archive-direct`, sin cambio de comportamiento.
+* duf/zoxide/btop/tealdeer quedan `requires_manual_validation=no`; dust/procs quedan `requires_manual_validation=yes`.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

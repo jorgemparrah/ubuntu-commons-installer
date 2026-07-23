@@ -25,6 +25,12 @@ const tools = [
     { name: 'yq', script: 'scripts/system/install_yq.sh', category: 'SYSTEM' },
     { name: 'HTTPie', script: 'scripts/system/install_httpie.sh', category: 'SYSTEM' },
     { name: 'xh', script: 'scripts/system/install_xh.sh', category: 'SYSTEM' },
+    { name: 'dust', script: 'scripts/system/install_dust.sh', category: 'SYSTEM' },
+    { name: 'duf', script: 'scripts/system/install_duf.sh', category: 'SYSTEM' },
+    { name: 'procs', script: 'scripts/system/install_procs.sh', category: 'SYSTEM' },
+    { name: 'zoxide', script: 'scripts/system/install_zoxide.sh', category: 'SYSTEM' },
+    { name: 'btop', script: 'scripts/system/install_btop.sh', category: 'SYSTEM' },
+    { name: 'tealdeer', script: 'scripts/system/install_tealdeer.sh', category: 'SYSTEM' },
 
     // SYSTEM — terminals
     { name: 'Terminator', script: 'scripts/system/install_terminator.sh', category: 'SYSTEM' },
