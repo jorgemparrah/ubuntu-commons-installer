@@ -164,6 +164,22 @@ tools_registry_register "yq" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
 
+# HTTPie y xh (Hito 38, 2026-07-23): mismo grupo cli-utils. HTTPie
+# apt-simple estándar. xh no está en apt/snap ni publica .deb — primer
+# caso de manager=tarball-direct (tarball .tar.gz de GitHub Releases,
+# ver la advertencia real documentada en el propio install_xh.sh).
+tools_registry_register "httpie" \
+    "name=HTTPie" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=httpie" \
+    "script=scripts/system/install_httpie.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "xh" \
+    "name=xh" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=tarball-direct" \
+    "script=scripts/system/install_xh.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
 # Instaladores individuales ex "Multimedia Tools" (ver ADR 0031/0035) — ya
 # vivían en category=multimedia. subcategory=capture/playback/codecs
 # agregadas el 2026-07-22 (antes sin subcategoría), junto con GIMP y OBS
