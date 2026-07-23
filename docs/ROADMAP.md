@@ -1589,7 +1589,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1603,9 +1603,21 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
 * **Lazygit** (`subcategory=git-tools`, mismo grupo que GitHub CLI/GitKraken) — TUI de Git, MIT, ya tiene un PPA propio activo (`ppa:lazygit-team/daily`).
 * **virt-manager** (`subcategory=virtualization`, mismo grupo que VirtualBox) — front-end GTK para QEMU/KVM, GPL, sin el Extension Pack propietario que restringe a VirtualBox; paquete en el repositorio oficial de Ubuntu. Investigar si además hace falta gestionar `qemu-kvm`/`libvirt` como dependencia (posible primer caso real de `depends_on` fuera del grupo shell-personalization, ver ADR 0042).
 
+### Investigación (2026-07-22)
+
+* **Podman**: confirmado en `universe` de Ubuntu 24.04 (v4.9) y 26.04 (v5.7). Confirmado que el paquete `podman-docker` (wrapper que crea `/usr/bin/docker`) declara `Conflicts: docker` — no se instala, para que conviva sin problema con Docker (ya en este catálogo). `podman-compose` queda fuera también, a propósito (alcance mínimo).
+* **Lazygit**: confirmado que el PPA histórico (`ppa:lazygit-team/daily`) está descontinuado (404 en Launchpad, con un issue del propio repo confirmándolo). Único mecanismo viable: el paquete oficial de `universe`, desactualizado frente a GitHub (`0.57.0` vs `v0.63.1` al momento de la investigación) — mismo riesgo aceptado y documentado que fzf.
+* **virt-manager**: confirmado en los repositorios oficiales de Ubuntu, junto con `qemu-kvm`/`libvirt-daemon-system`/`libvirt-clients`/`bridge-utils` (necesarios para funcionar completo, no gestionados como `depends_on` separado sino como parte del mismo `packages=` del instalador — más simple que un caso real de `depends_on`, ya que se instalan siempre juntos). Requiere agregar el usuario a **dos** grupos (`libvirt` y `kvm`, no uno). `cpu-checker` (paquete pequeño, provee `kvm-ok`) se agrega para advertir si el hardware no soporta virtualización — advertencia informativa, no bloquea la instalación.
+
+### Implementación (2026-07-22)
+
+* `scripts/development/install_podman.sh` y `scripts/development/install_lazygit.sh` (`manager=apt`, apt-simple estándar) — agregados al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (I25), sin sumar IDs nuevos.
+* `scripts/development/install_virt_manager.sh` (`manager=apt`, apt-simple con 6 paquetes) — `install_tool()` agrega los grupos `libvirt`/`kvm`, habilita `libvirtd` vía `systemctl` (guardado con `command -v`, no aplica sin systemd real) y advierte (sin bloquear) si `kvm-ok` reporta falta de soporte. Prueba mockeada dedicada nueva (I48).
+* Podman/Lazygit quedan `requires_manual_validation=no` (apt-simple estándar); virt-manager queda `requires_manual_validation=yes` (requiere hardware/kernel real para validar KVM de verdad).
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

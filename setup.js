@@ -84,6 +84,11 @@ const tools = [
     { name: 'Beekeeper Studio', script: 'scripts/development/install_beekeeper_studio.sh', category: 'DEVELOPMENT' },
     { name: 'DbGate', script: 'scripts/development/install_dbgate.sh', category: 'DEVELOPMENT' },
 
+    // DEVELOPMENT — contenedores, Git TUI y virtualización libre (Hito 33)
+    { name: 'Podman', script: 'scripts/development/install_podman.sh', category: 'DEVELOPMENT' },
+    { name: 'Lazygit', script: 'scripts/development/install_lazygit.sh', category: 'DEVELOPMENT' },
+    { name: 'virt-manager', script: 'scripts/development/install_virt_manager.sh', category: 'DEVELOPMENT' },
+
     // AI — asistentes de escritorio (ver ADR 0043)
     { name: 'Claude Desktop', script: 'scripts/productivity/install_claude_desktop.sh', category: 'AI' },
     { name: 'OpenClaw', script: 'scripts/productivity/install_openclaw.sh', category: 'AI' },

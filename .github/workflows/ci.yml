@@ -136,6 +136,7 @@ jobs:
           - hoppscotch-installer
           - beekeeper-studio-installer
           - dbgate-installer
+          - virt-manager-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -458,6 +459,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I47"
             cmd: bash tests/test_dbgate_installer.sh
+          - case: virt-manager-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I48"
+            cmd: bash tests/test_virt_manager_installer.sh
     steps:
       - uses: actions/checkout@v7
 

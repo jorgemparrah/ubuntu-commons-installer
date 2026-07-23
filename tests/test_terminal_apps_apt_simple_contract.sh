@@ -3,9 +3,9 @@
 #
 # Prueba simulada (mocks) del ciclo de vida completo de instaladores
 # apt-simple agregados al catálogo después del piloto (nnn, lf; fzf,
-# thefuck, jq del Hito 28; Okular del Hito 29): todos están en los
-# repositorios oficiales de Ubuntu, mismo patrón que
-# scripts/system/install_ranger.sh. No instala nada real: apt-get/apt/
+# thefuck, jq del Hito 28; Okular del Hito 29; Podman, Lazygit del Hito
+# 33): todos están en los repositorios oficiales de Ubuntu, mismo patrón
+# que scripts/system/install_ranger.sh. No instala nada real: apt-get/apt/
 # dpkg/sudo se interceptan con comandos falsos en un PATH temporal.
 #
 # Uso:
@@ -207,6 +207,8 @@ test_apt_simple_contract "scripts/system/install_fzf.sh" "fzf" "fzf" "fzf"
 test_apt_simple_contract "scripts/system/install_thefuck.sh" "thefuck" "thefuck" "thefuck"
 test_apt_simple_contract "scripts/system/install_jq.sh" "jq" "jq" "jq"
 test_apt_simple_contract "scripts/productivity/install_okular.sh" "Okular" "okular" "okular"
+test_apt_simple_contract "scripts/development/install_podman.sh" "Podman" "podman" "podman"
+test_apt_simple_contract "scripts/development/install_lazygit.sh" "Lazygit" "lazygit" "lazygit"
 
 print_test_summary
 exit_with_test_summary
