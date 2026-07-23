@@ -1755,7 +1755,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1768,9 +1768,19 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=p
 * **Lutris** — gestor de bibliotecas de juegos multi-plataforma (Wine/Proton/emuladores/nativos), GPL-3.0, en apt/repo propio.
 * **Heroic Games Launcher** — launcher FOSS para Epic Games Store/GOG/Amazon Games (usa Legendary como backend), publica `.deb`/AppImage en GitHub Releases.
 
+### Investigación (2026-07-22)
+
+* **Lutris**: confirmado que el paquete oficial de Ubuntu vive en `multiverse` (no `universe`), desactualizado (0.5.14-2 en 24.04 vs v0.5.22 en GitHub). Existe un PPA oficial del propio equipo (`ppa:lutris-team/lutris`, mantenido por el lead del proyecto), pero la propia documentación de lutris.net recomienda en su lugar el `.deb` de GitHub Releases — se prefiere esa fuente por consistencia con el resto del catálogo (mismo mecanismo `deb-direct` ya usado para casos similares). Binario confirmado en `/usr/games/lutris` (ruta ya en el PATH por defecto de Ubuntu).
+* **Heroic Games Launcher**: confirmado que publica un único asset `.deb` sin ambigüedad (`Heroic-<version>-linux-amd64.deb`) en los últimos 3 releases, sin el problema de releases mixtos "solo-hotfix" ya visto con Hoppscotch/DbGate. Paquete y binario: `heroic` (el `postinst` crea el symlink en `/usr/bin` automáticamente, verificado inspeccionando el `.deb` real).
+
+### Implementación (2026-07-22)
+
+* `scripts/productivity/install_lutris.sh` y `scripts/productivity/install_heroic.sh` (`manager=deb-direct` vía `scripts/lib/github_release.sh`, mismo mecanismo que LocalSend/Hoppscotch/Beekeeper Studio/DbGate) — pruebas mockeadas dedicadas nuevas (I54, I55).
+* Ambos quedan `requires_manual_validation=yes`.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 
