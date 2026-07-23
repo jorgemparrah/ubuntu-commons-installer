@@ -556,6 +556,14 @@ tools_registry_register "yarn" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
+# pnpm: manager=mise igual que Yarn (Hito 42, ver ADR 0017, que ya
+# contemplaba pnpm sin haberlo implementado hasta ahora).
+tools_registry_register "pnpm" \
+    "name=pnpm" "description=Gestor de paquetes para proyectos Node.js, alternativa rápida a npm/Yarn" "category=development" "subcategory=package-managers" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=mise" "packages=pnpm" \
+    "script=scripts/development/install_pnpm.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
 # gh (GitHub CLI): manager=mise igual que kubectl/Yarn, aunque también está
 # en el repositorio oficial de Ubuntu (universe) — decisión explícita del
 # dueño del proyecto (ver ADR 0033 y ADR 0034, esta última corrige el
@@ -838,3 +846,42 @@ tools_registry_register "claude_desktop" \
     "script=scripts/productivity/install_claude_desktop.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Grupo CLIs de nube/IaC (Hito 42, ver docs/ROADMAP.md): Terraform/OpenTofu
+# (subcategory=iac) y AWS CLI/Azure CLI/Google Cloud CLI
+# (subcategory=cloud-cli). Terraform se incluye pese a su licencia BUSL
+# 1.1 desde 2023 (no aprobada por la OSI, pero de uso gratuito permitido
+# salvo para competir con HashiCorp) — ver el encabezado de
+# install_terraform.sh, mismo precedente que Obsidian/Discord/Slack/Steam
+# en este catálogo. AWS CLI usa un mecanismo nuevo de un solo caso
+# (manager=aws-cli-installer, ver install_awscli.sh): no tiene repo APT
+# oficial propio, solo un .zip con su propio instalador embebido.
+tools_registry_register "terraform" \
+    "name=Terraform" "description=Herramienta de infraestructura como código de HashiCorp (licencia BUSL, no FOSS desde 2023)" "category=development" "subcategory=iac" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=terraform" \
+    "script=scripts/development/install_terraform.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "opentofu" \
+    "name=OpenTofu" "description=Fork FOSS de Terraform (MPL-2.0), mantenido por la Linux Foundation" "category=development" "subcategory=iac" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=tofu" \
+    "script=scripts/development/install_opentofu.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "awscli" \
+    "name=AWS CLI" "description=Cliente de línea de comandos oficial de Amazon Web Services" "category=development" "subcategory=cloud-cli" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=aws-cli-installer" \
+    "script=scripts/development/install_awscli.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "azure_cli" \
+    "name=Azure CLI" "description=Cliente de línea de comandos oficial de Microsoft Azure" "category=development" "subcategory=cloud-cli" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=azure-cli" \
+    "script=scripts/development/install_azure_cli.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "google_cloud_cli" \
+    "name=Google Cloud CLI" "description=Cliente de línea de comandos oficial de Google Cloud Platform" "category=development" "subcategory=cloud-cli" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=apt-vendor-repo" "packages=google-cloud-cli" \
+    "script=scripts/development/install_google_cloud_cli.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
