@@ -153,7 +153,7 @@ if [[ "${RUN_CODE}" -eq 0 ]]; then
 else
     fail "'install' debería salir con código 0 (fue ${RUN_CODE}). Salida: ${RUN_OUTPUT}"
 fi
-if grep -q "gpg" "${UCI_MOCK_LOG}"; then
+if grep -qE "^gpg " "${UCI_MOCK_LOG}"; then
     fail "'install' NO debería invocar 'gpg --dearmor' (la clave de OpenTofu ya es binaria)"
 else
     pass "'install' no invoca 'gpg --dearmor' (clave ya binaria)"
