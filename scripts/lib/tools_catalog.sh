@@ -900,3 +900,25 @@ tools_registry_register "ffmpeg" \
     "script=scripts/system/install_ffmpeg.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+# Grupo seguridad/sincronización/transferencia (Hito 44, ver
+# docs/ROADMAP.md): Bitwarden (subcategory=security, mismo grupo que
+# KeePassXC), Syncthing y FileZilla (subcategory=file-sharing, mismo
+# grupo que LocalSend).
+tools_registry_register "bitwarden" \
+    "name=Bitwarden" "description=Gestor de contraseñas en la nube con cliente de escritorio libre" "category=productivity" "subcategory=security" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=snap" "packages=bitwarden" \
+    "script=scripts/productivity/install_bitwarden.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "syncthing" \
+    "name=Syncthing" "description=Sincronización de archivos P2P entre dispositivos, sin nube" "category=productivity" "subcategory=file-sharing" "classification=optional" "profiles=cli,desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=syncthing" \
+    "script=scripts/productivity/install_syncthing.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "filezilla" \
+    "name=FileZilla" "description=Cliente de transferencia de archivos FTP/SFTP" "category=productivity" "subcategory=file-sharing" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt" "packages=filezilla" \
+    "script=scripts/productivity/install_filezilla.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
