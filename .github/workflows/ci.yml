@@ -147,6 +147,12 @@ jobs:
           - xh-installer
           - dust-installer
           - procs-installer
+          - terraform-installer
+          - opentofu-installer
+          - awscli-installer
+          - azure-cli-installer
+          - google-cloud-cli-installer
+          - pnpm-via-mise
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -524,6 +530,36 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I58"
             cmd: bash tests/test_procs_installer.sh
+          - case: terraform-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I59"
+            cmd: bash tests/test_terraform_installer.sh
+          - case: opentofu-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I60"
+            cmd: bash tests/test_opentofu_installer.sh
+          - case: awscli-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I63"
+            cmd: bash tests/test_awscli_installer.sh
+          - case: azure-cli-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I61"
+            cmd: bash tests/test_azure_cli_installer.sh
+          - case: google-cloud-cli-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I62"
+            cmd: bash tests/test_google_cloud_cli_installer.sh
+          - case: pnpm-via-mise
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "P01"
+            cmd: bash tests/docker/test_pnpm_via_mise.sh
     steps:
       - uses: actions/checkout@v7
 

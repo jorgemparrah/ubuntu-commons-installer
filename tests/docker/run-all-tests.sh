@@ -128,6 +128,11 @@ run_suite "tests/test_heroic_installer.sh" bash tests/test_heroic_installer.sh
 run_suite "tests/test_xh_installer.sh" bash tests/test_xh_installer.sh
 run_suite "tests/test_dust_installer.sh" bash tests/test_dust_installer.sh
 run_suite "tests/test_procs_installer.sh" bash tests/test_procs_installer.sh
+run_suite "tests/test_terraform_installer.sh" bash tests/test_terraform_installer.sh
+run_suite "tests/test_opentofu_installer.sh" bash tests/test_opentofu_installer.sh
+run_suite "tests/test_azure_cli_installer.sh" bash tests/test_azure_cli_installer.sh
+run_suite "tests/test_google_cloud_cli_installer.sh" bash tests/test_google_cloud_cli_installer.sh
+run_suite "tests/test_awscli_installer.sh" bash tests/test_awscli_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

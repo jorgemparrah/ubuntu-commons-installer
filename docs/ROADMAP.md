@@ -1957,7 +1957,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1972,9 +1972,24 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
 * **AWS CLI**, **Azure CLI**, **Google Cloud CLI** (mismo grupo, subcategoría `iac` o una dedicada `cloud-cli`) — clientes CLI oficiales de cada proveedor; cada uno con su propio mecanismo de instalación oficial (investigar: AWS CLI vía instalador `.zip` oficial, Azure CLI vía repo APT/Microsoft, Google Cloud CLI vía repo APT propio de Google).
 * **pnpm** (`category=development`, `subcategory=package-managers`, mismo grupo que Yarn) — gestor de paquetes Node.js, mismo mecanismo `manager=mise` que Yarn (ver [ADR 0017](adr/0017-mise-instala-yarn-pnpm-directo.md), que ya contempla pnpm vía Mise sin haberlo implementado hasta ahora).
 
+### Investigación (2026-07-23)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent, tras los dos incidentes de extralimitación de Hitos 37/39), verificando cada mecanismo contra fuentes oficiales en vivo:
+
+* **Terraform**: confirmado por búsqueda que la licencia es BUSL 1.1 desde 2023 (no aprobada por la OSI, pero de uso gratuito permitido salvo para competir con HashiCorp). Mecanismo oficial (`developer.hashicorp.com/terraform/install`): clave GPG en `apt.releases.hashicorp.com/gpg`, confirmada ASCII-armored en vivo (`curl | head -3` mostró el bloque PGP), requiere `gpg --dearmor`; línea de repo con codename dinámico. Decisión: se incluye igual, junto a OpenTofu, mismo precedente que Obsidian/Discord/Slack/Steam.
+* **OpenTofu**: se leyó (solo lectura, nunca ejecutado) el script oficial `get.opentofu.org/install-opentofu.sh`. Confirmado en vivo (`curl` + `file`) que la clave primaria YA es binaria/dearmorada — más simple que Terraform, usa `apt_vendor_repo_fetch_file_plain`. Repo con distro fija `any`/componente `main` (sin codename).
+* **AWS CLI**: no tiene repositorio APT oficial propio. El método oficial "siempre la última versión" es un `.zip` estático (`awscli.amazonaws.com/awscli-exe-linux-{x86_64,aarch64}.zip`, confirmado 200 en vivo) que trae su propio instalador (`aws/install`, un script de AWS). También existe snap oficial (`aws-cli --classic`), pero por la jerarquía de fuentes de `AGENT.md` §15 se prioriza el instalador oficial. Se modeló como mecanismo nuevo de un solo caso (`manager=aws-cli-installer`, no generalizado — mismo criterio que `izpack-installer` de SoapUI).
+* **Azure CLI**: confirmado (`learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux`, pestaña apt) mecanismo `apt-vendor-repo` con clave dearmorada (`packages.microsoft.com/keys/microsoft.asc`) + codename dinámico, pero el repositorio se publica como archivo `.sources` DEB822 de varias líneas, no una línea `deb [...]` simple.
+* **Google Cloud CLI**: confirmado (`docs.cloud.google.com/sdk/docs/install`) mecanismo `apt-vendor-repo` con clave dearmorada (`packages.cloud.google.com/apt/doc/apt-key.gpg`) + línea `deb` con distro fija `cloud-sdk` (sin depender del codename, más simple que Terraform/Azure CLI). Paquete `google-cloud-cli` (371.0.0+; versiones previas usaban `google-cloud-sdk`, ya obsoleto).
+* **pnpm**: confirmado que Mise ya soporta pnpm como runtime instalable (mismo registry que Yarn/kubectl/gh) — implementación idéntica a `install_yarn.sh`, sin investigación adicional necesaria.
+
+### Implementación (2026-07-23)
+
+Seis instaladores nuevos en `scripts/development/`: `install_terraform.sh`, `install_opentofu.sh`, `install_azure_cli.sh`, `install_google_cloud_cli.sh` (los 4 vía `apt-vendor-repo`, reutilizando `scripts/lib/apt_vendor_repo.sh`) e `install_awscli.sh` (mecanismo nuevo `manager=aws-cli-installer`) e `install_pnpm.sh` (`manager=mise`, calco de `install_yarn.sh`). Nuevas subcategorías: `iac` (Terraform/OpenTofu) y `cloud-cli` (AWS/Azure/Google Cloud CLI); pnpm se agregó a `subcategory=package-managers` (junto a Yarn). Tests: 5 mockeados (`tests/test_terraform_installer.sh`, `tests/test_opentofu_installer.sh`, `tests/test_azure_cli_installer.sh`, `tests/test_google_cloud_cli_installer.sh`, `tests/test_awscli_installer.sh`, IDs I59-I63) y 1 funcional real vía Docker (`tests/docker/test_pnpm_via_mise.sh`, ID P01, mismo criterio que Yarn/gh: no se agrega a `tests/docker/run-all-tests.sh`). Catálogo pasa de 100 a 106 entradas. Wireado en `setup.js`, `docs/TOOLS.md`, `docs/TEST_CASES.md`, `tests/docker/run-all-tests.sh` y `.github/workflows/ci.yml` (6 jobs nuevos: `terraform-installer`, `opentofu-installer`, `awscli-installer`, `azure-cli-installer`, `google-cloud-cli-installer`, `pnpm-via-mise`).
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

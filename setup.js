@@ -80,6 +80,7 @@ const tools = [
     // DEVELOPMENT
     { name: 'Docker', description: 'Motor de contenedores para empaquetar y ejecutar aplicaciones', script: 'scripts/development/install_docker.sh', category: 'DEVELOPMENT' },
     { name: 'Yarn', description: 'Gestor de paquetes para proyectos Node.js', script: 'scripts/development/install_yarn.sh', category: 'DEVELOPMENT' },
+    { name: 'pnpm', description: 'Gestor de paquetes para proyectos Node.js, alternativa rápida a npm/Yarn', script: 'scripts/development/install_pnpm.sh', category: 'DEVELOPMENT' },
     { name: 'GitHub CLI', description: 'Cliente de línea de comandos oficial de GitHub', script: 'scripts/development/install_gh.sh', category: 'DEVELOPMENT' },
     { name: 'Postman', description: 'Cliente gráfico para probar y documentar APIs', script: 'scripts/development/install_postman.sh', category: 'DEVELOPMENT' },
     { name: 'DBeaver', description: 'Cliente gráfico universal de bases de datos SQL/NoSQL', script: 'scripts/development/install_dbeaver.sh', category: 'DEVELOPMENT' },
@@ -107,6 +108,13 @@ const tools = [
     { name: 'Podman', description: 'Motor de contenedores sin daemon y sin privilegios de root, alternativa a Docker', script: 'scripts/development/install_podman.sh', category: 'DEVELOPMENT' },
     { name: 'Lazygit', description: 'Interfaz de terminal (TUI) para operar Git de forma visual', script: 'scripts/development/install_lazygit.sh', category: 'DEVELOPMENT' },
     { name: 'virt-manager', description: 'Interfaz gráfica para administrar máquinas virtuales QEMU/KVM', script: 'scripts/development/install_virt_manager.sh', category: 'DEVELOPMENT' },
+
+    // DEVELOPMENT — CLIs de nube e infraestructura como código (Hito 42)
+    { name: 'Terraform', description: 'Herramienta de infraestructura como código de HashiCorp (licencia BUSL, no FOSS desde 2023)', script: 'scripts/development/install_terraform.sh', category: 'DEVELOPMENT' },
+    { name: 'OpenTofu', description: 'Fork FOSS de Terraform (MPL-2.0), mantenido por la Linux Foundation', script: 'scripts/development/install_opentofu.sh', category: 'DEVELOPMENT' },
+    { name: 'AWS CLI', description: 'Cliente de línea de comandos oficial de Amazon Web Services', script: 'scripts/development/install_awscli.sh', category: 'DEVELOPMENT' },
+    { name: 'Azure CLI', description: 'Cliente de línea de comandos oficial de Microsoft Azure', script: 'scripts/development/install_azure_cli.sh', category: 'DEVELOPMENT' },
+    { name: 'Google Cloud CLI', description: 'Cliente de línea de comandos oficial de Google Cloud Platform', script: 'scripts/development/install_google_cloud_cli.sh', category: 'DEVELOPMENT' },
 
     // AI — asistentes de escritorio (ver ADR 0043)
     { name: 'Claude Desktop', description: 'Aplicación de escritorio de Claude (incluye el modo Cowork)', script: 'scripts/productivity/install_claude_desktop.sh', category: 'AI' },
