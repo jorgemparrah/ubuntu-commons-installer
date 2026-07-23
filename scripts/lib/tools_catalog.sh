@@ -318,6 +318,24 @@ tools_registry_register "discord" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# Element y Signal Desktop (Hito 36, 2026-07-22): mismo grupo
+# communication. Element vía apt-vendor-repo (clave ya lista +
+# apt_vendor_repo_write_list, distro fija 'default'). Signal Desktop vía
+# apt-vendor-repo combinando ambos sub-mecanismos (clave dearmorada +
+# .sources ya armado) — ver la advertencia real documentada en el propio
+# install_signal_desktop.sh sobre la ruta exacta del keyring.
+tools_registry_register "element" \
+    "name=Element" "category=productivity" "subcategory=communication" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=element-desktop" \
+    "script=scripts/productivity/install_element.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "signal_desktop" \
+    "name=Signal Desktop" "category=productivity" "subcategory=communication" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=signal-desktop" \
+    "script=scripts/productivity/install_signal_desktop.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 # Productividad de escritorio (Hito 26, 2026-07-21): LibreOffice
 # (apt-simple, el paquete oficial de Ubuntu ya está razonablemente al
 # día; el PPA "Fresh" de TDF es explícitamente bleeding-edge/inestable,
@@ -340,6 +358,17 @@ tools_registry_register "onlyoffice" \
 tools_registry_register "obsidian" \
     "name=Obsidian" "category=productivity" "subcategory=notes" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=snap" "packages=obsidian" \
     "script=scripts/productivity/install_obsidian.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Joplin (Hito 36, 2026-07-22): mismo grupo notes que Obsidian —
+# alternativa 100% FOSS (AGPL-3.0). manager=curl-script, pero
+# check_status/uninstall propios (no la convención ~/.local/bin del
+# resto del grupo): el script oficial instala en ~/.joplin/Joplin.AppImage,
+# sin symlink en el PATH.
+tools_registry_register "joplin" \
+    "name=Joplin" "category=productivity" "subcategory=notes" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=curl-script" \
+    "script=scripts/productivity/install_joplin.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
