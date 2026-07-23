@@ -1884,7 +1884,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1897,9 +1897,19 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=s
 * **Kitty** — terminal acelerada por GPU, GPL-3.0, ya está en el repositorio oficial de Ubuntu.
 * **Alacritty** — terminal acelerada por GPU, Apache-2.0, con PPA propio activo (`ppa:mmstick76/alacritty`).
 
+### Investigación (2026-07-23)
+
+* **Kitty**: confirmado en `universe` de Ubuntu 24.04 (0.32.2, servido incluso por `esm-apps`) frente a v0.48.0 en GitHub. El propio autor (Kovid Goyal) publica un instalador oficial (`sw.kovidgoyal.net/kitty/installer.sh`, confirmado auténtico) que da la versión más fresca, pero deja el binario en `~/.local/kitty.app/bin/kitty` sin symlink al PATH ni entrada `.desktop` — integración manual pendiente que el proyecto evita a propósito (AGENT.md §2). Se prefiere `apt-simple`, mismo criterio que LibreOffice en el Hito 26 (priorizar integración/estabilidad sobre la fuente más fresca cuando esta última implica peor calidad de mecanismo).
+* **Alacritty**: **la nota original de este hito estaba desactualizada** — se confirmó en vivo que el PPA `ppa:mmstick76/alacritty` (mantenido por el equipo de Pop!_OS, no por el propio proyecto Alacritty) está descontinuado desde agosto de 2021 (última versión publicada: 0.9.0), sin builds para `noble` (24.04) ni versiones posteriores — mismo hallazgo que Lazygit en el Hito 33 (PPA de terceros abandonado). Se usa el paquete oficial de Ubuntu (0.13.2 en 24.04 frente a v0.17.0 en GitHub), desactualizado pero única fuente gestionable viable.
+
+### Implementación (2026-07-23)
+
+* `scripts/system/install_kitty.sh` y `scripts/system/install_alacritty.sh` (`manager=apt`, apt-simple estándar) — agregados al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (I25), sin sumar IDs nuevos ni casos de CI nuevos (reutilizan el job ya existente).
+* Ambos quedan `requires_manual_validation=no`.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 
