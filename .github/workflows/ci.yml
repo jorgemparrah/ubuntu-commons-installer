@@ -156,6 +156,8 @@ jobs:
           - syncthing-installer
           - eza-installer
           - zip-utils-installer
+          - tailscale-installer
+          - cloudflared-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -578,6 +580,16 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I66"
             cmd: bash tests/test_zip_utils_installer.sh
+          - case: tailscale-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I67"
+            cmd: bash tests/test_tailscale_installer.sh
+          - case: cloudflared-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I68"
+            cmd: bash tests/test_cloudflared_installer.sh
     steps:
       - uses: actions/checkout@v7
 

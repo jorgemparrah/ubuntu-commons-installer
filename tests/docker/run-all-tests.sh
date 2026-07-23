@@ -136,6 +136,8 @@ run_suite "tests/test_awscli_installer.sh" bash tests/test_awscli_installer.sh
 run_suite "tests/test_syncthing_installer.sh" bash tests/test_syncthing_installer.sh
 run_suite "tests/test_eza_installer.sh" bash tests/test_eza_installer.sh
 run_suite "tests/test_zip_utils_installer.sh" bash tests/test_zip_utils_installer.sh
+run_suite "tests/test_tailscale_installer.sh" bash tests/test_tailscale_installer.sh
+run_suite "tests/test_cloudflared_installer.sh" bash tests/test_cloudflared_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

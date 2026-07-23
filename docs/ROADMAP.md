@@ -2134,7 +2134,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2149,9 +2149,22 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto. **Renombra 
 * **Tailscale** — mesh VPN basada en WireGuard, cliente open-source (BSD-3-Clause) aunque el servicio de coordinación es propietario (con capa gratuita); repositorio APT oficial propio.
 * **Cloudflare Tunnel** (`cloudflared`) — túneles salientes sin abrir puertos; el cliente es open-source (Apache-2.0/BSD según el componente), aunque depende del servicio de Cloudflare; repositorio APT oficial propio.
 
+### Investigación (2026-07-23)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent):
+
+* **Decisión de categoría**: se recategoriza `ngrok` de `category=development` a `category=system` (junto con las 4 herramientas nuevas), ya que ninguna de las 5 es una herramienta de codificación en sí — son infraestructura de red/túneles de uso general. El script de ngrok permanece en `scripts/development/install_ngrok.sh` (no se mueve de directorio), mismo criterio ya usado con GIMP/OBS Studio al recategorizar a `category=multimedia` sin mover sus scripts.
+* **WireGuard, OpenVPN**: confirmados en los repositorios oficiales de Ubuntu (`apt-cache policy`). El paquete `wireguard` es un metapaquete que depende de `wireguard-tools` (confirmado con `apt-cache depends`) — el binario de referencia (`wg`) lo provee ese paquete dependiente, no uno con el mismo nombre.
+* **Tailscale**: no está en los repositorios de Ubuntu. Confirmado en vivo (`pkgs.tailscale.com/stable/ubuntu/<codename>.noarmor.gpg`, con `curl` + `file`) que la clave YA es binaria (el propio nombre "noarmor" ya lo indica) — usa `apt_vendor_repo_fetch_file_plain`, sin `gpg --dearmor`. La línea de repositorio SÍ depende del codename de la distro.
+* **Cloudflare Tunnel**: no está en los repositorios de Ubuntu. Confirmado en vivo (`pkg.cloudflare.com/cloudflare-main.gpg`) que la clave YA es binaria. Distro fija `any` (la documentación oficial recomienda explícitamente esta variante sobre las variantes por codename) — más simple que Tailscale.
+
+### Implementación (2026-07-23)
+
+`scripts/system/install_{wireguard,openvpn,tailscale,cloudflared}.sh` (WireGuard/OpenVPN vía `manager=apt`; Tailscale/Cloudflare Tunnel vía `manager=apt-vendor-repo`). WireGuard/OpenVPN se agregaron al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (sin jobs de CI nuevos); Tailscale y Cloudflare Tunnel tienen tests dedicados (`tests/test_tailscale_installer.sh` I67, `tests/test_cloudflared_installer.sh` I68) con sus propios jobs de CI. `ngrok` recategorizado de `development` a `system` en `scripts/lib/tools_catalog.sh`/`setup.js`/`docs/TOOLS.md`. Catálogo pasa de 118 a 122 entradas.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 
