@@ -4,10 +4,11 @@
 # Prueba simulada (mocks) del ciclo de vida completo de instaladores
 # apt-simple agregados al catálogo después del piloto (nnn, lf; fzf,
 # thefuck, jq del Hito 28; Okular del Hito 29; Podman, Lazygit del Hito
-# 33; HTTPie del Hito 38; duf, btop, zoxide, tealdeer del Hito 39): todos
-# están en los repositorios oficiales de Ubuntu, mismo patrón que
-# scripts/system/install_ranger.sh. No instala nada real: apt-get/apt/
-# dpkg/sudo se interceptan con comandos falsos en un PATH temporal.
+# 33; HTTPie del Hito 38; duf, btop, zoxide, tealdeer del Hito 39; Kitty,
+# Alacritty del Hito 40): todos están en los repositorios oficiales de
+# Ubuntu, mismo patrón que scripts/system/install_ranger.sh. No instala
+# nada real: apt-get/apt/dpkg/sudo se interceptan con comandos falsos en
+# un PATH temporal.
 #
 # Uso:
 #   bash tests/test_terminal_apps_apt_simple_contract.sh
@@ -211,6 +212,8 @@ test_apt_simple_contract "scripts/productivity/install_okular.sh" "Okular" "okul
 test_apt_simple_contract "scripts/development/install_podman.sh" "Podman" "podman" "podman"
 test_apt_simple_contract "scripts/development/install_lazygit.sh" "Lazygit" "lazygit" "lazygit"
 test_apt_simple_contract "scripts/system/install_httpie.sh" "HTTPie" "httpie" "httpie"
+test_apt_simple_contract "scripts/system/install_kitty.sh" "Kitty" "kitty" "kitty"
+test_apt_simple_contract "scripts/system/install_alacritty.sh" "Alacritty" "alacritty" "alacritty"
 test_apt_simple_contract "scripts/system/install_duf.sh" "duf" "duf" "duf"
 test_apt_simple_contract "scripts/system/install_btop.sh" "btop" "btop" "btop"
 test_apt_simple_contract "scripts/system/install_zoxide.sh" "zoxide" "zoxide" "zoxide"

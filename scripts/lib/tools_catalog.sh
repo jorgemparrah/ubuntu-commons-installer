@@ -665,6 +665,24 @@ tools_registry_register "wezterm" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
 
+# Kitty y Alacritty (Hito 40, 2026-07-23): mismo grupo terminals que
+# Ghostty/Terminator/WezTerm. Ambos apt-simple: el instalador oficial de
+# Kitty (freshest, pero deja el binario sin symlink/desktop) y el PPA
+# histórico de Alacritty (mmstick76, descontinuado desde 2021, sin
+# soporte para 24.04+) quedan descartados, ver advertencias reales en
+# cada script.
+tools_registry_register "kitty" \
+    "name=Kitty" "category=system" "classification=optional" "profiles=cli,full" "subcategory=terminals" "manager=apt" "packages=kitty" \
+    "script=scripts/system/install_kitty.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "alacritty" \
+    "name=Alacritty" "category=system" "classification=optional" "profiles=cli,full" "subcategory=terminals" "manager=apt" "packages=alacritty" \
+    "script=scripts/system/install_alacritty.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
 # Grupo curl-script (Hito 16): manager=curl-script, ver
 # scripts/lib/curl_script.sh (ADR 0037). Categorías por función real, no
 # por ser "de IA" en sí (ver ADR 0036): CLIs de desarrollo en

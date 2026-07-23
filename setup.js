@@ -40,6 +40,8 @@ const tools = [
     { name: 'Yazi', script: 'scripts/system/install_yazi.sh', category: 'SYSTEM' },
     { name: 'Ghostty', script: 'scripts/system/install_ghostty.sh', category: 'SYSTEM' },
     { name: 'WezTerm', script: 'scripts/system/install_wezterm.sh', category: 'SYSTEM' },
+    { name: 'Kitty', script: 'scripts/system/install_kitty.sh', category: 'SYSTEM' },
+    { name: 'Alacritty', script: 'scripts/system/install_alacritty.sh', category: 'SYSTEM' },
 
     // SYSTEM — shell-personalization
     { name: 'Oh My Zsh', script: 'scripts/system/install_oh_my_zsh.sh', category: 'SYSTEM' },
