@@ -5,8 +5,9 @@
 # apt-simple agregados al catálogo después del piloto (nnn, lf; fzf,
 # thefuck, jq del Hito 28; Okular del Hito 29; Podman, Lazygit del Hito
 # 33; HTTPie del Hito 38; duf, btop, zoxide, tealdeer del Hito 39; Kitty,
-# Alacritty del Hito 40; ImageMagick, FFmpeg del Hito 43): todos están en
-# los repositorios oficiales de Ubuntu, mismo patrón que
+# Alacritty del Hito 40; ImageMagick, FFmpeg del Hito 43; FileZilla del
+# Hito 44): todos están en los repositorios oficiales de Ubuntu, mismo
+# patrón que
 # scripts/system/install_ranger.sh. No instala
 # nada real: apt-get/apt/dpkg/sudo se interceptan con comandos falsos en
 # un PATH temporal.
@@ -222,6 +223,7 @@ test_apt_simple_contract "scripts/system/install_tealdeer.sh" "tealdeer" "tealde
 test_apt_simple_contract "scripts/editors/install_neovim.sh" "Neovim" "neovim" "nvim"
 test_apt_simple_contract "scripts/system/install_imagemagick.sh" "ImageMagick" "imagemagick" "convert"
 test_apt_simple_contract "scripts/system/install_ffmpeg.sh" "FFmpeg" "ffmpeg" "ffmpeg"
+test_apt_simple_contract "scripts/productivity/install_filezilla.sh" "FileZilla" "filezilla" "filezilla"
 
 print_test_summary
 exit_with_test_summary

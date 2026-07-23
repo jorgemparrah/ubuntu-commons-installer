@@ -153,6 +153,7 @@ jobs:
           - azure-cli-installer
           - google-cloud-cli-installer
           - pnpm-via-mise
+          - syncthing-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -560,6 +561,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "P01"
             cmd: bash tests/docker/test_pnpm_via_mise.sh
+          - case: syncthing-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I64"
+            cmd: bash tests/test_syncthing_installer.sh
     steps:
       - uses: actions/checkout@v7
 

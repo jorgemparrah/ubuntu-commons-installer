@@ -2044,7 +2044,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2058,9 +2058,21 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
 * **Syncthing** (`category=productivity`, `subcategory=file-sharing`, mismo grupo que LocalSend) — sincronización de archivos P2P sin nube, MPL-2.0; probablemente ya está en los repositorios oficiales de Ubuntu.
 * **FileZilla** (`category=productivity`, `subcategory=file-sharing`) — cliente FTP/SFTP, GPL-2.0, en los repositorios oficiales de Ubuntu.
 
+### Investigación (2026-07-23)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent):
+
+* **Bitwarden**: confirmado en vivo (`snap info bitwarden`) que el snap oficial lo publica la cuenta verificada "8bit Solutions LLC (bitwarden)", licencia **GPL-3.0** (no AGPL-3.0 como asumía el objetivo original — corregido tras verificación en vivo). Confinamiento estricto (sin `--classic`); la documentación oficial exige conectar manualmente la interfaz `password-manager-service` tras instalar, sin la cual el almacenamiento seguro no funciona — se automatiza en el instalador.
+* **Syncthing**: NO está en el objetivo original ("probablemente ya está en los repositorios oficiales") de forma óptima — SÍ está en Ubuntu (`1.27.x`, Syncthing 1.x), pero se confirmó en vivo (API de GitHub Releases) que el repositorio APT oficial del propio proyecto (`apt.syncthing.net`) publica Syncthing 2.x (`v2.1.2`) — brecha de versión MAYOR (1.x vs 2.x, no menor), se prioriza la fuente más actualizada (mismo criterio que VirtualBox). Clave GPG del repo oficial confirmada en vivo como ya binaria (`curl` + `file`), igual que OpenTofu.
+* **FileZilla**: confirmado que el paquete de Ubuntu (3.66.5) queda una versión menor detrás del upstream (3.70.6) — brecha modesta. FileZilla no ofrece repo APT, PPA ni snap oficial propio, solo un tarball genérico sin instalador — se mantiene el paquete oficial de Ubuntu, riesgo de versión aceptado y documentado (mismo criterio que Lazygit/Neovim).
+
+### Implementación (2026-07-23)
+
+`scripts/productivity/install_{bitwarden,syncthing,filezilla}.sh` (`manager=snap`, `manager=apt-vendor-repo` y `manager=apt` respectivamente). Bitwarden se agregó al test parametrizado existente `tests/test_snap_installers_contract.sh`; FileZilla al parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (ninguno de los dos suma un job de CI nuevo). Syncthing tiene test dedicado `tests/test_syncthing_installer.sh` (I64) con su propio job de CI (`syncthing-installer`), por su mecanismo `apt-vendor-repo` propio. Catálogo pasa de 108 a 111 entradas.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

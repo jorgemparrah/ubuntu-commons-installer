@@ -158,6 +158,7 @@ const tools = [
     { name: 'Obsidian', description: 'Aplicación de notas en Markdown con vinculación entre notas (grafo de conocimiento)', script: 'scripts/productivity/install_obsidian.sh', category: 'PRODUCTIVITY' },
     { name: 'Joplin', description: 'Aplicación de notas en Markdown 100% libre, alternativa a Obsidian', script: 'scripts/productivity/install_joplin.sh', category: 'PRODUCTIVITY' },
     { name: 'KeePassXC', description: 'Gestor de contraseñas libre con cifrado local', script: 'scripts/productivity/install_keepassxc.sh', category: 'PRODUCTIVITY' },
+    { name: 'Bitwarden', description: 'Gestor de contraseñas en la nube con cliente de escritorio libre', script: 'scripts/productivity/install_bitwarden.sh', category: 'PRODUCTIVITY' },
 
     // PRODUCTIVITY — navegadores (Hito 27)
     { name: 'Brave', description: 'Navegador basado en Chromium con bloqueo de rastreadores integrado', script: 'scripts/productivity/install_brave.sh', category: 'PRODUCTIVITY' },
@@ -165,6 +166,8 @@ const tools = [
 
     // PRODUCTIVITY — misceláneos (Hito 29)
     { name: 'LocalSend', description: 'Envío de archivos entre dispositivos en la misma red local, sin nube', script: 'scripts/productivity/install_localsend.sh', category: 'PRODUCTIVITY' },
+    { name: 'Syncthing', description: 'Sincronización de archivos P2P entre dispositivos, sin nube', script: 'scripts/productivity/install_syncthing.sh', category: 'PRODUCTIVITY' },
+    { name: 'FileZilla', description: 'Cliente de transferencia de archivos FTP/SFTP', script: 'scripts/productivity/install_filezilla.sh', category: 'PRODUCTIVITY' },
     { name: 'Steam', description: 'Plataforma de distribución de videojuegos de Valve', script: 'scripts/productivity/install_steam.sh', category: 'PRODUCTIVITY' },
     { name: 'Lutris', description: 'Gestor de bibliotecas de juegos multi-plataforma (Wine/Proton/emuladores)', script: 'scripts/productivity/install_lutris.sh', category: 'PRODUCTIVITY' },
     { name: 'Heroic Games Launcher', description: 'Launcher libre para juegos de Epic Games Store, GOG y Amazon Games', script: 'scripts/productivity/install_heroic.sh', category: 'PRODUCTIVITY' },
