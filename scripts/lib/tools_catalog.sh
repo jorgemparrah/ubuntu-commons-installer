@@ -252,6 +252,23 @@ tools_registry_register "gimp" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
 
+# Inkscape y Krita (Hito 35, 2026-07-22): mismo grupo multimedia/graphics
+# que GIMP (complementarios, no reemplazos — Inkscape es vectorial,
+# Krita es pintura digital). Inkscape vía PPA oficial del propio equipo
+# (ppa:inkscape.dev/stable, confirmado activo); Krita vía snap oficial de
+# la Krita Foundation (cuenta verificada), sin --classic.
+tools_registry_register "inkscape" \
+    "name=Inkscape" "category=multimedia" "classification=optional" "profiles=full" "subcategory=graphics" "manager=apt-vendor-repo" "packages=inkscape" \
+    "script=scripts/system/install_inkscape.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "krita" \
+    "name=Krita" "category=multimedia" "classification=optional" "profiles=full" "subcategory=graphics" "manager=snap" "packages=krita" \
+    "script=scripts/system/install_krita.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
 # OBS Studio: manager=apt-vendor-repo (PPA oficial, ver ADR 0038) — migró
 # de Snap (etiquetado "unofficial" por el propio OBS Project). Ya no
 # depende de snapd, requires_manual_validation=no. category=multimedia/

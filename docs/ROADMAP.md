@@ -1671,7 +1671,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1684,9 +1684,21 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=m
 * **Inkscape** — editor de gráficos vectoriales, GPL-3.0, complementario a GIMP (que es solo raster).
 * **Krita** — pintura digital, GPL-3.0, complementario a GIMP.
 
+### Investigación (2026-07-22)
+
+* **Inkscape**: confirmado que el paquete de Ubuntu 24.04 (1.2.2) queda 2 versiones mayores atrás de la estable actual (1.4.4). Confirmado en vivo (Launchpad) el PPA oficial `ppa:inkscape.dev/stable`, mantenido por el propio equipo "Inkscape Developers" — mismo criterio de priorizar la fuente más actualizada ya aplicado a GIMP.
+* **Krita**: confirmado snap oficial `krita`, publicado por la cuenta verificada de la Krita Foundation (`validation: verified` vía la API de Snapcraft), con una versión más actualizada (5.2.11) que el paquete de Ubuntu (5.2.2). Confirmado que, a diferencia de GIMP, no requiere `--classic`.
+* Al implementar, se detectó y corrigió una inconsistencia preexistente en `setup.js`: GIMP y OBS Studio habían quedado con `category: 'SYSTEM'` en el menú interactivo pese a que la recategorización del catálogo (mismo día, ver ADR relacionado a `category=multimedia`) ya los movió a `category=multimedia` en `tools_catalog.sh` — corregido junto con el agregado de Inkscape/Krita al mismo bloque del menú.
+
+### Implementación (2026-07-22)
+
+* `scripts/system/install_inkscape.sh` (`manager=apt-vendor-repo` vía PPA, mismo patrón que KeePassXC/ULauncher) — prueba mockeada dedicada nueva (I50).
+* `scripts/system/install_krita.sh` (`manager=snap`, sin `--classic`) — agregado a los tests parametrizados existentes del grupo Snap (I10/I22).
+* Ambos quedan `requires_manual_validation=yes`.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 
