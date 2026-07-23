@@ -11,13 +11,19 @@
 # `.deb` — solo tarballs `.tar.gz` con un binario estático (musl) para
 # Linux x86_64, distinto de todo lo demás gestionado hasta ahora en este
 # catálogo (apt/apt-vendor-repo/snap/deb-direct/curl-script). Mecanismo
-# nuevo: `manager=tarball-direct` (primer y único caso hasta ahora, no se
-# abstrae a una biblioteca compartida — ver criterio de ADR 0032,
-# "esperar un segundo caso real"). Reutiliza
-# `github_release_asset_url` (scripts/lib/github_release.sh) para
-# resolver la URL del asset, y `curl_script_uninstall_local_bin`
-# (scripts/lib/curl_script.sh) para la desinstalación: el binario queda
-# en `~/.local/bin/xh`, misma convención que el grupo curl-script.
+# nuevo: `manager=archive-direct` — descargar un archivo comprimido
+# (`.tar.gz` o `.zip`) de GitHub Releases, extraer un único binario y
+# dejarlo en `~/.local/bin`. Originalmente `manager=tarball-direct`
+# (Hito 38); renombrado a `archive-direct` en el Hito 39 al aparecer un
+# segundo caso real (`procs`, que usa `.zip` en vez de `.tar.gz` — ver
+# ADR 0032, "esperar un segundo caso real antes de generalizar"). No se
+# abstrae a una biblioteca compartida todavía: la lógica de
+# descarga/extracción sigue siendo propia de cada script, solo el NOMBRE
+# del mecanismo se generalizó. Reutiliza `github_release_asset_url`
+# (scripts/lib/github_release.sh) para resolver la URL del asset, y
+# `curl_script_uninstall_local_bin` (scripts/lib/curl_script.sh) para la
+# desinstalación: el binario queda en `~/.local/bin/xh`, misma
+# convención que el grupo curl-script.
 
 set -Eeuo pipefail
 
