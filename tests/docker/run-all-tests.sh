@@ -125,6 +125,7 @@ run_suite "tests/test_signal_desktop_installer.sh" bash tests/test_signal_deskto
 run_suite "tests/test_joplin_installer.sh" bash tests/test_joplin_installer.sh
 run_suite "tests/test_lutris_installer.sh" bash tests/test_lutris_installer.sh
 run_suite "tests/test_heroic_installer.sh" bash tests/test_heroic_installer.sh
+run_suite "tests/test_xh_installer.sh" bash tests/test_xh_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

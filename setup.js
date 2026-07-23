@@ -23,6 +23,8 @@ const tools = [
     { name: 'thefuck', script: 'scripts/system/install_thefuck.sh', category: 'SYSTEM' },
     { name: 'jq', script: 'scripts/system/install_jq.sh', category: 'SYSTEM' },
     { name: 'yq', script: 'scripts/system/install_yq.sh', category: 'SYSTEM' },
+    { name: 'HTTPie', script: 'scripts/system/install_httpie.sh', category: 'SYSTEM' },
+    { name: 'xh', script: 'scripts/system/install_xh.sh', category: 'SYSTEM' },
 
     // SYSTEM — terminals
     { name: 'Terminator', script: 'scripts/system/install_terminator.sh', category: 'SYSTEM' },

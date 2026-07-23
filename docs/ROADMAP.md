@@ -1794,7 +1794,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -1807,9 +1807,20 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=s
 * **HTTPie** — cliente HTTP de línea de comandos con salida legible, BSD-3-Clause.
 * **xh** — reimplementación de HTTPie en Rust, mucho más rápida, MIT/Apache-2.0.
 
+### Investigación (2026-07-23)
+
+* **HTTPie**: confirmado en `universe` de Ubuntu 24.04 (paquete `httpie`, v3.2.2-1). Instala tres binarios (`http`/`httpie`/`https`); se usa `httpie` para `check_status` por no tener ambigüedad de nombre con otras herramientas. Sin repositorio APT propio del proyecto.
+* **xh**: confirmado en vivo que **no** está en apt/snap de Ubuntu, y que el release más reciente en GitHub (v0.26.1) **no publica ningún `.deb`** — solo tarballs `.tar.gz` con un binario estático (musl) para Linux x86_64 (y otras plataformas). Esto rompe el supuesto del mecanismo `deb-direct` existente (que asume un asset `.deb` instalable vía `apt-get`). Se confirmó inspeccionando el tarball real que contiene el binario `xh` en una ruta anidada (`xh-v<version>-x86_64-unknown-linux-musl/xh`), junto a docs/completions.
+
+### Implementación (2026-07-23)
+
+* `scripts/system/install_httpie.sh` (`manager=apt`, apt-simple estándar) — agregado al test parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh` (I25), sin sumar un ID nuevo.
+* `scripts/system/install_xh.sh` (`manager=tarball-direct`, nuevo — primer y único caso hasta ahora, no se abstrae a una biblioteca compartida, ver criterio de ADR 0032): reutiliza `github_release_asset_url` (`scripts/lib/github_release.sh`) para resolver la URL del tarball y `curl_script_uninstall_local_bin` (`scripts/lib/curl_script.sh`) para la desinstalación, ya que el binario resultante queda en `~/.local/bin/xh` (misma convención que el grupo curl-script). Prueba mockeada dedicada nueva (I56), que mockea `tar` explícitamente (simula la extracción real en vez de generar un `.tar.gz` real).
+* HTTPie queda `requires_manual_validation=no`; xh queda `requires_manual_validation=yes`.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

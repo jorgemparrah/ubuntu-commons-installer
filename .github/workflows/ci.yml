@@ -144,6 +144,7 @@ jobs:
           - joplin-installer
           - lutris-installer
           - heroic-installer
+          - xh-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -506,6 +507,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I55"
             cmd: bash tests/test_heroic_installer.sh
+          - case: xh-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I56"
+            cmd: bash tests/test_xh_installer.sh
     steps:
       - uses: actions/checkout@v7
 
