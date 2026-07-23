@@ -138,6 +138,7 @@ jobs:
           - dbgate-installer
           - virt-manager-installer
           - vscodium-installer
+          - inkscape-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -470,6 +471,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I49"
             cmd: bash tests/test_vscodium_installer.sh
+          - case: inkscape-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I50"
+            cmd: bash tests/test_inkscape_installer.sh
     steps:
       - uses: actions/checkout@v7
 

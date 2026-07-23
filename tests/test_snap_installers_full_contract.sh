@@ -143,6 +143,7 @@ test_snap_full_contract "scripts/productivity/install_obsidian.sh" "Obsidian" "o
 test_snap_full_contract "scripts/productivity/install_chromium.sh" "Chromium" "chromium" "no"
 test_snap_full_contract "scripts/system/install_yq.sh" "yq" "yq" "no"
 test_snap_full_contract "scripts/development/install_bruno.sh" "Bruno" "bruno" "yes"
+test_snap_full_contract "scripts/system/install_krita.sh" "Krita" "krita" "no"
 
 print_test_summary
 exit_with_test_summary

@@ -41,8 +41,6 @@ const tools = [
     { name: 'Meld', script: 'scripts/system/install_meld.sh', category: 'SYSTEM' },
     { name: 'Baobab', script: 'scripts/system/install_baobab.sh', category: 'SYSTEM' },
     { name: 'GParted', script: 'scripts/system/install_gparted.sh', category: 'SYSTEM' },
-    { name: 'GIMP', script: 'scripts/system/install_gimp.sh', category: 'SYSTEM' },
-    { name: 'OBS Studio', script: 'scripts/system/install_obs_studio.sh', category: 'SYSTEM' },
 
     // SYSTEM — extras
     { name: 'cmatrix', script: 'scripts/system/install_cmatrix.sh', category: 'SYSTEM' },
@@ -53,6 +51,15 @@ const tools = [
     { name: 'v4l-utils', script: 'scripts/system/install_v4l_utils.sh', category: 'MULTIMEDIA' },
     { name: 'ubuntu-restricted-extras', script: 'scripts/system/install_ubuntu_restricted_extras.sh', category: 'MULTIMEDIA' },
     { name: 'VLC', script: 'scripts/system/install_vlc.sh', category: 'MULTIMEDIA' },
+
+    // MULTIMEDIA — gráficos (GIMP/OBS Studio movidos aquí desde SYSTEM el
+    // 2026-07-22, consistente con category=multimedia en
+    // tools_catalog.sh desde la recategorización del mismo día; Inkscape
+    // y Krita nuevos, Hito 35)
+    { name: 'GIMP', script: 'scripts/system/install_gimp.sh', category: 'MULTIMEDIA' },
+    { name: 'OBS Studio', script: 'scripts/system/install_obs_studio.sh', category: 'MULTIMEDIA' },
+    { name: 'Inkscape', script: 'scripts/system/install_inkscape.sh', category: 'MULTIMEDIA' },
+    { name: 'Krita', script: 'scripts/system/install_krita.sh', category: 'MULTIMEDIA' },
 
     // EDITORS
     { name: 'Visual Studio Code', script: 'scripts/editors/install_vscode.sh', category: 'EDITORS' },

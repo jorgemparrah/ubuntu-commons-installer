@@ -119,6 +119,7 @@ run_suite "tests/test_beekeeper_studio_installer.sh" bash tests/test_beekeeper_s
 run_suite "tests/test_dbgate_installer.sh" bash tests/test_dbgate_installer.sh
 run_suite "tests/test_virt_manager_installer.sh" bash tests/test_virt_manager_installer.sh
 run_suite "tests/test_vscodium_installer.sh" bash tests/test_vscodium_installer.sh
+run_suite "tests/test_inkscape_installer.sh" bash tests/test_inkscape_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then
