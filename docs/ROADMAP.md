@@ -2272,7 +2272,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2285,9 +2285,20 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
 * **Helix** (`category=editors`, `subcategory=terminal-editors`, mismo grupo que Vim/Neovim, Hito 34) — editor modal con LSP integrado por defecto (sin plugins adicionales), MPL-2.0, con PPA propio o snap oficial.
 * **Starship** (`category=system`, `subcategory=shell-personalization`, mismo grupo que Oh My Zsh/Powerlevel10k) — prompt de shell multi-shell (bash/zsh/fish/nu), ISC License, instalador oficial `curl \| sh` (mismo mecanismo `curl-script` ya usado por las CLIs de IA, ver ADR 0037) o binario de GitHub Releases.
 
+### Investigación (2026-07-23)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent):
+
+* **Helix**: el PPA histórico (`ppa:maveonair/helix-editor`) tiene estado ambiguo — reportado como archivado/solo-lectura en discusiones recientes de la comunidad, aunque el paquete sigue publicado en Launchpad para `noble` (confirmado en vivo). La documentación oficial (`docs.helix-editor.com/package-managers.html`, confirmada en vivo) lista el snap como alternativa explícita para Linux con `snap install --classic helix`. Se prioriza el snap (`manager=snap`, `--classic`) por no tener la ambigüedad de mantenimiento futuro del PPA, mismo criterio que otros casos donde el snap es la fuente oficial sin complicaciones.
+* **Starship**: instalador oficial `curl | sh` confirmado en vivo (`curl -sI https://starship.rs/install.sh` → 200, `content-type: application/x-sh`). `manager=curl-script`, exactamente el mismo mecanismo que Claude Code/Codex CLI/OpenCode (ADR 0037), reutiliza `scripts/lib/curl_script.sh` sin cambios. El requisito de Nerd Font para sus íconos por defecto se gestiona como configuración post-instalación en un Hito futuro (mismo patrón que Powerlevel10k/Flameshot), no en este instalador.
+
+### Implementación (2026-07-23)
+
+`scripts/editors/install_helix.sh` (`manager=snap`, `--classic`, calco de Obsidian/Bruno) y `scripts/system/install_starship.sh` (`manager=curl-script`, calco de install_claude_code.sh). Ambos reutilizan tests parametrizados existentes sin agregar jobs de CI nuevos: Helix se agregó a `tests/test_snap_installers_contract.sh` (job `snap-installers-contract`), Starship a `tests/test_curl_script_contract.sh` (job `curl-script-contract`). Catálogo pasa de 134 a 136 entradas.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

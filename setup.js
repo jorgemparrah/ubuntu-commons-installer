@@ -61,6 +61,7 @@ const tools = [
     // SYSTEM — shell-personalization
     { name: 'Oh My Zsh', description: 'Framework de configuración y temas para el shell Zsh', script: 'scripts/system/install_oh_my_zsh.sh', category: 'SYSTEM' },
     { name: 'Powerlevel10k', description: 'Tema visual rápido y personalizable para el prompt de Zsh', script: 'scripts/system/install_powerlevel10k.sh', category: 'SYSTEM' },
+    { name: 'Starship', description: 'Prompt de shell rápido y personalizable, compatible con bash/zsh/fish/nu', script: 'scripts/system/install_starship.sh', category: 'SYSTEM' },
 
     // SYSTEM — gui-utils (Meld/Baobab/GParted: ex agrupador "System Utilities", ver ADR 0035)
     { name: 'Meld', description: 'Herramienta gráfica de comparación y fusión de archivos/carpetas', script: 'scripts/system/install_meld.sh', category: 'SYSTEM' },
@@ -107,6 +108,7 @@ const tools = [
     { name: 'VSCodium', description: 'Build de Visual Studio Code sin telemetría ni marca de Microsoft', script: 'scripts/editors/install_vscodium.sh', category: 'EDITORS' },
     { name: 'Vim', description: 'Editor de texto modal clásico de terminal', script: 'scripts/editors/install_vim.sh', category: 'EDITORS' },
     { name: 'Neovim', description: 'Fork moderno de Vim con soporte nativo de LSP', script: 'scripts/editors/install_neovim.sh', category: 'EDITORS' },
+    { name: 'Helix', description: 'Editor de texto modal con LSP integrado por defecto, sin plugins', script: 'scripts/editors/install_helix.sh', category: 'EDITORS' },
 
     // DEVELOPMENT
     { name: 'Docker', description: 'Motor de contenedores para empaquetar y ejecutar aplicaciones', script: 'scripts/development/install_docker.sh', category: 'DEVELOPMENT' },
