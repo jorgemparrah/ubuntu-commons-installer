@@ -2452,6 +2452,78 @@ Todo — investigación e implementación no comenzadas.
 
 ---
 
+# Hito 55
+
+## Ampliación del catálogo: Orca (Agent Development Environment)
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-23, pedido explícito del dueño del proyecto:
+
+* **Orca** (https://onorca.dev, repo `stablyai/orca`) — Agent Development Environment (ADE) de escritorio para orquestar múltiples agentes de codificación de IA (Claude Code, Codex, OpenCode, Cursor CLI y otros) en paralelo, cada uno en su propio git worktree aislado. Aplicación de escritorio (Electron/Tauri), open source (MIT). `category=ai`, `subcategory=ai-ide` (mismo grupo que Cursor/Antigravity IDE).
+
+### Investigación pendiente
+
+Confirmar el mecanismo antes de implementar (investigación preliminar 2026-07-23, a verificar en vivo al llegar al Hito):
+
+* Publica `.deb` y AppImage en GitHub Releases (`stablyai/orca`). El candidato más consistente con el catálogo es `manager=deb-direct` vía `scripts/lib/github_release.sh` (mismo patrón que Lutris/Heroic/Beekeeper Studio/DbGate), preferido sobre el AppImage por integración (symlink/`.desktop`).
+* Verificar en vivo el nombre exacto del asset `.deb` en el release más reciente, el nombre del paquete y del binario resultante (inspeccionar el `.deb` real con `dpkg-deb`), y si el `postinst` crea el symlink en el PATH automáticamente.
+* Confirmar que no dependa de un runtime no gestionado (Node, etc.) para arrancar, o documentarlo si lo hace.
+
+### Pendiente
+
+Todo — investigación en vivo e implementación no comenzadas.
+
+---
+
+# Hito 56
+
+## Ampliación del catálogo: OmniRoute (gateway de IA local)
+
+**Prioridad**
+
+Media
+
+**Estado**
+
+Blocked
+
+Depende de:
+
+Ninguno.
+
+### Objetivo
+
+Registrado el 2026-07-23, pedido explícito del dueño del proyecto:
+
+* **OmniRoute** (repo `diegosouzapw/OmniRoute`) — gateway de IA para múltiples proveedores de LLM: un endpoint local compatible con OpenAI con enrutamiento inteligente, balanceo de carga, reintentos, fallbacks, caché y observabilidad. Se ejecuta como un servicio local (dashboard web en `localhost:20128`, API compatible con OpenAI en `/v1`), no como una app de escritorio. Open source (MIT). `category=ai`; subcategoría a definir en la investigación (candidata: una nueva `ai-gateway`, o reutilizar `local-models` — mismo grupo que Ollama, ya que ambos exponen un endpoint local de inferencia).
+
+### Investigación pendiente
+
+Confirmar el mecanismo antes de implementar (investigación preliminar 2026-07-23, a verificar en vivo al llegar al Hito):
+
+* Método primario documentado: `npm install -g omniroute` (paquete npm global; arranca en el puerto 20128). También ofrece imagen Docker oficial (`diegosouzapw/omniroute`), instalación desde fuente y AUR.
+* Evaluar cuál mecanismo encaja mejor con este catálogo: un paquete npm global no calza limpio con ninguno de los mecanismos actuales (`mise` gestiona runtimes/CLIs vía su registry, no `npm -g` arbitrario; `curl-script` es para instaladores oficiales `curl | sh`). Investigar si conviene (a) un mecanismo nuevo tipo `npm-global` — evaluar contra ADR 0032 (esperar un segundo caso real antes de abstraer), o (b) el mecanismo Docker, dado que Docker ya está en el catálogo. Decisión a tomar en la investigación del Hito, documentándola.
+* Confirmar que OmniRoute no tenga sistema de facturación/telemetría que viole el estándar del proyecto (el README declara "no billing system", verificar en vivo).
+
+### Pendiente
+
+Todo — investigación en vivo e implementación no comenzadas.
+
+---
+
 # Preguntas resueltas por el dueño del proyecto (2026-07-15)
 
 Migradas desde la evaluación inicial del repositorio (2026-07-13) y resueltas en una revisión de inventario de herramientas. Las decisiones de arquitectura resultantes están en `docs/adr/` (0016–0021) y el inventario actualizado en `docs/TOOLS.md`.
