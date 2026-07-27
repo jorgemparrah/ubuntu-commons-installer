@@ -132,6 +132,7 @@ test_installer "scripts/system/install_yq.sh" "yq" "yq"
 test_installer "scripts/development/install_bruno.sh" "Bruno" "bruno"
 test_installer "scripts/system/install_krita.sh" "Krita" "krita"
 test_installer "scripts/productivity/install_bitwarden.sh" "Bitwarden" "bitwarden"
+test_installer "scripts/editors/install_helix.sh" "Helix" "helix"
 
 print_test_summary
 echo "Nota: ninguno de estos 12 instaladores se prueba funcionalmente (requiere"

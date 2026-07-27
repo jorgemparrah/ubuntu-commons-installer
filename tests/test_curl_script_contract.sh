@@ -4,7 +4,9 @@
 # Prueba simulada (mocks) del ciclo de vida de los instaladores del
 # mecanismo curl-script (Hito 16, ver
 # docs/adr/0037-mecanismo-curl-script-para-clis-de-ia.md): Claude Code,
-# Codex CLI, OpenCode, Antigravity CLI, OpenClaw, Hermes Agent. Ninguno
+# Codex CLI, OpenCode, Antigravity CLI, OpenClaw, Hermes Agent, y
+# Starship (Hito 49, no es una CLI de IA pero reutiliza el mismo
+# mecanismo — instalador oficial `curl | sh`). Ninguno
 # corre contra la red real ni el proveedor oficial: 'curl' se intercepta
 # con un comando falso en un PATH temporal que escribe un script "oficial"
 # de prueba (crea el binario esperado en un directorio simulado de
@@ -169,6 +171,7 @@ test_curl_script_contract "scripts/development/install_opencode.sh" "OpenCode" "
 test_curl_script_contract "scripts/development/install_antigravity.sh" "Antigravity CLI" "agy"
 test_curl_script_contract "scripts/productivity/install_openclaw.sh" "OpenClaw" "openclaw"
 test_curl_script_contract "scripts/productivity/install_hermes_agent.sh" "Hermes Agent" "hermes"
+test_curl_script_contract "scripts/system/install_starship.sh" "Starship" "starship"
 
 print_test_summary
 exit_with_test_summary

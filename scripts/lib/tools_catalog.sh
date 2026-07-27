@@ -1081,3 +1081,19 @@ tools_registry_register "remmina" \
     "script=scripts/productivity/install_remmina.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
+
+# Grupo editor de terminal y prompt de shell (Hito 49, ver
+# docs/ROADMAP.md): Helix (subcategory=terminal-editors, mismo grupo que
+# Vim/Neovim) y Starship (subcategory=shell-personalization, mismo grupo
+# que Oh My Zsh/Powerlevel10k).
+tools_registry_register "helix" \
+    "name=Helix" "description=Editor de texto modal con LSP integrado por defecto, sin plugins" "category=editors" "subcategory=terminal-editors" "classification=optional" "profiles=cli,desktop,developer,workstation,full,editor" "manager=snap" "packages=helix" \
+    "script=scripts/editors/install_helix.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "starship" \
+    "name=Starship" "description=Prompt de shell rápido y personalizable, compatible con bash/zsh/fish/nu" "category=system" "subcategory=shell-personalization" "classification=optional" "profiles=cli,full" "manager=curl-script" \
+    "script=scripts/system/install_starship.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
