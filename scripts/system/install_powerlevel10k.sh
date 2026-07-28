@@ -33,6 +33,8 @@ UCI_POWERLEVEL10K_REPO_ROOT="$(cd "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../.." && pwd
 source "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../lib/apt.sh"
 # shellcheck source=../lib/git_clone.sh
 source "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../lib/git_clone.sh"
+# shellcheck source=../lib/nerd_font.sh
+source "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../lib/nerd_font.sh"
 # shellcheck source=../lib/dependencies.sh
 source "${UCI_POWERLEVEL10K_SCRIPT_DIR}/../lib/dependencies.sh"
 # shellcheck source=../lib/tools_catalog.sh
@@ -125,6 +127,38 @@ repair_tool() {
     rm -rf "${P10K_DIR}"
     git_clone_ensure "${P10K_REPO}" "${P10K_DIR}"
     echo "${TOOL_NAME} reparado."
+}
+
+# Function to configure (Hito 54, 7° verbo del contrato, ver ADR 0042)
+#
+# Powerlevel10k necesita una Nerd Font instalada para renderizar sus
+# íconos: sin ella el prompt muestra cuadritos o signos de pregunta. El
+# propio proyecto recomienda oficialmente MesloLGS NF y la publica en su
+# repositorio de medios.
+#
+# Se implementa como configuración post-instalación (`configure`) y no
+# como parte de `install` ni como un instalador aparte con `depends_on`:
+# ese mecanismo rechaza en vez de resolver (ADR 0042), y acá lo que se
+# quiere es resolver. Mismo patrón que el atajo PrintScreen de Flameshot.
+#
+# La lógica vive en scripts/lib/nerd_font.sh porque install_starship.sh
+# necesita exactamente lo mismo (dos casos reales → biblioteca
+# compartida, criterio de ADR 0032).
+#
+# Configurar el emulador de terminal para que USE la fuente queda fuera
+# de alcance a propósito — ver la justificación en nerd_font.sh.
+configure_tool() {
+    local current_status
+    current_status="$(check_status 2>/dev/null)" || true
+    if [[ "${current_status}" != "INSTALLED" ]]; then
+        echo "${TOOL_NAME} no está instalado; corre 'install' antes de 'configure'." >&2
+        return 1
+    fi
+
+    echo "Configurando ${TOOL_NAME}: instalando la Nerd Font MesloLGS NF..."
+    nerd_font_install "${HOME}"
+    echo "${TOOL_NAME} configurado."
+    nerd_font_terminal_hint
 }
 
 installer_run_cli "$@"
