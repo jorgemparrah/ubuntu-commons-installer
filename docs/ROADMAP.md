@@ -2360,7 +2360,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2373,9 +2373,25 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
 * **Logseq** (`category=productivity`, `subcategory=notes`, mismo grupo que Obsidian/Joplin, Hito 36) — notas en Markdown local con vista de grafo, AGPL-3.0, solo AppImage/Flatpak (sin paquete apt/snap oficial confirmado, mismo patrón de incertidumbre que LocalSend/SoapUI).
 * **Albert** (`category=productivity`, mismo grupo que ULauncher — evaluar si comparten subcategoría nueva `launchers`) — lanzador de aplicaciones extensible, GPL-3.0, con PPA propio (`ppa:nilarimogard/webupd8` está descontinuado — verificar el PPA activo actual del proyecto antes de implementar).
 
+### Investigación (2026-07-28)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent), verificando cada fuente en vivo:
+
+* **Logseq**: confirmado que no está en los repositorios de Ubuntu ni publica snap oficial. Sus únicas distribuciones son AppImage y Flatpak; se elige Flatpak (tercer caso de `manager=flatpak`, ver [ADR 0045](adr/0045-mecanismo-flatpak-para-apps-sin-fuente-apt-snap-oficial.md)) por integración con el escritorio y actualización gestionada — un AppImage suelto no deja `.desktop` ni symlink en el PATH, el mismo motivo por el que se rechazó el instalador oficial de Kitty en el Hito 40. App ID `com.logseq.Logseq` y licencia AGPL-3.0-or-later confirmados contra la API de Flathub.
+* **Albert**: el PPA histórico que mencionaba el objetivo (`ppa:nilarimogard/webupd8`) está efectivamente descontinuado. El método oficial actual es el repositorio del propio proyecto en openSUSE Build Service (`home:manuelschneid3r`). Confirmado en vivo: existen los repos `xUbuntu_24.04` y `xUbuntu_26.04` (ambos responden 200 siguiendo redirects), la clave es ASCII-armored (requiere `gpg --dearmor`) y el índice `Packages` publica `albert` 35.1.0 para amd64 y arm64.
+* **Subcategoría compartida**: se resolvió la pregunta abierta del objetivo — Albert y ULauncher comparten la subcategoría nueva `launchers`. ULauncher no tenía `subcategory` asignada, así que se le agrega en este mismo hito (cambio de metadata puro, no toca su mecanismo ni su script).
+
+### Implementación (2026-07-28)
+
+`scripts/productivity/install_logseq.sh` (`manager=flatpak`, agregado al contrato parametrizado existente `tests/test_flatpak_installers_contract.sh`, sin job de CI nuevo) y `scripts/productivity/install_albert.sh` (`manager=apt-vendor-repo`, con test dedicado `tests/test_albert_installer.sh`, I74, y su job `albert-installer`).
+
+Albert estrena un patrón que ningún otro `apt-vendor-repo` del catálogo tenía: **la URL del repositorio en sí depende de la versión de Ubuntu** (`xUbuntu_24.04` / `xUbuntu_26.04`), no solo la línea `deb` — se resuelve con el `VERSION_ID` de `/etc/os-release`, y la línea usa el formato de repo plano de OBS (termina en ` /`). El test lo verifica contra el `VERSION_ID` real del entorno donde corre, sin hardcodear una versión.
+
+Catálogo pasa de 139 a 141 entradas, más la recategorización de ULauncher a `subcategory=launchers`.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

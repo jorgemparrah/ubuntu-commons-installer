@@ -169,6 +169,7 @@ const tools = [
 
     // PRODUCTIVITY
     { name: 'ULauncher', description: 'Lanzador de aplicaciones tipo Spotlight/Albert para el escritorio', script: 'scripts/productivity/install_ulauncher.sh', category: 'PRODUCTIVITY' },
+    { name: 'Albert', description: 'Lanzador de aplicaciones extensible y rápido, activado por teclado', script: 'scripts/productivity/install_albert.sh', category: 'PRODUCTIVITY' },
     { name: 'Google Chrome', description: 'Navegador web de Google', script: 'scripts/productivity/install_chrome.sh', category: 'PRODUCTIVITY' },
     { name: 'Spotify', description: 'Cliente de streaming de música', script: 'scripts/productivity/install_spotify.sh', category: 'PRODUCTIVITY' },
     { name: 'Zoom', description: 'Cliente de videoconferencias', script: 'scripts/productivity/install_zoom.sh', category: 'PRODUCTIVITY' },
@@ -186,6 +187,7 @@ const tools = [
     { name: 'OnlyOffice', description: 'Suite ofimática con alta compatibilidad de formato con Microsoft Office', script: 'scripts/productivity/install_onlyoffice.sh', category: 'PRODUCTIVITY' },
     { name: 'Obsidian', description: 'Aplicación de notas en Markdown con vinculación entre notas (grafo de conocimiento)', script: 'scripts/productivity/install_obsidian.sh', category: 'PRODUCTIVITY' },
     { name: 'Joplin', description: 'Aplicación de notas en Markdown 100% libre, alternativa a Obsidian', script: 'scripts/productivity/install_joplin.sh', category: 'PRODUCTIVITY' },
+    { name: 'Logseq', description: 'Notas en Markdown local con vista de grafo y bloques enlazables', script: 'scripts/productivity/install_logseq.sh', category: 'PRODUCTIVITY' },
     { name: 'KeePassXC', description: 'Gestor de contraseñas libre con cifrado local', script: 'scripts/productivity/install_keepassxc.sh', category: 'PRODUCTIVITY' },
     { name: 'Bitwarden', description: 'Gestor de contraseñas en la nube con cliente de escritorio libre', script: 'scripts/productivity/install_bitwarden.sh', category: 'PRODUCTIVITY' },
 

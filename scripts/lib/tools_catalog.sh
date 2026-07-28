@@ -88,7 +88,7 @@ tools_registry_register "flameshot" \
 # Ubuntu — ver ADR 0027) en vez de manager=apt como el resto de los
 # instaladores apt-simple migrados hasta ahora.
 tools_registry_register "ulauncher" \
-    "name=ULauncher" "description=Lanzador de aplicaciones tipo Spotlight/Albert para el escritorio" "category=productivity" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=ulauncher" \
+    "name=ULauncher" "description=Lanzador de aplicaciones tipo Spotlight/Albert para el escritorio" "category=productivity" "subcategory=launchers" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=ulauncher" \
     "script=scripts/productivity/install_ulauncher.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=no" "migration_status=migrated"
@@ -1119,5 +1119,23 @@ tools_registry_register "kooha" \
 tools_registry_register "papers" \
     "name=Papers" "description=Visor de documentos y PDF de GNOME, sucesor de Evince" "category=productivity" "subcategory=office" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=flatpak" "packages=org.gnome.Papers" \
     "script=scripts/productivity/install_papers.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Grupo notas y lanzadores (Hito 51, ver docs/ROADMAP.md): Logseq
+# (subcategory=notes, mismo grupo que Obsidian/Joplin) y Albert
+# (subcategory=launchers, NUEVA — compartida con ULauncher, que se
+# recategoriza en este mismo hito: antes no tenía subcategory).
+# Logseq es el tercer caso de manager=flatpak (ver ADR 0045): solo
+# distribuye AppImage y Flatpak, sin apt/snap oficial.
+tools_registry_register "logseq" \
+    "name=Logseq" "description=Notas en Markdown local con vista de grafo y bloques enlazables" "category=productivity" "subcategory=notes" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=flatpak" "packages=com.logseq.Logseq" \
+    "script=scripts/productivity/install_logseq.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "albert" \
+    "name=Albert" "description=Lanzador de aplicaciones extensible y rápido, activado por teclado" "category=productivity" "subcategory=launchers" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=albert" \
+    "script=scripts/productivity/install_albert.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
