@@ -1154,3 +1154,36 @@ tools_registry_register "wireshark" \
     "script=scripts/system/install_wireshark.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Grupo interfaces locales de IA (Hito 53, ver docs/ROADMAP.md y
+# docs/adr/0046-mecanismos-para-interfaces-locales-de-ia.md):
+# subcategory=local-models, mismo grupo que Ollama (todas exponen o
+# consumen inferencia local). Tres mecanismos distintos:
+#   - AnythingLLM: curl-script (ya existente; el objetivo asumía .deb,
+#     pero se confirmó en vivo que solo publica AppImage + installer.sh)
+#   - Open WebUI:  pip-mise (NUEVO, único caso) — pip sobre un Python
+#     fijado por Mise, porque PyPI exige >=3.11,<3.13 y Ubuntu 26.04
+#     traerá 3.13+
+#   - LM Studio:   appimage-direct (NUEVO, único caso) — AppImage desde
+#     URL estable. GRATUITO PERO DE CÓDIGO CERRADO: inclusión aprobada
+#     explícitamente por el dueño del proyecto, mismo precedente que
+#     Obsidian/Discord/Slack/Steam/Terraform/Vagrant.
+# Ninguno de los dos mecanismos nuevos extrae biblioteca compartida:
+# un solo caso real cada uno (criterio de ADR 0032).
+tools_registry_register "anythingllm" \
+    "name=AnythingLLM" "description=Interfaz de escritorio con RAG local sobre documentos propios" "category=ai" "subcategory=local-models" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=curl-script" \
+    "script=scripts/development/install_anythingllm.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "open_webui" \
+    "name=Open WebUI" "description=Interfaz web local para Ollama y APIs compatibles con OpenAI" "category=ai" "subcategory=local-models" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=pip-mise" "packages=open-webui" \
+    "script=scripts/development/install_open_webui.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "lmstudio" \
+    "name=LM Studio" "description=Interfaz de escritorio para descargar y ejecutar modelos locales (código cerrado, gratuito)" "category=ai" "subcategory=local-models" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=appimage-direct" \
+    "script=scripts/development/install_lmstudio.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
