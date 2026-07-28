@@ -43,6 +43,14 @@
 | `install_tailscale.sh` | Tailscale (Hito 46, 2026-07-23) | **Nuevo** — `optional`. `manager=apt-vendor-repo` contra el repositorio oficial (`pkgs.tailscale.com`): no está en los repositorios de Ubuntu. Clave YA binaria (confirmado en vivo con `curl`+`file`, endpoint "noarmor"), `apt_vendor_repo_fetch_file_plain`, sin `gpg --dearmor`. La línea de repositorio SÍ depende del codename de la distro (a diferencia de Cloudflare Tunnel). `requires_manual_validation=yes` |
 | `install_cloudflared.sh` | Cloudflare Tunnel (Hito 46, 2026-07-23) | **Nuevo** — `optional`. `manager=apt-vendor-repo` contra el repositorio oficial (`pkg.cloudflare.com`): no está en los repositorios de Ubuntu. Clave YA binaria (confirmado en vivo), sin `gpg --dearmor`. Distro fija `any` (recomendada explícitamente por la documentación oficial sobre las variantes por codename), más simple que Tailscale. `requires_manual_validation=yes` |
 
+### Análisis de red (`subcategory=network-analysis`)
+
+**Nota (Hito 52, 2026-07-28):** subcategoría nueva, deliberadamente separada de `networking`. Se evaluó reutilizar esa (ámbito ampliado en el Hito 46) y se descartó: ahí viven VPNs y túneles — herramientas que **mueven** tráfico — mientras que Wireshark lo **inspecciona**. El catálogo ya usa subcategorías granulares (`cli-utils`/`terminals`/`extras`/`launchers`/`iac`/`cloud-cli`/…) en vez de bolsas amplias.
+
+| Script | Propósito | Decisión |
+|---|---|---|
+| `install_wireshark.sh` | Wireshark (Hito 52, 2026-07-28) | **Nuevo** — `optional`. `manager=apt` (paquete `wireshark` de `universe`, binario homónimo confirmado inspeccionando el `.deb` real), pero **no es un apt-simple más**: `wireshark-common` pregunta vía debconf (`wireshark-common/install-setuid`, **Default: `false`**, confirmado leyendo su `templates` real) si los usuarios no-root pueden capturar paquetes. Su `postinst` (leído en vivo) con `false` deja `dumpcap` en `root:root` 0755 — **solo root captura**; con `true` crea el grupo de sistema `wireshark`, hace `chown root:wireshark` sobre `dumpcap` y le aplica `setcap cap_net_raw,cap_net_admin=eip`. Como el default deja la función principal de la herramienta inutilizable sin sudo, el instalador preconfigura la respuesta en `true` con `debconf-set-selections` **antes** de instalar, y usa `DEBIAN_FRONTEND=noninteractive` para que apt no se cuelgue (mismo criterio que `install_ubuntu_restricted_extras.sh`). El paquete crea el grupo pero no agrega a nadie: el instalador agrega al usuario actual, mismo patrón que `vboxusers` en `install_virtualbox.sh` (Hito 24), avisando que hay que reiniciar la sesión. `requires_manual_validation=yes`: el grupo y las capacidades de captura no se validan de verdad en un contenedor de CI |
+
 ### Terminales (`subcategory=terminals`)
 
 | Script | Propósito | Decisión |

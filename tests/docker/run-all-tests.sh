@@ -144,6 +144,7 @@ run_suite "tests/test_pokemon_colorscripts_installer.sh" bash tests/test_pokemon
 run_suite "tests/test_vagrant_installer.sh" bash tests/test_vagrant_installer.sh
 run_suite "tests/test_flatpak_installers_contract.sh" bash tests/test_flatpak_installers_contract.sh
 run_suite "tests/test_albert_installer.sh" bash tests/test_albert_installer.sh
+run_suite "tests/test_wireshark_installer.sh" bash tests/test_wireshark_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

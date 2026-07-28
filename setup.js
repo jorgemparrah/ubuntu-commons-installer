@@ -19,7 +19,7 @@ const tools = [
     { name: 'software-properties-common', description: 'Utilidades para gestionar repositorios y PPAs de APT', script: 'scripts/system/install_software_properties_common.sh', category: 'SYSTEM' },
     { name: 'apt-transport-https', description: 'Soporte para que APT descargue paquetes por HTTPS', script: 'scripts/system/install_apt_transport_https.sh', category: 'SYSTEM' },
     { name: 'GnuPG', description: 'Herramienta de cifrado y firma digital (OpenPGP)', script: 'scripts/system/install_gnupg2.sh', category: 'SYSTEM' },
-    { name: 'fzf', description: 'Buscador difuso (', script: 'scripts/system/install_fzf.sh', category: 'SYSTEM' },
+    { name: 'fzf', description: 'Buscador difuso (fuzzy finder) de línea de comandos', script: 'scripts/system/install_fzf.sh', category: 'SYSTEM' },
     { name: 'thefuck', description: 'Corrige automáticamente el último comando de terminal mal escrito', script: 'scripts/system/install_thefuck.sh', category: 'SYSTEM' },
     { name: 'jq', description: 'Procesador de JSON en la línea de comandos', script: 'scripts/system/install_jq.sh', category: 'SYSTEM' },
     { name: 'yq', description: 'Procesador de YAML en la línea de comandos (equivalente a jq)', script: 'scripts/system/install_yq.sh', category: 'SYSTEM' },
@@ -46,6 +46,9 @@ const tools = [
     { name: 'OpenVPN', description: 'VPN tradicional basada en TLS', script: 'scripts/system/install_openvpn.sh', category: 'SYSTEM' },
     { name: 'Tailscale', description: 'Mesh VPN basada en WireGuard, con coordinación centralizada', script: 'scripts/system/install_tailscale.sh', category: 'SYSTEM' },
     { name: 'Cloudflare Tunnel', description: 'Túneles salientes sin abrir puertos, vía la red de Cloudflare', script: 'scripts/system/install_cloudflared.sh', category: 'SYSTEM' },
+
+    // SYSTEM — análisis de red (Hito 52)
+    { name: 'Wireshark', description: 'Analizador de protocolos de red para inspeccionar tráfico en detalle', script: 'scripts/system/install_wireshark.sh', category: 'SYSTEM' },
 
     // SYSTEM — terminals
     { name: 'Terminator', description: 'Emulador de terminal con soporte para dividir la ventana en paneles', script: 'scripts/system/install_terminator.sh', category: 'SYSTEM' },

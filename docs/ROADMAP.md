@@ -2405,7 +2405,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2417,9 +2417,24 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto:
 
 * **Wireshark** (subcategoría a definir — evaluar si encaja en el ámbito ampliado de "redes y túneles" del Hito 46 o merece la suya propia, ya que es análisis/diagnóstico, no VPN/túnel) — analizador de protocolos de red, GPL-2.0, en los repositorios oficiales de Ubuntu. Requiere el grupo `wireshark`/capacidades de captura de paquetes sin root — investigar si el instalador debe gestionar ese paso de configuración (similar en espíritu al grupo `vboxusers` de VirtualBox, Hito 24).
 
+### Investigación (2026-07-28)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent), descargando e inspeccionando los paquetes reales:
+
+* **Fuente**: `wireshark` está en `universe` (4.2.2 en 24.04), binario homónimo — confirmado con `apt-get download` + `dpkg-deb -c`.
+* **Captura sin root (la pregunta abierta del objetivo)**: se resolvió leyendo el `postinst` y el `templates` reales de `wireshark-common`. El paquete pregunta vía debconf `wireshark-common/install-setuid`, **con default `false`**. Con `false`, `dumpcap` queda `root:root` 0755 y **solo root captura**; con `true`, el propio `postinst` crea el grupo de sistema `wireshark`, hace `chown root:wireshark` sobre `dumpcap` y le aplica `setcap cap_net_raw,cap_net_admin=eip`.
+  Conclusión: **sí, el instalador debe gestionarlo**, y no solo el grupo. Un `apt-get install -y wireshark` a secas deja la función principal de la herramienta inutilizable sin sudo, porque toma el default `false`. El instalador preconfigura la respuesta en `true` con `debconf-set-selections` antes de instalar (y usa `DEBIAN_FRONTEND=noninteractive` para que apt no se cuelgue esperando, mismo criterio que `install_ubuntu_restricted_extras.sh` con el EULA de las fuentes de Microsoft). El paquete crea el grupo pero **no agrega a nadie**, así que el instalador agrega al usuario actual — exactamente el patrón de `vboxusers` en `install_virtualbox.sh` (Hito 24), avisando que el cambio recién surte efecto al reiniciar la sesión.
+* **Subcategoría (la otra pregunta abierta)**: se opta por `subcategory=network-analysis` **nueva**, en vez de reutilizar `networking`. Ahí viven VPNs y túneles (WireGuard, OpenVPN, Tailscale, Cloudflare Tunnel, ngrok) — herramientas que MUEVEN tráfico; Wireshark lo INSPECCIONA. Son propósitos distintos y el catálogo ya usa subcategorías granulares en vez de bolsas amplias.
+
+### Implementación (2026-07-28)
+
+`scripts/system/install_wireshark.sh` con test dedicado `tests/test_wireshark_installer.sh` (I75) y su job de CI `wireshark-installer`. El test verifica lo que distingue a este instalador del patrón apt-simple: que el preseed de debconf ocurra **antes** del install (comprobado por número de línea en el log de mocks — si ocurriera después, el `postinst` ya habría corrido con el default `false`), el uso de `DEBIAN_FRONTEND=noninteractive`, el alta en el grupo, que `uninstall` no invoque `gpasswd` si el usuario no estaba en el grupo, y que `repair` reaplique el preseed. Catálogo pasa de 141 a 142 entradas.
+
+**Corrección de un bug preexistente encontrado de paso** (no parte del objetivo del Hito): la entrada de `fzf` en `tools_catalog.sh` tenía comillas dobles sin escapar dentro de su `description` (`"description=Buscador difuso ("fuzzy finder") de línea de comandos"`). Bash lo partía en **dos argumentos** — `description=Buscador difuso (fuzzy` y `finder) de línea de comandos` (este último sin `=`, basura para `tools_registry_register`) — y la migración del Hito 41 había copiado a `setup.js` la descripción truncada `'Buscador difuso ('`. Se corrigió en ambos archivos y se verificó con un parseo `shlex` sobre las 142 entradas que era el único caso.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 
