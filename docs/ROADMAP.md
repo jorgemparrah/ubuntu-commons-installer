@@ -2312,7 +2312,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2326,9 +2326,27 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=m
 * **MPV** (`subcategory=playback`, mismo grupo que VLC) — reproductor multimedia minimalista basado en mplayer/mplayer2, GPL-2.0/LGPL-2.1, en los repositorios oficiales de Ubuntu.
 * **Papers** (`category=productivity`, `subcategory=office`, mismo grupo que LibreOffice/OnlyOffice/Okular) — visor/editor de documentos y PDF de GNOME (sucesor de Evince), GPL-3.0; investigar disponibilidad en Ubuntu 24.04/26.04 (proyecto relativamente nuevo dentro del ecosistema GNOME).
 
+### Investigación (2026-07-27)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent), verificando cada fuente en vivo:
+
+* **MPV**: confirmado en `universe` (`apt-cache policy` → 0.37.0), paquete y binario coinciden (`mpv`, verificado con `apt-get download` + `dpkg-deb -c`). apt-simple sin particularidades.
+* **Kooha**: no está en los repositorios de Ubuntu. Su repo oficial (`SeaDve/Kooha`) publica Flathub como método primario y advierte explícitamente que los paquetes que no son Flatpak "no están soportados por el desarrollador". Existe un snap publicado por la misma cuenta del autor (`seadve`, confirmado con `snap info`), pero al no estar declarado como soportado por el proyecto no se usa — mismo criterio de priorizar fuentes oficiales sin ambigüedad aplicado a Helix en el Hito 49, con la conclusión inversa (allí la doc oficial SÍ listaba el snap). App ID `io.github.seadve.Kooha` confirmado contra la API de Flathub.
+* **Papers**: confirmado que **no está en apt en Ubuntu 24.04** — recién se incorpora como app core de GNOME en versiones posteriores. Flathub (`org.gnome.Papers`, GPL-2.0-or-later, confirmado contra la API) es la única fuente que cubre las dos versiones soportadas por este proyecto por igual.
+
+**Decisión de arquitectura**: los dos casos sin fuente APT/Snap oficial justificaron introducir el mecanismo `flatpak` — decisión consultada y aprobada explícitamente por el dueño del proyecto antes de implementar, registrada en [ADR 0045](adr/0045-mecanismo-flatpak-para-apps-sin-fuente-apt-snap-oficial.md). No cambia la jerarquía de fuentes de [ADR 0027](adr/0027-orden-de-fuentes-por-categoria.md): Flatpak sigue siendo la última opción, se usa solo cuando las anteriores no existen.
+
+### Implementación (2026-07-27)
+
+Mecanismo nuevo `manager=flatpak` con biblioteca compartida `scripts/lib/flatpak.sh` (hermana de `apt.sh`/`snap.sh`), API deliberadamente paralela a la de Snap. Dos casos reales en el mismo hito justifican extraer la biblioteca desde el inicio (criterio de ADR 0032 ya cumplido). `flatpak_ensure_flathub` instala el paquete `flatpak` vía APT si falta —no viene por defecto en Ubuntu, a diferencia de snapd— y registra el remote de Flathub de forma idempotente.
+
+Instaladores: `scripts/system/install_mpv.sh` (`manager=apt`, agregado al parametrizado existente `tests/test_terminal_apps_apt_simple_contract.sh`, sin job de CI nuevo), `scripts/system/install_kooha.sh` y `scripts/productivity/install_papers.sh` (ambos `manager=flatpak`, cubiertos por el nuevo contrato parametrizado `tests/test_flatpak_installers_contract.sh`, I73, con su job de CI `flatpak-installers-contract`). Catálogo pasa de 136 a 139 entradas.
+
+De paso se corrigió el índice `docs/adr/README.md`, al que le faltaban las entradas de ADR 0043 y 0044 y tenía ADR 0036 como "Aceptada" pese a estar marcada como reemplazada en su propio archivo.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

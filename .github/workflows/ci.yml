@@ -162,6 +162,7 @@ jobs:
           - pipes-sh-installer
           - pokemon-colorscripts-installer
           - vagrant-installer
+          - flatpak-installers-contract
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -614,6 +615,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I72"
             cmd: bash tests/test_vagrant_installer.sh
+          - case: flatpak-installers-contract
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I73"
+            cmd: bash tests/test_flatpak_installers_contract.sh
     steps:
       - uses: actions/checkout@v7
 

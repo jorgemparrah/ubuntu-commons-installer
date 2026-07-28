@@ -89,6 +89,7 @@ const tools = [
     { name: 'v4l-utils', description: 'Utilidades de línea de comandos para dispositivos de video (Video4Linux)', script: 'scripts/system/install_v4l_utils.sh', category: 'MULTIMEDIA' },
     { name: 'ubuntu-restricted-extras', description: 'Paquete meta con códecs multimedia y fuentes de uso restringido', script: 'scripts/system/install_ubuntu_restricted_extras.sh', category: 'MULTIMEDIA' },
     { name: 'VLC', description: 'Reproductor multimedia universal', script: 'scripts/system/install_vlc.sh', category: 'MULTIMEDIA' },
+    { name: 'MPV', description: 'Reproductor multimedia minimalista y scriptable', script: 'scripts/system/install_mpv.sh', category: 'MULTIMEDIA' },
 
     // MULTIMEDIA — gráficos (GIMP/OBS Studio movidos aquí desde SYSTEM el
     // 2026-07-22, consistente con category=multimedia en
@@ -96,6 +97,7 @@ const tools = [
     // y Krita nuevos, Hito 35)
     { name: 'GIMP', description: 'Editor de imágenes raster (equivalente libre a Photoshop)', script: 'scripts/system/install_gimp.sh', category: 'MULTIMEDIA' },
     { name: 'OBS Studio', description: 'Software de grabación de pantalla y transmisión en vivo', script: 'scripts/system/install_obs_studio.sh', category: 'MULTIMEDIA' },
+    { name: 'Kooha', description: 'Grabador de pantalla simple para GNOME/Wayland', script: 'scripts/system/install_kooha.sh', category: 'MULTIMEDIA' },
     { name: 'Inkscape', description: 'Editor de gráficos vectoriales', script: 'scripts/system/install_inkscape.sh', category: 'MULTIMEDIA' },
     { name: 'Krita', description: 'Aplicación de pintura digital e ilustración', script: 'scripts/system/install_krita.sh', category: 'MULTIMEDIA' },
 
@@ -199,6 +201,7 @@ const tools = [
     { name: 'Lutris', description: 'Gestor de bibliotecas de juegos multi-plataforma (Wine/Proton/emuladores)', script: 'scripts/productivity/install_lutris.sh', category: 'PRODUCTIVITY' },
     { name: 'Heroic Games Launcher', description: 'Launcher libre para juegos de Epic Games Store, GOG y Amazon Games', script: 'scripts/productivity/install_heroic.sh', category: 'PRODUCTIVITY' },
     { name: 'Okular', description: 'Visor y editor de documentos/PDF de KDE', script: 'scripts/productivity/install_okular.sh', category: 'PRODUCTIVITY' },
+    { name: 'Papers', description: 'Visor de documentos y PDF de GNOME, sucesor de Evince', script: 'scripts/productivity/install_papers.sh', category: 'PRODUCTIVITY' },
     { name: 'Remmina', description: 'Cliente de acceso remoto (RDP/VNC/SSH/SPICE)', script: 'scripts/productivity/install_remmina.sh', category: 'PRODUCTIVITY' },
 
     // MAINTENANCE (System Updates/Kernel & Headers movidos aquí desde

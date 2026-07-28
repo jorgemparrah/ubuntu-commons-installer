@@ -71,10 +71,13 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0033](0033-mise-amplia-su-rol-a-clis-via-registry.md) | Mise amplía su rol: de "solo runtimes" a también gestionar CLIs vía su registry (extiende 0002) | Reemplazada parcialmente por 0034 |
 | [0034](0034-gh-usa-manager-mise-igual-que-kubectl-yarn.md) | `gh` usa `manager=mise`, igual que kubectl y Yarn (corrige 0033) | Aceptada |
 | [0035](0035-eliminar-agrupadores-delgados-y-recategorizar-catalogo.md) | Eliminar los agrupadores delgados de ADR 0031 y recategorizar el catálogo | Reemplazada parcialmente por 0036 |
-| [0036](0036-candidatas-de-ia-en-categorias-existentes.md) | Distribuir las candidatas de IA del Hito 16 en categorías existentes, no una `ai-tools` nueva | Aceptada |
+| [0036](0036-candidatas-de-ia-en-categorias-existentes.md) | Distribuir las candidatas de IA del Hito 16 en categorías existentes, no una `ai-tools` nueva | Reemplazada por 0043 |
 | [0037](0037-mecanismo-curl-script-para-clis-de-ia.md) | Mecanismo `curl-script` para las CLIs de IA del Hito 16 | Aceptada |
 | [0038](0038-obs-studio-migra-de-snap-a-ppa-oficial.md) | OBS Studio migra de Snap a su PPA oficial | Aceptada |
 | [0039](0039-snapd-en-docker-para-ci-experimental.md) | snapd en Docker para CI (experimental) | Aceptada |
 | [0040](0040-cerrar-hito-14-via-tools-catalog.md) | Cerrar el Hito 14 (Arquitectura de plugins) vía `tools_catalog.sh`, sin reescribir instaladores | Aceptada |
 | [0041](0041-antigravity-ide-via-repo-apt-oficial.md) | Antigravity IDE se instala vía su repositorio APT oficial (corrige el diferimiento de ADR 0037) | Aceptada |
 | [0042](0042-configuraciones-post-instalacion-y-dependencias.md) | Configuraciones post-instalación (verbo `configure`) y dependencias entre instaladores (`depends_on`) | Aceptada |
+| [0043](0043-consolidar-herramientas-de-ia-en-category-ai.md) | Consolidar las herramientas de IA en una `category=ai` propia (reemplaza 0036) | Aceptada |
+| [0044](0044-campo-description-en-el-catalogo.md) | Agregar campo `description` al esquema del catálogo | Aceptada |
+| [0045](0045-mecanismo-flatpak-para-apps-sin-fuente-apt-snap-oficial.md) | Mecanismo `flatpak` para aplicaciones sin fuente APT/Snap oficial | Aceptada |
