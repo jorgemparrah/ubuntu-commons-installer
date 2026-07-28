@@ -167,6 +167,7 @@ jobs:
           - wireshark-installer
           - local-ai-ui-installers
           - nerd-font-configure
+          - orca-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -644,6 +645,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I77"
             cmd: bash tests/test_nerd_font_configure.sh
+          - case: orca-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I78"
+            cmd: bash tests/test_orca_installer.sh
     steps:
       - uses: actions/checkout@v7
 

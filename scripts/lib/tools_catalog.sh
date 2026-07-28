@@ -1187,3 +1187,23 @@ tools_registry_register "lmstudio" \
     "script=scripts/development/install_lmstudio.sh" \
     "supported_os=24.04,26.04" "supported_arch=amd64" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Orca (Hito 55, 2026-07-28): ADE de escritorio para orquestar agentes de
+# codificación en paralelo. category=ai, subcategory=ai-ide (mismo grupo
+# que Cursor y Antigravity IDE). manager=deb-direct con la URL resuelta
+# contra la API de GitHub Releases (mismo patrón que LocalSend/DbGate),
+# preferido sobre el AppImage que también publica.
+#
+# El id del catálogo es 'orca_ide' y el paquete 'orca-ide', NO 'orca':
+# Ubuntu ya publica un paquete 'orca' en sus repos oficiales (el lector de
+# pantalla de GNOME, presente en 24.04 y 26.04). Upstream renombró su
+# ejecutable justo por ese conflicto. Nombrarlo 'orca' acá haría que
+# 'uninstall' apuntara a software de accesibilidad ajeno.
+#
+# supported_arch=amd64: el release publica arm64, pero solo se verificó
+# el asset amd64 en vivo.
+tools_registry_register "orca_ide" \
+    "name=Orca" "description=Entorno de escritorio para orquestar varios agentes de codificación de IA en paralelo" "category=ai" "subcategory=ai-ide" "classification=optional" "profiles=desktop,developer,workstation,full,editor" "manager=deb-direct" "packages=orca-ide" \
+    "script=scripts/development/install_orca.sh" \
+    "supported_os=24.04,26.04" "supported_arch=amd64" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
