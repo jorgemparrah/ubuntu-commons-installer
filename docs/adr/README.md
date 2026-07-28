@@ -82,3 +82,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0044](0044-campo-description-en-el-catalogo.md) | Agregar campo `description` al esquema del catálogo | Aceptada |
 | [0045](0045-mecanismo-flatpak-para-apps-sin-fuente-apt-snap-oficial.md) | Mecanismo `flatpak` para aplicaciones sin fuente APT/Snap oficial | Aceptada |
 | [0046](0046-mecanismos-para-interfaces-locales-de-ia.md) | Mecanismos para las interfaces locales de IA del Hito 53: `pip-mise` y `appimage-direct` | Aceptada |
+| [0047](0047-mecanismo-npm-mise-para-omniroute.md) | Mecanismo `npm-mise` para OmniRoute, y subcategoría `ai-gateway` | Aceptada |
