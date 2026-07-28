@@ -74,20 +74,26 @@ exit 0
 EOF
     chmod +x "${UCI_MOCK_BIN}/apt"
 
-    # 'sudo' con passthrough: registra la invocación y ejecuta el resto,
-    # para que se vea si el comando real llevaba DEBIAN_FRONTEND delante.
+    # 'sudo' registra la invocación (para poder afirmar sobre
+    # DEBIAN_FRONTEND) y luego emula el comportamiento real de sudo con
+    # asignaciones de entorno previas al comando: 'sudo VAR=val cmd' es
+    # sintaxis válida de sudo, pero un passthrough ingenuo con "$@" haría
+    # que bash intente ejecutar 'VAR=val' como comando (código 127) —
+    # las asignaciones solo se reconocen en tiempo de parseo, no tras la
+    # expansión. Se despojan y exportan antes de ejecutar el resto, mismo
+    # patrón que tests/test_split_installers_contract.sh (que cubre
+    # install_ubuntu_restricted_extras.sh, el otro instalador del
+    # catálogo que usa DEBIAN_FRONTEND).
     cat > "${UCI_MOCK_BIN}/sudo" <<EOF
 #!/usr/bin/env bash
 echo "sudo \$*" >> "${UCI_MOCK_LOG}"
+while [[ "\$#" -gt 0 && "\$1" == *=* && "\$1" != -* ]]; do
+    export "\$1"
+    shift
+done
 "\$@"
 EOF
     chmod +x "${UCI_MOCK_BIN}/sudo"
-
-    # 'sudo DEBIAN_FRONTEND=... apt-get ...' hace que sudo ejecute
-    # 'DEBIAN_FRONTEND=... apt-get', y bash resuelve esa asignación como
-    # prefijo de entorno — pero con el passthrough del mock, el primer
-    # argumento pasa a ser literalmente la asignación. Se mockea 'env'
-    # por las dudas y se confía en el log de 'sudo' para la aserción.
     cat > "${UCI_MOCK_BIN}/debconf-set-selections" <<EOF
 #!/usr/bin/env bash
 echo "debconf-set-selections \$*" >> "${UCI_MOCK_LOG}"
