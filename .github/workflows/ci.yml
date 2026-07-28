@@ -166,6 +166,7 @@ jobs:
           - albert-installer
           - wireshark-installer
           - local-ai-ui-installers
+          - nerd-font-configure
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -638,6 +639,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I76"
             cmd: bash tests/test_local_ai_ui_installers.sh
+          - case: nerd-font-configure
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I77"
+            cmd: bash tests/test_nerd_font_configure.sh
     steps:
       - uses: actions/checkout@v7
 

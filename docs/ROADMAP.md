@@ -2500,7 +2500,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2517,9 +2517,28 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto: Powerlevel1
 * Investigar si además hace falta (o es siquiera automatizable) configurar el emulador de terminal para que use la fuente instalada — Flameshot, en su propia configuración, se limitó a lo automatizable vía `gsettings` (el atajo de teclado) sin tocar configuración de apps de terceros; aquí el equivalente sería tocar la configuración de Terminator/Ghostty/WezTerm/etc., que varía por terminal — probablemente quede fuera de alcance igual que quedó fuera de Flameshot, documentándolo explícitamente en vez de intentar cubrir todos los emuladores de terminal del catálogo.
 * Extender el mismo `configure_tool()` (o uno propio) a `install_starship.sh` una vez implementado en el Hito 49, reutilizando la misma lógica de instalación de fuente en vez de duplicarla (posible candidato a extraer a una función compartida si ambos casos terminan siendo prácticamente idénticos).
 
+### Investigación (2026-07-28)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent):
+
+* **Fuente**: MesloLGS NF es la que el propio Powerlevel10k recomienda oficialmente y publica en su repositorio de medios (`romkatv/powerlevel10k-media`). Confirmado en vivo que las **cuatro** variantes (Regular, Bold, Italic, Bold Italic) responden 200. Se instalan las cuatro a propósito: con solo Regular, la terminal sintetiza negrita e itálica deformando los glifos de los íconos.
+* **Starship** no impone una familia concreta —solo pide "una Nerd Font"—, así que se reutiliza MesloLGS NF en vez de instalar una segunda familia para el mismo fin.
+* **Biblioteca compartida**: el objetivo anticipaba que podía hacer falta "si ambos casos terminan siendo prácticamente idénticos". Lo son, así que se extrajo `scripts/lib/nerd_font.sh` desde el inicio en vez de duplicar — dos casos reales cumplen el criterio de [ADR 0032](adr/0032-mecanismo-condicional-por-version-de-ubuntu.md), igual que pasó con `flatpak.sh` en el Hito 50.
+* **Configurar el emulador de terminal: FUERA DE ALCANCE** (la pregunta abierta del objetivo). Se confirma la sospecha que ya planteaba el propio Hito, con la misma lógica que se aplicó a Flameshot (Hito 17): allí se automatizó solo lo que tenía una API estándar (`gsettings`) y no se tocó configuración de aplicaciones de terceros. Acá no existe equivalente — cada terminal del catálogo guarda la fuente en un formato propio: Terminator en INI (`~/.config/terminator/config`), Ghostty y Alacritty en archivos propios (TOML/KDL), WezTerm en Lua, GNOME Terminal en dconf, Kitty en `kitty.conf`. Automatizarlo significaría parsear y reescribir la configuración de hasta ocho apps de terceros, con riesgo real de romper ajustes del usuario (AGENT.md §17) y beneficio marginal frente a un cambio manual de una sola vez. Queda documentado en `scripts/lib/nerd_font.sh` y el propio `configure` lo informa al terminar.
+
+### Implementación (2026-07-28)
+
+Biblioteca compartida `scripts/lib/nerd_font.sh` (hermana de `apt.sh`/`snap.sh`/`flatpak.sh`, pero para un paso de configuración, no de instalación) y `configure_tool()` en `install_powerlevel10k.sh` e `install_starship.sh`. Es el segundo y tercer consumidor del 7° verbo `configure` ([ADR 0042](adr/0042-configuraciones-post-instalacion-y-dependencias.md)), que hasta ahora solo usaba Flameshot, y respeta sus dos criterios: rechaza explícitamente si la herramienta no está instalada, y es idempotente.
+
+Detalles de robustez: se exige el set completo de cuatro variantes para considerar la fuente instalada, de modo que una descarga cortada se repare volviendo a correr `configure` en vez de darse por buena; cada `.ttf` se descarga a un temporal y recién ahí se mueve a destino (mismo patrón en dos pasos que `apt_vendor_repo_fetch_file_plain`); y `fc-cache` se invoca guardado con `command -v`, porque en un contenedor mínimo puede no estar fontconfig y eso no debe invalidar una instalación de archivos que ya ocurrió.
+
+La fuente va a `~/.local/share/fonts` (ruta XDG por usuario), no a nivel de sistema: una fuente para el prompt del shell es preferencia del usuario, no configuración de la máquina, y así no requiere sudo. `nerd_font_uninstall` elimina solo los cuatro archivos que este proyecto instaló, nunca el directorio completo.
+
+Test nuevo `tests/test_nerd_font_configure.sh` (I77, job `nerd-font-configure`), parametrizado sobre ambas herramientas. **No agrega entradas al catálogo**: es configuración de herramientas ya registradas, así que sigue en 145.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 

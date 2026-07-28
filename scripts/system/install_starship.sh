@@ -21,6 +21,8 @@ TOOL_NAME="Starship"
 UCI_STARSHIP_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../lib/curl_script.sh
 source "${UCI_STARSHIP_SCRIPT_DIR}/../lib/curl_script.sh"
+# shellcheck source=../lib/nerd_font.sh
+source "${UCI_STARSHIP_SCRIPT_DIR}/../lib/nerd_font.sh"
 # shellcheck source=../lib/installer_cli.sh
 source "${UCI_STARSHIP_SCRIPT_DIR}/../lib/installer_cli.sh"
 
@@ -53,6 +55,31 @@ uninstall_tool() {
     echo "Desinstalando ${TOOL_NAME}..."
     curl_script_uninstall_local_bin "${HOME}" "${UCI_STARSHIP_BIN}"
     echo "${TOOL_NAME} desinstalado correctamente."
+}
+
+# Function to configure (Hito 54, 7° verbo del contrato, ver ADR 0042)
+#
+# Starship necesita una Nerd Font para sus símbolos/íconos por defecto,
+# igual que Powerlevel10k. A diferencia de aquel, no impone una familia
+# concreta —solo pide "una Nerd Font"— así que se reutiliza MesloLGS NF
+# vía scripts/lib/nerd_font.sh en vez de instalar una segunda familia
+# para el mismo fin.
+#
+# Esta es la segunda mitad del par de casos reales que justificó extraer
+# la biblioteca compartida en vez de duplicar la lógica (ADR 0032); el
+# objetivo del Hito 54 ya anticipaba esta posibilidad.
+configure_tool() {
+    local current_status
+    current_status="$(check_status 2>/dev/null)" || true
+    if [[ "${current_status}" != "INSTALLED" ]]; then
+        echo "${TOOL_NAME} no está instalado; corre 'install' antes de 'configure'." >&2
+        return 1
+    fi
+
+    echo "Configurando ${TOOL_NAME}: instalando la Nerd Font MesloLGS NF..."
+    nerd_font_install "${HOME}"
+    echo "${TOOL_NAME} configurado."
+    nerd_font_terminal_hint
 }
 
 installer_run_cli "$@"
