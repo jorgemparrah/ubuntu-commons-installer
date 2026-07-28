@@ -170,6 +170,11 @@ const tools = [
     // AI — modelos locales (Hito 28, ver ADR 0043)
     { name: 'Ollama', description: 'Runtime para correr modelos de lenguaje (LLM) de forma local', script: 'scripts/development/install_ollama.sh', category: 'AI' },
 
+    // AI — interfaces locales (Hito 53)
+    { name: 'Open WebUI', description: 'Interfaz web local para Ollama y APIs compatibles con OpenAI', script: 'scripts/development/install_open_webui.sh', category: 'AI' },
+    { name: 'AnythingLLM', description: 'Interfaz de escritorio con RAG local sobre documentos propios', script: 'scripts/development/install_anythingllm.sh', category: 'AI' },
+    { name: 'LM Studio', description: 'Interfaz de escritorio para descargar y ejecutar modelos locales (código cerrado, gratuito)', script: 'scripts/development/install_lmstudio.sh', category: 'AI' },
+
     // PRODUCTIVITY
     { name: 'ULauncher', description: 'Lanzador de aplicaciones tipo Spotlight/Albert para el escritorio', script: 'scripts/productivity/install_ulauncher.sh', category: 'PRODUCTIVITY' },
     { name: 'Albert', description: 'Lanzador de aplicaciones extensible y rápido, activado por teclado', script: 'scripts/productivity/install_albert.sh', category: 'PRODUCTIVITY' },

@@ -145,6 +145,7 @@ run_suite "tests/test_vagrant_installer.sh" bash tests/test_vagrant_installer.sh
 run_suite "tests/test_flatpak_installers_contract.sh" bash tests/test_flatpak_installers_contract.sh
 run_suite "tests/test_albert_installer.sh" bash tests/test_albert_installer.sh
 run_suite "tests/test_wireshark_installer.sh" bash tests/test_wireshark_installer.sh
+run_suite "tests/test_local_ai_ui_installers.sh" bash tests/test_local_ai_ui_installers.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

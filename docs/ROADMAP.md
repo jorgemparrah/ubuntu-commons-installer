@@ -2448,7 +2448,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2462,9 +2462,31 @@ Registrado el 2026-07-22, pedido explícito del dueño del proyecto (`category=a
 * **AnythingLLM** — interfaz de escritorio + RAG local, MIT (aplicación núcleo), `.deb`/AppImage vía GitHub Releases.
 * **LM Studio** — interfaz de escritorio para correr modelos locales, **gratuito pero de código cerrado** (a diferencia de Open WebUI/AnythingLLM) — confirmar con el dueño del proyecto si se incluye pese a no ser FOSS (mismo criterio ya aceptado para Obsidian/Discord/Slack/etc., que tampoco son FOSS) antes de implementar.
 
+### Investigación (2026-07-28)
+
+Hecha directamente (sin delegar a un sub-agente Task/Agent), verificando cada afirmación contra las fuentes reales:
+
+* **Open WebUI — licencia**: el objetivo pedía confirmar que la cláusula de marca no restringe el uso local. Leído el `LICENSE` real: es una BSD-3-Clause con una cláusula 4 que prohíbe **alterar, remover u ocultar el branding**, con excepción explícita para despliegues de hasta 50 usuarios finales. **No restringe el uso local** de la herramienta tal cual viene. Corrección al objetivo: **ya no es MIT** — GitHub la clasifica como `NOASSERTION` y el repositorio la llama "Open WebUI License".
+* **Open WebUI — mecanismo**: PyPI declara `requires_python: >=3.11,<3.13.0a1` (confirmado contra la API). Ubuntu 24.04 trae Python 3.12 (cumple) pero 26.04 traerá 3.13+ (**no** cumple), así que un pip contra el intérprete del sistema andaría hoy y se rompería en la otra versión soportada. Observación del dueño del proyecto: **Mise ya gestiona Python en este proyecto** (`scripts/lib/runtime.sh`, ADR 0002), así que fijar el intérprete con Mise resuelve el problema. Se descartó Docker —el método que el propio proyecto más promociona— para no introducir la gestión de servicios de larga duración en este catálogo. Ambas decisiones del dueño del proyecto.
+* **AnythingLLM**: el objetivo asumía que publicaba un `.deb`. Confirmado en vivo contra la API de GitHub Releases que **no**: solo AppImage (x64/Arm64), `.dmg`, `.exe` y un `installer.sh` oficial. Leído ese script (nunca ejecutado a ciegas), hace exactamente lo que encaja con el mecanismo `curl-script` ya existente, mismo patrón que Joplin — **no hizo falta un mecanismo nuevo**.
+* **LM Studio**: gratuito pero de **código cerrado**. Su inclusión fue consultada y **aprobada explícitamente por el dueño del proyecto**, con el precedente ya establecido de Obsidian/Discord/Slack/Steam/Terraform/Vagrant. Se distribuye solo como AppImage crudo desde una URL estable de última versión (confirmada en vivo: responde 200 y redirige al `.AppImage` versionado), sin script oficial. Requiere `libfuse2`, que Ubuntu 24.04+ ya no trae por defecto.
+
+### Implementación (2026-07-28)
+
+Tres instaladores en `scripts/development/`, los tres en `category=ai`/`subcategory=local-models` (mismo grupo que Ollama) y con un test parametrizado común `tests/test_local_ai_ui_installers.sh` (I76, job `local-ai-ui-installers`).
+
+Dos mecanismos nuevos, registrados en [ADR 0046](adr/0046-mecanismos-para-interfaces-locales-de-ia.md):
+
+* **`pip-mise`** (Open WebUI): pip sobre un Python fijado por Mise en 3.11. Reutiliza `scripts/lib/runtime.sh` sin modificarlo. El instalador **no arranca el servicio**: informa que se levanta con `open-webui serve`, coherente con el límite que este catálogo se puso.
+* **`appimage-direct`** (LM Studio): AppImage desde URL estable, con `.desktop` y `libfuse2` gestionados por el instalador.
+
+Ninguno de los dos extrae biblioteca compartida a `scripts/lib/`: tienen **un solo caso real cada uno**, así que la lógica vive en su instalador (criterio de [ADR 0032](adr/0032-mecanismo-condicional-por-version-de-ubuntu.md), mismo tratamiento que `izpack-installer` y `aws-cli-installer`). Esto los diferencia de `flatpak`, que nació con dos casos y sí justificó la biblioteca desde el inicio.
+
+Los tres `uninstall` conservan los datos del usuario (`~/.config/anythingllm-desktop`, `~/.lmstudio`) siguiendo AGENT.md §2, y el de LM Studio no purga `libfuse2` porque otros AppImage pueden depender de él. Catálogo pasa de 142 a 145 entradas.
+
 ### Pendiente
 
-Todo — investigación e implementación no comenzadas.
+Ninguno.
 
 ---
 
