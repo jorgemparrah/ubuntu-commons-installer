@@ -168,6 +168,7 @@ jobs:
           - local-ai-ui-installers
           - nerd-font-configure
           - orca-installer
+          - omniroute-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -650,6 +651,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I78"
             cmd: bash tests/test_orca_installer.sh
+          - case: omniroute-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I79"
+            cmd: bash tests/test_omniroute_installer.sh
     steps:
       - uses: actions/checkout@v7
 

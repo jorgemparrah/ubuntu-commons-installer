@@ -1207,3 +1207,22 @@ tools_registry_register "orca_ide" \
     "script=scripts/development/install_orca.sh" \
     "supported_os=24.04,26.04" "supported_arch=amd64" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+# OmniRoute (Hito 56, 2026-07-28, ver ADR 0047): gateway de IA que expone
+# un endpoint local compatible con OpenAI y enruta hacia muchos
+# proveedores. **Único caso del mecanismo `npm-mise`**: paquete npm global
+# sobre un Node fijado por Mise (declara `engines: node >=22 <23 ||
+# >=24 <27`, así que el Node del sistema no sirve como garantía).
+#
+# subcategory=ai-gateway, NUEVA y distinta de `local-models`: OmniRoute NO
+# corre inferencia local, solo enruta hacia proveedores remotos — lo único
+# local es el endpoint. Agruparlo con Ollama/LM Studio/Open WebUI
+# confundiría "corre modelos acá" con "enruta hacia modelos de terceros".
+#
+# requires_gui=no: el dashboard es una web (localhost:20128), se sirve
+# desde la CLI y no necesita sesión gráfica para instalarse.
+tools_registry_register "omniroute" \
+    "name=OmniRoute" "description=Gateway local que unifica múltiples proveedores de IA detrás de un endpoint compatible con OpenAI" "category=ai" "subcategory=ai-gateway" "classification=optional" "profiles=cli,developer,workstation,full,coding" "manager=npm-mise" "packages=omniroute" \
+    "script=scripts/development/install_omniroute.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"

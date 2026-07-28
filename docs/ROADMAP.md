@@ -2585,7 +2585,7 @@ Se descargó el `.deb` real del release `v1.4.159` y se inspeccionó con `dpkg-d
 
 # Hito 56
 
-## Ampliación del catálogo: OmniRoute (gateway de IA local)
+## Ampliación del catálogo: OmniRoute (gateway de IA multi-proveedor)
 
 **Prioridad**
 
@@ -2593,7 +2593,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2605,17 +2605,23 @@ Registrado el 2026-07-23, pedido explícito del dueño del proyecto:
 
 * **OmniRoute** (repo `diegosouzapw/OmniRoute`) — gateway de IA para múltiples proveedores de LLM: un endpoint local compatible con OpenAI con enrutamiento inteligente, balanceo de carga, reintentos, fallbacks, caché y observabilidad. Se ejecuta como un servicio local (dashboard web en `localhost:20128`, API compatible con OpenAI en `/v1`), no como una app de escritorio. Open source (MIT). `category=ai`; subcategoría a definir en la investigación (candidata: una nueva `ai-gateway`, o reutilizar `local-models` — mismo grupo que Ollama, ya que ambos exponen un endpoint local de inferencia).
 
-### Investigación pendiente
+### Investigación (verificada en vivo el 2026-07-28)
 
-Confirmar el mecanismo antes de implementar (investigación preliminar 2026-07-23, a verificar en vivo al llegar al Hito):
+Decisiones documentadas en [ADR 0047](adr/0047-mecanismo-npm-mise-para-omniroute.md):
 
-* Método primario documentado: `npm install -g omniroute` (paquete npm global; arranca en el puerto 20128). También ofrece imagen Docker oficial (`diegosouzapw/omniroute`), instalación desde fuente y AUR.
-* Evaluar cuál mecanismo encaja mejor con este catálogo: un paquete npm global no calza limpio con ninguno de los mecanismos actuales (`mise` gestiona runtimes/CLIs vía su registry, no `npm -g` arbitrario; `curl-script` es para instaladores oficiales `curl | sh`). Investigar si conviene (a) un mecanismo nuevo tipo `npm-global` — evaluar contra ADR 0032 (esperar un segundo caso real antes de abstraer), o (b) el mecanismo Docker, dado que Docker ya está en el catálogo. Decisión a tomar en la investigación del Hito, documentándola.
-* Confirmar que OmniRoute no tenga sistema de facturación/telemetría que viole el estándar del proyecto (el README declara "no billing system", verificar en vivo).
+* **Licencia y estado** — MIT, confirmada en los metadatos del repo y en el `package.json` publicado en npm. Repo muy activo.
+* **Mecanismo: `npm-mise` (nuevo)** — el paquete npm declara `engines: node >=22.0.0 <23 || >=24.0.0 <27` (confirmado en vivo contra el registry): Node 22 o 24/25/26, y explícitamente **no** 23. Es la misma clase de problema que Open WebUI planteó con Python en el Hito 53, así que se resuelve igual: `npm install -g` sobre un Node **fijado por Mise**, no el del sistema, cuya versión además difiere entre 24.04 y 26.04. Se fija **Node 24** (LTS vigente, Krypton, verificado contra `nodejs.org/dist/index.json`). `status` devuelve `UNKNOWN` si Mise no está disponible, mismo criterio que snap/flatpak/`pip-mise`.
+* **Docker descartado** — por el mismo criterio ya decidido para Open WebUI ([ADR 0046](adr/0046-mecanismos-para-interfaces-locales-de-ia.md)): implicaría gestionar un servicio de larga duración, algo que este catálogo no hace. Mantenerlo también evita que dos herramientas casi gemelas (Open WebUI y OmniRoute, ambas dashboards locales) se instalen por vías distintas sin razón de fondo.
+* **Sin biblioteca compartida** — se evaluó en serio, porque `npm-mise` **sí** es el segundo caso de la familia de `pip-mise` y ADR 0032 habilitaría abstraer. La conclusión es que no: la parte realmente común ya está abstraída en `scripts/lib/runtime.sh` (que ambos usan sin modificar), y lo único extraíble sería un wrapper de una línea, a partir del cual los verbos divergen por completo (`pip show` vs `npm ls -g`, `pip uninstall -y` vs `npm uninstall -g`). Se reevaluará con un tercer caso.
+* **⚠️ Corrección al objetivo: no es un gateway "de LLM locales"** — OmniRoute **no ejecuta inferencia local**; enruta hacia 290+ proveedores, en su mayoría remotos. Lo único local es el endpoint. Por eso se descarta reutilizar `local-models` (la subcategoría de Ollama, que el objetivo ofrecía como opción) y se adopta la otra candidata: una subcategoría nueva **`ai-gateway`**. Agruparlo con Ollama/LM Studio/Open WebUI confundiría "corre modelos acá" con "enruta hacia modelos de terceros desde acá".
+* **Facturación y telemetría** — verificado en vivo, cumple el estándar del proyecto: *"OmniRoute has no billing system"* (sin cobro propio; se paga a los proveedores directamente) y *"Zero telemetry by default — your prompts go only to the providers you choose, nowhere else"*.
 
-### Pendiente
+### Implementación
 
-Todo — investigación en vivo e implementación no comenzadas.
+* `docs/adr/0047-mecanismo-npm-mise-para-omniroute.md` — mecanismo `npm-mise` y subcategoría `ai-gateway`.
+* `scripts/development/install_omniroute.sh` — verbos `status`/`install`/`uninstall`/`update` (+ `reinstall` por el fallback del dispatcher), reutilizando `runtime.sh` e `installer_cli.sh`. No arranca el servicio: informa que se levanta con `omniroute` (dashboard en `localhost:20128`). `uninstall` conserva la configuración y los datos locales.
+* `tests/test_omniroute_installer.sh` (I79, job `omniroute-installer`) — mockeado. Además de los verbos, **cada acción afirma que no se usó el `npm` del sistema** (el riesgo central del mecanismo), con un `npm` falso que registra en su propio log; y `curl` está mockeado para fallar, de modo que el escenario "Mise ausente" sea determinista y sin red.
+* Catálogo: 146 → **147** entradas.
 
 ---
 

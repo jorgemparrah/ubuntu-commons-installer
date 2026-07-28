@@ -148,6 +148,7 @@ run_suite "tests/test_wireshark_installer.sh" bash tests/test_wireshark_installe
 run_suite "tests/test_local_ai_ui_installers.sh" bash tests/test_local_ai_ui_installers.sh
 run_suite "tests/test_nerd_font_configure.sh" bash tests/test_nerd_font_configure.sh
 run_suite "tests/test_orca_installer.sh" bash tests/test_orca_installer.sh
+run_suite "tests/test_omniroute_installer.sh" bash tests/test_omniroute_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

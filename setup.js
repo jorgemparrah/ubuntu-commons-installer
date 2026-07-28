@@ -179,6 +179,10 @@ const tools = [
     // ese nombre lo usa el lector de pantalla de GNOME en los repos de Ubuntu.
     { name: 'Orca', description: 'Entorno de escritorio para orquestar varios agentes de codificación de IA en paralelo', script: 'scripts/development/install_orca.sh', category: 'AI' },
 
+    // AI — gateway (Hito 56, ver ADR 0047). No corre modelos localmente:
+    // enruta hacia proveedores remotos detrás de un endpoint local.
+    { name: 'OmniRoute', description: 'Gateway local que unifica múltiples proveedores de IA detrás de un endpoint compatible con OpenAI', script: 'scripts/development/install_omniroute.sh', category: 'AI' },
+
     // PRODUCTIVITY
     { name: 'ULauncher', description: 'Lanzador de aplicaciones tipo Spotlight/Albert para el escritorio', script: 'scripts/productivity/install_ulauncher.sh', category: 'PRODUCTIVITY' },
     { name: 'Albert', description: 'Lanzador de aplicaciones extensible y rápido, activado por teclado', script: 'scripts/productivity/install_albert.sh', category: 'PRODUCTIVITY' },
