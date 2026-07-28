@@ -4,7 +4,8 @@
 # Prueba simulada (mocks) del ciclo de vida de los instaladores del
 # mecanismo Flatpak (Hito 50, ver
 # docs/adr/0045-mecanismo-flatpak-para-apps-sin-fuente-apt-snap-oficial.md):
-# Kooha y Papers. Confirma que 'status' distingue los tres casos —
+# Kooha y Papers (Hito 50), Logseq (Hito 51). Confirma que 'status'
+# distingue los tres casos —
 # app instalada, app no instalada, Flatpak ausente (UNKNOWN) — mismo
 # criterio que tests/test_snap_installers_contract.sh, más el ciclo
 # install/uninstall/update y el rechazo explícito de 'repair'.
@@ -181,6 +182,7 @@ test_flatpak_contract() {
 
 test_flatpak_contract "scripts/system/install_kooha.sh" "Kooha" "io.github.seadve.Kooha"
 test_flatpak_contract "scripts/productivity/install_papers.sh" "Papers" "org.gnome.Papers"
+test_flatpak_contract "scripts/productivity/install_logseq.sh" "Logseq" "com.logseq.Logseq"
 
 echo ""
 echo "Nota: ninguno de estos instaladores se prueba funcionalmente en CI"

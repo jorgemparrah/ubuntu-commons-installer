@@ -163,6 +163,7 @@ jobs:
           - pokemon-colorscripts-installer
           - vagrant-installer
           - flatpak-installers-contract
+          - albert-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -620,6 +621,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I73"
             cmd: bash tests/test_flatpak_installers_contract.sh
+          - case: albert-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I74"
+            cmd: bash tests/test_albert_installer.sh
     steps:
       - uses: actions/checkout@v7
 

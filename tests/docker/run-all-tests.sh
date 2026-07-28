@@ -143,6 +143,7 @@ run_suite "tests/test_pipes_sh_installer.sh" bash tests/test_pipes_sh_installer.
 run_suite "tests/test_pokemon_colorscripts_installer.sh" bash tests/test_pokemon_colorscripts_installer.sh
 run_suite "tests/test_vagrant_installer.sh" bash tests/test_vagrant_installer.sh
 run_suite "tests/test_flatpak_installers_contract.sh" bash tests/test_flatpak_installers_contract.sh
+run_suite "tests/test_albert_installer.sh" bash tests/test_albert_installer.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then
