@@ -1097,3 +1097,27 @@ tools_registry_register "starship" \
     "script=scripts/system/install_starship.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Grupo multimedia adicional (Hito 50, ver docs/ROADMAP.md): MPV
+# (subcategory=playback, mismo grupo que VLC), Kooha (subcategory=capture,
+# mismo grupo que OBS Studio/Cheese) y Papers (category=productivity,
+# subcategory=office, mismo grupo que LibreOffice/OnlyOffice/Okular).
+# Kooha y Papers estrenan manager=flatpak (ver ADR 0045): ninguno tiene
+# fuente APT/Snap oficial en las dos versiones de Ubuntu soportadas.
+tools_registry_register "mpv" \
+    "name=MPV" "description=Reproductor multimedia minimalista y scriptable" "category=multimedia" "subcategory=playback" "classification=optional" "profiles=cli,desktop,workstation,full,creator" "manager=apt" "packages=mpv" \
+    "script=scripts/system/install_mpv.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
+
+tools_registry_register "kooha" \
+    "name=Kooha" "description=Grabador de pantalla simple para GNOME/Wayland" "category=multimedia" "subcategory=capture" "classification=optional" "profiles=desktop,workstation,full,creator" "manager=flatpak" "packages=io.github.seadve.Kooha" \
+    "script=scripts/system/install_kooha.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+tools_registry_register "papers" \
+    "name=Papers" "description=Visor de documentos y PDF de GNOME, sucesor de Evince" "category=productivity" "subcategory=office" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=flatpak" "packages=org.gnome.Papers" \
+    "script=scripts/productivity/install_papers.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
