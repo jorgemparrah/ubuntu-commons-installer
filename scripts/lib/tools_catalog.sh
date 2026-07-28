@@ -141,7 +141,7 @@ tools_registry_register "gnupg2" \
 # yq (snap oficial de Mike Farah — el paquete apt de Ubuntu es un
 # programa DISTINTO e incompatible, ver el propio install_yq.sh).
 tools_registry_register "fzf" \
-    "name=fzf" "description=Buscador difuso ("fuzzy finder") de línea de comandos" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=fzf" \
+    "name=fzf" "description=Buscador difuso (fuzzy finder) de línea de comandos" "category=system" "classification=optional" "profiles=cli,full" "subcategory=cli-utils" "manager=apt" "packages=fzf" \
     "script=scripts/system/install_fzf.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=no" "requires_manual_validation=no" "migration_status=migrated"
@@ -1137,5 +1137,20 @@ tools_registry_register "logseq" \
 tools_registry_register "albert" \
     "name=Albert" "description=Lanzador de aplicaciones extensible y rápido, activado por teclado" "category=productivity" "subcategory=launchers" "classification=optional" "profiles=desktop,workstation,full,productivity" "manager=apt-vendor-repo" "packages=albert" \
     "script=scripts/productivity/install_albert.sh" \
+    "supported_os=24.04,26.04" "supported_arch=any" \
+    "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"
+
+# Análisis de red (Hito 52, ver docs/ROADMAP.md): Wireshark en
+# subcategory=network-analysis, NUEVA. Se evaluó reutilizar
+# subcategory=networking (ámbito ampliado en el Hito 46) y se descartó:
+# ahí viven VPNs y túneles (WireGuard/OpenVPN/Tailscale/Cloudflare
+# Tunnel/ngrok), herramientas que MUEVEN tráfico; Wireshark lo
+# INSPECCIONA. El catálogo ya usa subcategorías granulares en vez de
+# bolsas amplias. requires_manual_validation=yes: el grupo 'wireshark' y
+# las capacidades de captura sin root no se pueden validar de verdad en
+# un contenedor de CI (mismo criterio que VirtualBox con vboxusers).
+tools_registry_register "wireshark" \
+    "name=Wireshark" "description=Analizador de protocolos de red para inspeccionar tráfico en detalle" "category=system" "subcategory=network-analysis" "classification=optional" "profiles=desktop,developer,workstation,full,coding" "manager=apt" "packages=wireshark" \
+    "script=scripts/system/install_wireshark.sh" \
     "supported_os=24.04,26.04" "supported_arch=any" \
     "requires_gui=yes" "requires_manual_validation=yes" "migration_status=migrated"

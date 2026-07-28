@@ -164,6 +164,7 @@ jobs:
           - vagrant-installer
           - flatpak-installers-contract
           - albert-installer
+          - wireshark-installer
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -626,6 +627,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I74"
             cmd: bash tests/test_albert_installer.sh
+          - case: wireshark-installer
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I75"
+            cmd: bash tests/test_wireshark_installer.sh
     steps:
       - uses: actions/checkout@v7
 
