@@ -50,6 +50,33 @@ manual_check() {
     fi
 }
 
+# manual_note <texto>
+# Línea informativa que NO cuenta como chequeo. Para contexto que ayuda a
+# leer el log (tamaños de descarga, pasos que quedan a mano, etc.).
+manual_note() {
+    echo "  ..    - $1"
+}
+
+# manual_skip <descripción> <motivo>
+# Deja constancia en el log de algo que deliberadamente no se probó, sin
+# contarlo como fallo. Sirve para que el log diga por qué falta algo, en
+# vez de que el hueco pase inadvertido.
+manual_skip() {
+    echo "  SKIP  - $1 (${2})"
+}
+
+# manual_require_vm
+# Guarda común de todos los scripts de este directorio: instalan software
+# real y varios necesitan una sesión de escritorio, así que no deben
+# correr dentro de un contenedor.
+manual_require_vm() {
+    if [[ -f /.dockerenv ]]; then
+        echo "Este script instala software real y está pensado para una VM Ubuntu" >&2
+        echo "Desktop, no para un contenedor Docker. Abortando." >&2
+        exit 1
+    fi
+}
+
 manual_summary() {
     echo ""
     echo "== Resumen =="
@@ -63,6 +90,37 @@ manual_exit_with_summary() {
         exit 1
     fi
     exit 0
+}
+
+# manual_run_action <script_path> <acción>
+# Corre una acción del instalador dejando su salida en vivo en el log, y
+# devuelve su código en UCI_MANUAL_LAST_CODE.
+#
+# IMPORTANTE: los scripts que sourcean esta biblioteca corren con
+# `set -Eeuo pipefail`, y varias salidas legítimas de un instalador son
+# distintas de cero (NOT_INSTALLED, BROKEN, OUTDATED…). Capturar el
+# código con la forma `cmd; code=$?` haría que `set -e` abortara la
+# corrida ANTES de registrar nada — que es justamente lo que pasaba antes
+# de este arreglo: la batería moría en el primer 'status inicial' de la
+# primera herramienta, porque NOT_INSTALLED devuelve 1. La forma
+# `cmd && code=0 || code=$?` es la única que preserva el código sin
+# disparar `set -e`.
+UCI_MANUAL_LAST_CODE=0
+manual_run_action() {
+    local script="$1" action="$2"
+    "${script}" "${action}" && UCI_MANUAL_LAST_CODE=0 || UCI_MANUAL_LAST_CODE=$?
+    echo "(código: ${UCI_MANUAL_LAST_CODE})"
+}
+
+# manual_capture_status <script_path>
+# Corre 'status' capturando su salida en UCI_MANUAL_LAST_OUTPUT y su
+# código en UCI_MANUAL_LAST_CODE, sin disparar `set -e` (ver arriba).
+UCI_MANUAL_LAST_OUTPUT=""
+manual_capture_status() {
+    local script="$1"
+    UCI_MANUAL_LAST_OUTPUT="$("${script}" status 2>&1)" && UCI_MANUAL_LAST_CODE=0 || UCI_MANUAL_LAST_CODE=$?
+    echo "${UCI_MANUAL_LAST_OUTPUT}"
+    echo "(código: ${UCI_MANUAL_LAST_CODE})"
 }
 
 # manual_run_lifecycle <script_path> <etiqueta>
@@ -81,38 +139,26 @@ manual_run_lifecycle() {
     fi
 
     manual_step "${label}: status inicial"
-    local status_before status_before_code
-    status_before="$("${script}" status 2>&1)"
-    status_before_code=$?
-    echo "${status_before}"
-    echo "(código: ${status_before_code})"
+    manual_capture_status "${script}"
 
     manual_step "${label}: install"
-    "${script}" install
-    local install_code=$?
-    echo "(código: ${install_code})"
+    manual_run_action "${script}" install
+    local install_code="${UCI_MANUAL_LAST_CODE}"
     manual_check "${label}: 'install' sale con código 0" '[[ ${install_code} -eq 0 ]]'
 
     manual_step "${label}: status tras instalar"
-    local status_after status_after_code
-    status_after="$("${script}" status 2>&1)"
-    status_after_code=$?
-    echo "${status_after}"
-    echo "(código: ${status_after_code})"
+    manual_capture_status "${script}"
+    local status_after="${UCI_MANUAL_LAST_OUTPUT}" status_after_code="${UCI_MANUAL_LAST_CODE}"
     manual_check "${label}: 'status' reporta INSTALLED tras instalar" '[[ "${status_after}" == *"INSTALLED"* ]] && [[ "${status_after}" != *"NOT_INSTALLED"* ]]'
     manual_check "${label}: 'status' sale con código 0 tras instalar" '[[ ${status_after_code} -eq 0 ]]'
 
     manual_step "${label}: uninstall"
-    "${script}" uninstall
-    local uninstall_code=$?
-    echo "(código: ${uninstall_code})"
+    manual_run_action "${script}" uninstall
+    local uninstall_code="${UCI_MANUAL_LAST_CODE}"
     manual_check "${label}: 'uninstall' sale con código 0" '[[ ${uninstall_code} -eq 0 ]]'
 
     manual_step "${label}: status tras desinstalar"
-    local status_final status_final_code
-    status_final="$("${script}" status 2>&1)"
-    status_final_code=$?
-    echo "${status_final}"
-    echo "(código: ${status_final_code})"
+    manual_capture_status "${script}"
+    local status_final="${UCI_MANUAL_LAST_OUTPUT}"
     manual_check "${label}: 'status' reporta NOT_INSTALLED tras desinstalar" '[[ "${status_final}" == *"NOT_INSTALLED"* ]]'
 }
