@@ -2552,7 +2552,7 @@ Media
 
 **Estado**
 
-Blocked
+Done
 
 Depende de:
 
@@ -2564,17 +2564,22 @@ Registrado el 2026-07-23, pedido explícito del dueño del proyecto:
 
 * **Orca** (https://onorca.dev, repo `stablyai/orca`) — Agent Development Environment (ADE) de escritorio para orquestar múltiples agentes de codificación de IA (Claude Code, Codex, OpenCode, Cursor CLI y otros) en paralelo, cada uno en su propio git worktree aislado. Aplicación de escritorio (Electron/Tauri), open source (MIT). `category=ai`, `subcategory=ai-ide` (mismo grupo que Cursor/Antigravity IDE).
 
-### Investigación pendiente
+### Investigación (verificada en vivo el 2026-07-28)
 
-Confirmar el mecanismo antes de implementar (investigación preliminar 2026-07-23, a verificar en vivo al llegar al Hito):
+Se descargó el `.deb` real del release `v1.4.159` y se inspeccionó con `dpkg-deb` (sin instalarlo en ninguna máquina):
 
-* Publica `.deb` y AppImage en GitHub Releases (`stablyai/orca`). El candidato más consistente con el catálogo es `manager=deb-direct` vía `scripts/lib/github_release.sh` (mismo patrón que Lutris/Heroic/Beekeeper Studio/DbGate), preferido sobre el AppImage por integración (symlink/`.desktop`).
-* Verificar en vivo el nombre exacto del asset `.deb` en el release más reciente, el nombre del paquete y del binario resultante (inspeccionar el `.deb` real con `dpkg-deb`), y si el `postinst` crea el symlink en el PATH automáticamente.
-* Confirmar que no dependa de un runtime no gestionado (Node, etc.) para arrancar, o documentarlo si lo hace.
+* **Licencia y estado del proyecto** — MIT confirmada en el archivo `LICENSE` real del repo (Lovecast Inc.), no solo en los metadatos de la API. Repo activo.
+* **Mecanismo** — se confirma `manager=deb-direct` con la URL resuelta contra la API de GitHub Releases vía `scripts/lib/github_release.sh`: el asset trae la versión embebida (`orca-ide_1.4.159_amd64.deb`), así que no existe una URL "latest" estable. El release publica también `.rpm`, AppImage y binarios de macOS/Windows, de modo que el patrón del asset debe discriminar formato **y** arquitectura; el patrón usado (`_amd64\.deb"`) matchea exactamente un asset.
+* **⚠️ Corrección al objetivo: el paquete es `orca-ide`, no `orca`** — Ubuntu ya publica un paquete llamado `orca` en sus repos oficiales: el **lector de pantalla de GNOME** (verificado presente en 24.04 y en 26.04). Upstream renombró su ejecutable justo por ese conflicto (el comentario está en su propio shim: *"avoids Ubuntu GNOME Orca conflict"*). Consecuencia para este catálogo: el id es `orca_ide` y el paquete `orca-ide`; si se hubiera registrado como `orca`, `uninstall` habría purgado software de accesibilidad ajeno. El test I78 cubre ese riesgo explícitamente.
+* **El binario del PATH no viene en el paquete** — `/usr/bin/orca-ide` lo crea el `postinst` como symlink hacia `/opt/Orca/resources/bin/orca-ide` (el `.deb` solo trae `/opt/Orca/**` y el `.desktop`). Por eso `status` trata su ausencia como `BROKEN` y `repair` reinstala el paquete para que el `postinst` vuelva a correr, en vez de recrear el symlink a mano. El `postrm` lo elimina, pero solo si sigue apuntando dentro del directorio de Orca.
+* **No depende de un runtime no gestionado** — es una app Electron y su CLI corre con `ELECTRON_RUN_AS_NODE` sobre el binario empaquetado; no usa el Node del sistema ni Mise.
+* **Dependencias** — `python3`, `python3-gi`, `gir1.2-atspi-2.0`, `at-spi2-core`, `xdotool`, `xclip`, `xvfb` (y `libappindicator3-1` como `Recommends`). Todas verificadas como publicadas en 24.04 y 26.04 (varias en `universe`); las resuelve APT al instalar el `.deb` local, no hace falta declararlas en el instalador.
 
-### Pendiente
+### Implementación
 
-Todo — investigación en vivo e implementación no comenzadas.
+* `scripts/development/install_orca.sh` — contrato completo de 6 verbos, reutilizando `apt.sh`, `deb_direct.sh`, `github_release.sh` e `installer_cli.sh`. `status` distingue `NOT_INSTALLED`/`INSTALLED`/`OUTDATED`/`BROKEN`. Sin biblioteca nueva: es el enésimo caso del patrón `deb-direct` + GitHub Releases ya abstraído.
+* `tests/test_orca_installer.sh` (I78, job `orca-installer`) — mockeado. Además de los criterios comunes del mecanismo, cubre los dos riesgos propios: el JSON de release falso incluye **todos** los assets (amd64/arm64, `.deb`/`.rpm`) para verificar que se elige el correcto, y una guarda comprueba que ninguna acción toque el paquete `orca` de GNOME.
+* Catálogo: 145 → **146** entradas.
 
 ---
 

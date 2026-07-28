@@ -175,6 +175,10 @@ const tools = [
     { name: 'AnythingLLM', description: 'Interfaz de escritorio con RAG local sobre documentos propios', script: 'scripts/development/install_anythingllm.sh', category: 'AI' },
     { name: 'LM Studio', description: 'Interfaz de escritorio para descargar y ejecutar modelos locales (código cerrado, gratuito)', script: 'scripts/development/install_lmstudio.sh', category: 'AI' },
 
+    // AI — entornos de agentes (Hito 55). Paquete 'orca-ide', no 'orca':
+    // ese nombre lo usa el lector de pantalla de GNOME en los repos de Ubuntu.
+    { name: 'Orca', description: 'Entorno de escritorio para orquestar varios agentes de codificación de IA en paralelo', script: 'scripts/development/install_orca.sh', category: 'AI' },
+
     // PRODUCTIVITY
     { name: 'ULauncher', description: 'Lanzador de aplicaciones tipo Spotlight/Albert para el escritorio', script: 'scripts/productivity/install_ulauncher.sh', category: 'PRODUCTIVITY' },
     { name: 'Albert', description: 'Lanzador de aplicaciones extensible y rápido, activado por teclado', script: 'scripts/productivity/install_albert.sh', category: 'PRODUCTIVITY' },
