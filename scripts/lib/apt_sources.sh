@@ -118,6 +118,21 @@ apt_sources_keyring_problems() {
         while IFS= read -r keyring; do
             [[ -n "${keyring}" ]] || continue
 
+            # 'Signed-By:' puede traer la clave EMBEBIDA en línea en vez de
+            # una ruta — es lo que hace 'add-apt-repository' con los PPA de
+            # Launchpad, que escriben literalmente
+            # 'Signed-By: -----BEGIN PGP PUBLIC KEY BLOCK-----' seguido del
+            # bloque indentado. Es una configuración válida y no hay ningún
+            # archivo que revisar, así que se ignora.
+            #
+            # Sin este filtro se reportaba '-----BEGIN' como un "keyring
+            # ausente": falso positivo real visto en la máquina del dueño
+            # del proyecto, donde los PPA de ULauncher y OBS Studio
+            # aparecían como problemas inexistentes.
+            if [[ "${keyring}" != /* ]]; then
+                continue
+            fi
+
             if [[ ! -e "${keyring}" ]]; then
                 echo "keyring-ausente|${file}|${keyring}|el archivo referenciado no existe"
                 continue
