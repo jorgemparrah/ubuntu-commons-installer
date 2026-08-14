@@ -89,9 +89,17 @@ get_latest_hwe_kernel() {
     # terceros roto no debe impedir resolver el kernel.
     sudo apt update >&2 || true
 
-    # Find the latest HWE kernel available
+    # Find the latest HWE kernel available.
+    #
+    # El '|| true' es imprescindible: si no hay ningún HWE pendiente de
+    # actualizar —el caso NORMAL en una máquina al día— 'grep' devuelve 1,
+    # y bajo 'set -Eeuo pipefail' esa asignación abortaba la función en
+    # silencio. Consecuencia: el fallback de abajo era inalcanzable en la
+    # práctica (código muerto), y quien llama recibía una cadena vacía y
+    # terminaba corriendo 'apt install -y ""'. Segundo bug de esta misma
+    # función, encontrado por el test de regresión del primero.
     local latest_kernel
-    latest_kernel="$(apt list --upgradable 2>/dev/null | grep "linux-generic-hwe" | tail -1 | cut -d'/' -f1)"
+    latest_kernel="$(apt list --upgradable 2>/dev/null | grep "linux-generic-hwe" | tail -1 | cut -d'/' -f1 || true)"
 
     if [[ -n "$latest_kernel" ]]; then
         echo "$latest_kernel"
