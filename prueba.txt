@@ -1,0 +1,1036 @@
+🚀 Post-Install Setup
+
+? Selecciona las herramientas: ✗ ngrok (No instalado) — Túneles seguros para exponer servicios locales a internet, ✗ WezTerm (No instalado) — Emulador de terminal acelerado por GPU con multiplexor integrado, ✗ Oh My Zsh (No instalado) — Framework de configuración y temas para el shell Zsh, ✗ Powerlevel10k 
+(No instalado) — Tema visual rápido y personalizable para el prompt de Zsh, ✗ Meld (No instalado) — Herramienta gráfica de comparación y fusión de archivos/carpetas, ✗ GParted (No instalado) — Editor gráfico de particiones de disco, ✗ cmatrix (No instalado) — Efecto visual de terminal estilo Matrix, sin 
+utilidad práctica más allá de lo decorativo, ✗ ubuntu-restricted-extras (No instalado) — Paquete meta con códecs multimedia y fuentes de uso restringido, ✗ FFmpeg (No instalado) — Conversión y procesamiento de audio y video por línea de comandos, ✗ Visual Studio Code (No instalado) — Editor de código de 
+Microsoft con soporte de extensiones, ✗ Neovim (No instalado) — Fork moderno de Vim con soporte nativo de LSP, ✗ Docker (No instalado) — Motor de contenedores para empaquetar y ejecutar aplicaciones, ✗ VirtualBox (No instalado) — Software de virtualización de máquinas virtuales de Oracle, ✗ Terraform (No 
+instalado) — Herramienta de infraestructura como código de HashiCorp (licencia BUSL, no FOSS desde 2023), ✗ Azure CLI (No instalado) — Cliente de línea de comandos oficial de Microsoft Azure, ✗ Google Cloud CLI (No instalado) — Cliente de línea de comandos oficial de Google Cloud Platform, ✗ Claude Desktop 
+(No instalado) — Aplicación de escritorio de Claude (incluye el modo Cowork), ✗ Cursor AI IDE (No instalado) — Editor de código basado en VS Code con asistencia de IA integrada, ✗ ULauncher (No instalado) — Lanzador de aplicaciones tipo Spotlight/Albert para el escritorio, ✗ Albert (No instalado) — Lanzador 
+de aplicaciones extensible y rápido, activado por teclado, ✗ Flameshot (No instalado) — Herramienta de capturas de pantalla con anotaciones, ? Logseq (Estado desconocido) — Notas en Markdown local con vista de grafo y bloques enlazables, ✗ KeePassXC (No instalado) — Gestor de contraseñas libre con cifrado 
+local, ✗ Steam (No instalado) — Plataforma de distribución de videojuegos de Valve, ✗ System Updates (No instalado) — Actualización de los paquetes del sistema vía APT, ✗ Kernel & Headers (No instalado) — Gestión del kernel de Linux y sus headers (incluye HWE), ✗ Final System Update (No instalado) — 
+Actualización final y limpieza de paquetes huérfanos, al cierre del aprovisionamiento
+? ¿Proceder con 27 herramienta(s)? Yes
+
+🚀 Ejecutando acciones...
+
+📦 Instalando ngrok...
+Instalando ngrok...
+Obj:1 https://dl.google.com/linux/chrome-stable/deb stable InRelease
+Obj:2 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                                                                                                                                         
+Ign:3 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:4 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:5 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:6 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Err:7 https://packages.microsoft.com/repos/azure-cli resolute Release                                                                                                                                                                                                                                               
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Obj:8 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                 
+Obj:9 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                                   
+Obj:10 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                              
+Obj:11 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                        
+Des:13 https://apt.fury.io/wez * InRelease                                                                                                                    
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                                                    
+Des:15 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                            
+Err:15 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                                
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:16 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                        
+Obj:12 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:17 https://download.virtualbox.org/virtualbox/debian resolute InRelease                               
+Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:19 http://archive.ubuntu.com/ubuntu resolute-backports InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con ngrok (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando WezTerm...
+Instalando WezTerm...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:6 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Ign:8 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                   
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                      
+Obj:10 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                       
+Des:11 https://apt.fury.io/wez * InRelease                                                                                                                                              
+Obj:12 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                  
+Err:13 https://packages.microsoft.com/repos/azure-cli resolute Release                                                                                        
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Obj:14 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                          
+Des:16 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                            
+Err:16 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                     
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:17 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:15 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:18 https://packages.cloud.google.com/apt cloud-sdk InRelease                
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con WezTerm (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Oh My Zsh...
+Instalando Oh My Zsh...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:4 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Ign:5 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:8 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:9 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                            
+Obj:10 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                                                               
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                                   
+Des:12 https://apt.fury.io/wez * InRelease                                                                                                                    
+Obj:13 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                        
+Obj:14 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                
+Obj:16 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                             
+Des:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]        
+Err:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                      
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:15 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:19 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Err:20 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Oh My Zsh (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Powerlevel10k...
+Falta instalar Oh My Zsh primero (dependencia, ver docs/adr/0042-configuraciones-post-instalacion-y-dependencias.md): /home/jparra/Documentos/personal/proyectos/ubuntu-post-install/scripts/system/install_oh_my_zsh.sh install
+❌ Error con Powerlevel10k (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Meld...
+Instalando Meld...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Ign:5 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:8 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                         
+Obj:9 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                       
+Obj:10 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                
+Des:11 https://apt.fury.io/wez * InRelease                                                                                                                                              
+Err:12 https://packages.microsoft.com/repos/azure-cli resolute Release                                                                                                                  
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Obj:13 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                          
+Obj:14 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Des:16 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                  
+Err:16 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                      
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:17 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:15 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:18 https://packages.cloud.google.com/apt cloud-sdk InRelease                
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Meld (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando GParted...
+Instalando GParted...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Ign:6 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:7 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Err:9 https://packages.microsoft.com/repos/azure-cli resolute Release                                                                                                                                                                                                          
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Obj:10 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                                                                               
+Obj:11 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                    
+Des:12 https://apt.fury.io/wez * InRelease                                                                                                                    
+Des:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                                                   
+Err:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                                
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:15 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Obj:16 https://packages.cloud.google.com/apt cloud-sdk InRelease                                          
+Obj:17 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                        
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:19 http://archive.ubuntu.com/ubuntu resolute-backports InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con GParted (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando cmatrix...
+Instalando cmatrix...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Ign:6 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:7 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                          
+Obj:9 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                            
+Obj:10 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                                                                           
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                            
+Des:12 https://apt.fury.io/wez * InRelease                                                                                                                    
+Err:14 https://packages.microsoft.com/repos/azure-cli resolute Release                                                                                        
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                
+Obj:16 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease
+Des:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]        
+Err:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                            
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:18 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con cmatrix (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando ubuntu-restricted-extras...
+Instalando ubuntu-restricted-extras...
+Obj:1 https://dl.google.com/linux/chrome-stable/deb stable InRelease
+Obj:2 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                                                                                                                                         
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Ign:5 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:6 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:9 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                              
+Err:10 https://packages.microsoft.com/repos/azure-cli resolute Release                                                                                                                                                                                         
+  404  Not Found [IP: 2620:1ec:bdf::33 443]
+Obj:11 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                        
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                            
+Des:13 https://apt.fury.io/wez * InRelease                                                                                          
+Obj:14 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                      
+Des:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                  
+Err:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                            
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:18 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:16 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con ubuntu-restricted-extras (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando FFmpeg...
+Instalando FFmpeg...
+Obj:1 https://download.onlyoffice.com/repo/debian squeeze InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                                                                                                                                         
+Obj:4 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:5 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:7 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                    
+Obj:8 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                                                                
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                       
+Des:10 https://apt.fury.io/wez * InRelease                                                                                                                    
+Ign:11 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                      
+Obj:12 https://packages.microsoft.com/repos/code stable InRelease                                                                   
+Obj:13 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                
+Err:16 https://packages.microsoft.com/repos/azure-cli resolute Release                                    
+  404  Not Found [IP: 2620:1ec:bdf::33 443]
+Obj:17 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Des:18 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]        
+Err:18 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                            
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:14 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con FFmpeg (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Visual Studio Code...
+Instalando Visual Studio Code...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:4 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:5 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:6 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                                                                                                                     
+Obj:7 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                                                                                                                   
+Obj:8 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                               
+Obj:9 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                        
+Obj:10 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                  
+Des:11 https://apt.fury.io/wez * InRelease                                                                                                                    
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                          
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                             
+Des:15 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                  
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease                    
+Err:15 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                     
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Ign:17 https://packages.microsoft.com/repos/azure-cli resolute InRelease
+Obj:18 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Obj:19 https://packages.microsoft.com/repos/code stable InRelease
+Err:20 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Visual Studio Code (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Neovim...
+Instalando Neovim...
+Obj:1 https://dl.google.com/linux/chrome-stable/deb stable InRelease
+Obj:2 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:3 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                                                                                                                                         
+Ign:4 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:6 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:8 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:9 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                                                             
+Obj:11 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                              
+Des:12 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                                                                                
+Err:12 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                                                                                   
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:13 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                                                       
+Des:14 https://apt.fury.io/wez * InRelease                                                                                                                    
+Obj:10 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease                                                            
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                  
+Obj:16 https://packages.cloud.google.com/apt cloud-sdk InRelease                                          
+Obj:17 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease                     
+Obj:18 http://archive.ubuntu.com/ubuntu resolute-backports InRelease            
+Obj:19 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Err:20 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Neovim (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Docker...
+Instalando Docker...
+Obj:1 https://download.onlyoffice.com/repo/debian squeeze InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                                                                                                                                         
+Ign:4 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:6 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Err:9 https://packages.microsoft.com/repos/azure-cli resolute Release                                                                                                                                                                                                                                
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Obj:10 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                                                                                                     
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                      
+Obj:12 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                   
+Des:13 https://apt.fury.io/wez * InRelease                                                                                                                    
+Obj:14 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                      
+Des:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                  
+Err:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                            
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:18 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:16 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Docker (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando VirtualBox...
+Instalando VirtualBox...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:4 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:5 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:6 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:7 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                                                                            
+Ign:8 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                        
+Obj:9 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                  
+Obj:10 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                       
+Obj:11 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                                            
+Des:12 https://apt.fury.io/wez * InRelease                                                                                                                                              
+Obj:13 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                                                    
+Des:15 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                                                      
+Err:15 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                                
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:16 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Obj:14 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:17 https://packages.cloud.google.com/apt cloud-sdk InRelease                                          
+Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:19 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Err:20 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con VirtualBox (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Terraform...
+Instalando Terraform...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:4 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:5 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:6 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:7 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                                                                                                                     
+Obj:8 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                 
+Obj:9 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                              
+Des:10 https://apt.fury.io/wez * InRelease                                                                                                                                              
+Obj:11 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                        
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                
+Obj:13 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                             
+Des:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                  
+Err:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                      
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:15 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Ign:18 https://packages.microsoft.com/repos/azure-cli resolute InRelease
+Obj:19 https://packages.microsoft.com/repos/code stable InRelease
+Err:20 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:bdf::33 443]
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Terraform (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Azure CLI...
+Instalando Azure CLI...
+Obj:1 https://dl.google.com/linux/chrome-stable/deb stable InRelease
+Obj:2 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                                                                                                                                         
+Obj:3 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:4 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Ign:5 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:6 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:8 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                                                                                                                     
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                                                           
+Obj:10 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                       
+Obj:11 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                              
+Obj:12 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                  
+Obj:13 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                          
+Des:15 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                                                      
+Err:15 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                                
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Des:16 https://apt.fury.io/wez * InRelease                                                                
+Obj:17 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Err:18 https://packages.microsoft.com/repos/azure-cli resolute Release          
+  404  Not Found [IP: 2620:1ec:bdf::33 443]
+Obj:14 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Azure CLI (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Google Cloud CLI...
+Instalando Google Cloud CLI...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:4 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:5 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:7 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                   
+Obj:8 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                             
+Obj:9 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                                                  
+Des:10 https://apt.fury.io/wez * InRelease                                                                                                                                                   
+Obj:12 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                                                                                   
+Des:13 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                  
+Err:13 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                               
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:14 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                        
+Obj:11 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:15 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease                     
+Ign:16 https://packages.microsoft.com/repos/azure-cli resolute InRelease        
+Obj:17 https://packages.microsoft.com/repos/code stable InRelease               
+Obj:18 http://archive.ubuntu.com/ubuntu resolute-backports InRelease            
+Obj:19 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Err:20 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:46::33 443]
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Google Cloud CLI (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Claude Desktop...
+Instalando Claude Desktop...
+curl: (22) The requested URL returned error: 404
+gpg: no se han encontrados datos OpenPGP válidos
+No se pudo descargar/convertir la clave GPG desde https://downloads.claude.ai/claude-desktop/apt/keys/claude-desktop.asc
+❌ Error con Claude Desktop (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Cursor AI IDE...
+Instalando Cursor AI IDE...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:8 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                   
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                       
+Ign:10 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                      
+Obj:11 https://packages.microsoft.com/repos/code stable InRelease                                                                                             
+Obj:12 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                        
+Des:13 https://apt.fury.io/wez * InRelease                                                                                                                    
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                          
+Des:16 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                  
+Err:16 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                      
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:17 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:14 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:19 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Err:20 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:bdf::33 443]
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Cursor AI IDE (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando ULauncher...
+Instalando ULauncher...
+Añadiendo componente(s) «universe» a todos los repositorios.
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:4 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:5 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:6 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                      
+Obj:8 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                 
+Obj:9 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                   
+Des:10 https://apt.fury.io/wez * InRelease                                                                                                                                              
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                                                    
+Obj:13 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                                                       
+Des:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                            
+Err:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                               
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:15 https://packages.cloud.google.com/apt cloud-sdk InRelease                                          
+Ign:16 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                  
+Obj:12 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:17 https://packages.microsoft.com/repos/code stable InRelease
+Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Err:19 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:bdf::33 443]
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+Repositorio: «Types: deb
+URIs: https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu/
+Suites: resolute
+Components: main
+»
+Descripción:
+Application launcher for Linux
+Más información: https://launchpad.net/~agornostal/+archive/ubuntu/ulauncher
+Añadiendo repositorio.
+Se encontró la entrada deb existente en /etc/apt/sources.list.d/agornostal-ubuntu-ulauncher-resolute.sources
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:5 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Ign:6 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:7 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                            
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                         
+Obj:9 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                 
+Obj:10 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                
+Obj:11 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                  
+Des:12 https://apt.fury.io/wez * InRelease                                                                                                                                              
+Obj:14 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                                                    
+Obj:15 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                             
+Des:16 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                            
+Err:17 https://packages.microsoft.com/repos/azure-cli resolute Release                                                                       
+  404  Not Found [IP: 2620:1ec:bdf::33 443]
+Obj:18 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                             
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease                    
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease    
+Err:16 https://ngrok-agent.s3.amazonaws.com bookworm InRelease
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Ign:4 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:5 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:6 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                      
+Obj:9 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                              
+Obj:10 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                
+Des:11 https://apt.fury.io/wez * InRelease                                                                                                                                              
+Obj:12 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                  
+Obj:14 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                          
+Err:15 https://packages.microsoft.com/repos/azure-cli resolute Release                                                              
+  404  Not Found [IP: 2620:1ec:bdf::33 443]
+Obj:16 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                             
+Des:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                  
+Err:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                      
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:18 https://packages.cloud.google.com/apt cloud-sdk InRelease                
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con ULauncher (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Albert...
+Instalando Albert...
+Obj:1 https://dl.google.com/linux/chrome-stable/deb stable InRelease
+Obj:2 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:4 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                                                                                                                                         
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:6 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:8 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                         
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                       
+Des:10 https://apt.fury.io/wez * InRelease                                                                                                                    
+Obj:11 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                        
+Obj:13 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                
+Des:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                  
+Err:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                      
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:15 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:12 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Ign:18 https://packages.microsoft.com/repos/azure-cli resolute InRelease
+Obj:19 https://packages.microsoft.com/repos/code stable InRelease
+Err:20 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:bdf::69 443]
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Albert (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Flameshot...
+Instalando Flameshot...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:4 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:5 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:8 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                                                    
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                     
+Ign:10 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                      
+Obj:11 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                        
+Obj:12 https://packages.microsoft.com/repos/code stable InRelease                                                                   
+Des:13 https://apt.fury.io/wez * InRelease                                                                                                                    
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                          
+Err:16 https://packages.microsoft.com/repos/azure-cli resolute Release                                    
+  404  Not Found [IP: 2620:1ec:46::69 443]
+Des:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                  
+Err:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                            
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:18 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:14 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Flameshot (acción 'install' no disponible o falló; ver salida arriba)
+
+⏭️  Logseq: su estado no se pudo determinar, se omite por seguridad.
+
+📦 Instalando KeePassXC...
+Instalando KeePassXC...
+Repositorio: «Types: deb
+URIs: https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu/
+Suites: resolute
+Components: main
+»
+Descripción:
+KeePassXC Password Manager (official upstream PPA)
+
+https://keepassxc.org/download/
+Más información: https://launchpad.net/~phoerious/+archive/ubuntu/keepassxc
+Añadiendo repositorio.
+Se encontró la entrada deb existente en /etc/apt/sources.list.d/phoerious-ubuntu-keepassxc-resolute.sources
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:4 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:5 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:6 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Ign:7 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:8 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                               
+Obj:9 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                               
+Obj:10 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                  
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                      
+Err:12 https://packages.microsoft.com/repos/azure-cli resolute Release                                                                                        
+  404  Not Found [IP: 2620:1ec:bdf::69 443]
+Des:13 https://apt.fury.io/wez * InRelease                                                                                                                    
+Obj:14 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                      
+Obj:17 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Des:18 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]        
+Obj:16 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease    
+Err:18 https://ngrok-agent.s3.amazonaws.com bookworm InRelease 
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+Obj:1 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+Obj:2 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                                                                                                                                         
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Ign:4 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:6 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:8 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:9 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:10 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                                                                                                                                                    
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                                          
+Obj:13 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                          
+Obj:14 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Des:15 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                            
+Err:15 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                               
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Des:16 https://apt.fury.io/wez * InRelease                                                                
+Obj:12 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:17 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:19 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Err:20 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:bdf::69 443]
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con KeePassXC (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Steam...
+Instalando Steam...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:4 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Ign:5 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                                                                                                                                             
+Obj:6 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                                                                                                                                                    
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:8 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                                                                                                                   
+Des:10 https://apt.fury.io/wez * InRelease                                                                                                                                                                                                                                                            
+Obj:11 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                    
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                                                                                          
+Des:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                                                                                            
+Err:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                                
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Err:15 https://packages.microsoft.com/repos/azure-cli resolute Release                                    
+  404  Not Found [IP: 2620:1ec:46::69 443]
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:16 https://packages.cloud.google.com/apt cloud-sdk InRelease                
+Obj:17 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease
+Obj:18 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:19 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes... Hecho
+W: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+W: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+E: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+E: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+N: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+N: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Steam (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando System Updates...
+Instalando System Updates...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:6 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                                                                                                 
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:8 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                                    
+Ign:9 https://packages.microsoft.com/repos/azure-cli resolute InRelease                                                                                                                 
+Obj:10 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                       
+Des:11 https://apt.fury.io/wez * InRelease                                                                                                                    
+Obj:12 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                        
+Des:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                                                      
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                                    
+Err:14 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                      
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:16 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Obj:17 https://packages.cloud.google.com/apt cloud-sdk InRelease                                          
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Err:19 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:bdf::69 443]
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Advertencia: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+Advertencia: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Error: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+Información: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+Información: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+Error: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+Información: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+Información: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con System Updates (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Kernel & Headers...
+Instalando Kernel & Headers...
+HWE Kernel no encontrado. Instalando última versión...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Error: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+Advertencia: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+Advertencia: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Error: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+Instalando: Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease
+Ign:8 https://packages.microsoft.com/repos/azure-cli resolute InRelease
+Obj:9 https://packages.microsoft.com/repos/code stable InRelease
+Obj:10 https://packages.cloud.google.com/apt cloud-sdk InRelease
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-updates InRelease
+Des:12 https://apt.fury.io/wez * InRelease
+Obj:13 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease
+Err:14 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:46::69 443]
+Obj:16 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Des:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]
+Err:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:15 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:19 http://archive.ubuntu.com/ubuntu resolute-backports InRelease
+Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Leyendo lista de paquetes...
+linux-generic-hwe-26.04
+Error: No se ha podido localizar el paquete Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+   Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease
+   Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+   Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease
+   Obj:5 https://downloads.cursor.com/aptrepo stable InRelease
+   Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease
+   Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease
+   Ign:8 https://packages.microsoft.com/repos/azure-cli resolute InRelease
+   Obj:9 https://packages.microsoft.com/repos/code stable InRelease
+   Obj:10 https://packages.cloud.google.com/apt cloud-sdk InRelease
+   Obj:11 http://archive.ubuntu.com/ubuntu resolute-updates InRelease
+   Des:12 https://apt.fury.io/wez * InRelease
+   Obj:13 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease
+   Err:14 https://packages.microsoft.com/repos/azure-cli resolute Release
+     404  Not Found [IP: 2620:1ec:46::69 443]
+   Obj:16 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+   Des:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]
+   Err:17 https://ngrok-agent.s3.amazonaws.com bookworm InRelease
+     Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+   Obj:15 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+   Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+   Obj:19 http://archive.ubuntu.com/ubuntu resolute-backports InRelease
+   Obj:20 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch
+❌ Error con Kernel & Headers (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Final System Update...
+Instalando Final System Update...
+Esto actualizará y limpiará el sistema.
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                                                                                                                                                
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                                                                                                                                          
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                                                                                                                                                 
+Obj:5 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                                                                                                                                           
+Obj:6 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                                                                                                                                         
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                                                                         
+Obj:8 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                                                 
+Des:9 https://apt.fury.io/wez * InRelease                                                                                                                                               
+Obj:10 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                  
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                          
+Des:13 https://ngrok-agent.s3.amazonaws.com bookworm InRelease [20,3 kB]                                                            
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                                      
+Obj:11 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease                                              
+Err:13 https://ngrok-agent.s3.amazonaws.com bookworm InRelease                                                                               
+  Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Obj:15 https://packages.cloud.google.com/apt cloud-sdk InRelease                
+Ign:16 https://packages.microsoft.com/repos/azure-cli resolute InRelease        
+Obj:17 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:18 https://packages.microsoft.com/repos/code stable InRelease
+Obj:19 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Err:20 https://packages.microsoft.com/repos/azure-cli resolute Release
+  404  Not Found [IP: 2620:1ec:46::69 443]
+Advertencia: https://ngrok-agent.s3.amazonaws.com/dists/bookworm/InRelease: The key(s) in the keyring /usr/share/keyrings/ngrok-archive-keyring.gpg are ignored as the file has an unsupported filetype.
+Advertencia: Falló la verificación de firma OpenPGP: https://ngrok-agent.s3.amazonaws.com bookworm InRelease: Las firmas siguientes no se pudieron verificar porque su clave pública no está disponible: NO_PUBKEY 0E61D3BBAAEE37FE
+Error: El repositorio «https://ngrok-agent.s3.amazonaws.com bookworm InRelease» no está firmado.
+Información: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+Información: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+Error: El repositorio «https://packages.microsoft.com/repos/azure-cli resolute Release» no tiene un fichero de Publicación.
+Información: No se puede actualizar de un repositorio como este de forma segura y por tanto está deshabilitado por omisión.
+Información: Vea la página de manual apt-secure(8) para los detalles sobre la creación de repositorios y la configuración de usuarios.
+❌ Error con Final System Update (acción 'install' no disponible o falló; ver salida arriba)
+
+
+🎉 ¡Instalación completada!
