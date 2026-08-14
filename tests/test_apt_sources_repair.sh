@@ -60,6 +60,20 @@ setup_fixture() {
         > "${UCI_FAKE_ETC}/sources.list.d/azure-cli.sources"
     echo "deb https://sano.example stable main" > "${UCI_FAKE_ETC}/sources.list.d/sano.list"
 
+    # PPA de Launchpad tal como lo escribe 'add-apt-repository': la clave
+    # va EMBEBIDA en línea, no como ruta a un keyring. Formato real,
+    # copiado de una máquina de verdad. Debe ignorarse por completo.
+    cat > "${UCI_FAKE_ETC}/sources.list.d/ppa-embebida.sources" <<'PPA'
+Types: deb
+URIs: https://ppa.launchpadcontent.net/ejemplo/app/ubuntu/
+Suites: noble
+Components: main
+Signed-By: -----BEGIN PGP PUBLIC KEY BLOCK-----
+ .
+ mQINBFU7uhABEADX+dREIrFMc7DmSXZ5uu8D5Rl9dcmOF1qRvbkGbhfSgmQGG3d4
+ -----END PGP PUBLIC KEY BLOCK-----
+PPA
+
     # Clave en ASCII armor guardada como .gpg: exactamente el bug de ngrok.
     printf -- "-----BEGIN PGP PUBLIC KEY BLOCK-----\nmQINB\n" > "${UCI_FAKE_ETC}/keyrings/ngrok.gpg"
 
@@ -230,6 +244,22 @@ if [[ "${UCI_PROBLEMS}" == *"ngrok.gpg"* ]]; then
     pass "nombra el keyring concreto que APT va a ignorar"
 else
     fail "debería nombrar el keyring. Obtenido: '${UCI_PROBLEMS}'"
+fi
+
+# Regresión de un falso positivo real (reportado por el dueño del proyecto
+# al correr 'doctor' en su máquina): los .sources de los PPA de Launchpad
+# traen la clave embebida en línea ('Signed-By: -----BEGIN PGP...'), no una
+# ruta. La primera versión de esta comprobación tomaba '-----BEGIN' como un
+# archivo y reportaba 4 "keyrings ausentes" que no existían como problema.
+if [[ "${UCI_PROBLEMS}" != *"-----BEGIN"* ]]; then
+    pass "no confunde una clave embebida en línea con una ruta de keyring"
+else
+    fail "reportó '-----BEGIN' como si fuera un archivo: falso positivo con los PPA de Launchpad. Obtenido: '${UCI_PROBLEMS}'"
+fi
+if [[ "${UCI_PROBLEMS}" != *"ppa-embebida.sources"* ]]; then
+    pass "ignora por completo los .sources con clave embebida (configuración válida)"
+else
+    fail "un .sources con clave embebida no debe reportarse. Obtenido: '${UCI_PROBLEMS}'"
 fi
 
 # Un keyring binario bien guardado no debe reportarse.
