@@ -1,0 +1,2417 @@
+? Selecciona las herramientas: ✗ WezTerm (No instalado) — Emulador de terminal acelerado por GPU con multiplexor integrado, ✗ Oh My Zsh (No instalado) — Framework de configuración y temas 
+para el shell Zsh, ✗ Powerlevel10k (No instalado) — Tema visual rápido y personalizable para el prompt de Zsh, ✗ Meld (No instalado) — Herramienta gráfica de comparación y fusión de 
+archivos/carpetas, ✗ GParted (No instalado) — Editor gráfico de particiones de disco, ✗ cmatrix (No instalado) — Efecto visual de terminal estilo Matrix, sin utilidad práctica más allá de lo
+ decorativo, ✗ toilet (No instalado) — Arte ASCII de texto grande con más efectos y colores que figlet, ✗ pokemon-colorscripts (No instalado) — Arte ASCII de Pokémon coloreado en la 
+terminal, ✗ ubuntu-restricted-extras (No instalado) — Paquete meta con códecs multimedia y fuentes de uso restringido, ✗ VLC (No instalado) — Reproductor multimedia universal, ? Kooha 
+(Estado desconocido) — Grabador de pantalla simple para GNOME/Wayland, ✗ FFmpeg (No instalado) — Conversión y procesamiento de audio y video por línea de comandos, ✗ Visual Studio Code (No 
+instalado) — Editor de código de Microsoft con soporte de extensiones, ✗ Neovim (No instalado) — Fork moderno de Vim con soporte nativo de LSP, ✗ Docker (No instalado) — Motor de 
+contenedores para empaquetar y ejecutar aplicaciones, ✗ VirtualBox (No instalado) — Software de virtualización de máquinas virtuales de Oracle, ✗ Azure CLI (No instalado) — Cliente de línea 
+de comandos oficial de Microsoft Azure, ✗ Google Cloud CLI (No instalado) — Cliente de línea de comandos oficial de Google Cloud Platform, ✗ Albert (No instalado) — Lanzador de aplicaciones 
+extensible y rápido, activado por teclado, ✗ OnlyOffice (No instalado) — Suite ofimática con alta compatibilidad de formato con Microsoft Office, ✗ KeePassXC (No instalado) — Gestor de 
+contraseñas libre con cifrado local
+? ¿Proceder con 21 herramienta(s)? Yes
+
+🚀 Ejecutando acciones...
+
+📦 Instalando WezTerm...
+Instalando WezTerm...
+Obj:1 https://dl.google.com/linux/chrome-stable/deb stable InRelease
+Obj:2 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                  
+Obj:3 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:8 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Des:9 https://apt.fury.io/wez * InRelease                                                                                                                                                    
+Obj:10 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                           
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                        
+Obj:12 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Obj:13 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                      
+Obj:14 https://packages.cloud.google.com/apt cloud-sdk InRelease                                          
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Obj:15 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Descargados 5.722 B en 2s (3.483 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  libxcb-image0 libxcb-xkb1 libxkbcommon-x11-0
+Se instalarán los siguientes paquetes NUEVOS:
+  libxcb-image0 libxcb-xkb1 libxkbcommon-x11-0 wezterm
+0 actualizados, 4 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 34,4 MB de archivos.
+Se utilizarán 254 kB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-xkb1 amd64 1.17.0-2ubuntu1 [32,7 kB]
+Des:3 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxkbcommon-x11-0 amd64 1.13.1-1 [15,0 kB]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libxcb-image0 amd64 0.4.0-2build2 [11,0 kB]                                       
+Des:2 https://apt.fury.io/wez */* amd64 wezterm amd64 20240203-110809-5046fc22 [34,3 MB]
+Descargados 34,4 MB en 3s (10,1 MB/s)
+Seleccionando el paquete libxcb-xkb1:amd64 previamente no seleccionado.
+(Leyendo la base de datos ... 166481 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../libxcb-xkb1_1.17.0-2ubuntu1_amd64.deb ...
+Desempaquetando libxcb-xkb1:amd64 (1.17.0-2ubuntu1) ...
+Seleccionando el paquete libxkbcommon-x11-0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../libxkbcommon-x11-0_1.13.1-1_amd64.deb ...
+Desempaquetando libxkbcommon-x11-0:amd64 (1.13.1-1) ...
+Seleccionando el paquete libxcb-image0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../libxcb-image0_0.4.0-2build2_amd64.deb ...
+Desempaquetando libxcb-image0:amd64 (0.4.0-2build2) ...
+Seleccionando el paquete wezterm previamente no seleccionado.
+Preparando para desempaquetar .../wezterm_20240203-110809-5046fc22_amd64.deb ...
+Desempaquetando wezterm (20240203-110809-5046fc22) ...
+Configurando libxcb-xkb1:amd64 (1.17.0-2ubuntu1) ...
+Configurando libxcb-image0:amd64 (0.4.0-2build2) ...
+Configurando libxkbcommon-x11-0:amd64 (1.13.1-1) ...
+Configurando wezterm (20240203-110809-5046fc22) ...
+Procesando disparadores para hicolor-icon-theme (0.18-2build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+WezTerm instalado correctamente.
+✅ WezTerm completado
+
+📦 Instalando Oh My Zsh...
+Instalando Oh My Zsh...
+Obj:1 https://download.onlyoffice.com/repo/debian squeeze InRelease
+Obj:2 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                  
+Obj:3 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:4 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:5 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:6 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:7 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:8 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                              
+Obj:9 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                         
+Obj:10 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                             
+Des:11 https://apt.fury.io/wez * InRelease                                                                                               
+Obj:13 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                                  
+Obj:12 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:14 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-updates InRelease
+Obj:16 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Obj:17 http://archive.ubuntu.com/ubuntu resolute-backports InRelease
+Descargados 5.722 B en 2s (3.349 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+git ya está en su versión más reciente (1:2.53.0-1ubuntu1).
+Resolviendo dependencias... Hecho
+Paquetes sugeridos:
+  zsh-doc
+Se instalarán los siguientes paquetes NUEVOS:
+  zsh zsh-common
+0 actualizados, 2 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 4.986 kB de archivos.
+Se utilizarán 19,1 MB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/main amd64 zsh-common all 5.9-8ubuntu3 [4.168 kB]
+Des:2 http://archive.ubuntu.com/ubuntu resolute/main amd64 zsh amd64 5.9-8ubuntu3 [818 kB]
+Descargados 4.986 kB en 5s (1.035 kB/s)
+Seleccionando el paquete zsh-common previamente no seleccionado.
+(Leyendo la base de datos ... 166514 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../zsh-common_5.9-8ubuntu3_all.deb ...
+Desempaquetando zsh-common (5.9-8ubuntu3) ...
+Seleccionando el paquete zsh previamente no seleccionado.
+Preparando para desempaquetar .../zsh_5.9-8ubuntu3_amd64.deb ...
+Desempaquetando zsh (5.9-8ubuntu3) ...
+Configurando zsh-common (5.9-8ubuntu3) ...
+Configurando zsh (5.9-8ubuntu3) ...
+Procesando disparadores para debianutils (5.23.2build1) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+/home/jparra/.oh-my-zsh ya es un repositorio Git válido, no se reclona.
+Oh My Zsh instalado correctamente.
+✅ Oh My Zsh completado
+
+📦 Instalando Powerlevel10k...
+Instalando Powerlevel10k...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:3 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:4 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:5 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:6 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:7 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:8 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                            
+Obj:9 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                    
+Obj:10 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                
+Des:13 https://apt.fury.io/wez * InRelease                                                                
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Obj:11 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:15 https://packages.cloud.google.com/apt cloud-sdk InRelease                
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.368 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+zsh ya está en su versión más reciente (5.9-8ubuntu3).
+git ya está en su versión más reciente (1:2.53.0-1ubuntu1).
+Resolviendo dependencias... Hecho
+0 actualizados, 0 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+/home/jparra/.oh-my-zsh/custom/themes/powerlevel10k ya es un repositorio Git válido, no se reclona.
+Powerlevel10k instalado correctamente.
+✅ Powerlevel10k completado
+
+📦 Instalando Meld...
+Instalando Meld...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:3 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:8 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                              
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                          
+Obj:10 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Des:11 https://apt.fury.io/wez * InRelease                                                                                          
+Obj:13 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:12 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:15 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:16 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Obj:17 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+Descargados 5.722 B en 2s (3.283 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  gir1.2-gtksource-4 libgtksourceview-4-0 libgtksourceview-4-common python3-gi-cairo
+Se instalarán los siguientes paquetes NUEVOS:
+  gir1.2-gtksource-4 libgtksourceview-4-0 libgtksourceview-4-common meld python3-gi-cairo
+0 actualizados, 5 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 1.433 kB de archivos.
+Se utilizarán 8.736 kB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libgtksourceview-4-common all 4.8.4-9 [582 kB]
+Des:2 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libgtksourceview-4-0 amd64 4.8.4-9 [231 kB]
+Des:3 http://archive.ubuntu.com/ubuntu resolute/universe amd64 gir1.2-gtksource-4 amd64 4.8.4-9 [20,2 kB]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/main amd64 python3-gi-cairo amd64 3.56.2-1 [8.510 B]
+Des:5 http://archive.ubuntu.com/ubuntu resolute/universe amd64 meld all 3.22.3-2 [592 kB]
+Descargados 1.433 kB en 6s (240 kB/s)
+Seleccionando el paquete libgtksourceview-4-common previamente no seleccionado.
+(Leyendo la base de datos ... 168023 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../libgtksourceview-4-common_4.8.4-9_all.deb ...
+Desempaquetando libgtksourceview-4-common (4.8.4-9) ...
+Seleccionando el paquete libgtksourceview-4-0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../libgtksourceview-4-0_4.8.4-9_amd64.deb ...
+Desempaquetando libgtksourceview-4-0:amd64 (4.8.4-9) ...
+Seleccionando el paquete gir1.2-gtksource-4:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../gir1.2-gtksource-4_4.8.4-9_amd64.deb ...
+Desempaquetando gir1.2-gtksource-4:amd64 (4.8.4-9) ...
+Seleccionando el paquete python3-gi-cairo previamente no seleccionado.
+Preparando para desempaquetar .../python3-gi-cairo_3.56.2-1_amd64.deb ...
+Desempaquetando python3-gi-cairo (3.56.2-1) ...
+Seleccionando el paquete meld previamente no seleccionado.
+Preparando para desempaquetar .../archives/meld_3.22.3-2_all.deb ...
+Desempaquetando meld (3.22.3-2) ...
+Configurando python3-gi-cairo (3.56.2-1) ...
+Configurando libgtksourceview-4-common (4.8.4-9) ...
+Configurando libgtksourceview-4-0:amd64 (4.8.4-9) ...
+Configurando gir1.2-gtksource-4:amd64 (4.8.4-9) ...
+Configurando meld (3.22.3-2) ...
+Procesando disparadores para hicolor-icon-theme (0.18-2build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+Procesando disparadores para libglib2.0-0t64:amd64 (2.88.0-1) ...
+Procesando disparadores para shared-mime-info (2.4-5build3) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+Meld instalado correctamente.
+✅ Meld completado
+
+📦 Instalando GParted...
+Instalando GParted...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:4 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:5 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:8 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                            
+Obj:10 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                
+Des:13 https://apt.fury.io/wez * InRelease                                                                                          
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                
+Obj:15 https://packages.cloud.google.com/apt cloud-sdk InRelease                
+Obj:12 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.402 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  gparted-common libatkmm-1.6-1v5 libcairomm-1.0-1v5 libglibmm-2.4-1t64 libgtkmm-3.0-1t64 libpangomm-1.4-1v5 libparted-fs-resize0t64 libsigc++-2.0-0v5
+Paquetes sugeridos:
+  dmraid gpart jfsutils kpartx mtools reiser4progs reiserfsprogs udftools xfsprogs libparted-dev
+Se instalarán los siguientes paquetes NUEVOS:
+  gparted gparted-common libatkmm-1.6-1v5 libcairomm-1.0-1v5 libglibmm-2.4-1t64 libgtkmm-3.0-1t64 libpangomm-1.4-1v5 libparted-fs-resize0t64 libsigc++-2.0-0v5
+0 actualizados, 9 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 2.344 kB de archivos.
+Se utilizarán 11,0 MB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/main amd64 libsigc++-2.0-0v5 amd64 2.12.1-4build1 [13,1 kB]
+Des:2 http://archive.ubuntu.com/ubuntu resolute/main amd64 libglibmm-2.4-1t64 amd64 2.66.8-3 [639 kB]
+Des:3 http://archive.ubuntu.com/ubuntu resolute/main amd64 libatkmm-1.6-1v5 amd64 2.28.4-2 [75,7 kB]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/main amd64 libcairomm-1.0-1v5 amd64 1.14.5-3 [43,3 kB]
+Des:5 http://archive.ubuntu.com/ubuntu resolute/main amd64 libpangomm-1.4-1v5 amd64 2.46.4-2 [51,9 kB]
+Des:6 http://archive.ubuntu.com/ubuntu resolute/main amd64 libgtkmm-3.0-1t64 amd64 3.24.10-2 [987 kB]
+Des:7 http://archive.ubuntu.com/ubuntu resolute/main amd64 libparted-fs-resize0t64 amd64 3.6-6 [37,3 kB]
+Des:8 http://archive.ubuntu.com/ubuntu resolute/main amd64 gparted-common all 1.8.0-1 [91,4 kB]
+Des:9 http://archive.ubuntu.com/ubuntu resolute/main amd64 gparted amd64 1.8.0-1 [406 kB]
+Descargados 2.344 kB en 5s (469 kB/s)
+Seleccionando el paquete libsigc++-2.0-0v5:amd64 previamente no seleccionado.
+(Leyendo la base de datos ... 168561 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../0-libsigc++-2.0-0v5_2.12.1-4build1_amd64.deb ...
+Desempaquetando libsigc++-2.0-0v5:amd64 (2.12.1-4build1) ...
+Seleccionando el paquete libglibmm-2.4-1t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../1-libglibmm-2.4-1t64_2.66.8-3_amd64.deb ...
+Desempaquetando libglibmm-2.4-1t64:amd64 (2.66.8-3) ...
+Seleccionando el paquete libatkmm-1.6-1v5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../2-libatkmm-1.6-1v5_2.28.4-2_amd64.deb ...
+Desempaquetando libatkmm-1.6-1v5:amd64 (2.28.4-2) ...
+Seleccionando el paquete libcairomm-1.0-1v5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../3-libcairomm-1.0-1v5_1.14.5-3_amd64.deb ...
+Desempaquetando libcairomm-1.0-1v5:amd64 (1.14.5-3) ...
+Seleccionando el paquete libpangomm-1.4-1v5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../4-libpangomm-1.4-1v5_2.46.4-2_amd64.deb ...
+Desempaquetando libpangomm-1.4-1v5:amd64 (2.46.4-2) ...
+Seleccionando el paquete libgtkmm-3.0-1t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../5-libgtkmm-3.0-1t64_3.24.10-2_amd64.deb ...
+Desempaquetando libgtkmm-3.0-1t64:amd64 (3.24.10-2) ...
+Seleccionando el paquete libparted-fs-resize0t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../6-libparted-fs-resize0t64_3.6-6_amd64.deb ...
+Desempaquetando libparted-fs-resize0t64:amd64 (3.6-6) ...
+Seleccionando el paquete gparted-common previamente no seleccionado.
+Preparando para desempaquetar .../7-gparted-common_1.8.0-1_all.deb ...
+Desempaquetando gparted-common (1.8.0-1) ...
+Seleccionando el paquete gparted previamente no seleccionado.
+Preparando para desempaquetar .../8-gparted_1.8.0-1_amd64.deb ...
+Desempaquetando gparted (1.8.0-1) ...
+Configurando gparted-common (1.8.0-1) ...
+Configurando libsigc++-2.0-0v5:amd64 (2.12.1-4build1) ...
+Configurando libparted-fs-resize0t64:amd64 (3.6-6) ...
+Configurando libcairomm-1.0-1v5:amd64 (1.14.5-3) ...
+Configurando libglibmm-2.4-1t64:amd64 (2.66.8-3) ...
+Configurando libpangomm-1.4-1v5:amd64 (2.46.4-2) ...
+Configurando libatkmm-1.6-1v5:amd64 (2.28.4-2) ...
+Configurando libgtkmm-3.0-1t64:amd64 (3.24.10-2) ...
+Configurando gparted (1.8.0-1) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+Procesando disparadores para hicolor-icon-theme (0.18-2build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+GParted instalado correctamente.
+✅ GParted completado
+
+📦 Instalando cmatrix...
+Instalando cmatrix...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:3 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:4 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:6 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:8 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                               
+Obj:9 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                           
+Des:10 https://apt.fury.io/wez * InRelease                                                                                          
+Obj:11 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                    
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-updates InRelease              
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease            
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.404 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Paquetes sugeridos:
+  cmatrix-xfont
+Se instalarán los siguientes paquetes NUEVOS:
+  cmatrix
+0 actualizados, 1 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 34,0 kB de archivos.
+Se utilizarán 76,8 kB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/universe amd64 cmatrix amd64 2.0-6build1 [34,0 kB]
+Descargados 34,0 kB en 1s (39,1 kB/s)
+Seleccionando el paquete cmatrix previamente no seleccionado.
+(Leyendo la base de datos ... 168708 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../cmatrix_2.0-6build1_amd64.deb ...
+Desempaquetando cmatrix (2.0-6build1) ...
+Configurando cmatrix (2.0-6build1) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+Procesando disparadores para hicolor-icon-theme (0.18-2build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+cmatrix instalado correctamente.
+✅ cmatrix completado
+
+📦 Instalando toilet...
+Instalando toilet...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.onlyoffice.com/repo/debian squeeze InRelease
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:4 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:5 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:6 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:7 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:8 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:9 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                               
+Obj:10 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                  
+Des:12 https://apt.fury.io/wez * InRelease                                                                                          
+Obj:13 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                          
+Obj:14 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                      
+Obj:15 https://packages.cloud.google.com/apt cloud-sdk InRelease                                          
+Obj:11 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.510 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  toilet-fonts
+Paquetes sugeridos:
+  figlet
+Se instalarán los siguientes paquetes NUEVOS:
+  toilet toilet-fonts
+0 actualizados, 2 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 726 kB de archivos.
+Se utilizarán 851 kB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/universe amd64 toilet-fonts all 0.3-5 [713 kB]
+Des:2 http://archive.ubuntu.com/ubuntu resolute/universe amd64 toilet amd64 0.3-5 [13,3 kB]
+Descargados 726 kB en 2s (324 kB/s)
+Seleccionando el paquete toilet-fonts previamente no seleccionado.
+(Leyendo la base de datos ... 168719 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../toilet-fonts_0.3-5_all.deb ...
+Desempaquetando toilet-fonts (0.3-5) ...
+Seleccionando el paquete toilet previamente no seleccionado.
+Preparando para desempaquetar .../toilet_0.3-5_amd64.deb ...
+Desempaquetando toilet (0.3-5) ...
+Configurando toilet-fonts (0.3-5) ...
+Configurando toilet (0.3-5) ...
+update-alternatives: utilizando /usr/bin/figlet-toilet para proveer /usr/bin/figlet (figlet) en modo automático
+Procesando disparadores para man-db (2.13.1-1build1) ...
+toilet instalado correctamente.
+✅ toilet completado
+
+📦 Instalando pokemon-colorscripts...
+Instalando pokemon-colorscripts...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:4 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:5 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:6 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:8 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:9 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                              
+Obj:10 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                        
+Des:11 https://apt.fury.io/wez * InRelease                                                                
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                      
+Obj:14 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:15 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.127 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+python3 ya está en su versión más reciente (3.14.3-0ubuntu2).
+fijado python3 como instalado manualmente.
+git ya está en su versión más reciente (1:2.53.0-1ubuntu1).
+Resolviendo dependencias... Hecho
+0 actualizados, 0 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Clonando en '/home/jparra/.local/share/pokemon-colorscripts'...
+remote: Enumerating objects: 5170, done.
+remote: Counting objects: 100% (5170/5170), done.
+remote: Compressing objects: 100% (3935/3935), done.
+remote: Total 5170 (delta 2648), reused 2948 (delta 1235), pack-reused 0 (from 0)
+Recibiendo objetos: 100% (5170/5170), 6.69 MiB | 18.12 MiB/s, listo.
+Resolviendo deltas: 100% (2648/2648), listo.
+pokemon-colorscripts instalado correctamente.
+✅ pokemon-colorscripts completado
+
+📦 Instalando ubuntu-restricted-extras...
+Instalando ubuntu-restricted-extras...
+Obj:1 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+Obj:2 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:4 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                  
+Obj:5 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:7 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:8 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                              
+Obj:9 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:10 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                 
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                      
+Obj:13 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease
+Des:14 https://apt.fury.io/wez * InRelease                                      
+Obj:11 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:15 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.217 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  cabextract libmspack0t64 ttf-mscorefonts-installer unrar
+Paquetes recomendados:
+  libavcodec-extra
+Se instalarán los siguientes paquetes NUEVOS:
+  cabextract libmspack0t64 ttf-mscorefonts-installer ubuntu-restricted-extras unrar
+0 actualizados, 5 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 277 kB de archivos.
+Se utilizarán 698 kB de espacio de disco adicional después de esta operación.
+Des:1 https://download.onlyoffice.com/repo/debian squeeze/main amd64 ttf-mscorefonts-installer all 3.8.2 [21,5 kB]
+Des:2 http://archive.ubuntu.com/ubuntu resolute/main amd64 libmspack0t64 amd64 0.11-1.1build2 [41,6 kB]      
+Des:3 http://archive.ubuntu.com/ubuntu resolute/universe amd64 cabextract amd64 1.11-2build1 [25,0 kB]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/multiverse amd64 ubuntu-restricted-extras amd64 68build1 [2.596 B]
+Des:5 http://archive.ubuntu.com/ubuntu resolute/multiverse amd64 unrar amd64 1:7.2.4-1 [186 kB]
+Descargados 277 kB en 2s (152 kB/s)
+Preconfigurando paquetes ...
+Seleccionando el paquete libmspack0t64:amd64 previamente no seleccionado.
+(Leyendo la base de datos ... 168757 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../libmspack0t64_0.11-1.1build2_amd64.deb ...
+Desempaquetando libmspack0t64:amd64 (0.11-1.1build2) ...
+Seleccionando el paquete cabextract previamente no seleccionado.
+Preparando para desempaquetar .../cabextract_1.11-2build1_amd64.deb ...
+Desempaquetando cabextract (1.11-2build1) ...
+Seleccionando el paquete ttf-mscorefonts-installer previamente no seleccionado.
+Preparando para desempaquetar .../ttf-mscorefonts-installer_3.8.2_all.deb ...
+Desempaquetando ttf-mscorefonts-installer (3.8.2) ...
+Seleccionando el paquete ubuntu-restricted-extras previamente no seleccionado.
+Preparando para desempaquetar .../ubuntu-restricted-extras_68build1_amd64.deb ...
+Desempaquetando ubuntu-restricted-extras (68build1) ...
+Seleccionando el paquete unrar previamente no seleccionado.
+Preparando para desempaquetar .../unrar_1%3a7.2.4-1_amd64.deb ...
+Desempaquetando unrar (1:7.2.4-1) ...
+Configurando libmspack0t64:amd64 (0.11-1.1build2) ...
+Configurando unrar (1:7.2.4-1) ...
+update-alternatives: utilizando /usr/bin/unrar-nonfree para proveer /usr/bin/unrar (unrar) en modo automático
+Configurando ubuntu-restricted-extras (68build1) ...
+Configurando cabextract (1.11-2build1) ...
+Configurando ttf-mscorefonts-installer (3.8.2) ...
+
+These fonts were provided by Microsoft "in the interest of cross-
+platform compatibility".  This is no longer the case, but they are
+still available from third parties.
+
+You are free to download these fonts and use them for your own use,
+but you may not redistribute them in modified form, including changes
+to the file name or packaging format.
+
+--2026-08-14 03:28:07--  https://downloads.sourceforge.net/corefonts/andale32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:c95, 2606:4700::6812:d95, 104.18.12.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:c95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/andale32.exe [siguiente]
+--2026-08-14 03:28:07--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/andale32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/andale32.exe?viasf=1&fid=7853eb3b084c5c4b&e=1786778888&st=7YWOTHWuD5ZfeHPFdjr1wQ [siguiente]
+--2026-08-14 03:28:08--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/andale32.exe?viasf=1&fid=7853eb3b084c5c4b&e=1786778888&st=7YWOTHWuD5ZfeHPFdjr1wQ
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 198384 (194K) [application/octet-stream]
+Guardando como: ‘./andale32.exe’
+
+     0K .......... .......... .......... .......... .......... 25% 1,11M 0s
+    50K .......... .......... .......... .......... .......... 51% 1,10M 0s
+   100K .......... .......... .......... .......... .......... 77%  113M 0s
+   150K .......... .......... .......... .......... ...       100%  144M=0,09s
+
+2026-08-14 03:28:08 (2,12 MB/s) - ‘./andale32.exe’ guardado [198384/198384]
+
+--2026-08-14 03:28:08--  https://downloads.sourceforge.net/corefonts/arialb32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:c95, 2606:4700::6812:d95, 104.18.12.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:c95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/arialb32.exe [siguiente]
+--2026-08-14 03:28:08--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/arialb32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/arialb32.exe?viasf=1&fid=f7317db94c01163d&e=1786778889&st=osCnpd6y_ujjC_uZqBEm2Q [siguiente]
+--2026-08-14 03:28:09--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/arialb32.exe?viasf=1&fid=f7317db94c01163d&e=1786778889&st=osCnpd6y_ujjC_uZqBEm2Q
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 168176 (164K) [application/octet-stream]
+Guardando como: ‘./arialb32.exe’
+
+     0K .......... .......... .......... .......... .......... 30% 1,03M 0s
+    50K .......... .......... .......... .......... .......... 60% 1,36M 0s
+   100K .......... .......... .......... .......... .......... 91% 12,1M 0s
+   150K .......... ....                                       100% 37,3M=0,09s
+
+2026-08-14 03:28:09 (1,83 MB/s) - ‘./arialb32.exe’ guardado [168176/168176]
+
+--2026-08-14 03:28:09--  https://downloads.sourceforge.net/corefonts/arial32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:d95, 2606:4700::6812:c95, 104.18.13.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:d95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/arial32.exe [siguiente]
+--2026-08-14 03:28:09--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/arial32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/arial32.exe?viasf=1&fid=3fdfd49c0822caa1&e=1786778889&st=1x7a15cjtwwyab1Yaigk_g [siguiente]
+--2026-08-14 03:28:10--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/arial32.exe?viasf=1&fid=3fdfd49c0822caa1&e=1786778889&st=1x7a15cjtwwyab1Yaigk_g
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 554208 (541K) [application/octet-stream]
+Guardando como: ‘./arial32.exe’
+
+     0K .......... .......... .......... .......... ..........  9% 1,11M 0s
+    50K .......... .......... .......... .......... .......... 18% 1,25M 0s
+   100K .......... .......... .......... .......... .......... 27% 9,18M 0s
+   150K .......... .......... .......... .......... .......... 36%  177M 0s
+   200K .......... .......... .......... .......... .......... 46% 1,14M 0s
+   250K .......... .......... .......... .......... .......... 55% 3,78M 0s
+   300K .......... .......... .......... .......... .......... 64%  165M 0s
+   350K .......... .......... .......... .......... .......... 73% 17,5M 0s
+   400K .......... .......... .......... .......... .......... 83% 3,08M 0s
+   450K .......... .......... .......... .......... .......... 92% 5,99M 0s
+   500K .......... .......... .......... .......... .         100% 9,68M=0,2s
+
+2026-08-14 03:28:10 (3,01 MB/s) - ‘./arial32.exe’ guardado [554208/554208]
+
+--2026-08-14 03:28:10--  https://downloads.sourceforge.net/corefonts/comic32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:c95, 2606:4700::6812:d95, 104.18.12.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:c95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/comic32.exe [siguiente]
+--2026-08-14 03:28:10--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/comic32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/comic32.exe?viasf=1&fid=d156d78061e6b14a&e=1786778890&st=Z7Tw3hv2M04rDyT7uR1VRQ [siguiente]
+--2026-08-14 03:28:10--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/comic32.exe?viasf=1&fid=d156d78061e6b14a&e=1786778890&st=Z7Tw3hv2M04rDyT7uR1VRQ
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 246008 (240K) [application/octet-stream]
+Guardando como: ‘./comic32.exe’
+
+     0K .......... .......... .......... .......... .......... 20% 1,11M 0s
+    50K .......... .......... .......... .......... .......... 41% 1,36M 0s
+   100K .......... .......... .......... .......... .......... 62% 1,22M 0s
+   150K .......... .......... .......... .......... .......... 83% 11,2M 0s
+   200K .......... .......... .......... ..........           100% 70,1M=0,1s
+
+2026-08-14 03:28:11 (1,88 MB/s) - ‘./comic32.exe’ guardado [246008/246008]
+
+--2026-08-14 03:28:11--  https://downloads.sourceforge.net/corefonts/courie32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:c95, 2606:4700::6812:d95, 104.18.12.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:c95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/courie32.exe [siguiente]
+--2026-08-14 03:28:11--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/courie32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/courie32.exe?viasf=1&fid=b3187fc2387f0a2d&e=1786778891&st=EKgZXj1kmylN4JlKvgm_0g [siguiente]
+--2026-08-14 03:28:12--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/courie32.exe?viasf=1&fid=b3187fc2387f0a2d&e=1786778891&st=EKgZXj1kmylN4JlKvgm_0g
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 646368 (631K) [application/octet-stream]
+Guardando como: ‘./courie32.exe’
+
+     0K .......... .......... .......... .......... ..........  7% 1,03M 1s
+    50K .......... .......... .......... .......... .......... 15% 1,11M 0s
+   100K .......... .......... .......... .......... .......... 23% 11,6M 0s
+   150K .......... .......... .......... .......... .......... 31% 6,28M 0s
+   200K .......... .......... .......... .......... .......... 39% 1,51M 0s
+   250K .......... .......... .......... .......... .......... 47% 6,59M 0s
+   300K .......... .......... .......... .......... .......... 55% 11,4M 0s
+   350K .......... .......... .......... .......... .......... 63% 1,52M 0s
+   400K .......... .......... .......... .......... .......... 71% 13,9M 0s
+   450K .......... .......... .......... .......... .......... 79% 10,4M 0s
+   500K .......... .......... .......... .......... .......... 87% 6,58M 0s
+   550K .......... .......... .......... .......... .......... 95% 12,5M 0s
+   600K .......... .......... .......... .                    100% 8,50M=0,2s
+
+2026-08-14 03:28:12 (3,04 MB/s) - ‘./courie32.exe’ guardado [646368/646368]
+
+--2026-08-14 03:28:12--  https://downloads.sourceforge.net/corefonts/georgi32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:d95, 2606:4700::6812:c95, 104.18.12.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:d95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/georgi32.exe [siguiente]
+--2026-08-14 03:28:12--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/georgi32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/georgi32.exe?viasf=1&fid=3da9bf6dab417436&e=1786778893&st=wxAMb2IvGYUzq8fZ-GS3kQ [siguiente]
+--2026-08-14 03:28:13--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/georgi32.exe?viasf=1&fid=3da9bf6dab417436&e=1786778893&st=wxAMb2IvGYUzq8fZ-GS3kQ
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 392440 (383K) [application/octet-stream]
+Guardando como: ‘./georgi32.exe’
+
+     0K .......... .......... .......... .......... .......... 13%  889K 0s
+    50K .......... .......... .......... .......... .......... 26% 1,80M 0s
+   100K .......... .......... .......... .......... .......... 39% 2,45M 0s
+   150K .......... .......... .......... .......... .......... 52% 2,38M 0s
+   200K .......... .......... .......... .......... .......... 65% 3,01M 0s
+   250K .......... .......... .......... .......... .......... 78% 5,95M 0s
+   300K .......... .......... .......... .......... .......... 91% 4,35M 0s
+   350K .......... .......... .......... ...                  100% 7,94M=0,2s
+
+2026-08-14 03:28:13 (2,29 MB/s) - ‘./georgi32.exe’ guardado [392440/392440]
+
+--2026-08-14 03:28:13--  https://downloads.sourceforge.net/corefonts/impact32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:c95, 2606:4700::6812:d95, 104.18.13.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:c95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/impact32.exe [siguiente]
+--2026-08-14 03:28:13--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/impact32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/impact32.exe?viasf=1&fid=d7183a2f2b2ce159&e=1786778893&st=TDFpQ4m-UtfJWjTZ-Yi4VA [siguiente]
+--2026-08-14 03:28:13--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/impact32.exe?viasf=1&fid=d7183a2f2b2ce159&e=1786778893&st=TDFpQ4m-UtfJWjTZ-Yi4VA
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 173288 (169K) [application/octet-stream]
+Guardando como: ‘./impact32.exe’
+
+     0K .......... .......... .......... .......... .......... 29% 1,12M 0s
+    50K .......... .......... .......... .......... .......... 59%  899K 0s
+   100K .......... .......... .......... .......... .......... 88%  150M 0s
+   150K .......... .........                                  100%  252M=0,1s
+
+2026-08-14 03:28:14 (1,66 MB/s) - ‘./impact32.exe’ guardado [173288/173288]
+
+--2026-08-14 03:28:14--  https://downloads.sourceforge.net/corefonts/wd97vwr32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:d95, 2606:4700::6812:c95, 104.18.13.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:d95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/wd97vwr32.exe [siguiente]
+--2026-08-14 03:28:14--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/wd97vwr32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/wd97vwr32.exe?viasf=1&fid=1b714be795d1abde&e=1786778894&st=ODD_QqXjg1lQ8H2iHdeTgQ [siguiente]
+--2026-08-14 03:28:14--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/wd97vwr32.exe?viasf=1&fid=1b714be795d1abde&e=1786778894&st=ODD_QqXjg1lQ8H2iHdeTgQ
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 3953640 (3,8M) [application/octet-stream]
+Guardando como: ‘./wd97vwr32.exe’
+
+     0K .......... .......... .......... .......... ..........  1%  798K 5s
+    50K .......... .......... .......... .......... ..........  2% 2,47M 3s
+   100K .......... .......... .......... .......... ..........  3% 2,39M 3s
+   150K .......... .......... .......... .......... ..........  5% 2,42M 2s
+   200K .......... .......... .......... .......... ..........  6% 3,11M 2s
+   250K .......... .......... .......... .......... ..........  7% 5,64M 2s
+   300K .......... .......... .......... .......... ..........  9%  161M 1s
+   350K .......... .......... .......... .......... .......... 10% 2,14M 1s
+   400K .......... .......... .......... .......... .......... 11% 10,7M 1s
+   450K .......... .......... .......... .......... .......... 12% 12,0M 1s
+   500K .......... .......... .......... .......... .......... 14% 5,91M 1s
+   550K .......... .......... .......... .......... .......... 15% 14,2M 1s
+   600K .......... .......... .......... .......... .......... 16% 6,14M 1s
+   650K .......... .......... .......... .......... .......... 18% 5,93M 1s
+   700K .......... .......... .......... .......... .......... 19% 93,7M 1s
+   750K .......... .......... .......... .......... .......... 20% 14,2M 1s
+   800K .......... .......... .......... .......... .......... 22% 2,98M 1s
+   850K .......... .......... .......... .......... .......... 23% 12,1M 1s
+   900K .......... .......... .......... .......... .......... 24% 6,10M 1s
+   950K .......... .......... .......... .......... .......... 25% 12,7M 1s
+  1000K .......... .......... .......... .......... .......... 27% 11,9M 1s
+  1050K .......... .......... .......... .......... .......... 28% 12,6M 1s
+  1100K .......... .......... .......... .......... .......... 29% 12,2M 1s
+  1150K .......... .......... .......... .......... .......... 31% 12,3M 1s
+  1200K .......... .......... .......... .......... .......... 32% 12,1M 1s
+  1250K .......... .......... .......... .......... .......... 33% 12,7M 1s
+  1300K .......... .......... .......... .......... .......... 34% 12,2M 1s
+  1350K .......... .......... .......... .......... .......... 36% 12,4M 0s
+  1400K .......... .......... .......... .......... .......... 37%  107M 0s
+  1450K .......... .......... .......... .......... .......... 38% 12,2M 0s
+  1500K .......... .......... .......... .......... .......... 40% 12,7M 0s
+  1550K .......... .......... .......... .......... .......... 41% 6,36M 0s
+  1600K .......... .......... .......... .......... .......... 42%  156M 0s
+  1650K .......... .......... .......... .......... .......... 44% 12,0M 0s
+  1700K .......... .......... .......... .......... .......... 45% 12,1M 0s
+  1750K .......... .......... .......... .......... .......... 46% 12,8M 0s
+  1800K .......... .......... .......... .......... .......... 47% 12,3M 0s
+  1850K .......... .......... .......... .......... .......... 49% 11,9M 0s
+  1900K .......... .......... .......... .......... .......... 50% 12,2M 0s
+  1950K .......... .......... .......... .......... .......... 51% 12,0M 0s
+  2000K .......... .......... .......... .......... .......... 53% 12,6M 0s
+  2050K .......... .......... .......... .......... .......... 54% 12,2M 0s
+  2100K .......... .......... .......... .......... .......... 55% 12,6M 0s
+  2150K .......... .......... .......... .......... .......... 56% 12,1M 0s
+  2200K .......... .......... .......... .......... .......... 58% 12,3M 0s
+  2250K .......... .......... .......... .......... .......... 59% 12,2M 0s
+  2300K .......... .......... .......... .......... .......... 60% 12,4M 0s
+  2350K .......... .......... .......... .......... .......... 62% 12,0M 0s
+  2400K .......... .......... .......... .......... .......... 63% 12,4M 0s
+  2450K .......... .......... .......... .......... .......... 64% 12,1M 0s
+  2500K .......... .......... .......... .......... .......... 66% 12,1M 0s
+  2550K .......... .......... .......... .......... .......... 67% 12,6M 0s
+  2600K .......... .......... .......... .......... .......... 68% 12,3M 0s
+  2650K .......... .......... .......... .......... .......... 69% 12,4M 0s
+  2700K .......... .......... .......... .......... .......... 71%  107M 0s
+  2750K .......... .......... .......... .......... .......... 72% 6,46M 0s
+  2800K .......... .......... .......... .......... .......... 73% 12,2M 0s
+  2850K .......... .......... .......... .......... .......... 75% 12,2M 0s
+  2900K .......... .......... .......... .......... .......... 76%  119M 0s
+  2950K .......... .......... .......... .......... .......... 77% 12,2M 0s
+  3000K .......... .......... .......... .......... .......... 78% 6,30M 0s
+  3050K .......... .......... .......... .......... .......... 80% 6,20M 0s
+  3100K .......... .......... .......... .......... .......... 81% 14,4M 0s
+  3150K .......... .......... .......... .......... .......... 82% 6,34M 0s
+  3200K .......... .......... .......... .......... .......... 84% 9,64M 0s
+  3250K .......... .......... .......... .......... .......... 85% 6,14M 0s
+  3300K .......... .......... .......... .......... .......... 86% 6,20M 0s
+  3350K .......... .......... .......... .......... .......... 88% 13,9M 0s
+  3400K .......... .......... .......... .......... .......... 89% 10,4M 0s
+  3450K .......... .......... .......... .......... .......... 90% 6,15M 0s
+  3500K .......... .......... .......... .......... .......... 91% 6,22M 0s
+  3550K .......... .......... .......... .......... .......... 93% 11,7M 0s
+  3600K .......... .......... .......... .......... .......... 94% 12,7M 0s
+  3650K .......... .......... .......... .......... .......... 95% 12,1M 0s
+  3700K .......... .......... .......... .......... .......... 97%  112M 0s
+  3750K .......... .......... .......... .......... .......... 98% 13,1M 0s
+  3800K .......... .......... .......... .......... .......... 99%  116M 0s
+  3850K ..........                                            100% 25,1M=0,5s
+
+2026-08-14 03:28:15 (7,79 MB/s) - ‘./wd97vwr32.exe’ guardado [3953640/3953640]
+
+--2026-08-14 03:28:15--  https://downloads.sourceforge.net/corefonts/times32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:c95, 2606:4700::6812:d95, 104.18.12.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:c95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/times32.exe [siguiente]
+--2026-08-14 03:28:15--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/times32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/times32.exe?viasf=1&fid=94061fda873fb36c&e=1786778896&st=X2nH5BILW4o0mvUTs8LRCA [siguiente]
+--2026-08-14 03:28:16--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/times32.exe?viasf=1&fid=94061fda873fb36c&e=1786778896&st=X2nH5BILW4o0mvUTs8LRCA
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 661728 (646K) [application/octet-stream]
+Guardando como: ‘./times32.exe’
+
+     0K .......... .......... .......... .......... ..........  7% 1,12M 1s
+    50K .......... .......... .......... .......... .......... 15% 1,12M 0s
+   100K .......... .......... .......... .......... .......... 23% 11,1M 0s
+   150K .......... .......... .......... .......... .......... 30% 1,22M 0s
+   200K .......... .......... .......... .......... .......... 38% 10,0M 0s
+   250K .......... .......... .......... .......... .......... 46% 14,8M 0s
+   300K .......... .......... .......... .......... .......... 54% 11,6M 0s
+   350K .......... .......... .......... .......... .......... 61% 1,79M 0s
+   400K .......... .......... .......... .......... .......... 69% 6,08M 0s
+   450K .......... .......... .......... .......... .......... 77% 2,85M 0s
+   500K .......... .......... .......... .......... .......... 85%  174M 0s
+   550K .......... .......... .......... .......... .......... 92% 14,6M 0s
+   600K .......... .......... .......... .......... ......    100% 72,0M=0,2s
+
+2026-08-14 03:28:16 (3,14 MB/s) - ‘./times32.exe’ guardado [661728/661728]
+
+--2026-08-14 03:28:16--  https://downloads.sourceforge.net/corefonts/trebuc32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:d95, 2606:4700::6812:c95, 104.18.12.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:d95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/trebuc32.exe [siguiente]
+--2026-08-14 03:28:17--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/trebuc32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/trebuc32.exe?viasf=1&fid=cf3fc5274ac2dd10&e=1786778897&st=v82DWr6rhxn4dNCVjw_jIg [siguiente]
+--2026-08-14 03:28:17--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/trebuc32.exe?viasf=1&fid=cf3fc5274ac2dd10&e=1786778897&st=v82DWr6rhxn4dNCVjw_jIg
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 357200 (349K) [application/octet-stream]
+Guardando como: ‘./trebuc32.exe’
+
+     0K .......... .......... .......... .......... .......... 14% 1,23M 0s
+    50K .......... .......... .......... .......... .......... 28% 1,20M 0s
+   100K .......... .......... .......... .......... .......... 43% 11,8M 0s
+   150K .......... .......... .......... .......... .......... 57% 1,22M 0s
+   200K .......... .......... .......... .......... .......... 71% 12,1M 0s
+   250K .......... .......... .......... .......... .......... 86% 12,6M 0s
+   300K .......... .......... .......... .......... ........  100% 12,1M=0,1s
+
+2026-08-14 03:28:17 (2,49 MB/s) - ‘./trebuc32.exe’ guardado [357200/357200]
+
+--2026-08-14 03:28:17--  https://downloads.sourceforge.net/corefonts/verdan32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:c95, 2606:4700::6812:d95, 104.18.13.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:c95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/verdan32.exe [siguiente]
+--2026-08-14 03:28:17--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/verdan32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/verdan32.exe?viasf=1&fid=bc7a4a15866a1ca5&e=1786778898&st=ITL6HyjHbXupsdq8HCIRtA [siguiente]
+--2026-08-14 03:28:18--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/verdan32.exe?viasf=1&fid=bc7a4a15866a1ca5&e=1786778898&st=ITL6HyjHbXupsdq8HCIRtA
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 351992 (344K) [application/octet-stream]
+Guardando como: ‘./verdan32.exe’
+
+     0K .......... .......... .......... .......... .......... 14% 1,11M 0s
+    50K .......... .......... .......... .......... .......... 29% 1,36M 0s
+   100K .......... .......... .......... .......... .......... 43% 5,91M 0s
+   150K .......... .......... .......... .......... .......... 58% 1,54M 0s
+   200K .......... .......... .......... .......... .......... 72% 5,47M 0s
+   250K .......... .......... .......... .......... .......... 87%  136M 0s
+   300K .......... .......... .......... .......... ...       100% 61,3M=0,1s
+
+2026-08-14 03:28:18 (2,59 MB/s) - ‘./verdan32.exe’ guardado [351992/351992]
+
+--2026-08-14 03:28:18--  https://downloads.sourceforge.net/corefonts/webdin32.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:d95, 2606:4700::6812:c95, 104.18.13.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:d95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/webdin32.exe [siguiente]
+--2026-08-14 03:28:18--  https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/webdin32.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/webdin32.exe?viasf=1&fid=ae532eaa7d0a01c0&e=1786778898&st=ThmNQYC6gbEPNiVYVCvQDA [siguiente]
+--2026-08-14 03:28:19--  https://sitsa.dl.sourceforge.net/project/corefonts/the%20fonts/final/webdin32.exe?viasf=1&fid=ae532eaa7d0a01c0&e=1786778898&st=ThmNQYC6gbEPNiVYVCvQDA
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 185072 (181K) [application/octet-stream]
+Guardando como: ‘./webdin32.exe’
+
+     0K .......... .......... .......... .......... .......... 27% 1,12M 0s
+    50K .......... .......... .......... .......... .......... 55% 1,36M 0s
+   100K .......... .......... .......... .......... .......... 82% 1,22M 0s
+   150K .......... .......... ..........                      100%  144M=0,1s
+
+2026-08-14 03:28:19 (1,47 MB/s) - ‘./webdin32.exe’ guardado [185072/185072]
+
+andale32.exe: OK
+Extracting cabinet: andale32.exe
+  extracting fontinst.inf
+  extracting andale.inf
+  extracting fontinst.exe
+  extracting AndaleMo.TTF
+  extracting ADVPACK.DLL
+  extracting W95INF32.DLL
+  extracting W95INF16.DLL
+
+All done, no errors.
+arialb32.exe: OK
+Extracting cabinet: arialb32.exe
+  extracting fontinst.exe
+  extracting fontinst.inf
+  extracting AriBlk.TTF
+
+All done, no errors.
+arial32.exe: OK
+Extracting cabinet: arial32.exe
+  extracting FONTINST.EXE
+  extracting fontinst.inf
+  extracting Ariali.TTF
+  extracting Arialbd.TTF
+  extracting Arialbi.TTF
+  extracting Arial.TTF
+
+All done, no errors.
+comic32.exe: OK
+Extracting cabinet: comic32.exe
+  extracting fontinst.inf
+  extracting Comicbd.TTF
+  extracting Comic.TTF
+  extracting fontinst.exe
+
+All done, no errors.
+courie32.exe: OK
+Extracting cabinet: courie32.exe
+  extracting cour.ttf
+  extracting courbd.ttf
+  extracting courbi.ttf
+  extracting fontinst.inf
+  extracting couri.ttf
+  extracting fontinst.exe
+
+All done, no errors.
+georgi32.exe: OK
+Extracting cabinet: georgi32.exe
+  extracting fontinst.inf
+  extracting Georgiaz.TTF
+  extracting Georgiab.TTF
+  extracting Georgiai.TTF
+  extracting Georgia.TTF
+  extracting fontinst.exe
+
+All done, no errors.
+impact32.exe: OK
+Extracting cabinet: impact32.exe
+  extracting fontinst.exe
+  extracting Impact.TTF
+  extracting fontinst.inf
+
+All done, no errors.
+wd97vwr32.exe: OK
+Extracting cabinet: wd97vwr32.exe
+  extracting license.txt
+  extracting viewer1.cab
+
+All done, no errors.
+Extracting cabinet: viewer1.cab
+  extracting tahoma.ttf
+
+All done, no errors.
+times32.exe: OK
+Extracting cabinet: times32.exe
+  extracting fontinst.inf
+  extracting Times.TTF
+  extracting Timesbd.TTF
+  extracting Timesbi.TTF
+  extracting Timesi.TTF
+  extracting FONTINST.EXE
+
+All done, no errors.
+trebuc32.exe: OK
+Extracting cabinet: trebuc32.exe
+  extracting FONTINST.EXE
+  extracting trebuc.ttf
+  extracting Trebucbd.ttf
+  extracting trebucbi.ttf
+  extracting trebucit.ttf
+  extracting fontinst.inf
+
+All done, no errors.
+verdan32.exe: OK
+Extracting cabinet: verdan32.exe
+  extracting fontinst.exe
+  extracting fontinst.inf
+  extracting Verdanab.TTF
+  extracting Verdanai.TTF
+  extracting Verdanaz.TTF
+  extracting Verdana.TTF
+
+All done, no errors.
+webdin32.exe: OK
+Extracting cabinet: webdin32.exe
+  extracting fontinst.exe
+  extracting Webdings.TTF
+  extracting fontinst.inf
+  extracting Licen.TXT
+
+All done, no errors.
+All fonts downloaded and installed.
+Downloading PowerPointViewer.exe...
+--2026-08-14 03:28:19--  https://downloads.sourceforge.net/mscorefonts2/PowerPointViewer.exe
+Resolviendo downloads.sourceforge.net (downloads.sourceforge.net)... 2606:4700::6812:d95, 2606:4700::6812:c95, 104.18.13.149, ...
+Conectando con downloads.sourceforge.net (downloads.sourceforge.net)[2606:4700::6812:d95]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 301 Moved Permanently
+Ubicación: https://downloads.sourceforge.net/project/mscorefonts2/cabs/PowerPointViewer.exe [siguiente]
+--2026-08-14 03:28:20--  https://downloads.sourceforge.net/project/mscorefonts2/cabs/PowerPointViewer.exe
+Reutilizando la conexión existente a [downloads.sourceforge.net]:443.
+Petición HTTP enviada, esperando respuesta... 302 Found
+Ubicación: https://sitsa.dl.sourceforge.net/project/mscorefonts2/cabs/PowerPointViewer.exe?viasf=1&fid=c68b70648e3113e0&e=1786778900&st=8JkWHlTch0ouFKDaojMdCQ [siguiente]
+--2026-08-14 03:28:20--  https://sitsa.dl.sourceforge.net/project/mscorefonts2/cabs/PowerPointViewer.exe?viasf=1&fid=c68b70648e3113e0&e=1786778900&st=8JkWHlTch0ouFKDaojMdCQ
+Resolviendo sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)... 190.105.216.43
+Conectando con sitsa.dl.sourceforge.net (sitsa.dl.sourceforge.net)[190.105.216.43]:443... conectado.
+Petición HTTP enviada, esperando respuesta... 200 OK
+Longitud: 27024112 (26M) [application/octet-stream]
+Guardando como: ‘/tmp/mstt-cleartype.NB4BmJ/PowerPointViewer.exe’
+
+/tmp/mstt-cleartype.NB4BmJ/PowerPointViewer.exe 100%[=====================================================================================================>]  25,77M  19,9MB/s    en 1,3s    
+
+2026-08-14 03:28:22 (19,9 MB/s) - ‘/tmp/mstt-cleartype.NB4BmJ/PowerPointViewer.exe’ guardado [27024112/27024112]
+
+Extracting ClearType fonts...
+ppviewer.cab: WARNING; possible 6912 extra bytes at end of file.
+Updating font cache...
+ClearType fonts installed.
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+Procesando disparadores para fontconfig (2.17.1-3ubuntu1) ...
+ubuntu-restricted-extras instalado correctamente.
+✅ ubuntu-restricted-extras completado
+
+📦 Instalando VLC...
+Instalando VLC...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:4 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:5 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:7 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:8 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                            
+Obj:11 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                            
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                      
+Des:13 https://apt.fury.io/wez * InRelease                                                                
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Obj:10 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:15 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:16 https://packages.cloud.google.com/apt cloud-sdk InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.255 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  fonts-freefont-ttf libaribb24-0t64 libcddb2 libdc1394-25 libdouble-conversion3 libdvbpsi10 libebml5 libfaad2 libixml11t64 libkate1 liblirc-client0t64 libmatroska7 libmd4c0 libmpcdec6
+  libopenmpt-modplug1 libpcre2-16-0 libprotobuf-lite32t64 libproxy-tools libqt5core5t64 libqt5dbus5t64 libqt5gui5t64 libqt5network5t64 libqt5qml5 libqt5qmlmodels5 libqt5quick5 libqt5svg5
+  libqt5waylandclient5 libqt5waylandcompositor5 libqt5widgets5t64 libqt5x11extras5 libresid-builder0c2a libsidplay2 libspatialaudio0t64 libupnp17t64 libva-wayland2 libvlc-bin libvlc5
+  libvlccore9 libvncclient1 libxcb-composite0 libxcb-icccm4 libxcb-keysyms1 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xv0 qt5-gtk-platformtheme qttranslations5-l10n
+  qtwayland5 vlc-bin vlc-data vlc-l10n vlc-plugin-access-extra vlc-plugin-base vlc-plugin-notify vlc-plugin-qt vlc-plugin-samba vlc-plugin-skins2 vlc-plugin-video-output
+  vlc-plugin-video-splitter vlc-plugin-visualization
+Paquetes sugeridos:
+  lirc qgnomeplatform-qt5 qt5-image-formats-plugins qt5-qmltooling-plugins vlc-plugin-fluidsynth vlc-plugin-jack vlc-plugin-pipewire vlc-plugin-svg libdvdcss2
+Se instalarán los siguientes paquetes NUEVOS:
+  fonts-freefont-ttf libaribb24-0t64 libcddb2 libdc1394-25 libdouble-conversion3 libdvbpsi10 libebml5 libfaad2 libixml11t64 libkate1 liblirc-client0t64 libmatroska7 libmd4c0 libmpcdec6
+  libopenmpt-modplug1 libpcre2-16-0 libprotobuf-lite32t64 libproxy-tools libqt5core5t64 libqt5dbus5t64 libqt5gui5t64 libqt5network5t64 libqt5qml5 libqt5qmlmodels5 libqt5quick5 libqt5svg5
+  libqt5waylandclient5 libqt5waylandcompositor5 libqt5widgets5t64 libqt5x11extras5 libresid-builder0c2a libsidplay2 libspatialaudio0t64 libupnp17t64 libva-wayland2 libvlc-bin libvlc5
+  libvlccore9 libvncclient1 libxcb-composite0 libxcb-icccm4 libxcb-keysyms1 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xv0 qt5-gtk-platformtheme qttranslations5-l10n
+  qtwayland5 vlc vlc-bin vlc-data vlc-l10n vlc-plugin-access-extra vlc-plugin-base vlc-plugin-notify vlc-plugin-qt vlc-plugin-samba vlc-plugin-skins2 vlc-plugin-video-output
+  vlc-plugin-video-splitter vlc-plugin-visualization
+0 actualizados, 62 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 36,6 MB de archivos.
+Se utilizarán 152 MB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/main amd64 fonts-freefont-ttf all 20211204+svn4273-4build1 [5.656 kB]
+Des:2 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libaribb24-0t64 amd64 1.0.3-3 [30,4 kB]
+Des:3 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libcddb2 amd64 1.3.2-7.1fakesync1build1 [35,5 kB]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libdc1394-25 amd64 2.2.6-6 [92,3 kB]
+Des:5 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libdouble-conversion3 amd64 3.4.0-1 [41,4 kB]
+Des:6 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libdvbpsi10 amd64 1.3.3-1build2 [51,6 kB]
+Des:7 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libebml5 amd64 1.4.5-2 [49,7 kB]
+Des:8 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libfaad2 amd64 2.11.2-1build1 [216 kB]
+Des:9 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libixml11t64 amd64 1:1.14.25-1ubuntu1 [26,3 kB]                                                                               
+Des:10 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libkate1 amd64 0.4.1-12 [45,5 kB]                                                                                            
+Des:11 http://archive.ubuntu.com/ubuntu resolute/main amd64 liblirc-client0t64 amd64 0.10.2-0.10ubuntu1 [25,5 kB]                                                                            
+Des:12 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libmatroska7 amd64 1.7.1-2 [121 kB]                                                                                          
+Des:13 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libmd4c0 amd64 0.5.2-2build1 [43,7 kB]                                                                                       
+Des:14 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libmpcdec6 amd64 2:0.1~r495-3build1 [33,6 kB]                                                                                
+Des:15 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libopenmpt-modplug1 amd64 0.8.9.0-openmpt1-2build3 [22,7 kB]                                                                 
+Des:16 http://archive.ubuntu.com/ubuntu resolute/main amd64 libpcre2-16-0 amd64 10.46-1build1 [240 kB]                                                                                       
+Des:17 http://archive.ubuntu.com/ubuntu resolute/main amd64 libprotobuf-lite32t64 amd64 3.21.12-15ubuntu1 [251 kB]                                                                           
+Des:18 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libproxy-tools amd64 0.5.12-1 [7.102 B]                                                                                      
+Des:19 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5core5t64 amd64 5.15.18+dfsg-1ubuntu1 [2.066 kB]                                                                        
+Des:20 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5dbus5t64 amd64 5.15.18+dfsg-1ubuntu1 [222 kB]                                                                          
+Des:21 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5network5t64 amd64 5.15.18+dfsg-1ubuntu1 [731 kB]                                                                       
+Des:22 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libxcb-icccm4 amd64 0.4.2-1build1 [11,0 kB]                                                                                  
+Des:23 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libxcb-keysyms1 amd64 0.4.1-1build1 [8.704 B]                                                                                
+Des:24 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libxcb-render-util0 amd64 0.3.10-1build1 [10,4 kB]                                                                           
+Des:25 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-xinerama0 amd64 1.17.0-2ubuntu1 [5.542 B]                                                                                 
+Des:26 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-xinput0 amd64 1.17.0-2ubuntu1 [32,5 kB]                                                                                   
+Des:27 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5gui5t64 amd64 5.15.18+dfsg-1ubuntu1 [3.819 kB]                                                                         
+Des:28 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5qml5 amd64 5.15.18+dfsg-2 [1.506 kB]                                                                                   
+Des:29 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5qmlmodels5 amd64 5.15.18+dfsg-2 [206 kB]                                                                               
+Des:30 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5quick5 amd64 5.15.18+dfsg-2 [1.757 kB]                                                                                 
+Des:31 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5widgets5t64 amd64 5.15.18+dfsg-1ubuntu1 [2.584 kB]                                                                     
+Des:32 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5svg5 amd64 5.15.18-1 [148 kB]                                                                                          
+Des:33 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5waylandclient5 amd64 5.15.18-1 [412 kB]                                                                                
+Des:34 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5waylandcompositor5 amd64 5.15.18-1 [400 kB]                                                                            
+Des:35 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5x11extras5 amd64 5.15.18-1 [11,0 kB]                                                                                   
+Des:36 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libresid-builder0c2a amd64 2.1.1-16build1 [31,2 kB]                                                                          
+Des:37 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libsidplay2 amd64 2.1.1-16build1 [95,5 kB]                                                                                   
+Des:38 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libspatialaudio0t64 amd64 0.3.0+git20180730+dfsg1-3 [36,9 kB]                                                                
+Des:39 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libupnp17t64 amd64 1:1.14.25-1ubuntu1 [97,0 kB]                                                                              
+Des:40 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libva-wayland2 amd64 2.23.0-1ubuntu1 [10,9 kB]                                                                               
+Des:41 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libvlccore9 amd64 3.0.23-1 [475 kB]                                                                                          
+Des:42 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libvlc5 amd64 3.0.23-1 [73,0 kB]                                                                                             
+Des:43 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libvlc-bin amd64 3.0.23-1 [17,4 kB]                                                                                          
+Des:44 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libvncclient1 amd64 0.9.15+dfsg-3ubuntu0.2 [77,5 kB]                                                                     
+Des:45 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-composite0 amd64 1.17.0-2ubuntu1 [5.368 B]                                                                                
+Des:46 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-xv0 amd64 1.17.0-2ubuntu1 [9.980 B]                                                                                       
+Des:47 http://archive.ubuntu.com/ubuntu resolute/universe amd64 qt5-gtk-platformtheme amd64 5.15.18+dfsg-1ubuntu1 [129 kB]                                                                   
+Des:48 http://archive.ubuntu.com/ubuntu resolute/universe amd64 qttranslations5-l10n all 5.15.18-1 [1.951 kB]                                                                                
+Des:49 http://archive.ubuntu.com/ubuntu resolute/universe amd64 qtwayland5 amd64 5.15.18-1 [222 kB]                                                                                          
+Des:50 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-bin amd64 3.0.23-1 [23,5 kB]                                                                                             
+Des:51 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-data all 3.0.23-1 [354 kB]                                                                                               
+Des:52 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-plugin-base amd64 3.0.23-1 [3.172 kB]                                                                                    
+Des:53 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-plugin-qt amd64 3.0.23-1 [1.123 kB]                                                                                      
+Des:54 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-plugin-video-output amd64 3.0.23-1 [161 kB]                                                                              
+Des:55 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc amd64 3.0.23-1 [36,1 kB]                                                                                                 
+Des:56 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-l10n all 3.0.23-1 [6.882 kB]                                                                                             
+Des:57 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-plugin-access-extra amd64 3.0.23-1 [35,6 kB]                                                                             
+Des:58 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-plugin-notify amd64 3.0.23-1 [18,8 kB]                                                                                   
+Des:59 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-plugin-samba amd64 3.0.23-1 [19,8 kB]                                                                                    
+Des:60 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-plugin-skins2 amd64 3.0.23-1 [492 kB]                                                                                    
+Des:61 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-plugin-video-splitter amd64 3.0.23-1 [38,1 kB]                                                                           
+Des:62 http://archive.ubuntu.com/ubuntu resolute/universe amd64 vlc-plugin-visualization amd64 3.0.23-1 [43,6 kB]                                                                            
+Descargados 36,6 MB en 22s (1.672 kB/s)                                                                                                                                                      
+Extrayendo plantillas para los paquetes: 100%
+Seleccionando el paquete fonts-freefont-ttf previamente no seleccionado.
+(Leyendo la base de datos ... 168802 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../00-fonts-freefont-ttf_20211204+svn4273-4build1_all.deb ...
+Desempaquetando fonts-freefont-ttf (20211204+svn4273-4build1) ...
+Seleccionando el paquete libaribb24-0t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../01-libaribb24-0t64_1.0.3-3_amd64.deb ...
+Desempaquetando libaribb24-0t64:amd64 (1.0.3-3) ...
+Seleccionando el paquete libcddb2 previamente no seleccionado.
+Preparando para desempaquetar .../02-libcddb2_1.3.2-7.1fakesync1build1_amd64.deb ...
+Desempaquetando libcddb2 (1.3.2-7.1fakesync1build1) ...
+Seleccionando el paquete libdc1394-25:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../03-libdc1394-25_2.2.6-6_amd64.deb ...
+Desempaquetando libdc1394-25:amd64 (2.2.6-6) ...
+Seleccionando el paquete libdouble-conversion3:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../04-libdouble-conversion3_3.4.0-1_amd64.deb ...
+Desempaquetando libdouble-conversion3:amd64 (3.4.0-1) ...
+Seleccionando el paquete libdvbpsi10:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../05-libdvbpsi10_1.3.3-1build2_amd64.deb ...
+Desempaquetando libdvbpsi10:amd64 (1.3.3-1build2) ...
+Seleccionando el paquete libebml5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../06-libebml5_1.4.5-2_amd64.deb ...
+Desempaquetando libebml5:amd64 (1.4.5-2) ...
+Seleccionando el paquete libfaad2:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../07-libfaad2_2.11.2-1build1_amd64.deb ...
+Desempaquetando libfaad2:amd64 (2.11.2-1build1) ...
+Seleccionando el paquete libixml11t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../08-libixml11t64_1%3a1.14.25-1ubuntu1_amd64.deb ...
+Desempaquetando libixml11t64:amd64 (1:1.14.25-1ubuntu1) ...
+Seleccionando el paquete libkate1:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../09-libkate1_0.4.1-12_amd64.deb ...
+Desempaquetando libkate1:amd64 (0.4.1-12) ...
+Seleccionando el paquete liblirc-client0t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../10-liblirc-client0t64_0.10.2-0.10ubuntu1_amd64.deb ...
+Desempaquetando liblirc-client0t64:amd64 (0.10.2-0.10ubuntu1) ...
+Seleccionando el paquete libmatroska7:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../11-libmatroska7_1.7.1-2_amd64.deb ...
+Desempaquetando libmatroska7:amd64 (1.7.1-2) ...
+Seleccionando el paquete libmd4c0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../12-libmd4c0_0.5.2-2build1_amd64.deb ...
+Desempaquetando libmd4c0:amd64 (0.5.2-2build1) ...
+Seleccionando el paquete libmpcdec6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../13-libmpcdec6_2%3a0.1~r495-3build1_amd64.deb ...
+Desempaquetando libmpcdec6:amd64 (2:0.1~r495-3build1) ...
+Seleccionando el paquete libopenmpt-modplug1:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../14-libopenmpt-modplug1_0.8.9.0-openmpt1-2build3_amd64.deb ...
+Desempaquetando libopenmpt-modplug1:amd64 (0.8.9.0-openmpt1-2build3) ...
+Seleccionando el paquete libpcre2-16-0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../15-libpcre2-16-0_10.46-1build1_amd64.deb ...
+Desempaquetando libpcre2-16-0:amd64 (10.46-1build1) ...
+Seleccionando el paquete libprotobuf-lite32t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../16-libprotobuf-lite32t64_3.21.12-15ubuntu1_amd64.deb ...
+Desempaquetando libprotobuf-lite32t64:amd64 (3.21.12-15ubuntu1) ...
+Seleccionando el paquete libproxy-tools previamente no seleccionado.
+Preparando para desempaquetar .../17-libproxy-tools_0.5.12-1_amd64.deb ...
+Desempaquetando libproxy-tools (0.5.12-1) ...
+Seleccionando el paquete libqt5core5t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../18-libqt5core5t64_5.15.18+dfsg-1ubuntu1_amd64.deb ...
+Desempaquetando libqt5core5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Seleccionando el paquete libqt5dbus5t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../19-libqt5dbus5t64_5.15.18+dfsg-1ubuntu1_amd64.deb ...
+Desempaquetando libqt5dbus5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Seleccionando el paquete libqt5network5t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../20-libqt5network5t64_5.15.18+dfsg-1ubuntu1_amd64.deb ...
+Desempaquetando libqt5network5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Seleccionando el paquete libxcb-icccm4:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../21-libxcb-icccm4_0.4.2-1build1_amd64.deb ...
+Desempaquetando libxcb-icccm4:amd64 (0.4.2-1build1) ...
+Seleccionando el paquete libxcb-keysyms1:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../22-libxcb-keysyms1_0.4.1-1build1_amd64.deb ...
+Desempaquetando libxcb-keysyms1:amd64 (0.4.1-1build1) ...
+Seleccionando el paquete libxcb-render-util0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../23-libxcb-render-util0_0.3.10-1build1_amd64.deb ...
+Desempaquetando libxcb-render-util0:amd64 (0.3.10-1build1) ...
+Seleccionando el paquete libxcb-xinerama0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../24-libxcb-xinerama0_1.17.0-2ubuntu1_amd64.deb ...
+Desempaquetando libxcb-xinerama0:amd64 (1.17.0-2ubuntu1) ...
+Seleccionando el paquete libxcb-xinput0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../25-libxcb-xinput0_1.17.0-2ubuntu1_amd64.deb ...
+Desempaquetando libxcb-xinput0:amd64 (1.17.0-2ubuntu1) ...
+Seleccionando el paquete libqt5gui5t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../26-libqt5gui5t64_5.15.18+dfsg-1ubuntu1_amd64.deb ...
+Desempaquetando libqt5gui5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Seleccionando el paquete libqt5qml5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../27-libqt5qml5_5.15.18+dfsg-2_amd64.deb ...
+Desempaquetando libqt5qml5:amd64 (5.15.18+dfsg-2) ...
+Seleccionando el paquete libqt5qmlmodels5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../28-libqt5qmlmodels5_5.15.18+dfsg-2_amd64.deb ...
+Desempaquetando libqt5qmlmodels5:amd64 (5.15.18+dfsg-2) ...
+Seleccionando el paquete libqt5quick5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../29-libqt5quick5_5.15.18+dfsg-2_amd64.deb ...
+Desempaquetando libqt5quick5:amd64 (5.15.18+dfsg-2) ...
+Seleccionando el paquete libqt5widgets5t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../30-libqt5widgets5t64_5.15.18+dfsg-1ubuntu1_amd64.deb ...
+Desempaquetando libqt5widgets5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Seleccionando el paquete libqt5svg5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../31-libqt5svg5_5.15.18-1_amd64.deb ...
+Desempaquetando libqt5svg5:amd64 (5.15.18-1) ...
+Seleccionando el paquete libqt5waylandclient5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../32-libqt5waylandclient5_5.15.18-1_amd64.deb ...
+Desempaquetando libqt5waylandclient5:amd64 (5.15.18-1) ...
+Seleccionando el paquete libqt5waylandcompositor5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../33-libqt5waylandcompositor5_5.15.18-1_amd64.deb ...
+Desempaquetando libqt5waylandcompositor5:amd64 (5.15.18-1) ...
+Seleccionando el paquete libqt5x11extras5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../34-libqt5x11extras5_5.15.18-1_amd64.deb ...
+Desempaquetando libqt5x11extras5:amd64 (5.15.18-1) ...
+Seleccionando el paquete libresid-builder0c2a:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../35-libresid-builder0c2a_2.1.1-16build1_amd64.deb ...
+Desempaquetando libresid-builder0c2a:amd64 (2.1.1-16build1) ...
+Seleccionando el paquete libsidplay2:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../36-libsidplay2_2.1.1-16build1_amd64.deb ...
+Desempaquetando libsidplay2:amd64 (2.1.1-16build1) ...
+Seleccionando el paquete libspatialaudio0t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../37-libspatialaudio0t64_0.3.0+git20180730+dfsg1-3_amd64.deb ...
+Desempaquetando libspatialaudio0t64:amd64 (0.3.0+git20180730+dfsg1-3) ...
+Seleccionando el paquete libupnp17t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../38-libupnp17t64_1%3a1.14.25-1ubuntu1_amd64.deb ...
+Desempaquetando libupnp17t64:amd64 (1:1.14.25-1ubuntu1) ...
+Seleccionando el paquete libva-wayland2:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../39-libva-wayland2_2.23.0-1ubuntu1_amd64.deb ...
+Desempaquetando libva-wayland2:amd64 (2.23.0-1ubuntu1) ...
+Seleccionando el paquete libvlccore9:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../40-libvlccore9_3.0.23-1_amd64.deb ...
+Desempaquetando libvlccore9:amd64 (3.0.23-1) ...
+Seleccionando el paquete libvlc5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../41-libvlc5_3.0.23-1_amd64.deb ...
+Desempaquetando libvlc5:amd64 (3.0.23-1) ...
+Seleccionando el paquete libvlc-bin:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../42-libvlc-bin_3.0.23-1_amd64.deb ...
+Desempaquetando libvlc-bin:amd64 (3.0.23-1) ...
+Seleccionando el paquete libvncclient1:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../43-libvncclient1_0.9.15+dfsg-3ubuntu0.2_amd64.deb ...
+Desempaquetando libvncclient1:amd64 (0.9.15+dfsg-3ubuntu0.2) ...
+Seleccionando el paquete libxcb-composite0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../44-libxcb-composite0_1.17.0-2ubuntu1_amd64.deb ...
+Desempaquetando libxcb-composite0:amd64 (1.17.0-2ubuntu1) ...
+Seleccionando el paquete libxcb-xv0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../45-libxcb-xv0_1.17.0-2ubuntu1_amd64.deb ...
+Desempaquetando libxcb-xv0:amd64 (1.17.0-2ubuntu1) ...
+Seleccionando el paquete qt5-gtk-platformtheme:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../46-qt5-gtk-platformtheme_5.15.18+dfsg-1ubuntu1_amd64.deb ...
+Desempaquetando qt5-gtk-platformtheme:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Seleccionando el paquete qttranslations5-l10n previamente no seleccionado.
+Preparando para desempaquetar .../47-qttranslations5-l10n_5.15.18-1_all.deb ...
+Desempaquetando qttranslations5-l10n (5.15.18-1) ...
+Seleccionando el paquete qtwayland5:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../48-qtwayland5_5.15.18-1_amd64.deb ...
+Desempaquetando qtwayland5:amd64 (5.15.18-1) ...
+Seleccionando el paquete vlc-bin previamente no seleccionado.
+Preparando para desempaquetar .../49-vlc-bin_3.0.23-1_amd64.deb ...
+Desempaquetando vlc-bin (3.0.23-1) ...
+Seleccionando el paquete vlc-data previamente no seleccionado.
+Preparando para desempaquetar .../50-vlc-data_3.0.23-1_all.deb ...
+Desempaquetando vlc-data (3.0.23-1) ...
+Seleccionando el paquete vlc-plugin-base:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../51-vlc-plugin-base_3.0.23-1_amd64.deb ...
+Desempaquetando vlc-plugin-base:amd64 (3.0.23-1) ...
+Seleccionando el paquete vlc-plugin-qt:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../52-vlc-plugin-qt_3.0.23-1_amd64.deb ...
+Desempaquetando vlc-plugin-qt:amd64 (3.0.23-1) ...
+Seleccionando el paquete vlc-plugin-video-output:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../53-vlc-plugin-video-output_3.0.23-1_amd64.deb ...
+Desempaquetando vlc-plugin-video-output:amd64 (3.0.23-1) ...
+Seleccionando el paquete vlc previamente no seleccionado.
+Preparando para desempaquetar .../54-vlc_3.0.23-1_amd64.deb ...
+Desempaquetando vlc (3.0.23-1) ...
+Seleccionando el paquete vlc-l10n previamente no seleccionado.
+Preparando para desempaquetar .../55-vlc-l10n_3.0.23-1_all.deb ...
+Desempaquetando vlc-l10n (3.0.23-1) ...
+Seleccionando el paquete vlc-plugin-access-extra:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../56-vlc-plugin-access-extra_3.0.23-1_amd64.deb ...
+Desempaquetando vlc-plugin-access-extra:amd64 (3.0.23-1) ...
+Seleccionando el paquete vlc-plugin-notify:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../57-vlc-plugin-notify_3.0.23-1_amd64.deb ...
+Desempaquetando vlc-plugin-notify:amd64 (3.0.23-1) ...
+Seleccionando el paquete vlc-plugin-samba:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../58-vlc-plugin-samba_3.0.23-1_amd64.deb ...
+Desempaquetando vlc-plugin-samba:amd64 (3.0.23-1) ...
+Seleccionando el paquete vlc-plugin-skins2:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../59-vlc-plugin-skins2_3.0.23-1_amd64.deb ...
+Desempaquetando vlc-plugin-skins2:amd64 (3.0.23-1) ...
+Seleccionando el paquete vlc-plugin-video-splitter:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../60-vlc-plugin-video-splitter_3.0.23-1_amd64.deb ...
+Desempaquetando vlc-plugin-video-splitter:amd64 (3.0.23-1) ...
+Seleccionando el paquete vlc-plugin-visualization:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../61-vlc-plugin-visualization_3.0.23-1_amd64.deb ...
+Desempaquetando vlc-plugin-visualization:amd64 (3.0.23-1) ...
+Configurando libprotobuf-lite32t64:amd64 (3.21.12-15ubuntu1) ...
+Configurando libebml5:amd64 (1.4.5-2) ...
+Configurando libdouble-conversion3:amd64 (3.4.0-1) ...
+Configurando libkate1:amd64 (0.4.1-12) ...
+Configurando libdvbpsi10:amd64 (1.3.3-1build2) ...
+Configurando libxcb-xinput0:amd64 (1.17.0-2ubuntu1) ...
+Configurando liblirc-client0t64:amd64 (0.10.2-0.10ubuntu1) ...
+Configurando libaribb24-0t64:amd64 (1.0.3-3) ...
+Configurando libxcb-keysyms1:amd64 (0.4.1-1build1) ...
+Configurando fonts-freefont-ttf (20211204+svn4273-4build1) ...
+Configurando libxcb-render-util0:amd64 (0.3.10-1build1) ...
+Configurando vlc-l10n (3.0.23-1) ...
+Configurando libxcb-icccm4:amd64 (0.4.2-1build1) ...
+Configurando libmpcdec6:amd64 (2:0.1~r495-3build1) ...
+Configurando libpcre2-16-0:amd64 (10.46-1build1) ...
+Configurando libcddb2 (1.3.2-7.1fakesync1build1) ...
+Configurando libvncclient1:amd64 (0.9.15+dfsg-3ubuntu0.2) ...
+Configurando libqt5core5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Configurando libxcb-xinerama0:amd64 (1.17.0-2ubuntu1) ...
+Configurando qttranslations5-l10n (5.15.18-1) ...
+Configurando libresid-builder0c2a:amd64 (2.1.1-16build1) ...
+Configurando libfaad2:amd64 (2.11.2-1build1) ...
+Configurando libdc1394-25:amd64 (2.2.6-6) ...
+Configurando libixml11t64:amd64 (1:1.14.25-1ubuntu1) ...
+Configurando libvlccore9:amd64 (3.0.23-1) ...
+Configurando libsidplay2:amd64 (2.1.1-16build1) ...
+Configurando libva-wayland2:amd64 (2.23.0-1ubuntu1) ...
+Configurando libxcb-composite0:amd64 (1.17.0-2ubuntu1) ...
+Configurando libmatroska7:amd64 (1.7.1-2) ...
+Configurando libxcb-xv0:amd64 (1.17.0-2ubuntu1) ...
+Configurando libmd4c0:amd64 (0.5.2-2build1) ...
+Configurando libopenmpt-modplug1:amd64 (0.8.9.0-openmpt1-2build3) ...
+Configurando libupnp17t64:amd64 (1:1.14.25-1ubuntu1) ...
+Configurando libspatialaudio0t64:amd64 (0.3.0+git20180730+dfsg1-3) ...
+Configurando vlc-data (3.0.23-1) ...
+Configurando vlc-plugin-notify:amd64 (3.0.23-1) ...
+Configurando libproxy-tools (0.5.12-1) ...
+Configurando vlc-plugin-video-output:amd64 (3.0.23-1) ...
+Configurando vlc-plugin-samba:amd64 (3.0.23-1) ...
+Configurando libqt5dbus5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Configurando vlc-plugin-video-splitter:amd64 (3.0.23-1) ...
+Configurando libqt5network5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Configurando libvlc5:amd64 (3.0.23-1) ...
+Configurando vlc-plugin-visualization:amd64 (3.0.23-1) ...
+Configurando libqt5gui5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Configurando vlc-plugin-access-extra:amd64 (3.0.23-1) ...
+Configurando libqt5qml5:amd64 (5.15.18+dfsg-2) ...
+Configurando libvlc-bin:amd64 (3.0.23-1) ...
+Configurando vlc-plugin-base:amd64 (3.0.23-1) ...
+Configurando libqt5x11extras5:amd64 (5.15.18-1) ...
+Configurando libqt5qmlmodels5:amd64 (5.15.18+dfsg-2) ...
+Configurando libqt5widgets5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Configurando libqt5svg5:amd64 (5.15.18-1) ...
+Configurando vlc-bin (3.0.23-1) ...
+Configurando qt5-gtk-platformtheme:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Configurando libqt5waylandclient5:amd64 (5.15.18-1) ...
+Configurando vlc-plugin-qt:amd64 (3.0.23-1) ...
+Configurando vlc (3.0.23-1) ...
+Configurando libqt5quick5:amd64 (5.15.18+dfsg-2) ...
+Configurando vlc-plugin-skins2:amd64 (3.0.23-1) ...
+Configurando libqt5waylandcompositor5:amd64 (5.15.18-1) ...
+Configurando qtwayland5:amd64 (5.15.18-1) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+Procesando disparadores para fontconfig (2.17.1-3ubuntu1) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+Procesando disparadores para hicolor-icon-theme (0.18-2build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Procesando disparadores para libvlc-bin:amd64 (3.0.23-1) ...
+VLC instalado correctamente.
+✅ VLC completado
+
+⏭️  Kooha: su estado no se pudo determinar, se omite por seguridad.
+
+📦 Instalando FFmpeg...
+Instalando FFmpeg...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:3 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:4 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:5 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:7 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                                   
+Obj:8 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                       
+Des:10 https://apt.fury.io/wez * InRelease                                                                                                                                              
+Obj:11 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                                                                              
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                          
+Obj:13 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                              
+Obj:9 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease                                      
+Obj:14 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease                     
+Obj:15 https://downloads.cursor.com/aptrepo stable InRelease                    
+Obj:16 https://download.virtualbox.org/virtualbox/debian resolute InRelease     
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.532 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  libavdevice62 libjack-jackd2-0 libopenal-data libopenal1 libsdl2-2.0-0 libsdl2-classic libxss1
+Paquetes sugeridos:
+  ffmpeg-doc jackd2 libportaudio2
+Se instalarán los siguientes paquetes NUEVOS:
+  ffmpeg libavdevice62 libjack-jackd2-0 libopenal-data libopenal1 libsdl2-2.0-0 libsdl2-classic libxss1
+0 actualizados, 8 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 4.060 kB de archivos.
+Se utilizarán 8.596 kB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/main amd64 libjack-jackd2-0 amd64 1.9.22~dfsg-5build1 [292 kB]
+Des:2 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libopenal-data all 1:1.25.1-2 [163 kB]
+Des:3 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libopenal1 amd64 1:1.25.1-2 [768 kB]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libavdevice62 amd64 7:8.0.1-3ubuntu2 [73,7 kB]
+Des:5 http://archive.ubuntu.com/ubuntu resolute/main amd64 libxss1 amd64 1:1.2.3-1build4 [7.084 B]
+Des:6 http://archive.ubuntu.com/ubuntu resolute/main amd64 libsdl2-classic amd64 2.32.10+dfsg-6 [710 kB]
+Des:7 http://archive.ubuntu.com/ubuntu resolute/main amd64 libsdl2-2.0-0 amd64 2.32.10+dfsg-6 [14,0 kB]
+Des:8 http://archive.ubuntu.com/ubuntu resolute/universe amd64 ffmpeg amd64 7:8.0.1-3ubuntu2 [2.032 kB]
+Descargados 4.060 kB en 6s (692 kB/s)
+Seleccionando el paquete libjack-jackd2-0:amd64 previamente no seleccionado.
+(Leyendo la base de datos ... 170353 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../0-libjack-jackd2-0_1.9.22~dfsg-5build1_amd64.deb ...
+Desempaquetando libjack-jackd2-0:amd64 (1.9.22~dfsg-5build1) ...
+Seleccionando el paquete libopenal-data previamente no seleccionado.
+Preparando para desempaquetar .../1-libopenal-data_1%3a1.25.1-2_all.deb ...
+Desempaquetando libopenal-data (1:1.25.1-2) ...
+Seleccionando el paquete libopenal1:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../2-libopenal1_1%3a1.25.1-2_amd64.deb ...
+Desempaquetando libopenal1:amd64 (1:1.25.1-2) ...
+Seleccionando el paquete libavdevice62:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../3-libavdevice62_7%3a8.0.1-3ubuntu2_amd64.deb ...
+Desempaquetando libavdevice62:amd64 (7:8.0.1-3ubuntu2) ...
+Seleccionando el paquete libxss1:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../4-libxss1_1%3a1.2.3-1build4_amd64.deb ...
+Desempaquetando libxss1:amd64 (1:1.2.3-1build4) ...
+Seleccionando el paquete libsdl2-classic:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../5-libsdl2-classic_2.32.10+dfsg-6_amd64.deb ...
+Desempaquetando libsdl2-classic:amd64 (2.32.10+dfsg-6) ...
+Seleccionando el paquete libsdl2-2.0-0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../6-libsdl2-2.0-0_2.32.10+dfsg-6_amd64.deb ...
+Desempaquetando libsdl2-2.0-0:amd64 (2.32.10+dfsg-6) ...
+Seleccionando el paquete ffmpeg previamente no seleccionado.
+Preparando para desempaquetar .../7-ffmpeg_7%3a8.0.1-3ubuntu2_amd64.deb ...
+Desempaquetando ffmpeg (7:8.0.1-3ubuntu2) ...
+Configurando libjack-jackd2-0:amd64 (1.9.22~dfsg-5build1) ...
+Configurando libopenal-data (1:1.25.1-2) ...
+Configurando libxss1:amd64 (1:1.2.3-1build4) ...
+Configurando libsdl2-classic:amd64 (2.32.10+dfsg-6) ...
+Configurando libopenal1:amd64 (1:1.25.1-2) ...
+Configurando libavdevice62:amd64 (7:8.0.1-3ubuntu2) ...
+Configurando libsdl2-2.0-0:amd64 (2.32.10+dfsg-6) ...
+Configurando ffmpeg (7:8.0.1-3ubuntu2) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+FFmpeg instalado correctamente.
+✅ FFmpeg completado
+
+📦 Instalando Visual Studio Code...
+Instalando Visual Studio Code...
+Obj:1 https://download.onlyoffice.com/repo/debian squeeze InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:3 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:4 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                  
+Obj:5 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:6 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:7 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:8 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:9 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                           
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                              
+Obj:12 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                    
+Obj:13 https://packages.cloud.google.com/apt cloud-sdk InRelease                                          
+Des:14 https://apt.fury.io/wez * InRelease                                                                
+Obj:10 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:15 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (2.990 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  socat
+Se instalarán los siguientes paquetes NUEVOS:
+  code socat
+0 actualizados, 2 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 240 MB de archivos.
+Se utilizarán 1.075 MB de espacio de disco adicional después de esta operación.
+Des:1 https://packages.microsoft.com/repos/code stable/main amd64 code amd64 1.133.0-1786487972 [239 MB]
+Des:2 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 socat amd64 1.8.1.1-1ubuntu0.1 [403 kB]
+Descargados 240 MB en 7s (32,3 MB/s)                                                                                                                                                         
+Preconfigurando paquetes ...
+Seleccionando el paquete code previamente no seleccionado.
+(Leyendo la base de datos ... 170451 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../code_1.133.0-1786487972_amd64.deb ...
+Desempaquetando code (1.133.0-1786487972) ...
+Seleccionando el paquete socat previamente no seleccionado.
+Preparando para desempaquetar .../socat_1.8.1.1-1ubuntu0.1_amd64.deb ...
+Desempaquetando socat (1.8.1.1-1ubuntu0.1) ...
+Configurando code (1.133.0-1786487972) ...
+Configurando socat (1.8.1.1-1ubuntu0.1) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+Procesando disparadores para shared-mime-info (2.4-5build3) ...
+Visual Studio Code instalado correctamente.
+✅ Visual Studio Code completado
+
+📦 Instalando Neovim...
+Instalando Neovim...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:4 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:5 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:6 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                           
+Obj:9 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                                                         
+Des:11 https://apt.fury.io/wez * InRelease                                                                                          
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                               
+Obj:13 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Obj:14 https://packages.cloud.google.com/apt cloud-sdk InRelease                                          
+Obj:10 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:15 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:16 http://archive.ubuntu.com/ubuntu resolute-backports InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.537 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  libluajit-5.1-2 libluajit-5.1-common libtree-sitter0.25 libunibilium4 libutf8proc3 lua-lpeg lua-luv neovim-runtime python3-greenlet python3-msgpack python3-pynvim
+Paquetes sugeridos:
+  ctags vim-scripts python-greenlet-dev python-greenlet-doc
+Se instalarán los siguientes paquetes NUEVOS:
+  libluajit-5.1-2 libluajit-5.1-common libtree-sitter0.25 libunibilium4 libutf8proc3 lua-lpeg lua-luv neovim neovim-runtime python3-greenlet python3-msgpack python3-pynvim
+0 actualizados, 12 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 8.936 kB de archivos.
+Se utilizarán 39,4 MB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libluajit-5.1-common all 2.1.0+openresty20251030-1 [54,7 kB]
+Des:2 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libluajit-5.1-2 amd64 2.1.0+openresty20251030-1 [285 kB]
+Des:3 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libtree-sitter0.25 amd64 0.25.9-7 [95,6 kB]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libunibilium4 amd64 2.1.1-2build1 [27,5 kB]
+Des:5 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libutf8proc3 amd64 2.10.0-2 [71,6 kB]
+Des:6 http://archive.ubuntu.com/ubuntu resolute/universe amd64 lua-lpeg amd64 1.1.0-3 [42,5 kB]
+Des:7 http://archive.ubuntu.com/ubuntu resolute/universe amd64 lua-luv amd64 1.51.0-1-1 [119 kB]
+Des:8 http://archive.ubuntu.com/ubuntu resolute/main amd64 python3-msgpack amd64 1.1.2-2build1 [81,0 kB]
+Des:9 http://archive.ubuntu.com/ubuntu resolute/main amd64 python3-greenlet amd64 3.3.2-1 [167 kB]
+Des:10 http://archive.ubuntu.com/ubuntu resolute/universe amd64 python3-pynvim all 0.6.0-2 [36,7 kB]
+Des:11 http://archive.ubuntu.com/ubuntu resolute/universe amd64 neovim-runtime all 0.11.6-1 [4.972 kB]
+Des:12 http://archive.ubuntu.com/ubuntu resolute/universe amd64 neovim amd64 0.11.6-1 [2.983 kB]
+Descargados 8.936 kB en 3s (2.830 kB/s)
+Seleccionando el paquete libluajit-5.1-common previamente no seleccionado.
+(Leyendo la base de datos ... 173482 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../00-libluajit-5.1-common_2.1.0+openresty20251030-1_all.deb ...
+Desempaquetando libluajit-5.1-common (2.1.0+openresty20251030-1) ...
+Seleccionando el paquete libluajit-5.1-2:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../01-libluajit-5.1-2_2.1.0+openresty20251030-1_amd64.deb ...
+Desempaquetando libluajit-5.1-2:amd64 (2.1.0+openresty20251030-1) ...
+Seleccionando el paquete libtree-sitter0.25:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../02-libtree-sitter0.25_0.25.9-7_amd64.deb ...
+Desempaquetando libtree-sitter0.25:amd64 (0.25.9-7) ...
+Seleccionando el paquete libunibilium4:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../03-libunibilium4_2.1.1-2build1_amd64.deb ...
+Desempaquetando libunibilium4:amd64 (2.1.1-2build1) ...
+Seleccionando el paquete libutf8proc3:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../04-libutf8proc3_2.10.0-2_amd64.deb ...
+Desempaquetando libutf8proc3:amd64 (2.10.0-2) ...
+Seleccionando el paquete lua-lpeg:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../05-lua-lpeg_1.1.0-3_amd64.deb ...
+Desempaquetando lua-lpeg:amd64 (1.1.0-3) ...
+Seleccionando el paquete lua-luv:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../06-lua-luv_1.51.0-1-1_amd64.deb ...
+Desempaquetando lua-luv:amd64 (1.51.0-1-1) ...
+Seleccionando el paquete python3-msgpack previamente no seleccionado.
+Preparando para desempaquetar .../07-python3-msgpack_1.1.2-2build1_amd64.deb ...
+Desempaquetando python3-msgpack (1.1.2-2build1) ...
+Seleccionando el paquete python3-greenlet previamente no seleccionado.
+Preparando para desempaquetar .../08-python3-greenlet_3.3.2-1_amd64.deb ...
+Desempaquetando python3-greenlet (3.3.2-1) ...
+Seleccionando el paquete python3-pynvim previamente no seleccionado.
+Preparando para desempaquetar .../09-python3-pynvim_0.6.0-2_all.deb ...
+Desempaquetando python3-pynvim (0.6.0-2) ...
+Seleccionando el paquete neovim-runtime previamente no seleccionado.
+Preparando para desempaquetar .../10-neovim-runtime_0.11.6-1_all.deb ...
+Desempaquetando neovim-runtime (0.11.6-1) ...
+Seleccionando el paquete neovim previamente no seleccionado.
+Preparando para desempaquetar .../11-neovim_0.11.6-1_amd64.deb ...
+Desempaquetando neovim (0.11.6-1) ...
+Configurando libunibilium4:amd64 (2.1.1-2build1) ...
+Configurando neovim-runtime (0.11.6-1) ...
+Configurando lua-lpeg:amd64 (1.1.0-3) ...
+Configurando libutf8proc3:amd64 (2.10.0-2) ...
+Configurando lua-luv:amd64 (1.51.0-1-1) ...
+Configurando python3-greenlet (3.3.2-1) ...
+Configurando libluajit-5.1-common (2.1.0+openresty20251030-1) ...
+Configurando libtree-sitter0.25:amd64 (0.25.9-7) ...
+Configurando python3-msgpack (1.1.2-2build1) ...
+Configurando libluajit-5.1-2:amd64 (2.1.0+openresty20251030-1) ...
+Configurando python3-pynvim (0.6.0-2) ...
+Configurando neovim (0.11.6-1) ...
+Procesando disparadores para hicolor-icon-theme (0.18-2build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+Neovim instalado correctamente.
+✅ Neovim completado
+
+📦 Instalando Docker...
+Instalando Docker...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:3 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:4 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:5 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:6 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:7 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:8 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:9 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                               
+Obj:10 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                   
+Des:11 https://apt.fury.io/wez * InRelease                                                                                               
+Obj:13 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                                  
+Obj:14 http://archive.ubuntu.com/ubuntu resolute-updates InRelease              
+Obj:12 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:15 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:16 http://archive.ubuntu.com/ubuntu resolute-backports InRelease
+Obj:17 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.526 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+ca-certificates ya está en su versión más reciente (20260601~26.04.1).
+fijado ca-certificates como instalado manualmente.
+curl ya está en su versión más reciente (8.18.0-1ubuntu2.3).
+Resolviendo dependencias... Hecho
+0 actualizados, 0 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Des:1 https://download.docker.com/linux/ubuntu resolute InRelease [32,5 kB]
+Obj:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:3 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                  
+Obj:4 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:5 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Des:6 https://download.docker.com/linux/ubuntu resolute/stable amd64 Packages [23,4 kB]                                                                                                      
+Obj:7 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:8 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:9 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:10 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                         
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                            
+Obj:12 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                              
+Obj:14 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                
+Des:15 https://apt.fury.io/wez * InRelease                                                                
+Obj:16 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:17 https://packages.cloud.google.com/apt cloud-sdk InRelease                
+Obj:18 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:19 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 61,6 kB en 2s (38,0 kB/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  docker-ce-rootless-extras pigz
+Paquetes sugeridos:
+  cgroupfs-mount | cgroup-lite docker-model-plugin
+Se instalarán los siguientes paquetes NUEVOS:
+  containerd.io docker-buildx-plugin docker-ce docker-ce-cli docker-ce-rootless-extras docker-compose-plugin pigz
+0 actualizados, 7 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 102 MB de archivos.
+Se utilizarán 395 MB de espacio de disco adicional después de esta operación.
+Des:1 https://download.docker.com/linux/ubuntu resolute/stable amd64 containerd.io amd64 2.3.3-1~ubuntu.26.04~resolute [22,7 MB]
+Des:2 http://archive.ubuntu.com/ubuntu resolute/universe amd64 pigz amd64 2.8-1build1 [66,8 kB] 
+Des:3 https://download.docker.com/linux/ubuntu resolute/stable amd64 docker-ce-cli amd64 5:29.7.2-1~ubuntu.26.04~resolute [17,0 MB]
+Des:4 https://download.docker.com/linux/ubuntu resolute/stable amd64 docker-ce amd64 5:29.7.2-1~ubuntu.26.04~resolute [24,0 MB]
+Des:5 https://download.docker.com/linux/ubuntu resolute/stable amd64 docker-buildx-plugin amd64 0.36.1-1~ubuntu.26.04~resolute [17,2 MB]
+Des:6 https://download.docker.com/linux/ubuntu resolute/stable amd64 docker-ce-rootless-extras amd64 5:29.7.2-1~ubuntu.26.04~resolute [10,2 MB]
+Des:7 https://download.docker.com/linux/ubuntu resolute/stable amd64 docker-compose-plugin amd64 5.4.0-1~ubuntu.26.04~resolute [11,1 MB]
+Descargados 102 MB en 3s (30,6 MB/s)            
+Seleccionando el paquete containerd.io previamente no seleccionado.
+(Leyendo la base de datos ... 175905 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../0-containerd.io_2.3.3-1~ubuntu.26.04~resolute_amd64.deb ...
+Desempaquetando containerd.io (2.3.3-1~ubuntu.26.04~resolute) ...
+Seleccionando el paquete docker-ce-cli previamente no seleccionado.
+Preparando para desempaquetar .../1-docker-ce-cli_5%3a29.7.2-1~ubuntu.26.04~resolute_amd64.deb ...
+Desempaquetando docker-ce-cli (5:29.7.2-1~ubuntu.26.04~resolute) ...
+Seleccionando el paquete docker-ce previamente no seleccionado.
+Preparando para desempaquetar .../2-docker-ce_5%3a29.7.2-1~ubuntu.26.04~resolute_amd64.deb ...
+Desempaquetando docker-ce (5:29.7.2-1~ubuntu.26.04~resolute) ...
+Seleccionando el paquete pigz previamente no seleccionado.
+Preparando para desempaquetar .../3-pigz_2.8-1build1_amd64.deb ...
+Desempaquetando pigz (2.8-1build1) ...
+Seleccionando el paquete docker-buildx-plugin previamente no seleccionado.
+Preparando para desempaquetar .../4-docker-buildx-plugin_0.36.1-1~ubuntu.26.04~resolute_amd64.deb ...
+Desempaquetando docker-buildx-plugin (0.36.1-1~ubuntu.26.04~resolute) ...
+Seleccionando el paquete docker-ce-rootless-extras previamente no seleccionado.
+Preparando para desempaquetar .../5-docker-ce-rootless-extras_5%3a29.7.2-1~ubuntu.26.04~resolute_amd64.deb ...
+Desempaquetando docker-ce-rootless-extras (5:29.7.2-1~ubuntu.26.04~resolute) ...
+Seleccionando el paquete docker-compose-plugin previamente no seleccionado.
+Preparando para desempaquetar .../6-docker-compose-plugin_5.4.0-1~ubuntu.26.04~resolute_amd64.deb ...
+Desempaquetando docker-compose-plugin (5.4.0-1~ubuntu.26.04~resolute) ...
+Configurando docker-buildx-plugin (0.36.1-1~ubuntu.26.04~resolute) ...
+Configurando containerd.io (2.3.3-1~ubuntu.26.04~resolute) ...
+Created symlink '/etc/systemd/system/multi-user.target.wants/containerd.service' → '/usr/lib/systemd/system/containerd.service'.
+Configurando docker-compose-plugin (5.4.0-1~ubuntu.26.04~resolute) ...
+Configurando docker-ce-cli (5:29.7.2-1~ubuntu.26.04~resolute) ...
+Configurando pigz (2.8-1build1) ...
+Configurando docker-ce-rootless-extras (5:29.7.2-1~ubuntu.26.04~resolute) ...
+Configurando docker-ce (5:29.7.2-1~ubuntu.26.04~resolute) ...
+Created symlink '/etc/systemd/system/multi-user.target.wants/docker.service' → '/usr/lib/systemd/system/docker.service'.
+Created symlink '/etc/systemd/system/sockets.target.wants/docker.socket' → '/usr/lib/systemd/system/docker.socket'.
+Procesando disparadores para man-db (2.13.1-1build1) ...
+Docker instalado correctamente. Es posible que necesites cerrar sesión y volver a iniciar para que los cambios de grupo surtan efecto.
+✅ Docker completado
+
+📦 Instalando VirtualBox...
+Instalando VirtualBox...
+Obj:1 https://download.docker.com/linux/ubuntu resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease
+Obj:3 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                  
+Obj:4 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:5 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:6 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:9 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:10 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                           
+Obj:11 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                             
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                               
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                                             
+Des:15 https://apt.fury.io/wez * InRelease                                                                
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:16 https://packages.cloud.google.com/apt cloud-sdk InRelease                
+Obj:17 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:18 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.530 B/s)
+Leyendo lista de paquetes... Hecho
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:3 https://download.docker.com/linux/ubuntu resolute InRelease                                                                                                                            
+Obj:4 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:5 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:6 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:7 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:9 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                     
+Obj:10 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Des:11 https://apt.fury.io/wez * InRelease                                                                                          
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                  
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                      
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:16 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:17 https://packages.cloud.google.com/apt cloud-sdk InRelease
+Obj:18 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.490 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+linux-headers-7.0.0-29-generic ya está en su versión más reciente (7.0.0-29.29).
+fijado linux-headers-7.0.0-29-generic como instalado manualmente.
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  libb2-1 libgsoap-2.8.139 liblzf1 libopengl0 libqt6core6t64 libqt6dbus6 libqt6gui6 libqt6help6 libqt6network6 libqt6opengl6 libqt6printsupport6 libqt6qml6 libqt6qmlmeta6 libqt6qmlmodels6
+  libqt6qmlworkerscript6 libqt6quick6 libqt6sql6 libqt6sql6-sqlite libqt6statemachine6 libqt6svg6 libqt6waylandclient6 libqt6waylandcompositor6 libqt6widgets6 libqt6wlshellintegration6
+  libqt6xml6 libsdl-ttf2.0-0 libsdl1.2debian libtpms0 libts0t64 libxcb-cursor0 qt6-gtk-platformtheme qt6-qpa-plugins qt6-svg-plugins qt6-translations-l10n qt6-wayland
+Paquetes sugeridos:
+  menu qt6-qmltooling-plugins
+Se instalarán los siguientes paquetes NUEVOS:
+  dkms libb2-1 libgsoap-2.8.139 liblzf1 libopengl0 libqt6core6t64 libqt6dbus6 libqt6gui6 libqt6help6 libqt6network6 libqt6opengl6 libqt6printsupport6 libqt6qml6 libqt6qmlmeta6
+  libqt6qmlmodels6 libqt6qmlworkerscript6 libqt6quick6 libqt6sql6 libqt6sql6-sqlite libqt6statemachine6 libqt6svg6 libqt6waylandclient6 libqt6waylandcompositor6 libqt6widgets6
+  libqt6wlshellintegration6 libqt6xml6 libsdl-ttf2.0-0 libsdl1.2debian libtpms0 libts0t64 libxcb-cursor0 qt6-gtk-platformtheme qt6-qpa-plugins qt6-svg-plugins qt6-translations-l10n
+  qt6-wayland virtualbox-7.2
+0 actualizados, 37 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 126 MB de archivos.
+Se utilizarán 327 MB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libgsoap-2.8.139 amd64 2.8.139-1 [275 kB]
+Des:2 https://download.virtualbox.org/virtualbox/debian resolute/contrib amd64 virtualbox-7.2 amd64 7.2.14-174565~Ubuntu~resolute [105 MB]
+Des:3 http://archive.ubuntu.com/ubuntu resolute/universe amd64 liblzf1 amd64 3.6-4build1 [7.490 B]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libb2-1 amd64 0.98.1-1.1build2 [44,9 kB]
+Des:5 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6core6t64 amd64 6.10.2+dfsg-7 [2.080 kB]
+Des:6 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6dbus6 amd64 6.10.2+dfsg-7 [285 kB]
+Des:7 http://archive.ubuntu.com/ubuntu resolute/main amd64 libopengl0 amd64 1.7.0-3 [32,8 kB]
+Des:8 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libts0t64 amd64 1.22-1.1build2 [64,0 kB]
+Des:9 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libxcb-cursor0 amd64 0.1.6-1 [10,6 kB]                                                                                        
+Des:10 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6gui6 amd64 6.10.2+dfsg-7 [3.550 kB]                                                                                    
+Des:11 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6sql6 amd64 6.10.2+dfsg-7 [147 kB]                                                                                      
+Des:12 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6widgets6 amd64 6.10.2+dfsg-7 [2.818 kB]                                                                                
+Des:13 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6help6 amd64 6.10.2-1 [198 kB]                                                                                          
+Des:14 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6printsupport6 amd64 6.10.2+dfsg-7 [224 kB]                                                                             
+Des:15 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6statemachine6 amd64 6.10.2-1 [133 kB]                                                                                  
+Des:16 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6xml6 amd64 6.10.2+dfsg-7 [82,1 kB]                                                                                     
+Des:17 http://archive.ubuntu.com/ubuntu resolute/main amd64 libtpms0 amd64 0.10.2-2ubuntu1 [412 kB]                                                                                          
+Des:18 http://archive.ubuntu.com/ubuntu resolute/main amd64 dkms all 3.2.2-1ubuntu1 [63,0 kB]                                                                                                
+Des:19 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6network6 amd64 6.10.2+dfsg-7 [859 kB]                                                                                  
+Des:20 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6opengl6 amd64 6.10.2+dfsg-7 [439 kB]                                                                                   
+Des:21 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6qml6 amd64 6.10.2+dfsg-3 [1.893 kB]                                                                                    
+Des:22 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6qmlmodels6 amd64 6.10.2+dfsg-3 [387 kB]                                                                                
+Des:23 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6qmlworkerscript6 amd64 6.10.2+dfsg-3 [35,9 kB]                                                                         
+Des:24 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6qmlmeta6 amd64 6.10.2+dfsg-3 [69,4 kB]                                                                                 
+Des:25 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6quick6 amd64 6.10.2+dfsg-3 [2.514 kB]                                                                                  
+Des:26 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6sql6-sqlite amd64 6.10.2+dfsg-7 [61,4 kB]                                                                              
+Des:27 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6svg6 amd64 6.10.2-2 [234 kB]                                                                                           
+Des:28 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6waylandclient6 amd64 6.10.2+dfsg-7 [376 kB]                                                                            
+Des:29 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6waylandcompositor6 amd64 6.10.2-4 [471 kB]                                                                             
+Des:30 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6wlshellintegration6 amd64 6.10.2+dfsg-7 [95,6 kB]                                                                      
+Des:31 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libsdl1.2debian amd64 1.2.72-1 [93,0 kB]                                                                                     
+Des:32 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libsdl-ttf2.0-0 amd64 2.0.11-6build1 [17,6 kB]                                                                               
+Des:33 http://archive.ubuntu.com/ubuntu resolute/universe amd64 qt6-gtk-platformtheme amd64 6.10.2+dfsg-7 [96,4 kB]                                                                          
+Des:34 http://archive.ubuntu.com/ubuntu resolute/universe amd64 qt6-qpa-plugins amd64 6.10.2+dfsg-7 [89,3 kB]                                                                                
+Des:35 http://archive.ubuntu.com/ubuntu resolute/universe amd64 qt6-svg-plugins amd64 6.10.2-2 [32,5 kB]                                                                                     
+Des:36 http://archive.ubuntu.com/ubuntu resolute/universe amd64 qt6-translations-l10n all 6.10.2-1 [2.027 kB]                                                                                
+Des:37 http://archive.ubuntu.com/ubuntu resolute/universe amd64 qt6-wayland amd64 6.10.2-4 [106 kB]                                                                                          
+Descargados 126 MB en 9s (13,9 MB/s)                                                                                                                                                         
+Extrayendo plantillas para los paquetes: 100%
+Preconfigurando paquetes ...
+Seleccionando el paquete libgsoap-2.8.139:amd64 previamente no seleccionado.
+(Leyendo la base de datos ... 176142 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../00-libgsoap-2.8.139_2.8.139-1_amd64.deb ...
+Desempaquetando libgsoap-2.8.139:amd64 (2.8.139-1) ...
+Seleccionando el paquete liblzf1:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../01-liblzf1_3.6-4build1_amd64.deb ...
+Desempaquetando liblzf1:amd64 (3.6-4build1) ...
+Seleccionando el paquete libb2-1:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../02-libb2-1_0.98.1-1.1build2_amd64.deb ...
+Desempaquetando libb2-1:amd64 (0.98.1-1.1build2) ...
+Seleccionando el paquete libqt6core6t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../03-libqt6core6t64_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6core6t64:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libqt6dbus6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../04-libqt6dbus6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6dbus6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libopengl0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../05-libopengl0_1.7.0-3_amd64.deb ...
+Desempaquetando libopengl0:amd64 (1.7.0-3) ...
+Seleccionando el paquete libts0t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../06-libts0t64_1.22-1.1build2_amd64.deb ...
+Desempaquetando libts0t64:amd64 (1.22-1.1build2) ...
+Seleccionando el paquete libxcb-cursor0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../07-libxcb-cursor0_0.1.6-1_amd64.deb ...
+Desempaquetando libxcb-cursor0:amd64 (0.1.6-1) ...
+Seleccionando el paquete libqt6gui6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../08-libqt6gui6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6gui6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libqt6sql6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../09-libqt6sql6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6sql6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libqt6widgets6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../10-libqt6widgets6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6widgets6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libqt6help6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../11-libqt6help6_6.10.2-1_amd64.deb ...
+Desempaquetando libqt6help6:amd64 (6.10.2-1) ...
+Seleccionando el paquete libqt6printsupport6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../12-libqt6printsupport6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6printsupport6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libqt6statemachine6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../13-libqt6statemachine6_6.10.2-1_amd64.deb ...
+Desempaquetando libqt6statemachine6:amd64 (6.10.2-1) ...
+Seleccionando el paquete libqt6xml6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../14-libqt6xml6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6xml6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libtpms0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../15-libtpms0_0.10.2-2ubuntu1_amd64.deb ...
+Desempaquetando libtpms0:amd64 (0.10.2-2ubuntu1) ...
+Seleccionando el paquete virtualbox-7.2 previamente no seleccionado.
+Preparando para desempaquetar .../16-virtualbox-7.2_7.2.14-174565~Ubuntu~resolute_amd64.deb ...
+Desempaquetando virtualbox-7.2 (7.2.14-174565~Ubuntu~resolute) ...
+Seleccionando el paquete dkms previamente no seleccionado.
+Preparando para desempaquetar .../17-dkms_3.2.2-1ubuntu1_all.deb ...
+Desempaquetando dkms (3.2.2-1ubuntu1) ...
+Seleccionando el paquete libqt6network6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../18-libqt6network6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6network6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libqt6opengl6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../19-libqt6opengl6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6opengl6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libqt6qml6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../20-libqt6qml6_6.10.2+dfsg-3_amd64.deb ...
+Desempaquetando libqt6qml6:amd64 (6.10.2+dfsg-3) ...
+Seleccionando el paquete libqt6qmlmodels6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../21-libqt6qmlmodels6_6.10.2+dfsg-3_amd64.deb ...
+Desempaquetando libqt6qmlmodels6:amd64 (6.10.2+dfsg-3) ...
+Seleccionando el paquete libqt6qmlworkerscript6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../22-libqt6qmlworkerscript6_6.10.2+dfsg-3_amd64.deb ...
+Desempaquetando libqt6qmlworkerscript6:amd64 (6.10.2+dfsg-3) ...
+Seleccionando el paquete libqt6qmlmeta6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../23-libqt6qmlmeta6_6.10.2+dfsg-3_amd64.deb ...
+Desempaquetando libqt6qmlmeta6:amd64 (6.10.2+dfsg-3) ...
+Seleccionando el paquete libqt6quick6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../24-libqt6quick6_6.10.2+dfsg-3_amd64.deb ...
+Desempaquetando libqt6quick6:amd64 (6.10.2+dfsg-3) ...
+Seleccionando el paquete libqt6sql6-sqlite:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../25-libqt6sql6-sqlite_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6sql6-sqlite:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libqt6svg6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../26-libqt6svg6_6.10.2-2_amd64.deb ...
+Desempaquetando libqt6svg6:amd64 (6.10.2-2) ...
+Seleccionando el paquete libqt6waylandclient6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../27-libqt6waylandclient6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6waylandclient6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libqt6waylandcompositor6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../28-libqt6waylandcompositor6_6.10.2-4_amd64.deb ...
+Desempaquetando libqt6waylandcompositor6:amd64 (6.10.2-4) ...
+Seleccionando el paquete libqt6wlshellintegration6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../29-libqt6wlshellintegration6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6wlshellintegration6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libsdl1.2debian:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../30-libsdl1.2debian_1.2.72-1_amd64.deb ...
+Desempaquetando libsdl1.2debian:amd64 (1.2.72-1) ...
+Seleccionando el paquete libsdl-ttf2.0-0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../31-libsdl-ttf2.0-0_2.0.11-6build1_amd64.deb ...
+Desempaquetando libsdl-ttf2.0-0:amd64 (2.0.11-6build1) ...
+Seleccionando el paquete qt6-gtk-platformtheme:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../32-qt6-gtk-platformtheme_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando qt6-gtk-platformtheme:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete qt6-qpa-plugins:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../33-qt6-qpa-plugins_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando qt6-qpa-plugins:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete qt6-svg-plugins:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../34-qt6-svg-plugins_6.10.2-2_amd64.deb ...
+Desempaquetando qt6-svg-plugins:amd64 (6.10.2-2) ...
+Seleccionando el paquete qt6-translations-l10n previamente no seleccionado.
+Preparando para desempaquetar .../35-qt6-translations-l10n_6.10.2-1_all.deb ...
+Desempaquetando qt6-translations-l10n (6.10.2-1) ...
+Seleccionando el paquete qt6-wayland:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../36-qt6-wayland_6.10.2-4_amd64.deb ...
+Desempaquetando qt6-wayland:amd64 (6.10.2-4) ...
+Configurando libb2-1:amd64 (0.98.1-1.1build2) ...
+Configurando libqt6core6t64:amd64 (6.10.2+dfsg-7) ...
+Configurando libts0t64:amd64 (1.22-1.1build2) ...
+Configurando libopengl0:amd64 (1.7.0-3) ...
+Configurando dkms (3.2.2-1ubuntu1) ...
+Configurando qt6-translations-l10n (6.10.2-1) ...
+Configurando libqt6xml6:amd64 (6.10.2+dfsg-7) ...
+Configurando libqt6sql6:amd64 (6.10.2+dfsg-7) ...
+Configurando libqt6sql6-sqlite:amd64 (6.10.2+dfsg-7) ...
+Configurando libxcb-cursor0:amd64 (0.1.6-1) ...
+Configurando liblzf1:amd64 (3.6-4build1) ...
+Configurando libsdl1.2debian:amd64 (1.2.72-1) ...
+Configurando libgsoap-2.8.139:amd64 (2.8.139-1) ...
+Configurando libtpms0:amd64 (0.10.2-2ubuntu1) ...
+Configurando libsdl-ttf2.0-0:amd64 (2.0.11-6build1) ...
+Configurando libqt6dbus6:amd64 (6.10.2+dfsg-7) ...
+Configurando libqt6gui6:amd64 (6.10.2+dfsg-7) ...
+Configurando qt6-gtk-platformtheme:amd64 (6.10.2+dfsg-7) ...
+Configurando libqt6statemachine6:amd64 (6.10.2-1) ...
+Configurando libqt6network6:amd64 (6.10.2+dfsg-7) ...
+Configurando qt6-qpa-plugins:amd64 (6.10.2+dfsg-7) ...
+Configurando libqt6qml6:amd64 (6.10.2+dfsg-3) ...
+Configurando libqt6opengl6:amd64 (6.10.2+dfsg-7) ...
+Configurando libqt6qmlmodels6:amd64 (6.10.2+dfsg-3) ...
+Configurando libqt6widgets6:amd64 (6.10.2+dfsg-7) ...
+Configurando libqt6qmlworkerscript6:amd64 (6.10.2+dfsg-3) ...
+Configurando libqt6svg6:amd64 (6.10.2-2) ...
+Configurando libqt6waylandclient6:amd64 (6.10.2+dfsg-7) ...
+Configurando qt6-svg-plugins:amd64 (6.10.2-2) ...
+Configurando libqt6qmlmeta6:amd64 (6.10.2+dfsg-3) ...
+Configurando libqt6wlshellintegration6:amd64 (6.10.2+dfsg-7) ...
+Configurando libqt6printsupport6:amd64 (6.10.2+dfsg-7) ...
+Configurando libqt6help6:amd64 (6.10.2-1) ...
+Configurando libqt6quick6:amd64 (6.10.2+dfsg-3) ...
+Configurando virtualbox-7.2 (7.2.14-174565~Ubuntu~resolute) ...
+Configurando libqt6waylandcompositor6:amd64 (6.10.2-4) ...
+Configurando qt6-wayland:amd64 (6.10.2-4) ...
+Procesando disparadores para hicolor-icon-theme (0.18-2build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+Procesando disparadores para shared-mime-info (2.4-5build3) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+VirtualBox instalado correctamente (paquete virtualbox-7.2). Es posible que necesites cerrar sesión y volver a iniciar para que los cambios de grupo surtan efecto.
+✅ VirtualBox completado
+
+📦 Instalando Azure CLI...
+Instalando Azure CLI...
+Microsoft todavía no publica el repositorio de Azure CLI para esta versión de Ubuntu (resolute).
+No se agregó ningún repositorio, para no romper 'apt-get update' del sistema.
+Alternativas: instalarlo con el script oficial de Microsoft, o reintentar cuando publiquen para resolute.
+❌ Error con Azure CLI (acción 'install' no disponible o falló; ver salida arriba)
+
+📦 Instalando Google Cloud CLI...
+Instalando Google Cloud CLI...
+Obj:1 https://packages.microsoft.com/repos/code stable InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:4 https://download.docker.com/linux/ubuntu resolute InRelease                                                                                                                            
+Obj:5 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                  
+Obj:6 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:8 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:9 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                              
+Obj:10 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                         
+Obj:11 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                        
+Obj:12 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                            
+Des:14 https://apt.fury.io/wez * InRelease                                                                                                      
+Obj:13 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:15 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease
+Obj:16 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:17 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:18 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (2.857 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Paquetes sugeridos:
+  google-cloud-cli-app-engine-java google-cloud-cli-app-engine-python google-cloud-cli-pubsub-emulator google-cloud-cli-bigtable-emulator google-cloud-cli-datastore-emulator kubectl
+Se instalarán los siguientes paquetes NUEVOS:
+  google-cloud-cli
+0 actualizados, 1 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 95,9 MB de archivos.
+Se utilizarán 505 MB de espacio de disco adicional después de esta operación.
+Des:1 https://packages.cloud.google.com/apt cloud-sdk/main amd64 google-cloud-cli amd64 580.0.0-0 [95,9 MB]
+Descargados 95,9 MB en 7s (13,1 MB/s)                                                                                                                                                        
+Seleccionando el paquete google-cloud-cli previamente no seleccionado.
+(Leyendo la base de datos ... 177570 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../google-cloud-cli_580.0.0-0_amd64.deb ...
+Desempaquetando google-cloud-cli (580.0.0-0) ...
+Configurando google-cloud-cli (580.0.0-0) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Google Cloud CLI instalado correctamente.
+✅ Google Cloud CLI completado
+
+📦 Instalando Albert...
+Instalando Albert...
+Obj:1 https://apt.releases.hashicorp.com resolute InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:3 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:4 https://download.docker.com/linux/ubuntu resolute InRelease                                                                                                                            
+Obj:5 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:6 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:7 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:8 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                                                                              
+Obj:9 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:10 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                          
+Obj:12 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                    
+Des:13 https://apt.fury.io/wez * InRelease                                      
+Obj:14 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                     
+Obj:11 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:15 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:16 http://archive.ubuntu.com/ubuntu resolute-backports InRelease
+Obj:17 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:18 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.138 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  libexpat1-dev libpython3-dev libpython3.14-dev libqalculate-data libqalculate23 libqcoro6core0t64 libqcoro6network0t64 libqt6concurrent6 libqt6keychain1 python3-dev python3-packaging
+  python3-pip python3-pip-whl python3-setuptools-whl python3-venv python3-wheel python3.14-dev python3.14-venv zlib1g-dev
+Se instalarán los siguientes paquetes NUEVOS:
+  albert libexpat1-dev libpython3-dev libpython3.14-dev libqalculate-data libqalculate23 libqcoro6core0t64 libqcoro6network0t64 libqt6concurrent6 libqt6keychain1 python3-dev
+  python3-packaging python3-pip python3-pip-whl python3-setuptools-whl python3-venv python3-wheel python3.14-dev python3.14-venv zlib1g-dev
+0 actualizados, 20 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 15,8 MB de archivos.
+Se utilizarán 61,8 MB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqalculate-data all 5.9.0-1 [356 kB]
+Des:3 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqalculate23 amd64 5.9.0-1 [1.886 kB]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqcoro6core0t64 amd64 0.13.0-1ubuntu2 [40,5 kB]
+Des:5 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqcoro6network0t64 amd64 0.13.0-1ubuntu2 [32,8 kB]
+Des:6 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6concurrent6 amd64 6.10.2+dfsg-7 [33,4 kB]
+Des:7 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6keychain1 amd64 0.15.0-2 [60,9 kB]
+Des:8 http://archive.ubuntu.com/ubuntu resolute/main amd64 python3-packaging all 26.0-1 [58,7 kB]
+Des:9 http://archive.ubuntu.com/ubuntu resolute/universe amd64 python3-wheel all 0.46.3-2 [27,9 kB]
+Des:10 http://archive.ubuntu.com/ubuntu resolute/universe amd64 python3-pip all 25.1.1+dfsg-1ubuntu2 [1.416 kB]
+Des:11 http://archive.ubuntu.com/ubuntu resolute/universe amd64 python3-pip-whl all 25.1.1+dfsg-1ubuntu2 [1.430 kB]
+Des:12 http://archive.ubuntu.com/ubuntu resolute/universe amd64 python3-setuptools-whl all 78.1.1-0.1build1 [1.174 kB]
+Des:13 http://archive.ubuntu.com/ubuntu resolute-updates/universe amd64 python3.14-venv amd64 3.14.4-1ubuntu0.1 [5.354 B]
+Des:14 http://archive.ubuntu.com/ubuntu resolute/universe amd64 python3-venv amd64 3.14.3-0ubuntu2 [1.032 B]
+Des:15 http://archive.ubuntu.com/ubuntu resolute/main amd64 libexpat1-dev amd64 2.7.4-1 [145 kB]
+Des:16 http://archive.ubuntu.com/ubuntu resolute/main amd64 zlib1g-dev amd64 1:1.3.dfsg+really1.3.1-1ubuntu3 [895 kB]
+Des:17 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpython3.14-dev amd64 3.14.4-1ubuntu0.1 [5.987 kB]
+Des:2 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  albert 35.1.0-0+761.1 [1.741 kB]
+Des:18 http://archive.ubuntu.com/ubuntu resolute/main amd64 libpython3-dev amd64 3.14.3-0ubuntu2 [8.736 B]
+Des:19 http://archive.ubuntu.com/ubuntu resolute-updates/main amd64 python3.14-dev amd64 3.14.4-1ubuntu0.1 [510 kB]
+Des:20 http://archive.ubuntu.com/ubuntu resolute/main amd64 python3-dev amd64 3.14.3-0ubuntu2 [26,6 kB]
+Descargados 15,8 MB en 5s (3.425 kB/s)                                  
+Seleccionando el paquete libqalculate-data previamente no seleccionado.
+(Leyendo la base de datos ... 216365 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../00-libqalculate-data_5.9.0-1_all.deb ...
+Desempaquetando libqalculate-data (5.9.0-1) ...
+Seleccionando el paquete libqalculate23:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../01-libqalculate23_5.9.0-1_amd64.deb ...
+Desempaquetando libqalculate23:amd64 (5.9.0-1) ...
+Seleccionando el paquete libqcoro6core0t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../02-libqcoro6core0t64_0.13.0-1ubuntu2_amd64.deb ...
+Desempaquetando libqcoro6core0t64:amd64 (0.13.0-1ubuntu2) ...
+Seleccionando el paquete libqcoro6network0t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../03-libqcoro6network0t64_0.13.0-1ubuntu2_amd64.deb ...
+Desempaquetando libqcoro6network0t64:amd64 (0.13.0-1ubuntu2) ...
+Seleccionando el paquete libqt6concurrent6:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../04-libqt6concurrent6_6.10.2+dfsg-7_amd64.deb ...
+Desempaquetando libqt6concurrent6:amd64 (6.10.2+dfsg-7) ...
+Seleccionando el paquete libqt6keychain1:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../05-libqt6keychain1_0.15.0-2_amd64.deb ...
+Desempaquetando libqt6keychain1:amd64 (0.15.0-2) ...
+Seleccionando el paquete python3-packaging previamente no seleccionado.
+Preparando para desempaquetar .../06-python3-packaging_26.0-1_all.deb ...
+Desempaquetando python3-packaging (26.0-1) ...
+Seleccionando el paquete python3-wheel previamente no seleccionado.
+Preparando para desempaquetar .../07-python3-wheel_0.46.3-2_all.deb ...
+Desempaquetando python3-wheel (0.46.3-2) ...
+Seleccionando el paquete python3-pip previamente no seleccionado.
+Preparando para desempaquetar .../08-python3-pip_25.1.1+dfsg-1ubuntu2_all.deb ...
+Desempaquetando python3-pip (25.1.1+dfsg-1ubuntu2) ...
+Seleccionando el paquete python3-pip-whl previamente no seleccionado.
+Preparando para desempaquetar .../09-python3-pip-whl_25.1.1+dfsg-1ubuntu2_all.deb ...
+Desempaquetando python3-pip-whl (25.1.1+dfsg-1ubuntu2) ...
+Seleccionando el paquete python3-setuptools-whl previamente no seleccionado.
+Preparando para desempaquetar .../10-python3-setuptools-whl_78.1.1-0.1build1_all.deb ...
+Desempaquetando python3-setuptools-whl (78.1.1-0.1build1) ...
+Seleccionando el paquete python3.14-venv previamente no seleccionado.
+Preparando para desempaquetar .../11-python3.14-venv_3.14.4-1ubuntu0.1_amd64.deb ...
+Desempaquetando python3.14-venv (3.14.4-1ubuntu0.1) ...
+Seleccionando el paquete python3-venv previamente no seleccionado.
+Preparando para desempaquetar .../12-python3-venv_3.14.3-0ubuntu2_amd64.deb ...
+Desempaquetando python3-venv (3.14.3-0ubuntu2) ...
+Seleccionando el paquete albert previamente no seleccionado.
+Preparando para desempaquetar .../13-albert_35.1.0-0+761.1_amd64.deb ...
+Desempaquetando albert (35.1.0-0+761.1) ...
+Seleccionando el paquete libexpat1-dev:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../14-libexpat1-dev_2.7.4-1_amd64.deb ...
+Desempaquetando libexpat1-dev:amd64 (2.7.4-1) ...
+Seleccionando el paquete zlib1g-dev:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../15-zlib1g-dev_1%3a1.3.dfsg+really1.3.1-1ubuntu3_amd64.deb ...
+Desempaquetando zlib1g-dev:amd64 (1:1.3.dfsg+really1.3.1-1ubuntu3) ...
+Seleccionando el paquete libpython3.14-dev:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../16-libpython3.14-dev_3.14.4-1ubuntu0.1_amd64.deb ...
+Desempaquetando libpython3.14-dev:amd64 (3.14.4-1ubuntu0.1) ...
+Seleccionando el paquete libpython3-dev:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../17-libpython3-dev_3.14.3-0ubuntu2_amd64.deb ...
+Desempaquetando libpython3-dev:amd64 (3.14.3-0ubuntu2) ...
+Seleccionando el paquete python3.14-dev previamente no seleccionado.
+Preparando para desempaquetar .../18-python3.14-dev_3.14.4-1ubuntu0.1_amd64.deb ...
+Desempaquetando python3.14-dev (3.14.4-1ubuntu0.1) ...
+Seleccionando el paquete python3-dev previamente no seleccionado.
+Preparando para desempaquetar .../19-python3-dev_3.14.3-0ubuntu2_amd64.deb ...
+Desempaquetando python3-dev (3.14.3-0ubuntu2) ...
+Configurando libqt6concurrent6:amd64 (6.10.2+dfsg-7) ...
+Configurando python3-setuptools-whl (78.1.1-0.1build1) ...
+Configurando python3-pip-whl (25.1.1+dfsg-1ubuntu2) ...
+Configurando python3.14-venv (3.14.4-1ubuntu0.1) ...
+Configurando libqalculate-data (5.9.0-1) ...
+Configurando python3-packaging (26.0-1) ...
+Configurando libexpat1-dev:amd64 (2.7.4-1) ...
+Configurando python3-venv (3.14.3-0ubuntu2) ...
+Configurando libqcoro6core0t64:amd64 (0.13.0-1ubuntu2) ...
+Configurando libqalculate23:amd64 (5.9.0-1) ...
+Configurando libqt6keychain1:amd64 (0.15.0-2) ...
+Configurando zlib1g-dev:amd64 (1:1.3.dfsg+really1.3.1-1ubuntu3) ...
+Configurando libqcoro6network0t64:amd64 (0.13.0-1ubuntu2) ...
+Configurando libpython3.14-dev:amd64 (3.14.4-1ubuntu0.1) ...
+Configurando libpython3-dev:amd64 (3.14.3-0ubuntu2) ...
+Configurando python3.14-dev (3.14.4-1ubuntu0.1) ...
+Configurando python3-wheel (0.46.3-2) ...
+Configurando python3-dev (3.14.3-0ubuntu2) ...
+Configurando python3-pip (25.1.1+dfsg-1ubuntu2) ...
+Configurando albert (35.1.0-0+761.1) ...
+Procesando disparadores para hicolor-icon-theme (0.18-2build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+Albert instalado correctamente.
+✅ Albert completado
+
+📦 Instalando OnlyOffice...
+Instalando OnlyOffice...
+Obj:1 https://download.docker.com/linux/ubuntu resolute InRelease
+Obj:2 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                  
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:4 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:5 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:6 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:7 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:9 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                     
+Des:10 https://apt.fury.io/wez * InRelease                                                                                          
+Obj:12 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                              
+Obj:13 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                        
+Obj:14 https://packages.cloud.google.com/apt cloud-sdk InRelease                                          
+Obj:11 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:15 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:16 http://archive.ubuntu.com/ubuntu resolute-backports InRelease
+Obj:17 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:18 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (2.980 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  fonts-crosextra-carlito fonts-dejavu fonts-dejavu-extra fonts-takao-gothic fonts-takao-pgothic
+Paquetes sugeridos:
+  fonts-crosextra-caladea onlyoffice-desktopeditors-help
+Se instalarán los siguientes paquetes NUEVOS:
+  fonts-crosextra-carlito fonts-dejavu fonts-dejavu-extra fonts-takao-gothic fonts-takao-pgothic onlyoffice-desktopeditors
+0 actualizados, 6 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 375 MB de archivos.
+Se utilizarán 1.338 MB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/universe amd64 fonts-takao-pgothic all 00303.01-3ubuntu2 [3.543 kB]
+Des:2 https://download.onlyoffice.com/repo/debian squeeze/main amd64 onlyoffice-desktopeditors amd64 9.4.0-129 [365 MB]
+Des:3 http://archive.ubuntu.com/ubuntu resolute/universe amd64 fonts-takao-gothic all 00303.01-3ubuntu2 [3.555 kB]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/main amd64 fonts-dejavu-extra all 2.37-8build1 [1.944 kB]
+Des:5 http://archive.ubuntu.com/ubuntu resolute/universe amd64 fonts-dejavu all 2.37-8build1 [3.024 B]
+Des:6 http://archive.ubuntu.com/ubuntu resolute/universe amd64 fonts-crosextra-carlito all 20230309-2 [811 kB]
+Descargados 375 MB en 28s (13,5 MB/s)                                                                                                                                                        
+Seleccionando el paquete fonts-takao-pgothic previamente no seleccionado.
+(Leyendo la base de datos ... 217860 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../0-fonts-takao-pgothic_00303.01-3ubuntu2_all.deb ...
+Desempaquetando fonts-takao-pgothic (00303.01-3ubuntu2) ...
+Seleccionando el paquete fonts-takao-gothic previamente no seleccionado.
+Preparando para desempaquetar .../1-fonts-takao-gothic_00303.01-3ubuntu2_all.deb ...
+Desempaquetando fonts-takao-gothic (00303.01-3ubuntu2) ...
+Seleccionando el paquete fonts-dejavu-extra previamente no seleccionado.
+Preparando para desempaquetar .../2-fonts-dejavu-extra_2.37-8build1_all.deb ...
+Desempaquetando fonts-dejavu-extra (2.37-8build1) ...
+Seleccionando el paquete fonts-dejavu previamente no seleccionado.
+Preparando para desempaquetar .../3-fonts-dejavu_2.37-8build1_all.deb ...
+Desempaquetando fonts-dejavu (2.37-8build1) ...
+Seleccionando el paquete fonts-crosextra-carlito previamente no seleccionado.
+Preparando para desempaquetar .../4-fonts-crosextra-carlito_20230309-2_all.deb ...
+Desempaquetando fonts-crosextra-carlito (20230309-2) ...
+Seleccionando el paquete onlyoffice-desktopeditors previamente no seleccionado.
+Preparando para desempaquetar .../5-onlyoffice-desktopeditors_9.4.0-129_amd64.deb ...
+Desempaquetando onlyoffice-desktopeditors (9.4.0-129) ...
+Configurando fonts-crosextra-carlito (20230309-2) ...
+Configurando fonts-takao-pgothic (00303.01-3ubuntu2) ...
+update-alternatives: utilizando /usr/share/fonts/truetype/takao-gothic/TakaoPGothic.ttf para proveer /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) en modo automático
+Configurando fonts-dejavu-extra (2.37-8build1) ...
+Configurando fonts-dejavu (2.37-8build1) ...
+Configurando onlyoffice-desktopeditors (9.4.0-129) ...
+Configurando fonts-takao-gothic (00303.01-3ubuntu2) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+Procesando disparadores para hicolor-icon-theme (0.18-2build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Procesando disparadores para fontconfig (2.17.1-3ubuntu1) ...
+OnlyOffice instalado correctamente.
+✅ OnlyOffice completado
+
+📦 Instalando KeePassXC...
+Instalando KeePassXC...
+Repositorio: «Types: deb
+URIs: https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu/
+Suites: resolute
+Components: main
+»
+Descripción:
+KeePassXC Password Manager (official upstream PPA)
+
+https://keepassxc.org/download/
+Más información: https://launchpad.net/~phoerious/+archive/ubuntu/keepassxc
+Añadiendo repositorio.
+Se encontró la entrada deb existente en /etc/apt/sources.list.d/phoerious-ubuntu-keepassxc-resolute.sources
+Obj:1 https://dl.google.com/linux/chrome-stable/deb stable InRelease
+Obj:2 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:3 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                  
+Obj:4 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:5 https://download.docker.com/linux/ubuntu resolute InRelease                                                                                                                            
+Obj:6 https://download.onlyoffice.com/repo/debian squeeze InRelease                                                                                                                          
+Obj:7 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:8 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:9 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:10 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                             
+Obj:11 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                                                              
+Obj:13 http://archive.ubuntu.com/ubuntu resolute-backports InRelease                                                                                
+Obj:14 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease                   
+Des:15 https://apt.fury.io/wez * InRelease                                                                
+Obj:12 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease           
+Obj:16 https://packages.cloud.google.com/apt cloud-sdk InRelease                
+Obj:17 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:18 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.666 B/s)
+Leyendo lista de paquetes... Hecho
+Obj:1 https://download.onlyoffice.com/repo/debian squeeze InRelease
+Obj:2 https://apt.releases.hashicorp.com resolute InRelease                                                                                                                                  
+Obj:3 https://download.virtualbox.org/virtualbox/debian resolute InRelease                                                                                                                   
+Obj:4 https://packages.microsoft.com/repos/code stable InRelease                                                                                                                             
+Obj:5 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                                         
+Obj:6 https://download.docker.com/linux/ubuntu resolute InRelease                                                                                                                            
+Obj:7 https://downloads.cursor.com/aptrepo stable InRelease                                                                                                                                  
+Obj:8 http://archive.ubuntu.com/ubuntu resolute InRelease                                                                                                                                    
+Obj:9 http://security.ubuntu.com/ubuntu resolute-security InRelease                                                                                                                          
+Obj:10 http://archive.ubuntu.com/ubuntu resolute-updates InRelease                                                                                                                           
+Des:11 https://apt.fury.io/wez * InRelease                                                                                                                                
+Obj:12 https://packages.cloud.google.com/apt cloud-sdk InRelease                                                                    
+Obj:13 https://ppa.launchpadcontent.net/agornostal/ulauncher/ubuntu resolute InRelease                    
+Obj:15 http://archive.ubuntu.com/ubuntu resolute-backports InRelease            
+Obj:16 https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu resolute InRelease
+Obj:14 https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_26.04  InRelease
+Obj:17 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute InRelease
+Obj:18 https://ppa.launchpadcontent.net/zhangsongcui3371/fastfetch/ubuntu resolute InRelease
+Descargados 5.722 B en 2s (3.378 B/s)
+Leyendo lista de paquetes... Hecho
+Leyendo lista de paquetes... Hecho
+Creando árbol de dependencias... Hecho
+Leyendo la información del estado... Hecho
+Resolviendo dependencias... Hecho
+Se instalarán los siguientes paquetes adicionales:
+  libargon2-1 libbotan-3-10 libminizip1t64 libqrencode4 libqt5concurrent5t64 libtspi1 libzxcvbn0
+Se instalarán los siguientes paquetes NUEVOS:
+  keepassxc libargon2-1 libbotan-3-10 libminizip1t64 libqrencode4 libqt5concurrent5t64 libtspi1 libzxcvbn0
+0 actualizados, 8 nuevos se instalarán, 0 para eliminar y 5 no actualizados.
+Se necesita descargar 12,6 MB de archivos.
+Se utilizarán 44,8 MB de espacio de disco adicional después de esta operación.
+Des:1 http://archive.ubuntu.com/ubuntu resolute/main amd64 libargon2-1 amd64 0~20190702+dfsg-5 [21,3 kB]
+Des:2 https://ppa.launchpadcontent.net/phoerious/keepassxc/ubuntu resolute/main amd64 keepassxc amd64 2.7.12-1ppa2~resolute1 [9.055 kB]
+Des:3 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libtspi1 amd64 0.3.15-1 [158 kB]
+Des:4 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libbotan-3-10 amd64 3.10.0+dfsg-2 [2.340 kB]
+Des:5 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libminizip1t64 amd64 1:1.3.dfsg+really1.3.1-1ubuntu3 [22,6 kB]
+Des:6 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqrencode4 amd64 4.1.1-2build1 [25,9 kB]
+Des:7 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt5concurrent5t64 amd64 5.15.18+dfsg-1ubuntu1 [36,1 kB]
+Des:8 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libzxcvbn0 amd64 2.6+dfsg-1build1 [958 kB]
+Descargados 12,6 MB en 3s (4.426 kB/s)                                  
+Seleccionando el paquete libargon2-1:amd64 previamente no seleccionado.
+(Leyendo la base de datos ... 223357 ficheros o directorios instalados actualmente.)
+Preparando para desempaquetar .../0-libargon2-1_0~20190702+dfsg-5_amd64.deb ...
+Desempaquetando libargon2-1:amd64 (0~20190702+dfsg-5) ...
+Seleccionando el paquete libtspi1 previamente no seleccionado.
+Preparando para desempaquetar .../1-libtspi1_0.3.15-1_amd64.deb ...
+Desempaquetando libtspi1 (0.3.15-1) ...
+Seleccionando el paquete libbotan-3-10:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../2-libbotan-3-10_3.10.0+dfsg-2_amd64.deb ...
+Desempaquetando libbotan-3-10:amd64 (3.10.0+dfsg-2) ...
+Seleccionando el paquete libminizip1t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../3-libminizip1t64_1%3a1.3.dfsg+really1.3.1-1ubuntu3_amd64.deb ...
+Desempaquetando libminizip1t64:amd64 (1:1.3.dfsg+really1.3.1-1ubuntu3) ...
+Seleccionando el paquete libqrencode4:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../4-libqrencode4_4.1.1-2build1_amd64.deb ...
+Desempaquetando libqrencode4:amd64 (4.1.1-2build1) ...
+Seleccionando el paquete libqt5concurrent5t64:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../5-libqt5concurrent5t64_5.15.18+dfsg-1ubuntu1_amd64.deb ...
+Desempaquetando libqt5concurrent5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Seleccionando el paquete libzxcvbn0:amd64 previamente no seleccionado.
+Preparando para desempaquetar .../6-libzxcvbn0_2.6+dfsg-1build1_amd64.deb ...
+Desempaquetando libzxcvbn0:amd64 (2.6+dfsg-1build1) ...
+Seleccionando el paquete keepassxc previamente no seleccionado.
+Preparando para desempaquetar .../7-keepassxc_2.7.12-1ppa2~resolute1_amd64.deb ...
+Desempaquetando keepassxc (2.7.12-1ppa2~resolute1) ...
+Configurando libtspi1 (0.3.15-1) ...
+Configurando libzxcvbn0:amd64 (2.6+dfsg-1build1) ...
+Configurando libbotan-3-10:amd64 (3.10.0+dfsg-2) ...
+Configurando libqrencode4:amd64 (4.1.1-2build1) ...
+Configurando libqt5concurrent5t64:amd64 (5.15.18+dfsg-1ubuntu1) ...
+Configurando libargon2-1:amd64 (0~20190702+dfsg-5) ...
+Configurando libminizip1t64:amd64 (1:1.3.dfsg+really1.3.1-1ubuntu3) ...
+Configurando keepassxc (2.7.12-1ppa2~resolute1) ...
+Procesando disparadores para desktop-file-utils (0.28-1build1) ...
+Procesando disparadores para hicolor-icon-theme (0.18-2build1) ...
+Procesando disparadores para gnome-menus (3.38.1-1ubuntu1) ...
+Procesando disparadores para libc-bin (2.43-2ubuntu2.3) ...
+Procesando disparadores para man-db (2.13.1-1build1) ...
+Procesando disparadores para shared-mime-info (2.4-5build3) ...
+KeePassXC instalado correctamente.
+✅ KeePassXC completado
+
+
+🎉 ¡Instalación completada!
