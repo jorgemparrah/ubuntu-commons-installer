@@ -149,6 +149,7 @@ run_suite "tests/test_local_ai_ui_installers.sh" bash tests/test_local_ai_ui_ins
 run_suite "tests/test_nerd_font_configure.sh" bash tests/test_nerd_font_configure.sh
 run_suite "tests/test_orca_installer.sh" bash tests/test_orca_installer.sh
 run_suite "tests/test_omniroute_installer.sh" bash tests/test_omniroute_installer.sh
+run_suite "tests/test_apt_sources_repair.sh" bash tests/test_apt_sources_repair.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then

@@ -169,6 +169,7 @@ jobs:
           - nerd-font-configure
           - orca-installer
           - omniroute-installer
+          - apt-sources-repair
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -656,6 +657,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I79"
             cmd: bash tests/test_omniroute_installer.sh
+          - case: apt-sources-repair
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I80"
+            cmd: bash tests/test_apt_sources_repair.sh
     steps:
       - uses: actions/checkout@v7
 

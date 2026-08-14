@@ -10,7 +10,7 @@
 # línea 'deb [...]' simple) — se escribe con
 # `apt_vendor_repo_write_list` pasándole el contenido completo del
 # archivo `.sources` (varias líneas), en vez de una sola línea 'deb'. El
-# codename de la distro sigue siendo dinámico (Suites: $(lsb_release -cs)),
+# codename de la distro sigue siendo dinámico (Suites: ${suite}),
 # igual que Terraform.
 
 set -Eeuo pipefail
@@ -62,12 +62,27 @@ install_tool() {
 
     echo "Instalando ${TOOL_NAME}..."
 
+    local suite
+    suite="$(lsb_release -cs)"
+
+    # Microsoft puede tardar meses en publicar para un release nuevo de
+    # Ubuntu. Si se escribe igual el repositorio, queda un 404 permanente
+    # que hace fallar 'apt-get update' para TODO el sistema y degrada al
+    # resto de los instaladores (pasó de verdad con 26.04 "resolute", ver
+    # docs/ROADMAP.md Hito 19). Mejor no dejar nada escrito y decirlo.
+    if ! apt_vendor_repo_suite_available "${AZURE_CLI_REPO_URL}" "${suite}"; then
+        echo "Microsoft todavía no publica el repositorio de ${TOOL_NAME} para esta versión de Ubuntu (${suite})." >&2
+        echo "No se agregó ningún repositorio, para no romper 'apt-get update' del sistema." >&2
+        echo "Alternativas: instalarlo con el script oficial de Microsoft, o reintentar cuando publiquen para ${suite}." >&2
+        return 1
+    fi
+
     apt_vendor_repo_ensure_gnupg
     apt_vendor_repo_fetch_key_dearmored "${AZURE_CLI_KEY_URL}" "${AZURE_CLI_KEYRING}"
     apt_vendor_repo_write_list "${AZURE_CLI_SOURCES}" \
 "Types: deb
 URIs: ${AZURE_CLI_REPO_URL}
-Suites: $(lsb_release -cs)
+Suites: ${suite}
 Components: main
 Architectures: $(dpkg --print-architecture)
 Signed-by: ${AZURE_CLI_KEYRING}"
@@ -95,7 +110,7 @@ reinstall_tool() {
 # Function to update (para el estado OUTDATED)
 update_tool() {
     echo "Actualizando ${TOOL_NAME}..."
-    sudo apt-get update
+    apt_update || true
     sudo apt-get install --only-upgrade -y "${PACKAGE_NAME}"
     echo "${TOOL_NAME} actualizado correctamente."
 }

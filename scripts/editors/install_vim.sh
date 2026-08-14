@@ -53,7 +53,10 @@ check_status() {
 # Function to install
 install_tool() {
     echo "Instalando ${TOOL_NAME}..."
-    sudo apt update
+    # Un repositorio de terceros roto no debe impedir instalar/actualizar
+    # Vim (ver apt_update en scripts/lib/apt.sh). Este instalador es
+    # autocontenido a propósito, así que el patrón va en línea.
+    sudo apt update || true
     sudo apt install -y "${PACKAGE_NAME}"
     echo "${TOOL_NAME} instalado correctamente."
 }
@@ -76,7 +79,10 @@ reinstall_tool() {
 # Function to update (para el estado OUTDATED)
 update_tool() {
     echo "Actualizando ${TOOL_NAME}..."
-    sudo apt update
+    # Un repositorio de terceros roto no debe impedir instalar/actualizar
+    # Vim (ver apt_update en scripts/lib/apt.sh). Este instalador es
+    # autocontenido a propósito, así que el patrón va en línea.
+    sudo apt update || true
     sudo apt install --only-upgrade -y "${PACKAGE_NAME}"
     echo "${TOOL_NAME} actualizado correctamente."
 }

@@ -75,9 +75,19 @@ EOF
 EOF
     chmod +x "${UCI_MOCK_BIN}/sudo"
 
+    cat > "${UCI_MOCK_BIN}/gpg" <<EOF
+#!/usr/bin/env bash
+echo "gpg \$*" >> "${UCI_MOCK_LOG}"
+cat > /dev/null
+echo "clave-falsa-dearmored"
+exit 0
+EOF
+    chmod +x "${UCI_MOCK_BIN}/gpg"
+
     cat > "${UCI_MOCK_BIN}/curl" <<EOF
 #!/usr/bin/env bash
 echo "curl \$*" >> "${UCI_MOCK_LOG}"
+echo "clave-falsa-armored"
 prev=""
 for arg in "\$@"; do
     if [[ "\${prev}" == "-o" ]]; then
@@ -168,6 +178,18 @@ if grep -q "tee /etc/apt/sources.list.d/opentofu.list" "${UCI_MOCK_LOG}"; then
 else
     fail "'install' no escribió el repo esperado. Log: $(cat "${UCI_MOCK_LOG}")"
 fi
+# Guarda de regresión (bug real del 2026-08-14, ver docs/ROADMAP.md Hito
+# 19): la clave de este proveedor viene en ASCII armor y el keyring de
+# destino es un '.gpg'. Si no se desarma, APT la IGNORA en silencio
+# ("unsupported filetype"), el repositorio queda sin firmar y desde ahí
+# 'apt-get update' falla para TODO el sistema, degradando al resto de los
+# instaladores. Esta afirmación es la que faltaba para detectarlo.
+if grep -q "gpg --dearmor" "${UCI_MOCK_LOG}"; then
+    pass "'install' desarma la clave ASCII armor antes de guardarla como .gpg"
+else
+    fail "'install' NO invocó 'gpg --dearmor': APT ignoraría el keyring y el repo quedaría sin firmar. Log: $(cat "${UCI_MOCK_LOG}")"
+fi
+
 if grep -q "apt-get install -y ${UCI_PKG_NAME}" "${UCI_MOCK_LOG}"; then
     pass "'install' instala el paquete '${UCI_PKG_NAME}'"
 else

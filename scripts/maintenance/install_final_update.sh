@@ -27,6 +27,9 @@ set -Eeuo pipefail
 
 UCI_FINAL_UPDATE_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../lib/installer_cli.sh
+# shellcheck source=../lib/apt.sh
+source "${UCI_FINAL_UPDATE_SCRIPT_DIR}/../lib/apt.sh"
+# shellcheck source=../lib/installer_cli.sh
 source "${UCI_FINAL_UPDATE_SCRIPT_DIR}/../lib/installer_cli.sh"
 
 TOOL_NAME="Final System Update"
@@ -51,7 +54,7 @@ install_tool() {
     echo "Instalando ${TOOL_NAME}..."
     echo "Esto actualizará y limpiará el sistema."
 
-    sudo apt update
+    apt_update || true
     sudo apt upgrade -y
     sudo apt autoremove -y
 

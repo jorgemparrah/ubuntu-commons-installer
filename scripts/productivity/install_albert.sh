@@ -84,6 +84,18 @@ install_tool() {
     local repo_url
     repo_url="$(albert_repo_url)"
 
+    # El repositorio de Albert en OBS tiene una ruta distinta por release
+    # de Ubuntu, y OBS puede no haber publicado todavía para el release
+    # actual. Escribir el repositorio igual dejaría un 404 permanente que
+    # hace fallar 'apt-get update' para todo el sistema (mismo problema
+    # real que tuvo Azure CLI en 26.04, ver docs/ROADMAP.md Hito 19). Es
+    # un repositorio plano, de ahí el "/" como suite.
+    if ! apt_vendor_repo_suite_available "${repo_url}" "/"; then
+        echo "El repositorio de ${TOOL_NAME} no está publicado para esta versión de Ubuntu (${repo_url})." >&2
+        echo "No se agregó ningún repositorio, para no romper 'apt-get update' del sistema." >&2
+        return 1
+    fi
+
     apt_vendor_repo_ensure_gnupg
     apt_vendor_repo_fetch_key_dearmored "${repo_url}Release.key" "${ALBERT_KEYRING}"
     apt_vendor_repo_write_list "${ALBERT_REPO_LIST}" \
@@ -112,7 +124,7 @@ reinstall_tool() {
 # Function to update (para el estado OUTDATED)
 update_tool() {
     echo "Actualizando ${TOOL_NAME}..."
-    sudo apt-get update
+    apt_update || true
     sudo apt-get install --only-upgrade -y "${PACKAGE_NAME}"
     echo "${TOOL_NAME} actualizado correctamente."
 }

@@ -58,7 +58,7 @@ flatpak_app_installed() {
 # idempotente: si el remote ya está, no falla ni lo duplica.
 flatpak_ensure_flathub() {
     if ! command -v flatpak &> /dev/null; then
-        sudo apt-get update
+        apt_update || true
         sudo apt-get install -y flatpak
     fi
 

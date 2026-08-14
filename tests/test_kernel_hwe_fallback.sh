@@ -95,6 +95,48 @@ for forbidden in "update-grub" "grub-mkconfig" "reboot" "shutdown"; do
     fi
 done
 
+echo ""
+echo "== get_latest_hwe_kernel NO contamina stdout con la salida de 'apt update' =="
+# Bug real del 2026-08-14 (ver docs/ROADMAP.md Hito 19): 'sudo apt update'
+# imprimía a stdout DENTRO de la sustitución de comandos con que
+# install_tool captura esta función, así que el "nombre de paquete"
+# terminaba siendo toda la salida de apt y la instalación fallaba con
+# "No se ha podido localizar el paquete Obj:1 https://...". Rompía en
+# cualquier máquina, con repositorios sanos o no.
+UCI_KERNEL_MOCK_BIN="$(mktemp -d)"
+cat > "${UCI_KERNEL_MOCK_BIN}/sudo" <<'MOCK'
+#!/usr/bin/env bash
+"$@"
+MOCK
+cat > "${UCI_KERNEL_MOCK_BIN}/apt" <<'MOCK'
+#!/usr/bin/env bash
+# Emula el ruido real de 'apt update' y su advertencia por stdout.
+if [[ "$1" == "update" ]]; then
+    echo "Obj:1 http://archive.ubuntu.com/ubuntu resolute InRelease"
+    echo "Des:2 https://ejemplo.invalid bookworm InRelease [20,3 kB]"
+    echo "WARNING: apt does not have a stable CLI interface."
+    exit 0
+fi
+# 'apt list --upgradable' sin candidatos: fuerza la rama de fallback.
+exit 0
+MOCK
+chmod +x "${UCI_KERNEL_MOCK_BIN}/sudo" "${UCI_KERNEL_MOCK_BIN}/apt"
+
+UCI_KERNEL_RESULT="$(PATH="${UCI_KERNEL_MOCK_BIN}:${PATH}" bash -c "source '${INSTALL_KERNEL_SH}'; get_latest_hwe_kernel" 2>/dev/null)"
+rm -rf "${UCI_KERNEL_MOCK_BIN}"
+
+if [[ "${UCI_KERNEL_RESULT}" != *"Obj:"* && "${UCI_KERNEL_RESULT}" != *"WARNING"* && "${UCI_KERNEL_RESULT}" != *"Des:"* ]]; then
+    pass "stdout no arrastra la salida de 'apt update'"
+else
+    fail "stdout quedó contaminado con la salida de 'apt update': el nombre de paquete sería inutilizable. Obtenido: '${UCI_KERNEL_RESULT}'"
+fi
+
+if [[ "${UCI_KERNEL_RESULT}" == linux-generic-hwe-* ]] && [[ "$(printf '%s' "${UCI_KERNEL_RESULT}" | grep -c .)" -eq 1 ]]; then
+    pass "devuelve exactamente un nombre de paquete usable ('${UCI_KERNEL_RESULT}')"
+else
+    fail "debería devolver una sola línea con el nombre del paquete. Obtenido: '${UCI_KERNEL_RESULT}'"
+fi
+
 print_test_summary
 echo "Nota: la instalación real de un kernel HWE requiere validación manual"
 echo "en una VM o máquina de prueba dedicada (ver docs/UBUNTU_COMPATIBILITY.md)."

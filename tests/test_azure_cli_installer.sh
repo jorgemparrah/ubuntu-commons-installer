@@ -30,7 +30,7 @@ UCI_MOCK_LOG=""
 
 # setup_mock_bin <dpkg_state: ii|missing> [<upgradable: yes|no>] [<binary: auto|yes|no>]
 setup_mock_bin() {
-    local dpkg_state="$1" upgradable="${2:-no}" binary="${3:-auto}"
+    local dpkg_state="$1" upgradable="${2:-no}" binary="${3:-auto}" suite_available="${4:-yes}"
     UCI_MOCK_BIN="$(mktemp -d)"
     UCI_MOCK_LOG="$(mktemp)"
 
@@ -87,9 +87,18 @@ exit 0
 EOF
     chmod +x "${UCI_MOCK_BIN}/gpg"
 
+    # Dos usos distintos de curl: el HEAD que comprueba si el proveedor
+    # publica para esta versión de Ubuntu (apt_vendor_repo_suite_available)
+    # y la descarga de la clave. El primero debe poder fallar por separado.
     cat > "${UCI_MOCK_BIN}/curl" <<EOF
 #!/usr/bin/env bash
 echo "curl \$*" >> "${UCI_MOCK_LOG}"
+for arg in "\$@"; do
+    if [[ "\${arg}" == "--head" ]]; then
+        [[ "${suite_available}" == "yes" ]] && exit 0
+        exit 22
+    fi
+done
 echo "clave-falsa-armored"
 exit 0
 EOF
@@ -144,8 +153,8 @@ teardown_mock_bin() {
 RUN_CODE=0
 RUN_OUTPUT=""
 run_installer() {
-    local action="$1" dpkg_state="$2" upgradable="${3:-no}" binary="${4:-auto}"
-    setup_mock_bin "${dpkg_state}" "${upgradable}" "${binary}"
+    local action="$1" dpkg_state="$2" upgradable="${3:-no}" binary="${4:-auto}" suite_available="${5:-yes}"
+    setup_mock_bin "${dpkg_state}" "${upgradable}" "${binary}" "${suite_available}"
     set +e
     RUN_OUTPUT="$(PATH="${UCI_MOCK_BIN}:${PATH}" bash "${INSTALL_SH}" "${action}" 2>&1)"
     RUN_CODE=$?
@@ -273,6 +282,31 @@ if grep -q "purge" "${UCI_MOCK_LOG}"; then
     fail "'reinstall' no debería pasar por 'purge'"
 else
     pass "'reinstall' evita el ciclo completo de purge+autoremove"
+fi
+teardown_mock_bin
+
+echo ""
+echo "== 11. install rechaza (sin escribir nada) si el proveedor no publica para esta versión de Ubuntu =="
+# Hallazgo real del 2026-08-14 (ver docs/ROADMAP.md Hito 19): en Ubuntu
+# 26.04 "resolute" Microsoft no publicaba repositorio, y el instalador lo
+# escribía igual. El 404 resultante hacía fallar 'apt-get update' de forma
+# permanente y con eso TODOS los demás instaladores APT: un proveedor
+# rezagado rompía la máquina entera. Ahora se comprueba antes.
+run_installer "install" "missing" "no" "auto" "no"
+if [[ "${RUN_CODE}" -ne 0 ]]; then
+    pass "'install' falla si el proveedor no publica para esta versión de Ubuntu"
+else
+    fail "'install' debería fallar si no hay repositorio para esta versión (código ${RUN_CODE}). Salida: ${RUN_OUTPUT}"
+fi
+if grep -q "tee /etc/apt/sources.list.d/azure-cli.sources" "${UCI_MOCK_LOG}"; then
+    fail "'install' escribió el repositorio pese a no estar publicado: eso es lo que rompe 'apt-get update' del sistema. Log: $(cat "${UCI_MOCK_LOG}")"
+else
+    pass "'install' NO deja ningún archivo de repositorio escrito cuando no está publicado"
+fi
+if [[ "${RUN_OUTPUT}" == *"todavía no publica"* ]]; then
+    pass "'install' explica el motivo real en vez de un error genérico"
+else
+    fail "'install' debería explicar que el proveedor no publica para esta versión. Salida: ${RUN_OUTPUT}"
 fi
 teardown_mock_bin
 

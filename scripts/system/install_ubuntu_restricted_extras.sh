@@ -45,7 +45,7 @@ check_status() {
 # comportamiento que ya tenía el agrupador original de Multimedia Tools).
 install_tool() {
     echo "Instalando ${TOOL_NAME}..."
-    sudo apt-get update
+    apt_update || true
     sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "${PACKAGE_NAME}"
     echo "${TOOL_NAME} instalado correctamente."
 }
@@ -67,7 +67,7 @@ reinstall_tool() {
 # Function to update (para el estado OUTDATED)
 update_tool() {
     echo "Actualizando ${TOOL_NAME}..."
-    sudo apt-get update
+    apt_update || true
     sudo DEBIAN_FRONTEND=noninteractive apt-get install --only-upgrade -y "${PACKAGE_NAME}"
     echo "${TOOL_NAME} actualizado correctamente."
 }

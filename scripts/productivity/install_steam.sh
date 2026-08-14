@@ -61,7 +61,7 @@ install_tool() {
     if ! dpkg --print-foreign-architectures | grep -qx "i386"; then
         echo "Habilitando la arquitectura i386 (requerida por Steam)..."
         sudo dpkg --add-architecture i386
-        sudo apt-get update
+        apt_update || true
     fi
 
     apt_install_packages "${PACKAGE_NAME}"
@@ -85,7 +85,7 @@ reinstall_tool() {
 # Function to update (para el estado OUTDATED)
 update_tool() {
     echo "Actualizando ${TOOL_NAME}..."
-    sudo apt-get update
+    apt_update || true
     sudo apt-get install --only-upgrade -y "${PACKAGE_NAME}"
     echo "${TOOL_NAME} actualizado correctamente."
 }

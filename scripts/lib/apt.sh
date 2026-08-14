@@ -53,14 +53,50 @@ apt_all_packages_installed() {
     return 0
 }
 
+# apt_update
+# `apt-get update` que NO es fatal si algún repositorio falla.
+#
+# Motivo (hallazgo de la ejecución real del 2026-08-14, ver
+# docs/ROADMAP.md Hito 19): `apt-get update` devuelve un código distinto
+# de cero si **cualquier** repositorio del sistema está roto, aunque no
+# tenga nada que ver con lo que se está instalando. Como los instaladores
+# corren con `set -Eeuo pipefail`, un solo repositorio de terceros mal
+# configurado hacía fallar a TODOS los instaladores que pasan por APT: en
+# esa corrida, un repositorio roto dejó sin instalar hasta `cmatrix`, que
+# viene de los repositorios de Ubuntu y no tenía problema alguno.
+#
+# Ahora el fallo se reporta de forma visible y se continúa: APT ya sabe
+# trabajar con las listas que tenga disponibles, y es preferible instalar
+# con una lista algo desactualizada a no poder instalar nada. Quien
+# necesite tratar el fallo como fatal puede mirar el código de retorno,
+# que se preserva.
+apt_update() {
+    if sudo apt-get update; then
+        return 0
+    fi
+
+    local code=$?
+    echo "" >&2
+    echo "AVISO: 'apt-get update' reportó errores (típicamente un repositorio de" >&2
+    echo "terceros roto o sin paquetes para esta versión de Ubuntu). Se continúa" >&2
+    echo "con las listas de paquetes disponibles; revisá la salida de arriba para" >&2
+    echo "ver qué repositorio conviene corregir o quitar." >&2
+    echo "" >&2
+    return "${code}"
+}
+
 # apt_install_packages <paquete...>
-# `apt-get update` + `apt-get install -y` de todos los paquetes dados.
+# `apt-get update` (tolerante, ver apt_update) + `apt-get install -y` de
+# todos los paquetes dados.
 # Los argumentos se preservan como parámetros posicionales normales (sin
 # `eval`, sin concatenar a una sola cadena): quien llama puede pasar un
 # array expandido (`apt_install_packages "${PKGS[@]}"`) y los espacios en
 # un nombre de paquete (si alguna vez los hubiera) se preservarían igual.
 apt_install_packages() {
-    sudo apt-get update
+    # El '|| true' es deliberado: un repositorio ajeno roto no debe
+    # impedir instalar. Si el paquete pedido realmente no se puede
+    # resolver, el 'apt-get install' de abajo falla igual y ese sí corta.
+    apt_update || true
     sudo apt-get install -y "$@"
 }
 

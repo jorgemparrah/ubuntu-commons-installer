@@ -28,7 +28,7 @@ UCI_APT_VENDOR_REPO_SH_LOADED=1
 # 'gpg --dearmor' requiere el paquete gnupg; no se puede asumir presente.
 apt_vendor_repo_ensure_gnupg() {
     if ! command -v gpg &> /dev/null; then
-        sudo apt-get update
+        apt_update || true
         sudo apt-get install -y gnupg
     fi
 }
@@ -110,4 +110,32 @@ apt_vendor_repo_fetch_key_plain() {
 apt_vendor_repo_write_list() {
     local list_path="$1" line="$2"
     echo "${line}" | sudo tee "${list_path}" > /dev/null
+}
+
+# apt_vendor_repo_suite_available <repo_url> <suite>
+# ¿El proveedor publica realmente esa suite/release? Devuelve 0 si el
+# archivo Release responde, 1 si no.
+#
+# Existe por un hallazgo de la primera ejecución real (2026-08-14, ver
+# docs/ROADMAP.md Hito 19): en Ubuntu 26.04 el instalador de Azure CLI
+# escribía un repositorio con 'Suites: resolute', pero Microsoft todavía
+# no publica para ese release. El resultado era un 404 permanente que
+# hacía fallar 'apt-get update' para TODO el sistema, degradando a todos
+# los demás instaladores — un proveedor rezagado rompía la máquina entera.
+#
+# Comprobar antes de escribir el archivo permite fallar limpio y no dejar
+# nada roto atrás. Soporta tanto repositorios normales (dists/<suite>/)
+# como repositorios planos (suite "/").
+apt_vendor_repo_suite_available() {
+    local repo_url="$1" suite="$2"
+    local base="${repo_url%/}"
+    local release_url
+
+    if [[ "${suite}" == "/" ]]; then
+        release_url="${base}/Release"
+    else
+        release_url="${base}/dists/${suite}/Release"
+    fi
+
+    curl -fsS --head --max-time 20 "${release_url}" > /dev/null 2>&1
 }

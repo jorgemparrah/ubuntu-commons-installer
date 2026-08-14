@@ -394,6 +394,8 @@ Uso:
   ./setup.sh list --profile <nombre>   Filtra la lista a un perfil
   ./setup.sh info                 Igual que 'list', agregando el estado real de instalación de cada herramienta
   ./setup.sh info --profile <nombre>   Filtra 'info' a un perfil
+  ./setup.sh repair-apt          Reporta los repositorios APT rotos (no modifica nada)
+  ./setup.sh repair-apt --apply  Respalda y deshabilita los repositorios APT rotos
 
 Perfiles disponibles (docs/ROADMAP.md, Hito 13):
   minimal, cli, desktop, developer, workstation, full,
@@ -418,6 +420,20 @@ cmd_doctor() {
     if ! doctor_run "${UCI_HOME_DIR}" "$@"; then
         exit 1
     fi
+}
+
+cmd_repair_apt() {
+    # Un repositorio APT roto hace que 'apt-get update' devuelva error de
+    # forma permanente y degrada a todos los instaladores APT (hallazgo de
+    # la primera ejecución real, ver docs/ROADMAP.md Hito 19). Este
+    # comando lo detecta y —solo si se pide con --apply— respalda y
+    # deshabilita los archivos culpables. Nunca borra nada.
+    local script="${UCI_ROOT_DIR}/scripts/maintenance/repair_apt_sources.sh"
+    if [[ ! -x "${script}" ]]; then
+        log_error "No se encontró ${script}"
+        return 1
+    fi
+    "${script}" "$@"
 }
 
 cmd_backup() {
@@ -770,6 +786,9 @@ main() {
             ;;
         info)
             cmd_info "$@"
+            ;;
+        repair-apt)
+            cmd_repair_apt "$@"
             ;;
         *)
             log_error "Comando desconocido: '${cmd}'"

@@ -4,7 +4,7 @@
 # Prueba simulada (mocks) de scripts/editors/install_vscodium.sh (Hito
 # 34, ver docs/ROADMAP.md). Mismo mecanismo apt_vendor_repo_fetch_file_plain
 # que Brave/ngrok: VSCodium publica su clave ya lista para 'signed-by'
-# (sin 'gpg --dearmor') y un archivo `.sources` completo en formato
+# (desarmada con 'gpg --dearmor') y un archivo `.sources` completo en formato
 # DEB822 — ambos se descargan a un temporal y se instalan de forma
 # atómica con 'sudo install -D'. No instala nada real:
 # apt-get/apt/dpkg/sudo/curl/install se interceptan con comandos falsos en
@@ -78,9 +78,19 @@ EOF
 EOF
     chmod +x "${UCI_MOCK_BIN}/sudo"
 
+    cat > "${UCI_MOCK_BIN}/gpg" <<EOF
+#!/usr/bin/env bash
+echo "gpg \$*" >> "${UCI_MOCK_LOG}"
+cat > /dev/null
+echo "clave-falsa-dearmored"
+exit 0
+EOF
+    chmod +x "${UCI_MOCK_BIN}/gpg"
+
     cat > "${UCI_MOCK_BIN}/curl" <<EOF
 #!/usr/bin/env bash
 echo "curl \$*" >> "${UCI_MOCK_LOG}"
+echo "clave-falsa-armored"
 prev=""
 for arg in "\$@"; do
     if [[ "\${prev}" == "-o" ]]; then
@@ -173,6 +183,18 @@ if grep -q "install .*vscodium.sources" "${UCI_MOCK_LOG}"; then
 else
     fail "'install' no instaló el archivo .sources en la ruta final esperada. Log: $(cat "${UCI_MOCK_LOG}")"
 fi
+# Guarda de regresión (bug real del 2026-08-14, ver docs/ROADMAP.md Hito
+# 19): la clave de este proveedor viene en ASCII armor y el keyring de
+# destino es un '.gpg'. Si no se desarma, APT la IGNORA en silencio
+# ("unsupported filetype"), el repositorio queda sin firmar y desde ahí
+# 'apt-get update' falla para TODO el sistema, degradando al resto de los
+# instaladores. Esta afirmación es la que faltaba para detectarlo.
+if grep -q "gpg --dearmor" "${UCI_MOCK_LOG}"; then
+    pass "'install' desarma la clave ASCII armor antes de guardarla como .gpg"
+else
+    fail "'install' NO invocó 'gpg --dearmor': APT ignoraría el keyring y el repo quedaría sin firmar. Log: $(cat "${UCI_MOCK_LOG}")"
+fi
+
 if grep -q "apt-get install -y ${UCI_PKG_NAME}" "${UCI_MOCK_LOG}"; then
     pass "'install' instala el paquete '${UCI_PKG_NAME}'"
 else

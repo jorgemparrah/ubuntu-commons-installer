@@ -72,9 +72,22 @@ resolve_hwe_fallback_package_name() {
 }
 
 # Function to get the latest available HWE kernel
+#
+# ATENCIÓN: esta función SOLO debe imprimir el nombre del paquete en
+# stdout, porque quien la llama la usa dentro de una sustitución de
+# comandos. Todo lo demás va a stderr.
+#
+# Bug real corregido el 2026-08-14 (ver docs/ROADMAP.md, Hito 19): el
+# 'apt update' de acá abajo imprimía a stdout DENTRO de esa sustitución,
+# así que el nombre del paquete terminaba siendo toda la salida de apt y
+# la instalación fallaba con "No se ha podido localizar el paquete Obj:1
+# https://...". Fallaba en cualquier máquina, con repositorios sanos o
+# no; se detectó en la primera ejecución real.
 get_latest_hwe_kernel() {
-    # Update package list to get latest available kernels
-    sudo apt update
+    # Update package list to get latest available kernels.
+    # '>&2': ver la advertencia de arriba. '|| true': un repositorio de
+    # terceros roto no debe impedir resolver el kernel.
+    sudo apt update >&2 || true
 
     # Find the latest HWE kernel available
     local latest_kernel
@@ -137,7 +150,8 @@ update_tool() {
     fi
 
     echo "Actualizando ${TOOL_NAME}..."
-    sudo apt update
+    # Un repositorio de terceros roto no debe impedir actualizar el kernel.
+    sudo apt update || true
 
     if apt list --upgradable 2>/dev/null | grep -q "linux-generic-hwe"; then
         sudo apt upgrade -y linux-generic-hwe* linux-headers-generic linux-firmware
