@@ -25,6 +25,8 @@ source "${UCI_DOCTOR_SCRIPT_DIR}/../lib/logging.sh"
 source "${UCI_DOCTOR_SCRIPT_DIR}/../lib/runtime.sh"
 # shellcheck source=../lib/tools_catalog.sh
 source "${UCI_DOCTOR_SCRIPT_DIR}/../lib/tools_catalog.sh"
+# shellcheck source=../lib/apt_sources.sh
+source "${UCI_DOCTOR_SCRIPT_DIR}/../lib/apt_sources.sh"
 
 # Rutas que pueden ya existir en un /home reutilizado.
 # Ver docs/adr/0003-migracion-nvm-sin-borrado-directo.md (apéndice).
@@ -344,6 +346,43 @@ doctor_check_broken_symlinks() {
     return 0
 }
 
+# doctor_check_apt_keyrings <verbose>
+# Reporta repositorios APT cuya clave GPG está mal configurada, mediante
+# una revisión ESTÁTICA de archivos: no corre 'apt-get update' (eso
+# escribiría en /var/lib/apt/lists y pediría sudo, y Doctor nunca modifica
+# nada — AGENT.md §10), no usa la red y no necesita permisos.
+#
+# Existe por un hallazgo real (2026-08-14, ver docs/ROADMAP.md Hito 19):
+# un keyring en ASCII armor guardado con extensión '.gpg' hace que APT lo
+# ignore y el repositorio quede sin firmar, con lo cual 'apt-get update'
+# empieza a fallar de forma permanente y degrada TODOS los instaladores
+# APT. El síntoma culpa al repositorio, no al keyring, así que era muy
+# difícil de diagnosticar sin esta pista.
+doctor_check_apt_keyrings() {
+    local verbose="$1"
+    local problems=""
+    problems="$(apt_sources_keyring_problems 2>/dev/null || true)"
+
+    local count=0
+    if [[ -n "${problems}" ]]; then
+        count="$(printf '%s\n' "${problems}" | grep -c .)"
+    fi
+
+    doctor_line "Claves GPG de repositorios APT:" "${count} problema(s) detectado(s)"
+
+    if [[ "${count}" -gt 0 ]]; then
+        local line kind repo_file keyring detail
+        while IFS='|' read -r kind repo_file keyring detail; do
+            [[ -z "${kind}" ]] && continue
+            echo "  ✗ ${repo_file}"
+            echo "    ${kind}: ${keyring}"
+            echo "    ${detail}"
+        done <<< "${problems}"
+        echo "    Para limpiar los repositorios que ya estén rotos: ./setup.sh repair-apt"
+    fi
+    return 0
+}
+
 # doctor_run <home_dir> [--verbose|-v]
 # Nunca modifica el sistema. Retorna != 0 solo por una opción inválida
 # (error de invocación), nunca porque falte alguna herramienta.
@@ -397,6 +436,7 @@ doctor_run() {
     doctor_check_executables "${UCI_DOCTOR_REPO_ROOT}" "${verbose}"
     doctor_check_shared_dependencies
     doctor_check_broken_symlinks "${home_dir}" "${verbose}"
+    doctor_check_apt_keyrings "${verbose}"
     echo ""
     echo "Versiones de runtime (Mise):"
     runtime_status_all "${home_dir}"

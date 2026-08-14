@@ -65,7 +65,13 @@ install_tool() {
 
     echo "Instalando ${TOOL_NAME}..."
 
-    apt_vendor_repo_fetch_file_plain "${VSCODIUM_KEY_URL}" "${VSCODIUM_KEYRING}"
+    # La clave de VSCodium viene en ASCII armor pese a llamarse .gpg, y
+    # el vscodium.sources de upstream fija
+    # 'Signed-by: /usr/share/keyrings/vscodium.gpg', así que la ruta no se
+    # puede cambiar: hay que desarmarla en ese mismo destino. Sin esto APT
+    # la ignora y el repositorio queda sin firmar (mismo bug que ngrok,
+    # ver docs/ROADMAP.md Hito 19).
+    apt_vendor_repo_fetch_key_dearmored "${VSCODIUM_KEY_URL}" "${VSCODIUM_KEYRING}"
     apt_vendor_repo_fetch_file_plain "${VSCODIUM_SOURCES_URL}" "${VSCODIUM_SOURCES_LIST}"
     apt_install_packages "${PACKAGE_NAME}"
 
@@ -90,7 +96,7 @@ reinstall_tool() {
 # Function to update (para el estado OUTDATED)
 update_tool() {
     echo "Actualizando ${TOOL_NAME}..."
-    sudo apt-get update
+    apt_update || true
     sudo apt-get install --only-upgrade -y "${PACKAGE_NAME}"
     echo "${TOOL_NAME} actualizado correctamente."
 }

@@ -11,7 +11,7 @@
 # se confirmó en vivo (`curl` + `file`) que la clave GPG primaria YA está
 # en formato binario/dearmorado (a diferencia de Terraform/Azure CLI/
 # Google Cloud CLI), así que se usa
-# `apt_vendor_repo_fetch_file_plain` (mismo helper que Brave/VSCodium)
+# `apt_vendor_repo_fetch_key_dearmored` (la clave viene en ASCII armor)
 # para la clave, no `apt_vendor_repo_fetch_key_dearmored`. La línea de
 # repositorio tampoco depende del codename de la distro: el script oficial
 # fija distro "any"/componente "main" siempre, para cualquier versión de
@@ -66,7 +66,10 @@ install_tool() {
 
     echo "Instalando ${TOOL_NAME}..."
 
-    apt_vendor_repo_fetch_file_plain "${OPENTOFU_KEY_URL}" "${OPENTOFU_KEYRING}"
+    # La clave viene en ASCII armor y el destino es un .gpg: hay que
+    # desarmarla o APT la ignora (mismo bug que ngrok, ver
+    # docs/ROADMAP.md Hito 19).
+    apt_vendor_repo_fetch_key_dearmored "${OPENTOFU_KEY_URL}" "${OPENTOFU_KEYRING}"
     apt_vendor_repo_write_list "${OPENTOFU_REPO_LIST}" \
         "deb [signed-by=${OPENTOFU_KEYRING}] ${OPENTOFU_REPO_URL} any main"
 
@@ -93,7 +96,7 @@ reinstall_tool() {
 # Function to update (para el estado OUTDATED)
 update_tool() {
     echo "Actualizando ${TOOL_NAME}..."
-    sudo apt-get update
+    apt_update || true
     sudo apt-get install --only-upgrade -y "${PACKAGE_NAME}"
     echo "${TOOL_NAME} actualizado correctamente."
 }

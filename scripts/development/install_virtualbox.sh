@@ -144,7 +144,7 @@ install_tool() {
     apt_vendor_repo_write_list "${VIRTUALBOX_REPO_LIST}" \
         "deb [arch=$(dpkg --print-architecture) signed-by=${VIRTUALBOX_KEYRING}] ${VIRTUALBOX_REPO_URL} $(. /etc/os-release && echo "${VERSION_CODENAME}") contrib"
 
-    sudo apt-get update
+    apt_update || true
 
     local package
     package="$(vbox_latest_available_package)"
@@ -208,7 +208,7 @@ update_tool() {
     fi
 
     echo "Actualizando ${TOOL_NAME}..."
-    sudo apt-get update
+    apt_update || true
     sudo apt-get install --only-upgrade -y "${pkg}"
     echo "${TOOL_NAME} actualizado correctamente."
 }

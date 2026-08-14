@@ -5,7 +5,7 @@
 # catálogo. Usa el dispatcher compartido, los helpers APT
 # (scripts/lib/apt.sh) y los helpers de repositorio de proveedor
 # (scripts/lib/apt_vendor_repo.sh) — mecanismo `apt-vendor-repo`, mismo
-# patrón que Brave (clave ya lista para 'signed-by', sin 'gpg --dearmor').
+# patrón que Azure CLI: la clave viene en ASCII armor y se desarma.
 #
 # ngrok Inc. publica su repositorio oficial directamente
 # (ngrok-agent.s3.amazonaws.com). La línea del repositorio usa
@@ -66,7 +66,13 @@ install_tool() {
 
     echo "Instalando ${TOOL_NAME}..."
 
-    apt_vendor_repo_fetch_file_plain "${NGROK_KEY_URL}" "${NGROK_KEYRING}"
+    # ngrok publica la clave en ASCII armor (.asc) y el destino es un
+    # .gpg, así que HAY que desarmarla: APT decide el formato por la
+    # extensión y, si no se hace, la ignora en silencio ("unsupported
+    # filetype"), el repositorio queda sin firmar y 'apt-get update'
+    # empieza a fallar para TODO el sistema. Bug real detectado en la
+    # primera ejecución real (2026-08-14, ver docs/ROADMAP.md Hito 19).
+    apt_vendor_repo_fetch_key_dearmored "${NGROK_KEY_URL}" "${NGROK_KEYRING}"
     apt_vendor_repo_write_list "${NGROK_REPO_LIST}" "${NGROK_REPO_LINE}"
     apt_install_packages "${PACKAGE_NAME}"
 
@@ -91,7 +97,7 @@ reinstall_tool() {
 # Function to update (para el estado OUTDATED)
 update_tool() {
     echo "Actualizando ${TOOL_NAME}..."
-    sudo apt-get update
+    apt_update || true
     sudo apt-get install --only-upgrade -y "${PACKAGE_NAME}"
     echo "${TOOL_NAME} actualizado correctamente."
 }

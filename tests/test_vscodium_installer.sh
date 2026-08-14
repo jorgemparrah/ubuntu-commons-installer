@@ -4,7 +4,7 @@
 # Prueba simulada (mocks) de scripts/editors/install_vscodium.sh (Hito
 # 34, ver docs/ROADMAP.md). Mismo mecanismo apt_vendor_repo_fetch_file_plain
 # que Brave/ngrok: VSCodium publica su clave ya lista para 'signed-by'
-# (sin 'gpg --dearmor') y un archivo `.sources` completo en formato
+# (desarmada con 'gpg --dearmor') y un archivo `.sources` completo en formato
 # DEB822 — ambos se descargan a un temporal y se instalan de forma
 # atómica con 'sudo install -D'. No instala nada real:
 # apt-get/apt/dpkg/sudo/curl/install se interceptan con comandos falsos en
@@ -78,9 +78,19 @@ EOF
 EOF
     chmod +x "${UCI_MOCK_BIN}/sudo"
 
+    cat > "${UCI_MOCK_BIN}/gpg" <<EOF
+#!/usr/bin/env bash
+echo "gpg \$*" >> "${UCI_MOCK_LOG}"
+cat > /dev/null
+echo "clave-falsa-dearmored"
+exit 0
+EOF
+    chmod +x "${UCI_MOCK_BIN}/gpg"
+
     cat > "${UCI_MOCK_BIN}/curl" <<EOF
 #!/usr/bin/env bash
 echo "curl \$*" >> "${UCI_MOCK_LOG}"
+echo "clave-falsa-armored"
 prev=""
 for arg in "\$@"; do
     if [[ "\${prev}" == "-o" ]]; then
@@ -141,7 +151,7 @@ fi
 teardown_mock_bin
 
 echo ""
-echo "== 2. install: descarga clave y .sources directo, sin gpg/dearmor =="
+echo "== 2. install: desarma la clave y descarga el .sources directo =="
 run_installer "install" "missing"
 if [[ "${RUN_CODE}" -eq 0 ]]; then
     pass "'install' sale con código 0"
@@ -149,7 +159,7 @@ else
     fail "'install' debería salir con código 0 (fue ${RUN_CODE}). Salida: ${RUN_OUTPUT}"
 fi
 if grep -q "curl -fsSL https://repo.vscodium.dev/vscodium.gpg" "${UCI_MOCK_LOG}"; then
-    pass "'install' descarga la clave oficial de VSCodium directo (sin gpg/dearmor)"
+    pass "'install' descarga la clave oficial de VSCodium"
 else
     fail "'install' no descargó la clave esperada. Log: $(cat "${UCI_MOCK_LOG}")"
 fi
@@ -158,10 +168,15 @@ if grep -q "curl -fsSL https://repo.vscodium.dev/vscodium.sources" "${UCI_MOCK_L
 else
     fail "'install' no descargó el archivo .sources esperado. Log: $(cat "${UCI_MOCK_LOG}")"
 fi
+# Antes esta prueba afirmaba lo CONTRARIO: que no se invocara 'gpg',
+# porque se asumía que la clave del proveedor ya venía en formato binario.
+# Esa suposición era falsa —la clave está en ASCII armor— y la aserción
+# fijaba el bug como comportamiento correcto, así que el arreglo del
+# 2026-08-14 la hizo fallar (ver docs/ROADMAP.md Hito 19 y ADR 0048).
 if grep -q "^gpg " "${UCI_MOCK_LOG}"; then
-    fail "'install' no debería invocar 'gpg' (la clave de VSCodium ya viene lista)"
+    pass "'install' invoca 'gpg' para desarmar la clave (viene en ASCII armor)"
 else
-    pass "'install' no invoca 'gpg' (mecanismo distinto a Slack/OnlyOffice)"
+    fail "'install' debería invocar 'gpg --dearmor': sin eso APT ignora el keyring y el repo queda sin firmar"
 fi
 if grep -q "install .*vscodium.gpg" "${UCI_MOCK_LOG}"; then
     pass "'install' instala la clave descargada en su ruta final vía 'install -D'"
@@ -173,6 +188,18 @@ if grep -q "install .*vscodium.sources" "${UCI_MOCK_LOG}"; then
 else
     fail "'install' no instaló el archivo .sources en la ruta final esperada. Log: $(cat "${UCI_MOCK_LOG}")"
 fi
+# Guarda de regresión (bug real del 2026-08-14, ver docs/ROADMAP.md Hito
+# 19): la clave de este proveedor viene en ASCII armor y el keyring de
+# destino es un '.gpg'. Si no se desarma, APT la IGNORA en silencio
+# ("unsupported filetype"), el repositorio queda sin firmar y desde ahí
+# 'apt-get update' falla para TODO el sistema, degradando al resto de los
+# instaladores. Esta afirmación es la que faltaba para detectarlo.
+if grep -q "gpg --dearmor" "${UCI_MOCK_LOG}"; then
+    pass "'install' desarma la clave ASCII armor antes de guardarla como .gpg"
+else
+    fail "'install' NO invocó 'gpg --dearmor': APT ignoraría el keyring y el repo quedaría sin firmar. Log: $(cat "${UCI_MOCK_LOG}")"
+fi
+
 if grep -q "apt-get install -y ${UCI_PKG_NAME}" "${UCI_MOCK_LOG}"; then
     pass "'install' instala el paquete '${UCI_PKG_NAME}'"
 else

@@ -1082,9 +1082,30 @@ Registrado el 2026-07-21 junto con el Hito 18, del que depende directamente. La 
 
 **Explícitamente no bloqueante para el resto del roadmap** (confirmado con el dueño del proyecto): mientras este hito espera resultados, el trabajo continúa en los Hitos 20-23.
 
+### Primera ejecución real (2026-08-14): 26 de 27 herramientas fallaron
+
+El dueño del proyecto corrió el instalador interactivo en una máquina real con Ubuntu 26.04 y 27 herramientas seleccionadas (log en `prueba.txt`). Resultado: **26 fallas**. El análisis mostró que 23 de ellas **no tenían ningún problema propio** — fallaron todas por la misma causa compartida, y la causa era nuestra.
+
+Decisiones y detalle completo en [ADR 0048](adr/0048-apt-get-update-no-es-fatal.md). Resumen de lo corregido:
+
+| # | Hallazgo | Alcance |
+|---|---|---|
+| 1 | **Clave GPG mal guardada.** `install_ngrok.sh` bajaba la clave de ngrok (ASCII armor) y la guardaba como `.gpg` sin desarmar. APT la ignoró (`unsupported filetype`), el repositorio quedó sin firmar y `apt-get update` empezó a fallar de forma permanente | Bug propio. **Mismo bug latente encontrado en VSCodium y OpenTofu** al auditar los 8 instaladores que usaban el helper sin desarmar |
+| 2 | **Un repositorio roto tumbaba todo.** `apt_install_packages()` trataba el fallo de `apt-get update` como fatal, y ese comando falla si *cualquier* repositorio del sistema está roto. Así, el bug de ngrok dejó sin instalar hasta `cmatrix` | Sistémico: **102 ubicaciones** corregidas para no tratarlo como fatal |
+| 3 | **Kernel: captura de stdout.** `get_latest_hwe_kernel()` corría `sudo apt update` dentro de la sustitución de comandos que captura el nombre del paquete, así que el "paquete" era toda la salida de apt (`No se ha podido localizar el paquete Obj:1 https://...`) | Bug propio que **fallaba en cualquier máquina**, con repositorios sanos o no |
+| 4 | **Claude Desktop: URL de la clave movida.** Daba 404. La correcta es `downloads.claude.ai/claude-desktop/key.asc`, verificada en vivo junto con su huella (`31DDDE24…1A7ECACE`, la publicada oficialmente) | Bug propio, dependía de una URL de terceros |
+| 5 | **Azure CLI en 26.04.** Microsoft no publica para `resolute` (verificado: 404; `noble` sí). El instalador escribía el repositorio igual y ese 404 permanente envenenaba `apt` para el resto | Se verifica que el proveedor publique **antes** de escribir. Aplicado también a Albert, que tiene el mismo riesgo |
+
+Además se agregó **limpieza de los repositorios ya rotos** (`./setup.sh repair-apt`, seguro por defecto: solo reporta salvo que se pase `--apply`; respalda y deshabilita renombrando, nunca borra) y una comprobación **estática** en `doctor` que detecta claves mal guardadas sin usar red ni `sudo` — la pista que faltaba para diagnosticar esto sin leer un log de mil líneas.
+
+**Dos mecanismos se validaron funcionando exactamente como se diseñaron**, y vale registrarlo:
+
+* **Powerlevel10k** se negó a instalarse con un mensaje claro porque Oh My Zsh no estaba: el `depends_on` de [ADR 0042](adr/0042-configuraciones-post-instalacion-y-dependencias.md).
+* **Logseq** se omitió con *"su estado no se pudo determinar, se omite por seguridad"*: el estado `UNKNOWN` evitando la decisión a ciegas para la que se creó.
+
 ### Pendiente
 
-Esperando la ejecución en VM y el log de resultados correspondiente.
+Volver a correr en la máquina real con las correcciones aplicadas, empezando por `./setup.sh repair-apt --apply` para limpiar los repositorios que quedaron rotos de la corrida anterior. Los grupos de `tests/manual/` siguen pendientes de ejecución.
 
 ---
 

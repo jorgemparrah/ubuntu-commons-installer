@@ -394,6 +394,11 @@ Uso:
   ./setup.sh list --profile <nombre>   Filtra la lista a un perfil
   ./setup.sh info                 Igual que 'list', agregando el estado real de instalación de cada herramienta
   ./setup.sh info --profile <nombre>   Filtra 'info' a un perfil
+  ./setup.sh repair-apt          Reporta los repositorios APT rotos (no modifica nada)
+  ./setup.sh repair-apt --apply  Respalda y deshabilita los repositorios APT rotos
+  ./setup.sh uninstall           Desinstala herramientas (elección interactiva de lo instalado)
+  ./setup.sh uninstall --tool docker,steam   Desinstala herramientas puntuales por id
+  ./setup.sh uninstall --dry-run   Muestra qué se desinstalaría, sin tocar nada
 
 Perfiles disponibles (docs/ROADMAP.md, Hito 13):
   minimal, cli, desktop, developer, workstation, full,
@@ -418,6 +423,20 @@ cmd_doctor() {
     if ! doctor_run "${UCI_HOME_DIR}" "$@"; then
         exit 1
     fi
+}
+
+cmd_repair_apt() {
+    # Un repositorio APT roto hace que 'apt-get update' devuelva error de
+    # forma permanente y degrada a todos los instaladores APT (hallazgo de
+    # la primera ejecución real, ver docs/ROADMAP.md Hito 19). Este
+    # comando lo detecta y —solo si se pide con --apply— respalda y
+    # deshabilita los archivos culpables. Nunca borra nada.
+    local script="${UCI_ROOT_DIR}/scripts/maintenance/repair_apt_sources.sh"
+    if [[ ! -x "${script}" ]]; then
+        log_error "No se encontró ${script}"
+        return 1
+    fi
+    "${script}" "$@"
 }
 
 cmd_backup() {
@@ -719,6 +738,273 @@ cmd_info() {
     catalog_list_run "${UCI_PARSED_PROFILE}" 1
 }
 
+# uninstall_resolve_status <script_path>
+# Estado real de una herramienta, normalizado a una sola palabra. Mismo
+# criterio de detección que catalog_list_run, incluido el orden que revisa
+# NOT_INSTALLED antes que INSTALLED (la segunda es subcadena de la primera).
+uninstall_resolve_status() {
+    local script_path="$1"
+    local status_output s
+    set +e
+    status_output="$("${script_path}" status 2>&1)"
+    set -e
+    for s in NOT_INSTALLED INSTALLED OUTDATED BROKEN UNSUPPORTED UNKNOWN; do
+        if [[ "${status_output}" == *"${s}"* ]]; then
+            echo "${s}"
+            return 0
+        fi
+    done
+    echo "DESCONOCIDO"
+}
+
+# uninstall_is_removable <estado>
+# Solo se desinstala lo que está realmente presente. NOT_INSTALLED no tiene
+# nada que quitar; UNSUPPORTED/UNKNOWN/DESCONOCIDO significan que no se
+# pudo determinar, y actuar a ciegas sobre el sistema sería justo lo que
+# este proyecto evita (mismo criterio que el skip por UNKNOWN del flujo
+# interactivo).
+uninstall_is_removable() {
+    case "$1" in
+        INSTALLED|OUTDATED|BROKEN) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+# uninstall_print_warning
+# Efectos de 'uninstall' que conviene conocer ANTES de confirmar. No son
+# bugs: son decisiones deliberadas del proyecto (AGENT.md §2 y §11).
+uninstall_print_warning() {
+    echo ""
+    log_warn "Antes de continuar, tené en cuenta:"
+    echo "  - 'uninstall' hace purge (no remove): también quita los archivos de"
+    echo "    configuración del paquete."
+    echo "  - Tus DATOS se conservan a propósito: modelos de Ollama y LM Studio,"
+    echo "    datos de AnythingLLM, configuración de OmniRoute, y la"
+    echo "    personalización de shell en \$HOME."
+    echo "  - Algunos efectos NO se revierten, porque quitarlos rompería otras"
+    echo "    herramientas: la arquitectura i386, los grupos de usuario"
+    echo "    (wireshark, libvirt, kvm), los repositorios de proveedor y libfuse2."
+}
+
+# uninstall_run_targets <dry_run> <id...>
+# Núcleo compartido por el modo directo (--tool) y el interactivo.
+uninstall_run_targets() {
+    local dry_run="$1"
+    shift
+    local -a ids=("$@")
+
+    local -a plan_ids=() plan_names=() plan_scripts=()
+    local id name script_field script_path status
+
+    echo ""
+    echo "Estado actual de lo seleccionado:"
+    for id in "${ids[@]}"; do
+        name="$(tools_registry_field "${id}" "name")"
+        script_field="$(tools_registry_field "${id}" "script")"
+        script_path="${UCI_ROOT_DIR}/${script_field}"
+        status="$(uninstall_resolve_status "${script_path}")"
+
+        if uninstall_is_removable "${status}"; then
+            printf '  %-22s %-16s se desinstalará\n' "${id}" "${status}"
+            plan_ids+=("${id}")
+            plan_names+=("${name}")
+            plan_scripts+=("${script_path}")
+        else
+            printf '  %-22s %-16s se omite (nada que quitar o estado no determinable)\n' "${id}" "${status}"
+        fi
+    done
+
+    if [[ "${#plan_ids[@]}" -eq 0 ]]; then
+        echo ""
+        log_info "No hay nada para desinstalar."
+        return 0
+    fi
+
+    if [[ "${dry_run}" == "1" ]]; then
+        echo ""
+        log_info "[dry-run] se desinstalarían ${#plan_ids[@]} herramienta(s). No se modificó nada."
+        return 0
+    fi
+
+    uninstall_print_warning
+    echo ""
+    local reply=""
+    read -r -p "Desinstalar ${#plan_ids[@]} herramienta(s)? [escribí 'si' para confirmar] " reply
+    if [[ "${reply}" != "si" && "${reply}" != "sí" ]]; then
+        log_info "Cancelado. No se modificó nada."
+        return 0
+    fi
+
+    local failed=0 i=0
+    for i in "${!plan_ids[@]}"; do
+        echo ""
+        echo "== Desinstalando ${plan_names[$i]} (${plan_ids[$i]}) =="
+        set +e
+        "${plan_scripts[$i]}" uninstall
+        local code=$?
+        set -e
+        if [[ "${code}" -eq 0 ]]; then
+            log_success "${plan_names[$i]} desinstalado."
+        else
+            log_error "${plan_names[$i]} falló al desinstalarse (código ${code})."
+            failed=$((failed + 1))
+        fi
+    done
+
+    echo ""
+    echo "== Resumen =="
+    echo "Desinstaladas: $(( ${#plan_ids[@]} - failed ))/${#plan_ids[@]}"
+    if [[ "${failed}" -gt 0 ]]; then
+        log_error "Fallaron ${failed}. Revisá la salida de arriba."
+        return 1
+    fi
+    return 0
+}
+
+# uninstall_select_interactive
+# Lista SOLO lo que está realmente instalado y deja elegir por número.
+# Resultado en UCI_UNINSTALL_SELECTED (array global).
+#
+# Se implementa en Bash y no en setup.js a propósito: 'uninstall' es una
+# acción destructiva y el router debe poder ofrecerla sin depender de
+# Node/npm (ADR 0001), que es justo lo que puede faltar en una máquina a
+# medio aprovisionar.
+UCI_UNINSTALL_SELECTED=()
+uninstall_select_interactive() {
+    UCI_UNINSTALL_SELECTED=()
+    local -a ids=() names=()
+    local id name script_field script_path status
+
+    log_info "Consultando el estado real de cada herramienta del catálogo (puede tardar)..."
+    while IFS= read -r id; do
+        [[ -z "${id}" ]] && continue
+        script_field="$(tools_registry_field "${id}" "script")"
+        script_path="${UCI_ROOT_DIR}/${script_field}"
+        [[ -x "${script_path}" ]] || continue
+        status="$(uninstall_resolve_status "${script_path}")"
+        uninstall_is_removable "${status}" || continue
+        ids+=("${id}")
+        names+=("$(tools_registry_field "${id}" "name") [${status}]")
+    done < <(tools_registry_ids)
+
+    if [[ "${#ids[@]}" -eq 0 ]]; then
+        log_info "No hay ninguna herramienta del catálogo instalada en esta máquina."
+        return 0
+    fi
+
+    echo ""
+    echo "Herramientas instaladas:"
+    local i
+    for i in "${!ids[@]}"; do
+        printf '  %3d) %-24s %s\n' "$(( i + 1 ))" "${ids[$i]}" "${names[$i]}"
+    done
+
+    echo ""
+    echo "Elegí los números a desinstalar, separados por espacios o comas."
+    echo "Enter sin nada (o 'q') cancela."
+    local reply=""
+    read -r -p "> " reply
+
+    if [[ -z "${reply}" || "${reply}" == "q" ]]; then
+        log_info "Cancelado. No se modificó nada."
+        return 0
+    fi
+
+    local -a picks=()
+    IFS=', ' read -ra picks <<< "${reply}"
+    local pick
+    for pick in "${picks[@]}"; do
+        [[ -z "${pick}" ]] && continue
+        if [[ ! "${pick}" =~ ^[0-9]+$ ]]; then
+            log_error "'${pick}' no es un número válido. No se modificó nada."
+            UCI_UNINSTALL_SELECTED=()
+            return 1
+        fi
+        if [[ "${pick}" -lt 1 || "${pick}" -gt "${#ids[@]}" ]]; then
+            log_error "El número ${pick} está fuera de rango (1-${#ids[@]}). No se modificó nada."
+            UCI_UNINSTALL_SELECTED=()
+            return 1
+        fi
+        UCI_UNINSTALL_SELECTED+=("${ids[$(( pick - 1 ))]}")
+    done
+    return 0
+}
+
+# cmd_uninstall [--tool <id>[,<id>...]] [--dry-run]
+# Desinstala herramientas del catálogo. Sin '--tool' entra en modo
+# interactivo, mostrando solo lo que está realmente instalado.
+#
+# Siempre pide confirmación explícita antes de tocar el sistema (salvo en
+# '--dry-run', que no toca nada), y solo actúa sobre herramientas cuyo
+# estado real confirma que hay algo que quitar.
+cmd_uninstall() {
+    local dry_run=0
+    local -a requested=()
+    local -a parts=()
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --dry-run)
+                dry_run=1
+                shift
+                ;;
+            --tool)
+                if [[ -z "${2:-}" ]]; then
+                    log_error "'--tool' requiere al menos un id de herramienta."
+                    exit 1
+                fi
+                IFS=',' read -ra parts <<< "$2"
+                requested+=("${parts[@]}")
+                shift 2
+                ;;
+            --tool=*)
+                IFS=',' read -ra parts <<< "${1#--tool=}"
+                requested+=("${parts[@]}")
+                shift
+                ;;
+            *)
+                log_error "Opción desconocida para 'uninstall': '$1'"
+                exit 1
+                ;;
+        esac
+    done
+
+    if ! preflight_core; then
+        log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
+        exit 1
+    fi
+
+    if [[ "${#requested[@]}" -eq 0 ]]; then
+        if ! uninstall_select_interactive; then
+            exit 1
+        fi
+        if [[ "${#UCI_UNINSTALL_SELECTED[@]}" -eq 0 ]]; then
+            return 0
+        fi
+        uninstall_run_targets "${dry_run}" "${UCI_UNINSTALL_SELECTED[@]}" || exit 1
+        return 0
+    fi
+
+    # Se validan TODOS los ids antes de tocar nada: es preferible fallar de
+    # entrada por un id mal escrito a desinstalar la mitad y recién ahí
+    # descubrir el error.
+    local -a unknown=()
+    local id
+    for id in "${requested[@]}"; do
+        [[ -z "${id}" ]] && continue
+        if [[ -z "$(tools_registry_field "${id}" "script")" ]]; then
+            unknown+=("${id}")
+        fi
+    done
+    if [[ "${#unknown[@]}" -gt 0 ]]; then
+        log_error "Id(s) de herramienta desconocido(s): ${unknown[*]}"
+        echo "Consultá los ids válidos con: ./setup.sh list" >&2
+        exit 1
+    fi
+
+    uninstall_run_targets "${dry_run}" "${requested[@]}" || exit 1
+}
+
 cmd_interactive() {
     if ! preflight_core; then
         log_error "El preflight básico no se cumplió. Revisa los mensajes anteriores."
@@ -770,6 +1056,12 @@ main() {
             ;;
         info)
             cmd_info "$@"
+            ;;
+        repair-apt)
+            cmd_repair_apt "$@"
+            ;;
+        uninstall)
+            cmd_uninstall "$@"
             ;;
         *)
             log_error "Comando desconocido: '${cmd}'"

@@ -19,6 +19,9 @@ Otros comandos frecuentes:
 ./setup.sh list                       # catálogo de herramientas gestionadas (id/categoría/perfiles)
 ./setup.sh info                        # lo mismo, agregando el estado real de instalación
 ./setup.sh install --profile developer  # instala sin interacción todo lo del perfil elegido
+./setup.sh uninstall                      # desinstala eligiendo de lo que está instalado
+./setup.sh uninstall --tool docker,steam   # desinstala herramientas puntuales por id
+./setup.sh repair-apt                      # reporta repositorios APT rotos (con --apply los limpia)
 ./setup.sh backup --dry-run              # qué respaldaría, sin crear nada
 ./setup.sh migrate --dry-run              # qué haría cada migración pendiente, sin aplicar nada
 ./setup.sh help                            # ayuda completa

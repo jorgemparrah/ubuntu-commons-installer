@@ -3,7 +3,7 @@
 #
 # Prueba simulada (mocks) de scripts/development/install_ngrok.sh (Hito
 # 28, ver docs/ROADMAP.md). Mismo mecanismo que Brave: clave ya lista
-# para 'signed-by' (apt_vendor_repo_fetch_file_plain, sin 'gpg --dearmor')
+# en ASCII armor (apt_vendor_repo_fetch_key_dearmored, con 'gpg --dearmor')
 # + una línea 'deb [...]' con codename fijo ('bookworm', no 'ubuntu
 # trusty'/'debian squeeze' como Slack/OnlyOffice, pero el mismo mecanismo
 # apt_vendor_repo_write_list). No instala nada real:
@@ -78,9 +78,19 @@ EOF
 EOF
     chmod +x "${UCI_MOCK_BIN}/sudo"
 
+    cat > "${UCI_MOCK_BIN}/gpg" <<EOF
+#!/usr/bin/env bash
+echo "gpg \$*" >> "${UCI_MOCK_LOG}"
+cat > /dev/null
+echo "clave-falsa-dearmored"
+exit 0
+EOF
+    chmod +x "${UCI_MOCK_BIN}/gpg"
+
     cat > "${UCI_MOCK_BIN}/curl" <<EOF
 #!/usr/bin/env bash
 echo "curl \$*" >> "${UCI_MOCK_LOG}"
+echo "clave-falsa-armored"
 prev=""
 for arg in "\$@"; do
     if [[ "\${prev}" == "-o" ]]; then
@@ -166,6 +176,18 @@ if grep -q "install .*ngrok-archive-keyring.gpg" "${UCI_MOCK_LOG}"; then
 else
     fail "'install' no instaló la clave esperada. Log: $(cat "${UCI_MOCK_LOG}")"
 fi
+# Guarda de regresión (bug real del 2026-08-14, ver docs/ROADMAP.md Hito
+# 19): la clave de este proveedor viene en ASCII armor y el keyring de
+# destino es un '.gpg'. Si no se desarma, APT la IGNORA en silencio
+# ("unsupported filetype"), el repositorio queda sin firmar y desde ahí
+# 'apt-get update' falla para TODO el sistema, degradando al resto de los
+# instaladores. Esta afirmación es la que faltaba para detectarlo.
+if grep -q "gpg --dearmor" "${UCI_MOCK_LOG}"; then
+    pass "'install' desarma la clave ASCII armor antes de guardarla como .gpg"
+else
+    fail "'install' NO invocó 'gpg --dearmor': APT ignoraría el keyring y el repo quedaría sin firmar. Log: $(cat "${UCI_MOCK_LOG}")"
+fi
+
 if grep -q "tee /etc/apt/sources.list.d/ngrok.list" "${UCI_MOCK_LOG}"; then
     pass "'install' escribe /etc/apt/sources.list.d/ngrok.list"
 else

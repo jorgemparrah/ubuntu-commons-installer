@@ -83,3 +83,4 @@ Las ADR 0001–0014 se derivaron de los hallazgos de la evaluación inicial del 
 | [0045](0045-mecanismo-flatpak-para-apps-sin-fuente-apt-snap-oficial.md) | Mecanismo `flatpak` para aplicaciones sin fuente APT/Snap oficial | Aceptada |
 | [0046](0046-mecanismos-para-interfaces-locales-de-ia.md) | Mecanismos para las interfaces locales de IA del Hito 53: `pip-mise` y `appimage-direct` | Aceptada |
 | [0047](0047-mecanismo-npm-mise-para-omniroute.md) | Mecanismo `npm-mise` para OmniRoute, y subcategoría `ai-gateway` | Aceptada |
+| [0048](0048-apt-get-update-no-es-fatal.md) | Un `apt-get update` fallido no es fatal, y los repositorios APT rotos se limpian | Aceptada |
