@@ -86,8 +86,12 @@ run_uninstall() {
     set -e
 }
 
+# 'grep -c' ya imprime "0" cuando no hay coincidencias, y ADEMÁS sale con
+# código 1. Un '|| echo 0' agregaba un segundo "0" y la comparación '-eq'
+# recibía "0\n0", que no es un entero: el chequeo fallaba siempre aunque
+# el comportamiento fuera correcto. Basta con enmascarar el código.
 uninstalls_in_log() {
-    grep -c " uninstall" "${UCI_ACTION_LOG}" 2>/dev/null || echo 0
+    grep -c " uninstall" "${UCI_ACTION_LOG}" 2>/dev/null || true
 }
 
 echo "== 1. --dry-run no desinstala nada =="

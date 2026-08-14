@@ -163,10 +163,15 @@ if [[ "${RUN_CODE}" -eq 0 ]]; then
 else
     fail "'install' debería salir con código 0 (fue ${RUN_CODE}). Salida: ${RUN_OUTPUT}"
 fi
+# Antes esta prueba afirmaba lo CONTRARIO: que no se invocara 'gpg',
+# porque se asumía que la clave del proveedor ya venía en formato binario.
+# Esa suposición era falsa —la clave está en ASCII armor— y la aserción
+# fijaba el bug como comportamiento correcto, así que el arreglo del
+# 2026-08-14 la hizo fallar (ver docs/ROADMAP.md Hito 19 y ADR 0048).
 if grep -qE "^gpg " "${UCI_MOCK_LOG}"; then
-    fail "'install' NO debería invocar 'gpg --dearmor' (la clave de OpenTofu ya es binaria)"
+    pass "'install' invoca 'gpg' para desarmar la clave (viene en ASCII armor)"
 else
-    pass "'install' no invoca 'gpg --dearmor' (clave ya binaria)"
+    fail "'install' debería invocar 'gpg --dearmor': sin eso APT ignora el keyring y el repo queda sin firmar"
 fi
 if grep -q "install .*opentofu.gpg" "${UCI_MOCK_LOG}"; then
     pass "'install' instala la clave binaria en su ruta final"

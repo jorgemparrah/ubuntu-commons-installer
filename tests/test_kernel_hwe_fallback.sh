@@ -120,7 +120,15 @@ fi
 # 'apt list --upgradable' sin candidatos: fuerza la rama de fallback.
 exit 0
 MOCK
-chmod +x "${UCI_KERNEL_MOCK_BIN}/sudo" "${UCI_KERNEL_MOCK_BIN}/apt"
+# La imagen de prueba no trae 'lsb_release' y el fallback lo usa: sin este
+# doble, get_latest_hwe_kernel moría con código 127 (comando no encontrado)
+# y la prueba abortaba antes de afirmar nada.
+cat > "${UCI_KERNEL_MOCK_BIN}/lsb_release" <<'MOCK'
+#!/usr/bin/env bash
+[[ "$1" == "-rs" ]] && echo "24.04"
+exit 0
+MOCK
+chmod +x "${UCI_KERNEL_MOCK_BIN}/sudo" "${UCI_KERNEL_MOCK_BIN}/apt" "${UCI_KERNEL_MOCK_BIN}/lsb_release"
 
 UCI_KERNEL_RESULT="$(PATH="${UCI_KERNEL_MOCK_BIN}:${PATH}" bash -c "source '${INSTALL_KERNEL_SH}'; get_latest_hwe_kernel" 2>/dev/null)"
 rm -rf "${UCI_KERNEL_MOCK_BIN}"

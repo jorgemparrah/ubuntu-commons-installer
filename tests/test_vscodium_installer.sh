@@ -151,7 +151,7 @@ fi
 teardown_mock_bin
 
 echo ""
-echo "== 2. install: descarga clave y .sources directo, sin gpg/dearmor =="
+echo "== 2. install: desarma la clave y descarga el .sources directo =="
 run_installer "install" "missing"
 if [[ "${RUN_CODE}" -eq 0 ]]; then
     pass "'install' sale con código 0"
@@ -159,7 +159,7 @@ else
     fail "'install' debería salir con código 0 (fue ${RUN_CODE}). Salida: ${RUN_OUTPUT}"
 fi
 if grep -q "curl -fsSL https://repo.vscodium.dev/vscodium.gpg" "${UCI_MOCK_LOG}"; then
-    pass "'install' descarga la clave oficial de VSCodium directo (sin gpg/dearmor)"
+    pass "'install' descarga la clave oficial de VSCodium"
 else
     fail "'install' no descargó la clave esperada. Log: $(cat "${UCI_MOCK_LOG}")"
 fi
@@ -168,10 +168,15 @@ if grep -q "curl -fsSL https://repo.vscodium.dev/vscodium.sources" "${UCI_MOCK_L
 else
     fail "'install' no descargó el archivo .sources esperado. Log: $(cat "${UCI_MOCK_LOG}")"
 fi
+# Antes esta prueba afirmaba lo CONTRARIO: que no se invocara 'gpg',
+# porque se asumía que la clave del proveedor ya venía en formato binario.
+# Esa suposición era falsa —la clave está en ASCII armor— y la aserción
+# fijaba el bug como comportamiento correcto, así que el arreglo del
+# 2026-08-14 la hizo fallar (ver docs/ROADMAP.md Hito 19 y ADR 0048).
 if grep -q "^gpg " "${UCI_MOCK_LOG}"; then
-    fail "'install' no debería invocar 'gpg' (la clave de VSCodium ya viene lista)"
+    pass "'install' invoca 'gpg' para desarmar la clave (viene en ASCII armor)"
 else
-    pass "'install' no invoca 'gpg' (mecanismo distinto a Slack/OnlyOffice)"
+    fail "'install' debería invocar 'gpg --dearmor': sin eso APT ignora el keyring y el repo queda sin firmar"
 fi
 if grep -q "install .*vscodium.gpg" "${UCI_MOCK_LOG}"; then
     pass "'install' instala la clave descargada en su ruta final vía 'install -D'"
