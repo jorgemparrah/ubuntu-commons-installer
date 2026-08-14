@@ -170,6 +170,7 @@ jobs:
           - orca-installer
           - omniroute-installer
           - apt-sources-repair
+          - uninstall-command
         ubuntu: ["24.04", "26.04"]
         include:
           - case: router
@@ -662,6 +663,11 @@ jobs:
             dockerfile: tests/docker/Dockerfile
             ids: "I80"
             cmd: bash tests/test_apt_sources_repair.sh
+          - case: uninstall-command
+            variant: base
+            dockerfile: tests/docker/Dockerfile
+            ids: "I81"
+            cmd: bash tests/test_uninstall_command.sh
     steps:
       - uses: actions/checkout@v7
 

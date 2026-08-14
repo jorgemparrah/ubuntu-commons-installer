@@ -150,6 +150,7 @@ run_suite "tests/test_nerd_font_configure.sh" bash tests/test_nerd_font_configur
 run_suite "tests/test_orca_installer.sh" bash tests/test_orca_installer.sh
 run_suite "tests/test_omniroute_installer.sh" bash tests/test_omniroute_installer.sh
 run_suite "tests/test_apt_sources_repair.sh" bash tests/test_apt_sources_repair.sh
+run_suite "tests/test_uninstall_command.sh" bash tests/test_uninstall_command.sh
 
 section "Resumen general"
 if [[ "${FAILED}" -eq 0 ]]; then
