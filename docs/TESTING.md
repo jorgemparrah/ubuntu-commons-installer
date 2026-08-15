@@ -186,4 +186,14 @@ Registrado el 2026-07-21 al planificar el camino hacia la primera versión estab
 bash tests/manual/run_all_manual_tests.sh
 ```
 
+**Ampliado en el Hito 19 (2026-07-28).** Lo anterior cubría los 18 instaladores del catálogo de julio de 2026; las 51 herramientas incorporadas después (Hitos 20–56) que requieren validación manual no tenían forma de validarse. Se agregaron **7 grupos** que las cubren, con un runner que deja **un log por grupo** para revisarlos de a tandas:
+
+```bash
+bash tests/manual/run_manual_group.sh --list   # cli, snap-extra, apt-vendor, deb-direct, flatpak, system-heavy, ai-local
+bash tests/manual/run_manual_group.sh cli      # el más liviano, buen primer paso
+bash tests/manual/run_manual_group.sh all      # todo (varios GB de descarga)
+```
+
+En el mismo movimiento se corrigió un **bug bloqueante** en `tests/manual/lib_manual.sh`: capturaba el código de salida con `cmd; code=$?`, y bajo `set -Eeuo pipefail` el `status` inicial normal (`NOT_INSTALLED`, código 1) hacía que `set -e` abortara la batería en la primera herramienta, antes de registrar nada. Ningún nivel de prueba automatizado detecta esto, porque estos scripts a propósito nunca corren en CI.
+
 A diferencia de los Niveles 1 y 2, esto nunca corre en CI ni en la máquina de desarrollo de este repositorio — es exclusivamente para que la persona usuaria lo ejecute en su propia VM y comparta el log de resultados (ver Hito 19 en `docs/ROADMAP.md`, explícitamente no bloqueante para el resto del roadmap mientras se espera ese resultado).

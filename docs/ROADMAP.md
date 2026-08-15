@@ -1082,9 +1082,31 @@ Registrado el 2026-07-21 junto con el Hito 18, del que depende directamente. La 
 
 **Explícitamente no bloqueante para el resto del roadmap** (confirmado con el dueño del proyecto): mientras este hito espera resultados, el trabajo continúa en los Hitos 20-23.
 
+### Ampliación de la cobertura (2026-07-28)
+
+Al revisar qué cubrían realmente los scripts del Hito 18 se encontró que cubrían **18 instaladores**, los del catálogo de ese momento, mientras que **51 herramientas marcadas `requires_manual_validation=yes`** incorporadas después (Hitos 20–56) no tenían ninguna forma de validarse. Se agregaron 7 grupos nuevos que cubren esas 51, con lo que las 69 que requieren validación manual quedan cubiertas.
+
+**Bug bloqueante encontrado y corregido en `lib_manual.sh`.** Los scripts del Hito 18 no podían funcionar: `manual_run_lifecycle` capturaba el código con la forma `cmd; code=$?`, y como los scripts corren con `set -Eeuo pipefail` y el `status` inicial normal es `NOT_INSTALLED` (código 1), `set -e` abortaba la corrida **en la primera herramienta, antes de registrar nada**. Esto explica por qué este hito nunca produjo un log. Se corrigió con la forma `cmd && code=0 || code=$?`, que preserva el código sin disparar `set -e`, y se verificó con un instalador falso.
+
+Grupos nuevos, cada uno con su propio log (`tests/manual/run_manual_group.sh`, ver `tests/manual/README.md`):
+
+| Grupo | Cubre |
+|---|---|
+| `cli` | 6 livianos (curl-script, archive-direct, git-clone) + el verbo `configure` de Starship |
+| `snap-extra` | 8 Snap posteriores al Hito 18 |
+| `apt-vendor` | 13 con repositorio APT del proveedor |
+| `deb-direct` | 9 que descargan un `.deb` directo |
+| `flatpak` | 3 Flatpak |
+| `system-heavy` | 6 que tocan el sistema (grupos, arquitectura i386, servicios) |
+| `ai-local` | 5 de IA local, incluidos los mecanismos `pip-mise` y `npm-mise` |
+
+Además del ciclo de vida genérico, los grupos verifican lo que solo tiene sentido en una máquina real: que el `postinst` de Orca cree `/usr/bin/orca-ide` y que **el lector de pantalla `orca` de GNOME quede intacto**; que el preseed de debconf de Wireshark deje `dumpcap` en el grupo `wireshark`; que Mise instale su propio Python 3.11 y Node 24 para Open WebUI y OmniRoute; que Starship deje las 4 variantes de la Nerd Font y sea idempotente; que Steam habilite `i386`; que Flatpak configure `flathub`; y que `apt-get update` siga sin advertencias con los 13 repositorios de proveedor agregados.
+
+VirtualBox queda opt-in (`--include-virtualbox`) por los módulos del kernel y el diálogo de Secure Boot, mismo criterio que el kernel HWE.
+
 ### Pendiente
 
-Esperando la ejecución en VM y el log de resultados correspondiente.
+Esperando la ejecución en VM y los logs de resultados correspondientes.
 
 ---
 
